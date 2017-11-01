@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="ESFA.DAS.Support.Indexer.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="5" osVersion="*" schemaVersion="2015-04.2.6">
+  <Role name="ESFA.DAS.Support.Indexer.Worker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="LoggingRedisConnectionString" value="__LoggingRedisConnectionString__" />
+      <Setting name="EnvironmentName" value="__EnvironmentName__" />
+	  <Setting name="Support_Azure_Search_AdminKey" value="__Search_AdminKey__" />
+	  <Setting name="Support_Azure_Search_ServiceName" value="__Search_ServiceName__" />
+	  <Setting name="Support_SubSite_0" value="__SubSite_0__" />
+	  <Setting name="Support_SubSite_1" value="__SubSite_1__" />
+	  <Setting name="Support_SubSite_2" value="__SubSite_2__" />
+	  <Setting name="Support_SubSite_3" value="__SubSite_3__" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
