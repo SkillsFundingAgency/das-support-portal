@@ -6,12 +6,12 @@
 
       <Setting name="LoggingRedisConnectionString" />
       <Setting name="EnvironmentName" />
-      <Setting name="Support:Azure:Search:AdminKey" />
-      <Setting name="Support:Azure:Search:ServiceName" />
-      <Setting name="Support:SubSite:0" />
-      <Setting name="Support:SubSite:1" />
-      <Setting name="Support:SubSite:2" />
-      <Setting name="Support:SubSite:3" />
+      <Setting name="Support_Azure_Search_AdminKey" />
+      <Setting name="Support_Azure_Search_ServiceName" />
+      <Setting name="Support_SubSite_0" />
+      <Setting name="Support_SubSite_1" />
+      <Setting name="Support_SubSite_2" />
+      <Setting name="Support_SubSite_3" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>
