@@ -21,7 +21,7 @@ namespace ESFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<IIndexProvider>().Use<AzureSearchProvider>();
             if (Debugger.IsAttached)
             {
-                For<IProvideSettings>().Use(c => new MachineSettings(string.Empty));
+                For<IProvideSettings>().Use(c => new CloudServiceSettingsProvider(new MachineSettings(string.Empty)));
             }
             else
             {

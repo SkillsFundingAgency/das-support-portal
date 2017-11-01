@@ -20,7 +20,7 @@ namespace ESFA.DAS.Support.Indexer.Infrastructure.Settings
 
         public string GetSetting(string settingKey)
         {
-            var setting = GetNullableSetting(GetKey(settingKey));
+            var setting = GetNullableSetting(settingKey);
 
             if (string.IsNullOrEmpty(setting))
             {
