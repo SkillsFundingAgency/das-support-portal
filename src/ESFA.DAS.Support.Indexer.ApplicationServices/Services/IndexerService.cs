@@ -23,11 +23,12 @@ namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
 
         public void Run()
         {
-            var items = FindItems();
-            _indexProvider.IndexDocuments(_settings.IndexName, items);
+            //var items = 
+            FindItems();
+            // _indexProvider.IndexDocuments(_settings.IndexName, items);
         }
 
-        private IEnumerable<SearchItem> FindItems()
+        private void FindItems()
         {
             foreach (var setting in _settings.Sites.Where(x => !string.IsNullOrEmpty(x)))
             {
@@ -36,11 +37,10 @@ namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
                 {
                     if (!string.IsNullOrEmpty(resource.SearchItemsUrl))
                     {
-                        var items = _downloader.GetSearchItems(new Uri(resource.SearchItemsUrl));
-                        foreach (var item in items)
-                        {
-                            yield return item;
-                        }
+                        var baseUri = new Uri(siteManifest.BaseUrl);
+                        var uri = new Uri(baseUri, resource.SearchItemsUrl);
+                        //var items = _downloader.GetSearchItems(uri);
+                        _indexProvider.IndexDocuments(_settings.IndexName, _downloader.GetSearchItems(uri));
                     }
                 }
             }

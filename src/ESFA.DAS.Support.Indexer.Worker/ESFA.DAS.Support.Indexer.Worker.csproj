@@ -135,18 +135,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="AfterBuild"
-        DependsOnTargets="SetGenerateManifests;GenerateApplicationManifest;GenerateDeploymentManifest">		
-   <Copy
-	SourceFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\obj\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.exe.manifest"
-	DestinationFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\bin\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.exe.manifest"
-	/>
-		
-    <Copy
-	SourceFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\obj\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.application"
-	DestinationFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\bin\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.application"
-	/>
-</Target>
+  <Target Name="AfterBuild" DependsOnTargets="SetGenerateManifests;GenerateApplicationManifest;GenerateDeploymentManifest">
+    <Copy SourceFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\obj\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.exe.manifest" DestinationFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\bin\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.exe.manifest" />
+    <Copy SourceFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\obj\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.application" DestinationFiles="$(SolutionDir)ESFA.DAS.Support.Indexer.Worker\bin\$(Configuration)\ESFA.DAS.Support.Indexer.Worker.application" />
+  </Target>
   <PropertyGroup>
     <!-- Setting AutoUnifyAssemblyReferences to false will allow the ResolveAssemblyReferences task to 
     create warnings when detecting version missmatches among references.

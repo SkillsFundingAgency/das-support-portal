@@ -14,6 +14,6 @@ namespace ESFA.DAS.Support.Indexer.ApplicationServices.Settings
         }
 
         public IEnumerable<string> Sites => _settings.GetArray("Support:SubSite");
-        public string IndexName => "support";
+        public string IndexName => string.Format(_settings.GetSetting("IndexNameFormat"), _settings.GetSetting("EnvironmentName"));
     }
 }
