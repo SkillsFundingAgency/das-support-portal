@@ -56,9 +56,9 @@
       <Project>{5c3439d0-f4ed-4071-8a39-650dc231ef84}</Project>
       <Name>ESFA.DAS.Support.Indexer.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ESFA.DAS.Support.Shared\ESFA.DAS.Support.Shared.csproj">
-      <Project>{33af67c7-6c59-4353-bbf3-14a2d2bebe37}</Project>
-      <Name>ESFA.DAS.Support.Shared</Name>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

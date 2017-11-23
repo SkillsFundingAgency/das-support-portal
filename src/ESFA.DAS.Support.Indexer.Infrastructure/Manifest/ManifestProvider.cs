@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ESFA.DAS.Support.Indexer.ApplicationServices.Services;
 using ESFA.DAS.Support.Indexer.Infrastructure.Extensions;
-using ESFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared;
 
 namespace ESFA.DAS.Support.Indexer.Infrastructure.Manifest
 {

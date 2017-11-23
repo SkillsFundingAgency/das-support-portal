@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ESFA.DAS.Support.Indexer.ApplicationServices.Settings;
-using ESFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared;
 
 namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
 {

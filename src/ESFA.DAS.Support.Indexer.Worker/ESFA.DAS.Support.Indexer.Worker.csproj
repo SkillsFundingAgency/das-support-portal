@@ -80,6 +80,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
@@ -120,10 +121,6 @@
     <ProjectReference Include="..\ESFA.DAS.Support.Indexer.Infrastructure\ESFA.DAS.Support.Indexer.Infrastructure.csproj">
       <Project>{dcf11d5a-4e9e-4902-befe-11d6de23ecc4}</Project>
       <Name>ESFA.DAS.Support.Indexer.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DAS.Support.Shared\ESFA.DAS.Support.Shared.csproj">
-      <Project>{33af67c7-6c59-4353-bbf3-14a2d2bebe37}</Project>
-      <Name>ESFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
