@@ -16,10 +16,9 @@ namespace ESFA.DAS.Support.Indexer.Worker
             });
         }
 
-        static int Main()
+        private static int Main()
         {
-            +
-                return (int) HostFactory.Run(new Program().Configure);
+            return (int) HostFactory.Run(new Program().Configure);
         }
     }
 }

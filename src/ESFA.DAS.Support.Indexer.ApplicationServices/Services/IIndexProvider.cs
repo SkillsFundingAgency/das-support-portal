@@ -9,5 +9,7 @@ namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
         void DeleteIndex(string name);
 
         void IndexDocuments<T>(string name, IEnumerable<T> documents) where T : class;
+
+        bool IndexExists(string indexName);
     }
 }

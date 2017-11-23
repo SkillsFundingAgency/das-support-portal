@@ -9,7 +9,6 @@ namespace ESFA.DAS.Support.Indexer.Infrastructure.Extensions
     {
         public static Task<T> DownloadAs<T>(this HttpClient client, Uri uri)
         {
-
             // I know I am firing this on another thread
             // to keep UI free from any smallest task like
             // preparing httpclient, setting headers
@@ -19,8 +18,8 @@ namespace ESFA.DAS.Support.Indexer.Infrastructure.Extensions
             // this helps us using excessive logging required for
             // debugging and diagnostics
 
-            return Task.Run(async () => {
-
+            return Task.Run(async () =>
+            {
                 // following parses url and makes sure
                 // it is a valid url
                 // there is no need for this to be done on 
@@ -34,17 +33,10 @@ namespace ESFA.DAS.Support.Indexer.Infrastructure.Extensions
 
                 var content = await response.Content.ReadAsStringAsync();
 
-                if ((int)response.StatusCode > 300)
-                {
-
-                    // it is good to receive error text details
-                    // not just reason phrase
-
+                if ((int) response.StatusCode > 300)
                     throw new InvalidOperationException(response.ReasonPhrase
                                                         + "\r\n" + content);
-                }
                 return JsonConvert.DeserializeObject<T>(content);
-
             });
         }
     }

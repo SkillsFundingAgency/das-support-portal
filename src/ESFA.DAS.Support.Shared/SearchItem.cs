@@ -1,7 +1,10 @@
-﻿namespace ESFA.DAS.Support.Shared
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ESFA.DAS.Support.Shared
 {
     public class SearchItem
     {
+        [Key]
         public string SearchId { get; set; }
 
         public string[] Keywords { get; set; }

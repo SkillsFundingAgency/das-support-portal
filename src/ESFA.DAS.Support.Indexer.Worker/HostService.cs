@@ -10,12 +10,12 @@ namespace ESFA.DAS.Support.Indexer.Worker
 {
     public class HostService : ServiceControl
     {
-        private readonly ITrigger _trigger;
+        private readonly CancellationTokenSource _cancel = new CancellationTokenSource();
         private readonly IIndexSearchItems _indexer;
-        readonly CancellationTokenSource _cancel = new CancellationTokenSource();
-        readonly LogWriter _log = HostLogger.Get<HostService>();
-        readonly string _testPhrase;
-        Task _task;
+        private readonly LogWriter _log = HostLogger.Get<HostService>();
+        private readonly string _testPhrase;
+        private readonly ITrigger _trigger;
+        private Task _task;
 
         public HostService(ITrigger trigger, IIndexSearchItems indexer)
         {
@@ -41,7 +41,7 @@ namespace ESFA.DAS.Support.Indexer.Worker
             return true;
         }
 
-        async Task Idle()
+        private async Task Idle()
         {
             if (_cancel.Token.IsCancellationRequested)
             {
@@ -52,14 +52,10 @@ namespace ESFA.DAS.Support.Indexer.Worker
             await Task.Yield();
 
             if (Debugger.IsAttached || _trigger.HasATriggerToRun())
-            {
                 _indexer.Run();
-            }
 
             if (Debugger.IsAttached)
-            {
                 _cancel.Cancel();
-            }
 
             await Task.Delay(1000);
             await Idle();
