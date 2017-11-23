@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ESFA.DAS.Support.Shared;
+using System.Threading.Tasks;
+using SFA.DAS.Support.Shared;
 
 namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public interface IGetSearchItemsFromASite
     {
-        IEnumerable<SearchItem> GetSearchItems(Uri collectionUri);
+        Task<IEnumerable<SearchItem>> GetSearchItems(Uri collectionUri);
     }
 }

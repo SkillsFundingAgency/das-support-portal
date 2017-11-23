@@ -1,10 +1,11 @@
 ﻿using System;
-using ESFA.DAS.Support.Shared;
+using System.Threading.Tasks;
+using SFA.DAS.Support.Shared;
 
 namespace ESFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public interface IGetSiteManifest
     {
-        SiteManifest GetSiteManifest(Uri siteUri);
+        Task<SiteManifest> GetSiteManifest(Uri siteUri);
     }
 }
