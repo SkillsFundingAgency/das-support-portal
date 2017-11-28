@@ -33,12 +33,10 @@
       <Setting name="LevyApiTenant" value="" />
       <Setting name="LevyTokenCertificate" value="" />
       <Setting name="LevyHttpClientBaseUrl" value="" />
-
       <Setting name="Support_Azure_Search_QueryKey" value="" />
       <Setting name="Support_Azure_Search_ServiceName" value="" />
       <Setting name="Support_SubSite_0" value="http://localhost:51274/" />
       <Setting name="Support_SubSite_1" value="http://localhost:19723/" />
-
       <Setting name="InstrumentationKey" value="" />
     </ConfigurationSettings>
     <Certificates>

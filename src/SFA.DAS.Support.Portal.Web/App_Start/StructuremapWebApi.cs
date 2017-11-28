@@ -16,11 +16,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Web.Http;
-using SFA.DAS.Portal.Web.DependencyResolution;
+using SFA.DAS.Support.Portal.Web.DependencyResolution;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Portal.Web.App_Start.StructuremapWebApi), "Start")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Support.Portal.Web.App_Start.StructuremapWebApi), "Start")]
 
-namespace SFA.DAS.Portal.Web.App_Start {
+namespace SFA.DAS.Support.Portal.Web.App_Start {
     public static class StructuremapWebApi {
         public static void Start() {
 			var container = StructuremapMvc.StructureMapDependencyScope.Container;

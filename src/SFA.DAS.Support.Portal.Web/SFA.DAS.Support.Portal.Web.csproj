@@ -446,11 +446,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Home\Index.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Search\Detail.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -466,7 +461,6 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
       <LastGenOutput>Index.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -512,7 +506,9 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Finance.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Health\Index.cshtml" />
+    <Content Include="Views\Health\Index.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
     <Content Include="Views\Health\EmployerUser.cshtml" />
     <Content Include="Views\Health\Accounts.cshtml" />
     <Content Include="Views\Challenge\Index.cshtml">

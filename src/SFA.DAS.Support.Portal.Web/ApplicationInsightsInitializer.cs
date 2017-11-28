@@ -6,7 +6,7 @@ namespace SFA.DAS.Support.Portal.Web
     {
         public void Initialize(ITelemetry telemetry)
         {
-            telemetry.Context.Properties["Application"] = "SFA.DAS.Portal.Web";
+            telemetry.Context.Properties["Application"] = "SFA.DAS.Support.Portal.Web";
         }
     }
 }

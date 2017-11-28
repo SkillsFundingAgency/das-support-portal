@@ -18,7 +18,7 @@
 using System.Web.Http.Dependencies;
 using StructureMap;
 
-namespace SFA.DAS.Portal.Web.DependencyResolution
+namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
     /// <summary>
     /// The structure map dependency resolver.

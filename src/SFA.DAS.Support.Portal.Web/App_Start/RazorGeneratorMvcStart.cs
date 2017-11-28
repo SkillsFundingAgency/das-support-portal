@@ -3,9 +3,9 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Portal.Web.RazorGeneratorMvcStart), "Start")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Support.Portal.Web.RazorGeneratorMvcStart), "Start")]
 
-namespace SFA.DAS.Portal.Web {
+namespace SFA.DAS.Support.Portal.Web {
     public static class RazorGeneratorMvcStart {
         public static void Start() {
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {

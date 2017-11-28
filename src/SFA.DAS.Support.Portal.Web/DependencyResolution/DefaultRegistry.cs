@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SFA.DAS.Portal.Web.DependencyResolution {
+namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
 	

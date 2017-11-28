@@ -39,13 +39,11 @@
       <Setting name="LevyApiTenant" />
       <Setting name="LevyTokenCertificate" />
       <Setting name="LevyHttpClientBaseUrl" />
-
       <Setting name="Support_Azure_Search_QueryKey" />
       <Setting name="Support_Azure_Search_ServiceName" />
       <Setting name="Support_SubSite_0" />
       <Setting name="Support_SubSite_1" />
-      
-      <Setting name="InstrumentationKey"/>
+      <Setting name="InstrumentationKey" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="SimpleEndpoint" protocol="http" port="80" />

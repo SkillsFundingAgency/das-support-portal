@@ -33,12 +33,10 @@
       <Setting name="LevyApiTenant" value="__LevyApiTenant__" />
       <Setting name="LevyTokenCertificate" value="__LevyTokenCertificate__" />
       <Setting name="LevyHttpClientBaseUrl" value="__LevyHttpClientBaseUrl__" />
-
       <Setting name="Support_Azure_Search_QueryKey" value="__AzureSearchQueryKey__" />
       <Setting name="Support_Azure_Search_ServiceName" value="__AzureSearchName__" />
       <Setting name="Support_SubSite_0" value="__SubSite0__" />
       <Setting name="Support_SubSite_1" value="__SubSite1__" />
-
       <Setting name="InstrumentationKey" value="__InstrumentationKey__" />
     </ConfigurationSettings>
     <Certificates>

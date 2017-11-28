@@ -8,8 +8,8 @@
     <ProjectGuid>8efb0eeb-33da-4b59-8b93-adcd0fef5798</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ESFA.DAS.Support.Indexer.CloudService</RootNamespace>
-    <AssemblyName>ESFA.DAS.Support.Indexer.CloudService</AssemblyName>
+    <RootNamespace>SFA.DAS.Support.Indexer.CloudService</RootNamespace>
+    <AssemblyName>SFA.DAS.Support.Indexer.CloudService</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>SFA.DAS.Support.Indexer.CloudService</Name>
   </PropertyGroup>
@@ -48,7 +48,7 @@
     <DiagnosticsConfiguration Include="SFA.DAS.Support.Indexer.WorkerContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DAS.Support.Indexer.Worker\SFA.DAS.Support.Indexer.Worker.csproj">
+    <ProjectReference Include="..\SFA.DAS.Support.Indexer.Worker\SFA.DAS.Support.Indexer.Worker.csproj">
       <Name>SFA.DAS.Support.Indexer.Worker</Name>
       <Project>{127e0cb4-7b8c-490e-8a38-233c21eb03be}</Project>
       <Private>True</Private>

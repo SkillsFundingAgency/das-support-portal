@@ -15,19 +15,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using SFA.DAS.Portal.Web.App_Start;
+using SFA.DAS.Support.Portal.Web.App_Start;
 
 using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(StructuremapMvc), "Start")]
 [assembly: ApplicationShutdownMethod(typeof(StructuremapMvc), "End")]
 
-namespace SFA.DAS.Portal.Web.App_Start {
+namespace SFA.DAS.Support.Portal.Web.App_Start {
 	using System.Web.Mvc;
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
-	using SFA.DAS.Portal.Web.DependencyResolution;
+	using SFA.DAS.Support.Portal.Web.DependencyResolution;
 
     using StructureMap;
     
