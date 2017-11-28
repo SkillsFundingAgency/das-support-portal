@@ -1,0 +1,59 @@
+﻿@using SFA.DAS.Portal.Web.Helpers
+@model SFA.DAS.Support.Portal.Web.ViewModels.AccountDetailViewModel
+@{
+    ViewBag.modelTitle = Model.Account.DasAccountName;
+    ViewBag.accountId = Model.Account.HashedAccountId;
+    ViewBag.dateRegistered = Model.Account.DateRegistered;
+    ViewBag.currentSection = "account";
+    ViewBag.currentPage = NavPages.TeamMembers;
+}
+
+@if (Model.Account != null)
+{
+    <h1>
+        Team members
+    </h1>
+    if (Model.Account.TeamMembers.Any())
+    {
+        <table>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Status</th>
+            </tr>
+            @foreach (var item in Model.Account.TeamMembers)
+            {
+                <tr>
+                    <td id="teamMemberName">
+                        @if (!string.IsNullOrEmpty(item.UserRef))
+                        {
+                            @Html.ActionLink(item.Name, "Detail", "Search", new { id = item.UserRef }, null)
+                        }
+                        else
+                        {
+                            @item.Name
+                        }
+                    </td>
+                    <td id="teamMemberEmail">
+                        @item.Email
+                    </td>
+                    <td id="teamMemberRole">
+                        @item.Role
+                    </td>
+                    <td id="teamMemberStatus">
+                        @AccountHelper.GetTeamMemberStatus(item.Status)
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No team members availables</p>
+    }
+}
+else
+{
+    <p>Account not found</p>
+}
