@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.modelTitle = "ABC Midlands";
+    ViewBag.accountId = "A1B2C";
+    ViewBag.currentSection = "account";
+    ViewBag.currentPage = "finance";
+}
+
+<h1 class="heading-xlarge">Payment details</h1>
+
+<dl>
+    <dt>Date</dt>
+    <dd>4 may 2017</dd>
+    <dt>Payment to</dt>
+    <dd>Active Learning &amp; Development Limited</dd>
+</dl>
+
+<table class="responsive">
+    <thead>
+        <tr>
+            <th colspan="2"></th>
+            <th class="highlight colgroup" scope="colgroup" colspan="2">Co-investment</th>
+            <th colspan="2"></th>
+        </tr>
+        <tr>
+            <th scope="col" class="tw-20">Course</th>
+            <th scope="col" class="numeric tw-20">Paid from levy</th>
+            <th scope="col" class="numeric tw-20 highlight">Government contribution</th>
+            <th scope="col" class="numeric tw-20 highlight">Employer contribution</th>
+            <th scope="col" class="numeric tw-15">Amount</th>
+            <th scope="col" class="tw-5"><span class="vh">Action</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td data-label="Course">Writing <span class="no-wrap">level 1</span></td>
+            <td class="numeric" data-label="Paid from levy">-£970</td>
+            <td class="numeric highlight" data-label="Government contribution">£0</td>
+            <td class="numeric highlight" data-label="Your contribution">£0</td>
+            <td class="numeric" data-label="Amount">-£970</td>
+            <td><a href="">Details</a></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr class="total">
+            <td data-label="Totals"> </td>
+            <td data-label="Paid from levy" class="total numeric no-wrap">-£970</td>
+            <td data-label="Government contribution" class="highlight total numeric no-wrap">£0</td>
+            <td data-label="Your contribution" class="highlight total numeric no-wrap">£0</td>
+            <td data-label="Amount" class="total numeric no-wrap">-£970</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,46 @@
+﻿@using Sfa.Das.Console.Web.Helpers
+@model Sfa.Das.Console.Web.ViewModels.AccountDetailViewModel
+@{
+    ViewBag.modelTitle = Model.Account?.DasAccountName;
+    ViewBag.accountId = Model.Account?.HashedAccountId;
+    ViewBag.dateRegistered = Model.Account?.DateRegistered;
+    ViewBag.currentSection = "account";
+    ViewBag.currentPage = NavPages.PayeSchemes;
+}
+
+@if (Model.Account != null)
+{
+    <h1>
+        PAYE Schemes
+    </h1>
+
+    if (Model.Account.PayeSchemes != null && Model.Account.PayeSchemes.Any())
+    {
+        <p>Added PAYE Schemes</p>
+
+        <table id="paye-schemes">
+            <tr>
+                <th scope="col">PAYE Ref</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date Added</th>
+            </tr>
+
+            @foreach (var payeScheme in Model.Account.PayeSchemes)
+            {
+                <tr>
+                    <td id="paye-ref">@payeScheme.Ref</td>
+                    <td id="paye-scheme-name">@payeScheme.Name</td>
+                    <td id="paye-scheme-added-date">@AccountHelper.ConvertDateTimeToDdmmyyyyFormat(payeScheme.AddedDate)</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p id="no-paye-schemes-found">No PAYE schemes availables</p>
+    }
+}
+else
+{
+    <p id="no-account-found">Account not found</p>
+}

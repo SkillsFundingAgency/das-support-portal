@@ -1,0 +1,93 @@
+﻿using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using FluentAssertions;
+using FluentAssertions.Mvc.Fakes;
+using MediatR;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.Portal.ApplicationServices.Queries;
+using SFA.DAS.Portal.ApplicationServices.Responses;
+using SFA.DAS.Portal.Core.Domain.Model;
+using SFA.DAS.Portal.Web;
+using SFA.DAS.Portal.Web.Controllers;
+using SFA.DAS.Portal.Web.Services;
+using SFA.DAS.Portal.Web.ViewModels;
+
+namespace SFA.DAS.Portal.UnitTests.Web.Controllers
+{
+    [TestFixture]
+    public sealed class SearchControllerTests
+    {
+        private SearchController _sut;
+        private Mock<ILog> _mockLogger;
+        private Mock<IMappingService> _mockMappingService;
+        private Mock<IMediator> _mockMediator;
+
+        [SetUp]
+        public void Init()
+        {
+            _mockLogger = new Mock<ILog>();
+            _mockMappingService = new Mock<IMappingService>();
+            _mockMediator = new Mock<IMediator>();
+
+            _sut = new SearchController(
+                _mockMappingService.Object,
+                _mockMediator.Object);
+        }
+
+        [Test]
+        public async Task ShouldSetDefaultSearchUrl()
+        {
+            var routes = new RouteCollection();
+
+            RouteConfig.RegisterRoutes(routes);
+
+            var context = new Mock<HttpContextBase>();
+
+            var response = new Mock<HttpResponseBase>();
+
+            response.Setup(x => x.ApplyAppPathModifier(It.IsAny<string>())).Returns((string url) => url);
+
+            context.SetupGet(x => x.Request).Returns(new FakeHttpRequest("/", "/"));
+            context.SetupGet(x => x.Response).Returns(response.Object);
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
+                .Returns(Task.FromResult(new EmployerUserResponse
+                {
+                    User = new EmployerUser
+                    {
+                        FirstName = "Joe",
+                        LastName = "Bloggs",
+                        Email = "joe@bloggs.com",
+                        IsActive = true,
+                        IsLocked = false
+                    },
+                    StatusCode = SearchResponseCodes.Success
+                }));
+            
+            _sut.Url = new UrlHelper(new RequestContext(context.Object, new RouteData()), routes);
+
+            var result = await _sut.Detail("112344", "Bob");
+            var vr = result as ViewResult;
+            var vm = vr.Model as DetailViewModel;
+
+            AssertionExtensions.Should(result).NotBeNull();
+
+            vm.SearchUrl.ShouldBeEquivalentTo("/search?SearchTerm=Bob");
+        }
+        [Test]
+        public async Task ShouldReturnPageNotFoundWhenNoUserRecordFound()
+        {
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
+                .Returns(Task.FromResult(new EmployerUserResponse()));
+
+            var result = await _sut.Detail("112344", "Bob");
+            var vr = result as HttpNotFoundResult;
+
+            AssertionExtensions.Should(vr).NotBeNull();
+        }
+    }
+}

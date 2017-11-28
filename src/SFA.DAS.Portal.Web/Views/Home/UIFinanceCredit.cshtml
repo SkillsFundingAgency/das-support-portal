@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.modelTitle = "ABC Midlands";
+    ViewBag.accountId = "A1B2C";
+    ViewBag.currentSection = "account";
+    ViewBag.currentPage = "finance";
+}
+
+<h1 class="heading-xlarge">Credit Details</h1>
+<p class="lede">Credit made on 1 Mar 2017.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th id="th-ps" scope="col">PAYE scheme</th>
+            <th id="th-ld" class="numeric" scope="col">Levy paid to HMRC</th>
+            <th id="th-ef" class="numeric" scope="col">English %</th>
+            <th id="th-tu" class="numeric" scope="col">10% Top up</th>
+            <th id="th-pi" class="numeric" scope="col">Paid in</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="responsive-tr">
+            <td headers="th-ps">
+                <span>777/AA00001</span>
+            </td>
+            <td headers="th-ld" class="numeric">
+                £10,000.00
+            </td>
+            <td headers="th-ef" class="numeric">
+                90.00%
+            </td>
+            <td headers="th-tu" class="numeric">
+                £900.00
+            </td>
+            <td headers="th-pi" class="numeric">
+                £9,900.00
+            </td>
+        </tr>
+        <tr class="total">
+            <th scope="row" colspan="4" id="th-total"><span class="vh">Total</span></th>
+            <td class="numeric" headers="th-total">£9,900.00</td>
+        </tr>
+    </tbody>
+</table>
