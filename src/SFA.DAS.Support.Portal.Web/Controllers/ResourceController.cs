@@ -42,7 +42,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Challenge(string id, string resourceId, string key, FormCollection formData)
+        public ActionResult Challenge(string id, string resourceId, string key, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
             var result = _repository.SubmitChallenge(resourceId, pairs);

@@ -17,10 +17,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
         public async Task<SearchResponse> Handle(SearchQuery message)
         {
-            return new SearchResponse
+            return await Task.FromResult(new SearchResponse
             {
                 Results = _repository.Search(message.Query)
-            };
+            });
         }
     }
 }

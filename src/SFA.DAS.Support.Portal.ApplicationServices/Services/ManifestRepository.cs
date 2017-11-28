@@ -184,7 +184,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 Task.WaitAll(task);
                 return task.Result;
             }
-            catch (Exception ex)
+            catch 
             {
                 return @"<h3 style='color:red'>There was a problem downloading this asset</h3>
 <div style='display:none'>{url}</div>";

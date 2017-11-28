@@ -45,7 +45,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             {
                 identity = _getCurrentIdentity.GetCurrentIdentity();
             }
-            catch (Exception e)
+            catch
             {
                 return "Anonymous user";
             }
@@ -91,7 +91,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             {
                 identity = _getCurrentIdentity.GetCurrentIdentity();
             }
-            catch (Exception e)
+            catch
             {
                 return "Anonymous user";
             }
