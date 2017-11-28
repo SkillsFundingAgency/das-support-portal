@@ -42,6 +42,14 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Indexer.Worker\SFA.DAS.Support.Indexer.Worker.csproj">
+      <Name>SFA.DAS.Support.Indexer.Worker</Name>
+      <Project>{127e0cb4-7b8c-490e-8a38-233c21eb03be}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>SFA.DAS.Support.Indexer.Worker</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Web\SFA.DAS.Support.Portal.Web.csproj">
       <Name>SFA.DAS.Support.Portal.Web</Name>
       <Project>{5b06a69d-8660-4d15-b6b1-6a7ddbaa5ce5}</Project>
@@ -52,10 +60,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SFA.DAS.Support.Indexer.WorkerContent\" />
     <Folder Include="SFA.DAS.Support.Portal.WebContent\" />
     <Folder Include="Configuration\" />
   </ItemGroup>
   <ItemGroup>
+    <DiagnosticsConfiguration Include="SFA.DAS.Support.Indexer.WorkerContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="SFA.DAS.Support.Portal.WebContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <!-- Import the target files for this project template -->

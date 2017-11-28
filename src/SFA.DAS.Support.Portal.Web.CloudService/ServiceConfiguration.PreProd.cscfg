@@ -43,10 +43,29 @@
       <Certificate name="WebSslCert" thumbprint="2E64CCFB6B2D5F6994E464DD6160F0DBAF412A0D" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
+  <Role name="SFA.DAS.Support.Indexer.Worker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="__StorageConnectionString__" />
+      <Setting name="LoggingRedisConnectionString" value="__LoggingRedisConnectionString__" />
+      <Setting name="EnvironmentName" value="__EnvironmentName__" />
+      <Setting name="Support_Azure_Search_AdminKey" value="__Search_AdminKey__" />
+      <Setting name="Support_Azure_Search_ServiceName" value="__Search_ServiceName__" />
+      <Setting name="Support_SubSite_0" value="__SubSite_0__" />
+      <Setting name="Support_SubSite_1" value="__SubSite_1__" />
+      <Setting name="Support_SubSite_2" value="__SubSite_2__" />
+      <Setting name="Support_SubSite_3" value="__SubSite_3__" />
+    </ConfigurationSettings>
+  </Role>
   <NetworkConfiguration>
     <VirtualNetworkSite name="__vnet__" />
     <AddressAssignments>
       <InstanceAddress roleName="SFA.DAS.Support.Portal.Web">
+        <Subnets>
+          <Subnet name="__subnet__" />
+        </Subnets>
+      </InstanceAddress>
+      <InstanceAddress roleName="SFA.DAS.Support.Indexer.Worker">
         <Subnets>
           <Subnet name="__subnet__" />
         </Subnets>
