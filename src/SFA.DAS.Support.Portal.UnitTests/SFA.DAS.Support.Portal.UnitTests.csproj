@@ -164,6 +164,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Controllers\AccountControllerTests.cs" />
     <Compile Include="Web\Controllers\SearchControllerTests.cs" />
+    <Compile Include="Web\Controllers\SharedControllerTests.cs" />
     <Compile Include="Web\ExtensionHelpers\HtmlAgilityPackExtensions.cs" />
     <Compile Include="Web\Helpers\AccountHelperTests.cs" />
     <Compile Include="Web\Helpers\ChallengeHelperTests.cs" />
