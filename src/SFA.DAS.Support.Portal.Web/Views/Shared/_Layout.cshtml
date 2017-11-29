@@ -1,0 +1,122 @@
+﻿@using System.Globalization
+@using SFA.DAS.EAS.Account.Api.Types
+@using System.Linq
+@using SFA.DAS.Support.Portal.Web.Models
+@{
+    if (ViewBag.dateRegistered != null)
+    {
+        ViewBag.dateRegisteredDatails = @", created " + @ViewBag.dateRegistered.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+    }
+}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>DAS Support</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="~/Content/apple-touch-icon.png">
+
+        <link rel="stylesheet" href="~/Content/dist/css/fonts.css">
+        <link rel="stylesheet" href="~/Content/dist/css/screen.css">
+        
+        @Html.Partial("_Analytics")
+    </head>
+
+    <body>
+
+    @Html.Action("Header", "Shared")
+
+    @if (!string.IsNullOrEmpty(ViewBag.modelTitle))
+    {
+        <div class="secondary-header">
+            <h1>
+                @ViewBag.modelTitle
+                @if (!string.IsNullOrEmpty(ViewBag.accountId))
+                {
+                    <span>Account ID @ViewBag.accountId @ViewBag.dateRegisteredDatails
+                </span>
+                }           
+            </h1>
+        </div>
+    }
+
+    @if (ViewBag.SubHeader != null)
+    {
+        <div class="secondary-header">
+            @Html.Raw(ViewBag.SubHeader)
+        </div>
+    }
+
+    <div id="content">
+    @if (ViewBag.SubNav != null && ViewBag.SubNav.Items != null && ViewBag.SubNav.Items.Length > 0)
+    {
+        <div class="sub-nav">
+            <ul role="menu">
+                @foreach (var item in ViewBag.SubNav.Items)
+                {
+                    <li><a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a></li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="sub-nav">
+            <ul role="menu">
+
+                @if (ViewBag.currentSection == "search")
+                {
+                    <li><a href="@Url.Action("Index", "Search")">User search</a></li>
+                }
+
+                @if (ViewBag.currentSection == "user")
+                {
+                    <li><a href="@Url.Action("Index", "Search")">User search</a></li>
+                }
+
+                @if (ViewBag.currentSection == "account")
+                {
+                    <li><a href="@Url.Action("Index", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.Overview ? "selected" : string.Empty)">Organisations</a></li>
+                    <li><a href="@Url.Action("PayeSchemes", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.PayeSchemes ? "selected" : string.Empty)">PAYE Schemes</a></li>
+                    <li><a href="@Url.Action("TeamMembers", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.TeamMembers ? "selected" : string.Empty)">Team members</a></li>
+                    <li>
+                        <a href="@Url.Action("Finance", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.Finance || ViewBag.currentPage == NavPages.Challenge ? "selected" : string.Empty)">Finance</a>
+                        @if (ViewBag.currentPage == NavPages.Finance || ViewBag.currentPage == NavPages.PayeSchemeDetails)
+                        {
+                            var payePosition = -1;
+                            if (ViewBag.PayePosition != null)
+                            {
+                                payePosition = int.Parse(ViewBag.PayePosition);
+                            }
+
+                            <ul>
+                                @{ int count = 0; }
+                                @foreach (var payeScheme in ViewBag.payeSchemes)
+                                {
+                                    <li><a href="@Url.Action("PayeSchemeLevySubmissions", "Account", new {accountId = payeScheme.DasAccountId, payePosition = count})" class="@(payePosition == count ? "selected" : string.Empty)">@payeScheme.Ref.ToString() levy declarations</a></li>
+                                    count++;
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+
+    }
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+                integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+                crossorigin="anonymous"></script>
+
+        <script src="~/Content/dist/js/app.min.js"></script>
+
+    </body>
+</html>

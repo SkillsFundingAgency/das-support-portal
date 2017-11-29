@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="SFA.DAS.Support.Indexer.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
+  <WorkerRole name="SFA.DAS.Support.Indexer.Worker" vmsize="Standard_D2_v2">
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+
+      <Setting name="LoggingRedisConnectionString" />
+      <Setting name="EnvironmentName" />
+      <Setting name="Support_Azure_Search_AdminKey" />
+      <Setting name="Support_Azure_Search_ServiceName" />
+      <Setting name="Support_SubSite_0" />
+      <Setting name="Support_SubSite_1" />
+      <Setting name="Support_SubSite_2" />
+      <Setting name="Support_SubSite_3" />
+    </ConfigurationSettings>
+  </WorkerRole>
+</ServiceDefinition>

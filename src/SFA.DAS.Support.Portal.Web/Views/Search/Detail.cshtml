@@ -1,0 +1,29 @@
+﻿@model SFA.DAS.Support.Portal.Web.ViewModels.DetailViewModel
+@{
+    ViewBag.modelTitle = $"{Model.User.FirstName} {Model.User.LastName}";
+    ViewBag.currentSection = "user";
+    ViewBag.currentPage = "overview";
+}
+
+    <h1>Overview</h1>
+
+    @if (Model.User != null)
+    {
+        <dl>
+
+            <dt>Name:</dt>
+            <dd>@Model.User.FirstName @Model.User.LastName</dd>
+
+
+            <dt>Email:</dt>
+            <dd><a href="mailto:@Model.User.Email">@Model.User.Email</a></dd>
+
+            <dt>Status:</dt>
+            <dd>@Model.User.Status</dd>
+
+        </dl>
+    }
+    else
+    {
+        <p>User not found</p>
+    }
