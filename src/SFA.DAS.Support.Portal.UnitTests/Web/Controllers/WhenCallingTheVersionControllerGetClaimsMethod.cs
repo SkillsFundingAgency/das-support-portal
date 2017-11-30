@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
-    public class WhenCallingTheGetClaimsMethod : WithAPreparedVersionController
+    public class WhenCallingTheVersionControllerGetClaimsMethod : WithAPreparedVersionController
     {
         [Test]
         public void ItShouldReturnTheListOfUserClaims()

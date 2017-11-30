@@ -164,9 +164,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Controllers\AccountControllerTests.cs" />
     <Compile Include="Web\Controllers\SearchControllerTests.cs" />
-    <Compile Include="Web\Controllers\WhenCallingTheGetClaimsMethod.cs" />
-    <Compile Include="Web\Controllers\WhenCallingTheGetGroupsMethod.cs" />
-    <Compile Include="Web\Controllers\WhenCallingTheGetTestMethod.cs" />
+    <Compile Include="Web\Controllers\WhenCallingTheVersionControllerGetClaimsMethod.cs" />
+    <Compile Include="Web\Controllers\WhenCallingTheVersionControllerGetGroupsMethod.cs" />
+    <Compile Include="Web\Controllers\WhenCallingTheVersionControllerGetTestMethod.cs" />
     <Compile Include="Web\Controllers\WhenCallingTheHomeControllerIndexMethod.cs" />
     <Compile Include="Web\Controllers\WhenCallingTheVersionControllerGetMethod.cs" />
     <Compile Include="Web\Controllers\WhenCallingTheVersionControllerManifestMethod.cs" />

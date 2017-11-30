@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
-    public class WhenCallingTheGetTestMethod : WithAPreparedVersionController
+    public class WhenCallingTheVersionControllerGetTestMethod : WithAPreparedVersionController
     {
         [Test]
         public void ItShouldReturnTrue()

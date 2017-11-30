@@ -1,12 +1,13 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [AllowAnonymous]
     public sealed class ErrorController : Controller
     {
 
-        // GET: Error
         [AllowAnonymous]
         public ViewResult BadRequest()
         {

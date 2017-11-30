@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
-    public class WhenCallingTheGetGroupsMethod : WithAPreparedVersionController
+    public class WhenCallingTheVersionControllerGetGroupsMethod : WithAPreparedVersionController
     {
         [Test]
         public void ItShouldReturnThelistOfGroups()
