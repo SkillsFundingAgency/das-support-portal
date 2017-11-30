@@ -6,30 +6,30 @@ using SFA.DAS.Support.Portal.Web.ViewModels;
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
     [TestFixture]
-    public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAController<SharedController>
+    public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<SharedController>
     {
 
         [SetUp]
         public override void Setup()
         {
             base.Setup();
-            _actionResultResponse = Unit.Header();
+            ActionResultResponse = Unit.Header();
         }
 
         [Test]
         public void ItShouldReturnAPartialHeaderView()
         {
-            Assert.IsInstanceOf<PartialViewResult>(_actionResultResponse);
+            Assert.IsInstanceOf<PartialViewResult>(ActionResultResponse);
 
             var expected = "_Header";
-            Assert.AreEqual(expected, (_actionResultResponse as PartialViewResult).ViewName);
+            Assert.AreEqual(expected, (ActionResultResponse as PartialViewResult).ViewName);
         }
 
         [Test]
         public void ItShouldReturnAUsernameInTheViewModel()
         {
-            Assert.IsInstanceOf<HeaderViewModel>((_actionResultResponse as PartialViewResult).Model);
-            Assert.IsNotNull(((HeaderViewModel)(_actionResultResponse as PartialViewResult).Model).Username);
+            Assert.IsInstanceOf<HeaderViewModel>((ActionResultResponse as PartialViewResult).Model);
+            Assert.IsNotNull(((HeaderViewModel)(ActionResultResponse as PartialViewResult).Model).Username);
         }
     }
 }

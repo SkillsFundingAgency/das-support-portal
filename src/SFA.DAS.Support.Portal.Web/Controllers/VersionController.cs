@@ -56,7 +56,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Authorize]
         public IEnumerable<string[]> GetGroups()
         {
-            foreach (IdentityReference group in System.Web.HttpContext.Current.Request.LogonUserIdentity.Groups)
+            foreach (IdentityReference group in System.Web.HttpContext.Current?.Request?.LogonUserIdentity?.Groups?? new IdentityReferenceCollection())
             {
                 yield return new string[] {group.Value, group.Translate(typeof(NTAccount)).ToString()};
             }
@@ -66,7 +66,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Authorize]
         public IEnumerable<Claim> GetClaims()
         {
-            return System.Web.HttpContext.Current.Request.LogonUserIdentity.Claims;
+            return System.Web.HttpContext.Current?.Request?.LogonUserIdentity?.Claims?? new List<Claim>();
         }
 
         [Route("api/test")]
@@ -75,11 +75,5 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             return true;
         }
-    }
-
-    public class VersionInformation
-    {
-        public string AssemblyVersion { get; set; }
-        public string Version { get; set; }
     }
 }
