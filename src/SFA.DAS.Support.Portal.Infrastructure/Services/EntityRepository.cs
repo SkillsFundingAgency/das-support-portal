@@ -7,9 +7,9 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
 {
     public class EntityRepository : IEntityRepository
     {
-        private readonly IAzureSearchProvider _provider;
+        private readonly ISearchProvider _provider;
 
-        public EntityRepository(IAzureSearchProvider provider)
+        public EntityRepository(ISearchProvider provider)
         {
             _provider = provider;
         }

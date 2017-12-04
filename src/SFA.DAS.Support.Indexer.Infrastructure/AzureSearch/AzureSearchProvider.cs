@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 namespace SFA.DAS.Support.Indexer.Infrastructure.AzureSearch
 {
@@ -16,7 +17,7 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.AzureSearch
             _client = client;
         }
 
-        public void CreateIndex<T>(string name)
+        public void CreateIndex<T>(string name) where T : class
         {
             var definition = new Index
             {
@@ -77,5 +78,11 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.AzureSearch
 
             return exists;
         }
+
+        public void CreateIndexAlias(string newIndexName, string aliasName)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
