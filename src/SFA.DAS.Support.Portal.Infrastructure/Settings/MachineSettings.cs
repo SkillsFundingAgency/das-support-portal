@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using SFA.DAS.Support.Portal.Core.Services;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
+    [ExcludeFromCodeCoverage]
     public sealed class MachineSettings : IProvideSettings
     {
         private readonly string _prefix;

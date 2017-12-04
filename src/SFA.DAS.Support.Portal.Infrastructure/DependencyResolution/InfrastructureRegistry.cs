@@ -13,9 +13,11 @@ using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.TokenService.Api.Client;
 using StructureMap.Configuration.DSL;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public class InfrastructureRegistry : Registry
     {
         public InfrastructureRegistry()

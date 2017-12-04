@@ -6,9 +6,11 @@ using SFA.DAS.Support.Portal.Web.Logging;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.Settings;
 using StructureMap.Configuration.DSL;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public class WebRegistry : Registry
     {
         public WebRegistry()

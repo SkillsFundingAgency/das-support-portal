@@ -1,8 +1,10 @@
-﻿using System.Web;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.Web.Logging
 {
+    [ExcludeFromCodeCoverage]
     public sealed class RequestContext : IRequestContext
     {
         public RequestContext(HttpContextBase context)

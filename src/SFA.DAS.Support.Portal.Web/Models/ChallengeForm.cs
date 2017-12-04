@@ -1,7 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.Web.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ChallengeForm
     {
         public string Redirect { get; set; }

@@ -174,6 +174,7 @@
     <Compile Include="Web\Controllers\WhenTestingAnMvcControllerOfType.cs" />
     <Compile Include="Web\Controllers\WhenCallingTheSharedControllerHeaderMethod.cs" />
     <Compile Include="Web\Controllers\WhenTestingAnApiControllerOfType.cs" />
+    <Compile Include="Web\Controllers\WhenTestingTheChallengeController.cs" />
     <Compile Include="Web\Controllers\WithAPreparedVersionController.cs" />
     <Compile Include="Web\ExtensionHelpers\HtmlAgilityPackExtensions.cs" />
     <Compile Include="Web\Helpers\AccountHelperTests.cs" />

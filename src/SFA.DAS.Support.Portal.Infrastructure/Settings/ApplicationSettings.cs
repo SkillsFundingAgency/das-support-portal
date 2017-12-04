@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Azure;
 using SFA.DAS.Support.Portal.Core.Configuration;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ApplicationSettings : IConfigurationSettings
     {
         public IEnumerable<Uri> ElasticServerUrls => GetElasticSearchIps();

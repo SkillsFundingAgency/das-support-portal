@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.EAS.Account.Api.Types;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Core.Domain.Model
 {
+    [ExcludeFromCodeCoverage]
     public class UserSummary
     {
         public string Id { get; set; }

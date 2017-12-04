@@ -2,9 +2,11 @@
 using System.Security.Cryptography.X509Certificates;
 using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.TokenService.Api.Client;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
+    [ExcludeFromCodeCoverage]
     public class LevySubmissionsApiConfiguration : ITokenServiceApiClientConfiguration
     {
         private readonly IProvideSettings _settings;
