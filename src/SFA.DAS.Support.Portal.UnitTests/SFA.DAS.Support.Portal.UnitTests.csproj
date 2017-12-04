@@ -161,6 +161,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Helpers\PayeSchemeObfuscatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Controllers\AccountControllerTests.cs" />
     <Compile Include="Web\Controllers\SearchControllerTests.cs" />
