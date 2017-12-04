@@ -12,6 +12,7 @@ using SFA.DAS.Support.Portal.Web.Services;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
+    [TestFixture]
     public class
         WhenProvidingAnIncorrectChallengResponseToTheChallengeController : WhenTestingAnMvcControllerOfType<
             ChallengeController>

@@ -115,6 +115,7 @@
     <Compile Include="Crytpo\CryptoTests.cs" />
     <Compile Include="Handlers\AccountDetailHandlerTests.cs" />
     <Compile Include="Handlers\AccountDetailTeamMemberHandlerTests.cs" />
+    <Compile Include="Handlers\AccountFinanceHandlerTests.cs" />
     <Compile Include="Handlers\AccountLevySubmissionsHandlerTests.cs" />
     <Compile Include="Handlers\ChallengePermissionsHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserDetailHandlerTests.cs" />

@@ -175,6 +175,7 @@
     <Compile Include="Web\Controllers\WhenCallingTheSharedControllerHeaderMethod.cs" />
     <Compile Include="Web\Controllers\WhenTestingAnApiControllerOfType.cs" />
     <Compile Include="Web\Controllers\WhenTestingTheChallengeController.cs" />
+    <Compile Include="Web\Controllers\WhenTestingTheHealthController.cs" />
     <Compile Include="Web\Controllers\WithAPreparedVersionController.cs" />
     <Compile Include="Web\ExtensionHelpers\HtmlAgilityPackExtensions.cs" />
     <Compile Include="Web\Helpers\AccountHelperTests.cs" />
@@ -199,6 +200,10 @@
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
       <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
       <Name>SFA.DAS.Support.Portal.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Portal.Health\SFA.DAS.Support.Portal.Health.csproj">
+      <Project>{FC05B066-5813-403D-BCD7-ABC01EE6041B}</Project>
+      <Name>SFA.DAS.Support.Portal.Health</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Web\SFA.DAS.Support.Portal.Web.csproj">
       <Project>{5B06A69D-8660-4D15-B6B1-6A7DDBAA5CE5}</Project>
