@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class InfrastructureRegistry : Registry
     {
         public InfrastructureRegistry()

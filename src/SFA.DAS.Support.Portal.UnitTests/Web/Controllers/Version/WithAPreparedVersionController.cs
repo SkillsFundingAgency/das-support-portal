@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Web;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Controllers;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
 {
     public class WithAPreparedVersionController : WhenTestingAnApiControllerOfType<VersionController>
     {

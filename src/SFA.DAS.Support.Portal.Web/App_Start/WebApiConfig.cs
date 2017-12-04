@@ -3,7 +3,7 @@ using System.Web.Http;
 
 namespace SFA.DAS.Support.Portal.Web
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)

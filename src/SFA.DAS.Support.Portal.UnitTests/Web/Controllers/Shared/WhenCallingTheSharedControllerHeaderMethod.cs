@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Shared
 {
     [TestFixture]
     public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<SharedController>

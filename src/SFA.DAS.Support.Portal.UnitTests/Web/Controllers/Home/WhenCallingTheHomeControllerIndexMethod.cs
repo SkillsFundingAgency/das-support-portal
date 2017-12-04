@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.Web.Controllers;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Home
 {
     public class WhenCallingTheHomeControllerIndexMethod : WhenTestingAnMvcControllerOfType<HomeController>
     {

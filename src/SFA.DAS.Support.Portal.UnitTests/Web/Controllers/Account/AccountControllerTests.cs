@@ -13,12 +13,11 @@ using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
-using SFA.DAS.Support.Portal.Core.Domain.Model;
 using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Account
 {
     [TestFixture]
     public sealed class AccountControllerTests
@@ -61,7 +60,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
                 .Returns(true);
 
             _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountFinanceQuery>()))
-                        .Returns(Task.FromResult(new AccountFinanceResponse() { Account = new Account(), Balance = 10m, StatusCode = SearchResponseCodes.SearchFailed }));
+                        .Returns(Task.FromResult(new AccountFinanceResponse() { Account = new Core.Domain.Model.Account(), Balance = 10m, StatusCode = SearchResponseCodes.SearchFailed }));
 
             var result = await _sut.Finance("vj7gbm", "Bob");
             var vr = result as HttpNotFoundResult;
@@ -78,7 +77,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
                 .Returns(true);
 
             _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountLevySubmissionsQuery>()))
-                .Returns(Task.FromResult(new AccountLevySubmissionsResponse { Account = new Account {PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate} } } }));
+                .Returns(Task.FromResult(new AccountLevySubmissionsResponse { Account = new Core.Domain.Model.Account {PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate} } } }));
 
             var result = await _sut.PayeSchemeLevySubmissions("1", "1");
             var vr = result as ViewResult;
@@ -96,7 +95,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
                 .Returns(true);
 
             _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountLevySubmissionsQuery>()))
-                .Returns(Task.FromResult(new AccountLevySubmissionsResponse { Account = new Account { PayeSchemes = new List<PayeSchemeViewModel> { new PayeSchemeViewModel { Name = name } } } }));
+                .Returns(Task.FromResult(new AccountLevySubmissionsResponse { Account = new Core.Domain.Model.Account { PayeSchemes = new List<PayeSchemeViewModel> { new PayeSchemeViewModel { Name = name } } } }));
 
             var result = await _sut.PayeSchemeLevySubmissions("1", "1");
             var vr = result as ViewResult;

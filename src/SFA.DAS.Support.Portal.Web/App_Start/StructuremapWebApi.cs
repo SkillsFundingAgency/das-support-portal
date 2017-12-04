@@ -22,7 +22,7 @@ using SFA.DAS.Support.Portal.Web.DependencyResolution;
 [assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Support.Portal.Web.App_Start.StructuremapWebApi), "Start")]
 
 namespace SFA.DAS.Support.Portal.Web.App_Start {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public static class StructuremapWebApi {
         public static void Start() {
 			var container = StructuremapMvc.StructureMapDependencyScope.Container;

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Core.Domain.Model
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class UserSummary
     {
         public string Id { get; set; }

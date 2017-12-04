@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.Support.Shared
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class ResultPage<T>
     {
         [JsonProperty("_links")]

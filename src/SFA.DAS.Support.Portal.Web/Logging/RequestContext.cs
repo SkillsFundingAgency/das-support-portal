@@ -4,7 +4,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.Web.Logging
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public sealed class RequestContext : IRequestContext
     {
         public RequestContext(HttpContextBase context)

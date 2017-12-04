@@ -32,7 +32,7 @@ namespace SFA.DAS.Support.Portal.Web.App_Start {
     using StructureMap;
     using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public static class StructuremapMvc {
         #region Public Properties
 

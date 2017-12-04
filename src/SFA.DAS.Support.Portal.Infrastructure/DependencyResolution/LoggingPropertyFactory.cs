@@ -10,7 +10,7 @@ using SFA.DAS.Support.Portal.Core.Services;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class LoggingPropertyFactory : ILoggingPropertyFactory
     {
         private readonly IRoleSettings _roleSettings;

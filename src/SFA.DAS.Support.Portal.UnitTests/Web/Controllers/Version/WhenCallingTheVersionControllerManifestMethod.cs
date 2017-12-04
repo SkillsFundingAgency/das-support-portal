@@ -5,7 +5,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Shared;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
 {
     public class WhenCallingTheVersionControllerManifestMethod : WithAPreparedVersionController
     {

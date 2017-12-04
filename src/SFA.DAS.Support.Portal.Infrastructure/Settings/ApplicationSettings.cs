@@ -8,7 +8,7 @@ using SFA.DAS.Support.Portal.Core.Configuration;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public sealed class ApplicationSettings : IConfigurationSettings
     {
         public IEnumerable<Uri> ElasticServerUrls => GetElasticSearchIps();

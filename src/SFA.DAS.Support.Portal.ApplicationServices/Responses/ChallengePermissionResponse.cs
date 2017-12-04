@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Responses
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class ChallengePermissionResponse
     {
         public bool IsValid { get; set; }

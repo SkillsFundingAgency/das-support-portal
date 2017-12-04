@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class DefaultRegistry : Registry {
         #region Constructors and Destructors
 

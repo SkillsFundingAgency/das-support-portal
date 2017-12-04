@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using StructureMap.TypeRules;
     using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class ControllerConvention : IRegistrationConvention {
         #region Public Methods and Operators
 

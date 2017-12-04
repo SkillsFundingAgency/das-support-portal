@@ -10,7 +10,7 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.Services;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Challenge
 {
     [TestFixture]
     public class

@@ -29,7 +29,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     /// <summary>
     /// The structure map dependency scope.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class StructureMapDependencyScope : ServiceLocatorImplBase {
         #region Constants and Fields
 

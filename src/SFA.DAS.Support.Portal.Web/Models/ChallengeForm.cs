@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.Web.Models
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class ChallengeForm
     {
         public string Redirect { get; set; }

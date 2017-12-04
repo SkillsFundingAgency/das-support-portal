@@ -7,7 +7,7 @@ using StructureMap.Graph;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public sealed class ApplicationServicesRegistry : Registry
     {
         public ApplicationServicesRegistry()

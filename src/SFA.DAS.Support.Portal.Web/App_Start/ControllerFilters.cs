@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Web
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class ControllerFilters
     {
         private static readonly string AdfsMetadata = CloudConfigurationManager.GetSetting("ida_ADFSMetadata");

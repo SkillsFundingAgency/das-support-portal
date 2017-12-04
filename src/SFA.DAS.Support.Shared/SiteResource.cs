@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Shared
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class SiteResource
     {
         public string ResourceKey { get; set; }

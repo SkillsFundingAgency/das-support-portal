@@ -24,7 +24,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     /// <summary>
     /// The structure map dependency resolver.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class StructureMapWebApiDependencyResolver : StructureMapWebApiDependencyScope, IDependencyResolver
     {
         #region Constructors and Destructors

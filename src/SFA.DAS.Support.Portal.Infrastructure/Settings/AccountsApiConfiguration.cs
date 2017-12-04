@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class AccountsApiConfiguration : IAccountApiConfiguration
     {
         private readonly IProvideSettings _settings;

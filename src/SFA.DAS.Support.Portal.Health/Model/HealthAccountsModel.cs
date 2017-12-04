@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Portal.Health.Model
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class HealthAccountsModel
     {
         public Status ApiStatus { get; set; }

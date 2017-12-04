@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SFA.DAS.Support.Portal.Health;
 using SFA.DAS.Support.Portal.Web.Controllers;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Health
 {
     [TestFixture]
     public class WhenTestingTheHealthController : WhenTestingAnMvcControllerOfType<HealthController> 
@@ -21,7 +21,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
         [Test]
         public async Task ItShouldNotThrowAndExceptionWhenCallingTheIndexMethod()
         {
-            var healthModel = new Health.Model.HealthModel();
+            var healthModel = new Portal.Health.Model.HealthModel();
             _healthService.Setup(h => h.CreateHealthModel()).Returns(Task.FromResult(healthModel));
             Assert.DoesNotThrow(async () => ActionResultResponse = await Unit.Index());
             

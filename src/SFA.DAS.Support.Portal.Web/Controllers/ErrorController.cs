@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     [AllowAnonymous]
     public sealed class ErrorController : Controller
     {

@@ -26,7 +26,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using StructureMap;
     using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public static class IoC {
         public static IContainer Initialize() {
             return new Container(c =>

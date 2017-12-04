@@ -10,7 +10,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.Web
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class MvcApplication : System.Web.HttpApplication
     {
 

@@ -200,6 +200,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AccountRepositoryTests.cs" />
     <Compile Include="Repository\ChallengeRepositoryTests.cs" />

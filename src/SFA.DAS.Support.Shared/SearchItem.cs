@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Shared
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class SearchItem
     {
         [Key]

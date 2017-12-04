@@ -6,7 +6,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.Web
 {
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public partial class Startup
     {
         public void Configuration(IAppBuilder app)

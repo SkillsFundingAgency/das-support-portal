@@ -28,7 +28,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     /// <summary>
     /// The structure map web api dependency scope.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public class StructureMapWebApiDependencyScope : StructureMapDependencyScope, IDependencyScope
     {
         public StructureMapWebApiDependencyScope(IContainer container)
