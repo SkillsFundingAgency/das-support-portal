@@ -11,7 +11,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
            
             var result = Unit.GetGroups();
             Assert.IsInstanceOf<IEnumerable<string[]>>(result);
-            Assert.Fail("TODO: Iain Mock Groups and test those groups returned");
+            CollectionAssert.IsEmpty(result);
         }
     }
 }

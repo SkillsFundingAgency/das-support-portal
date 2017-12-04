@@ -9,13 +9,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
     {
       
 
-        [SetUp]
-        public override void Setup()
-        {
-            MockManifestRepository = new Mock<IManifestRepository>();
-            MockLogger = new Mock<NLog.Logger.ILog>();
-            Unit = new VersionController(MockManifestRepository.Object, MockLogger.Object);
-        }
+        
 
         [Test]
         public void ItShouldReturnVersionInformation()

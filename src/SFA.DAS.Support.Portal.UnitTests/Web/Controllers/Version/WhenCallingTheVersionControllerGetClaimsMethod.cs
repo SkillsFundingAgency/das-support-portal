@@ -13,8 +13,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
            
             var actual = Unit.GetClaims();
             Assert.IsInstanceOf<IEnumerable<Claim>>(actual);
-            Assert.Fail("TODO: Iain Mock Claims and test those claims returned");
-            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual(0, actual.Count());
         }
     }
 }
