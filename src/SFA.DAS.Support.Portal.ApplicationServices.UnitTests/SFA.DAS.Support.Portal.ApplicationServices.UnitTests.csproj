@@ -46,6 +46,9 @@
     <Reference Include="HMRC.ESFA.Levy.Api.Types, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HMRC.ESFA.Levy.Api.Types.1.0.30\lib\net452\HMRC.ESFA.Levy.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.2.1.0\lib\net45\MediatR.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.13.8.999, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
@@ -117,6 +120,8 @@
     <Compile Include="Handlers\AccountDetailTeamMemberHandlerTests.cs" />
     <Compile Include="Handlers\AccountFinanceHandlerTests.cs" />
     <Compile Include="Handlers\AccountLevySubmissionsHandlerTests.cs" />
+    <Compile Include="Handlers\AccountPayeSchemesHandlerTests.cs" />
+    <Compile Include="Handlers\ChallengeHandlerTests.cs" />
     <Compile Include="Handlers\ChallengePermissionsHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserDetailHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserSearchHandlerTests.cs" />
