@@ -364,13 +364,14 @@
     <Compile Include="App_Start\ControllerFilters.cs" />
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ChallengeController.cs" />
     <Compile Include="Controllers\IWindowsLogonIdentityProvider.cs" />
     <Compile Include="Controllers\VersionInformation.cs" />
+    <Compile Include="Controllers\WindowsLogonIdentityProvider.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyScope.cs" />
     <Compile Include="Models\ChallengeForm.cs" />

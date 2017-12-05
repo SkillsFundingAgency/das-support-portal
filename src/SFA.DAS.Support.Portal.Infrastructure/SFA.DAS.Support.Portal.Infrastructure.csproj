@@ -162,6 +162,7 @@
     <Compile Include="Services\DocuentExtensions.cs" />
     <Compile Include="Services\EntityRepository.cs" />
     <Compile Include="Services\FormMapper.cs" />
+    <Compile Include="Services\IAzureSearchProvider.cs" />
     <Compile Include="Services\WebDownloader.cs" />
     <Compile Include="Settings\AppConfigSettingsProvider.cs" />
     <Compile Include="Settings\ApplicationSettings.cs" />

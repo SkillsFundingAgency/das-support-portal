@@ -122,6 +122,7 @@
     <Compile Include="Services\Crypto.cs" />
     <Compile Include="Services\DatetimeService.cs" />
     <Compile Include="Services\IChallengeService.cs" />
+    <Compile Include="Services\ICrypto.cs" />
     <Compile Include="Services\IDatetimeService.cs" />
     <Compile Include="Services\IDownload.cs" />
     <Compile Include="Services\IFormMapper.cs" />
