@@ -8,7 +8,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Extensions
 {
     public static class HttpClientExtensions
     {
-        public static Task<T> DownloadAs<T>(this HttpClient client, Uri uri) where T : class
+        public static async Task<T> DownloadAs<T>(this HttpClient client, Uri uri) where T : class
         {
 
             // I know I am firing this on another thread
@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Extensions
             // this helps us using excessive logging required for
             // debugging and diagnostics
 
-            return Task.Run(async () => {
+            
 
                 // following parses url and makes sure
                 // it is a valid url
@@ -47,13 +47,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Extensions
                 }
                 return JsonConvert.DeserializeObject<T>(content);
 
-            });
+            //});
         }
 
-        public static Task<string> Download(this HttpClient client, Uri uri)
+        public static async Task<string> Download(this HttpClient client, Uri uri)
         {
-            return Task.Run(async () =>
-            {
+            //return Task.Run(async () =>
+            //{
 
                 // following parses url and makes sure
                 // it is a valid url
@@ -79,7 +79,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Extensions
                     //                                    + "\r\n" + content);
                 }
                 return content;
-            });
+            //});
         }
     }
 }
