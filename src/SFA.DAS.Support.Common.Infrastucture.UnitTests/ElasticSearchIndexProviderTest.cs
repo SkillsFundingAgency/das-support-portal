@@ -28,7 +28,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         private const string _aliasName = "DummyAlias";
 
         [SetUp]
-        public void Satup()
+        public void Setup()
         {
             _loggerMock = new Mock<ILog>();
             _clientMock = new Mock<IElasticsearchCustomClient>();
