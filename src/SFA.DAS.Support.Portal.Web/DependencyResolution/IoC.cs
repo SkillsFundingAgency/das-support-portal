@@ -21,7 +21,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution;
 using SFA.DAS.Support.Portal.Core.DependencyResolution;
 using SFA.DAS.Support.Portal.Health;
 using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
-using SFA.DAS.Support.Portal.Web.DependencyResolution;
+
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using StructureMap;

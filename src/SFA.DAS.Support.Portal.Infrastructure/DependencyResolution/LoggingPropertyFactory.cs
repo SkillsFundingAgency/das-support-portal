@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Security.Claims;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Core.Services;
+using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {

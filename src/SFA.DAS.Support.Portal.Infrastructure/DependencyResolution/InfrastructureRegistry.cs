@@ -13,6 +13,9 @@ using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.TokenService.Api.Client;
 using StructureMap.Configuration.DSL;
+using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Common.Infrastucture.Settings;
+using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
@@ -61,13 +64,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<ILevySubmissionsRepository>().Use<LevySubmissionsRepository>();
             For<IChallengeRepository>().Use<ChallengeRepository>();
             For<IHmrcClientConfiguration>().Use<HmrcClientConfiguration>();
-            For<IAzureSearchSettings>().Use<AzureSearchSettings>();
-            For<IAzureSearchProvider>().Use<AzureSearchProvider>();
-            For<ISearchIndexClient>().Use("", c =>
-            {
-                var settings = c.GetInstance<IAzureSearchSettings>();
-                return new SearchIndexClient(settings.ServiceName, settings.IndexName, new SearchCredentials(settings.QueryApiKey));
-            });
+
+            For<ISearchSettings>().Use<ElasticSearchSettings>();
+            For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
+            For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
+            For<ISearchProvider>().Use(x => new ElasticSearchProvider(x.GetInstance<IElasticsearchCustomClient>(), x.GetInstance<ISearchSettings>().IndexName));
+
+
             For<IEntityRepository>().Use<EntityRepository>();
             For<IDownload>().Use<WebDownloader>();
             For<IFormMapper>().Use<FormMapper>();
