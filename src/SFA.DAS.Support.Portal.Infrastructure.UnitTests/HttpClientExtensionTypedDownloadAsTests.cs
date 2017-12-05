@@ -2,49 +2,52 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using SFA.DAS.Support.Portal.Infrastructure.Extensions;
-using System.Web;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {
     [TestFixture]
-    public class HttpClientExtensionStringDownloadTests
+    public class HttpClientExtensionTypedDownloadAsTests
     {
         private MockHttpMessageHandler _mockHttpMessageHandler;
         private HttpClient _httpClient;
         private Uri _testUri = new Uri("http://localost/api/user/1234");
         private string _validTestResponseData;
         private string _emptyJsonContent;
+        private TestType _testType;
 
         [SetUp]
         public void Setup()
         {
             _emptyJsonContent = "{}";
-            _validTestResponseData = "{'name' : 'Test McGee'}";
-
-
+            _testType = new TestType();
+            _validTestResponseData = JsonConvert.SerializeObject(_testType);
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
         }
 
         [Test]
-        public async Task ItShouldDownloadJsonSuccessfully()
+        public async Task ItShouldDownloadJsonAndDeserializeSuccessfully()
         {
             // Arrange
             _mockHttpMessageHandler
-               .When("http://localost/api/user/*")
-               .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
+                .When("http://localost/api/user/*")
+                .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
 
             // Act
-            var response = await _httpClient.Download(_testUri);
+            var response = await _httpClient.DownloadAs<TestType>(_testUri);
 
             Assert.IsNotNull(response);
+
         }
 
-        [TestCase(HttpStatusCode.BadRequest)]// 400
-        public async Task ItShouldNotThrowAnExceptionWhenDownloadRecievesHttpStatus(HttpStatusCode code)
+
+        [TestCase(HttpStatusCode.Ambiguous)]// 300
+        public async Task ItShouldNotReturnNullWhenDownloadRecievesHttpStatus(HttpStatusCode code)
         {
             // Arrange
             _mockHttpMessageHandler
@@ -52,9 +55,10 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
                 .Respond(code, "application/json", _validTestResponseData)
                 ;
 
+            TestType response = null;
             try
             {
-                var response = await _httpClient.Download(_testUri);
+                response = await _httpClient.DownloadAs<TestType>(_testUri);
             }
             catch (HttpException e)
             {
@@ -64,7 +68,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             {
                 Assert.Fail($"Exception of type {nameof(Exception)} thrown");
             }
-            Assert.Pass("No Exception was thrown");
+            Assert.IsNotNull(response);
         }
 
         [TestCase(HttpStatusCode.Unauthorized)] // 401
@@ -72,28 +76,27 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
         [TestCase(HttpStatusCode.ExpectationFailed)] // 417
         [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
         [TestCase(HttpStatusCode.BadGateway)] // 502
-        public async Task ItShouldThrowAnExceptionWhenDownloadRecievesHttpStatus(HttpStatusCode code)
+        public async Task ItShouldThrowreturnNullWhenDownloadRecievesHttpStatus(HttpStatusCode code)
         {
             // Arrange
             _mockHttpMessageHandler
                 .When("http://localost/api/user/*")
-                .Respond(code, "application/json", "{}")
+                .Respond(code, "application/json", _validTestResponseData)
                 ;
-
+            TestType response = null;
             try
             {
-                var response = await _httpClient.Download(_testUri);
-
+                response = await _httpClient.DownloadAs<TestType>(_testUri);
             }
             catch (HttpException e)
             {
-                Assert.Pass($"Exception of type {nameof(HttpException)} thrown");
+                Assert.Fail($"Exception of type {nameof(HttpException)} thrown");
             }
             catch (Exception e)
             {
                 Assert.Fail($"Exception of type {nameof(Exception)} thrown");
             }
-            Assert.Fail("No Exception was thrown");
+            Assert.IsNull(response);
         }
     }
 }
