@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+﻿using SFA.DAS.Support.Common.Infrastucture.Settings;
+using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution

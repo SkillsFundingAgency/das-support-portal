@@ -2,10 +2,12 @@
 using System.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Services
 {
-    public class AzureSearchProvider : IAzureSearchProvider
+
+    public class AzureSearchProvider : ISearchProvider
     {
         private readonly ISearchIndexClient _client;
 
@@ -14,7 +16,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
             _client = client;
         }
 
-        public IEnumerable<T> Search<T>(string searchText, int top = 50, int skip = 0) where T : class
+        public IEnumerable<SearchItem> Search<SeachItem>(string searchText, int top = 50, int skip = 0)
         {
             var searchParameters = new SearchParameters
             {
@@ -23,7 +25,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
             };
 
             searchParameters.Skip = skip;
-            var response = _client.Documents.Search<T>(searchText, searchParameters);
+            var response = _client.Documents.Search<SearchItem>(searchText, searchParameters);
             foreach (var document in response.Results.Select(x => x.Document))
             {
                 yield return document;

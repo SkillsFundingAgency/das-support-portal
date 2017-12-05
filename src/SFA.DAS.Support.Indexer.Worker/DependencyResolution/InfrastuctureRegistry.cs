@@ -8,6 +8,12 @@ using SFA.DAS.Support.Indexer.Infrastructure.AzureSearch;
 using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
 using SFA.DAS.Support.Indexer.Infrastructure.Settings;
 using StructureMap.Configuration.DSL;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
+using SFA.DAS.Support.Common.Infrastucture.Settings;
+using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
+using SFA.DAS.NLog.Logger;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
@@ -15,21 +21,39 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
+            For<ILog>().Use(x => new NLogLogger(x.ParentType, null, GetProperties())).AlwaysUnique();
+
             For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
             For<IGetSiteManifest>().Use<ManifestProvider>();
-            For<IIndexProvider>().Use<AzureSearchProvider>();
+      
             if (Debugger.IsAttached)
                 For<IProvideSettings>().Use(c => new CloudServiceSettingsProvider(new MachineSettings(string.Empty)));
             else
                 For<IProvideSettings>().Use<CloudServiceSettingsProvider>();
 
+            For<ISearchSettings>().Use<SearchSettings>();
+            For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
+            For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
+            For<IIndexProvider>().Use<ElasticSearchIndexProvider>();
             For<ITrigger>().Use<StorageQueueService>();
             For<IIndexSearchItems>().Use<IndexerService>();
-            For<ISearchServiceClient>().Use("", x =>
-            {
-                var settings = x.GetInstance<ISearchSettings>();
-                return new SearchServiceClient(settings.ServiceName, new SearchCredentials(settings.AdminApiKey));
-            });
         }
+
+        private IDictionary<string, object> GetProperties()
+        {
+            var properties = new Dictionary<string, object>();
+            properties.Add("Version", GetVersion());
+            return properties;
+        }
+
+        private string GetVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersionInfo.ProductVersion;
+        }
+
+
+
     }
 }

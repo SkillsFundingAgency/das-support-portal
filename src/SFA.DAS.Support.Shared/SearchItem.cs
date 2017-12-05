@@ -6,7 +6,6 @@ namespace SFA.DAS.Support.Shared
     //[ExcludeFromCodeCoverage]
     public class SearchItem
     {
-        [Key]
         public string SearchId { get; set; }
 
         public string[] Keywords { get; set; }

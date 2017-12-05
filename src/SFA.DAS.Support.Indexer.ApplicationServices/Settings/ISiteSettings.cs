@@ -5,6 +5,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
     public interface ISiteSettings
     {
         IEnumerable<string> Sites { get; }
-        string IndexName { get; }
+       string EnvironmentName { get; }
     }
 }

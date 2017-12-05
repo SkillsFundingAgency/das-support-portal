@@ -37,6 +37,9 @@
       <HintPath>..\packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.5.5.0\lib\net46\Elasticsearch.Net.dll</HintPath>
+    </Reference>
     <Reference Include="HMRC.ESFA.Levy.Api.Client, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HMRC.ESFA.Levy.Api.Client.1.0.30\lib\net452\HMRC.ESFA.Levy.Api.Client.dll</HintPath>
       <Private>True</Private>
@@ -80,6 +83,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Nest, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.5.5.0\lib\net46\Nest.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -174,12 +180,17 @@
     <Compile Include="Settings\LevySubmissionsApiConfiguration.cs" />
     <Compile Include="Settings\EmployerUsersApiConfiguration.cs" />
     <Compile Include="Settings\MachineSettings.cs" />
+    <Compile Include="Settings\ElasticSearchSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Common.Infrastucture\SFA.DAS.Support.Common.Infrastucture.csproj">
+      <Project>{e233b49b-0294-41e0-b3ac-284d36e0b16e}</Project>
+      <Name>SFA.DAS.Support.Common.Infrastucture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.ApplicationServices\SFA.DAS.Support.Portal.ApplicationServices.csproj">
       <Project>{CE85AAE2-BD07-45F0-A642-4FA376ED9BF1}</Project>
       <Name>SFA.DAS.Support.Portal.ApplicationServices</Name>
@@ -193,6 +204,7 @@
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
