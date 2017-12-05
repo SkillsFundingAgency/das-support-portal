@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Shared
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class NavItem
     {
         public string Title { get; set; }

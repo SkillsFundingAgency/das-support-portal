@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Shared
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class PageLinks
     {
         public string Prev { get; set; }
