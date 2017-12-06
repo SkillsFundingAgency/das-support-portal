@@ -17,9 +17,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
         private readonly ISiteSettings _settings;
-        private List<SiteManifest> _manifests;
-        private IDictionary<string, SiteResource> _resources;
-        private IDictionary<string, SiteChallenge> _challanges;
+        private List<SiteManifest> _manifests = new List<SiteManifest>();
+        private IDictionary<string, SiteResource> _resources = new Dictionary<string, SiteResource>();
+        private IDictionary<string, SiteChallenge> _challenges = new Dictionary<string, SiteChallenge>();
 
         public ManifestRepository(ISiteSettings settings, ISiteConnector downloader, IFormMapper formMapper, ILog log)
         {
@@ -29,19 +29,42 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _settings = settings;
         }
 
+        private async Task PollSites()
+        {
+            if (_manifests.Any()) return;
+            _manifests = await LoadManifest();
+            _resources = new Dictionary<string, SiteResource>();
+            _challenges = new Dictionary<string, SiteChallenge>();
+            foreach (var siteManifest in _manifests)
+            {
+                foreach (var item in siteManifest.Resources ?? new List<SiteResource>())
+                {
+                    _resources.Add(item.ResourceKey, item);
+                }
+                foreach (var item in siteManifest.Challenges?? new List<SiteChallenge>())
+                {
+                    _challenges.Add(item.ChallengeKey, item);
+                }
+            }
+        }
+
         private ICollection<SiteManifest> Manifests
         {
-            get { return _manifests ?? (_manifests = LoadManifest().Result); }
+            get
+            {
+                return _manifests;
+            }
         }
+
 
         private IDictionary<string, SiteResource> Resources
         {
-            get { return _resources ?? (_resources = Manifests.SelectMany(x => x.Resources).ToDictionary(x => FormatKey(x.ResourceKey), x => x)); }
+            get { return _resources; }
         }
 
         private IDictionary<string, SiteChallenge> Challenges
         {
-            get { return _challanges ?? (_challanges = Manifests.SelectMany(x => x.Challenges).ToDictionary(x => x.ChallengeKey, x => x)); }
+            get { return _challenges; }
         }
 
         public async Task<bool> ChallengeExists(string key)
@@ -51,6 +74,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<SiteChallenge> GetChallenge(string key)
         {
+            await PollSites();
             var challenge = Challenges[FormatKey(key)];
             var site = Manifests.FirstOrDefault(x => x.Challenges.Select(y => FormatKey(y.ChallengeKey)).Contains(key.ToLower()));
             if (site == null || site.BaseUrl == null)
@@ -64,6 +88,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<bool> ResourceExists(string key)
         {
+            await PollSites();
             return await Task.FromResult(Resources.ContainsKey(FormatKey(key)));
         }
 
@@ -77,7 +102,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);
-            return GetPage(url);
+            return await GetPage(url);
         }
 
         public async Task<string> GetChallengeForm(string key, string id, string url)
@@ -124,14 +149,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             {
                 var result = await Task.FromResult(_manifests);
                 return result;
-
             }
             catch (Exception ex)
             {
                 _log.Error(ex, nameof(GetManifests));
-
-                throw;
             }
+            return await Task.FromResult(new List<SiteManifest>());
         }
 
         private Uri FindSiteForChallenge(string key)
@@ -143,6 +166,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<SiteResource> GetResource(string key)
         {
+            await PollSites();
             var resource = Resources[FormatKey(key)];
             var site = Manifests.FirstOrDefault(x => x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
             if (site == null || site.BaseUrl == null)
@@ -168,7 +192,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             return Resources
-                .Where(x => x.Key.StartsWith(key.Split('/').FirstOrDefault()??""))
+                .Where(x => x.Key.StartsWith(key.Split('/').FirstOrDefault() ?? ""))
                 .Where(x => !string.IsNullOrEmpty(x.Value.ResourceTitle))
                 .Select(x =>
                     new NavItem
@@ -191,7 +215,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             try
             {
                 var result = await _downloader.Download(AddQueryString(url));
-                
+
                 return result;
             }
             catch
@@ -217,14 +241,24 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private async Task<List<SiteManifest>> LoadManifest()
         {
-           
+
             var list = new Dictionary<string, SiteManifest>();
             foreach (var site in _settings.Sites.Where(x => !string.IsNullOrEmpty(x)))
             {
                 _log.Debug($"Downloading '{site}'");
                 var uri = new Uri(new Uri(site), "/api/manifest");
-                var manifest = await _downloader.Download<SiteManifest>(uri);
-                list.Add(uri.ToString(), manifest);
+
+                try
+                {
+                    var manifest = await _downloader.Download<SiteManifest>(uri);
+                    list.Add(uri.ToString(), manifest);
+
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex, $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
+                }
+
             }
             return list.Values.ToList();
         }

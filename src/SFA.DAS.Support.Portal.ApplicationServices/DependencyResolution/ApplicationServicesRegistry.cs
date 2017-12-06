@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;

@@ -9,7 +9,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
     public class WebDownloaderconstructorTests
     {
         [Test]
-        public async Task ItShouldThrowAnArgumentExceptionIfPassedANullHttpClient()
+        public void ItShouldThrowAnArgumentExceptionIfPassedANullHttpClient()
         {
             Assert.Throws<ArgumentException>(() => new SiteConnector(null));
         }

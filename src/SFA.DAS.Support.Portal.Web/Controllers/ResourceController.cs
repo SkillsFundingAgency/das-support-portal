@@ -12,7 +12,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly ICheckPermissions _checker;
         private readonly IGrantPermissions _granter;
 
-        public ResourceController(IManifestRepository repository, ICheckPermissions checker, IGrantPermissions granter)
+        public ResourceController(
+            IManifestRepository repository, 
+            ICheckPermissions checker, 
+            IGrantPermissions granter)
         {
             _repository = repository;
             _checker = checker;
@@ -27,12 +30,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, resourceId);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, resourceId);
+            ViewBag.SubNav = await _repository.GetNav(key, resourceId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
 
             try
             {
-                return View("Sub", (object)_repository.GetChallengeForm(key, resourceId, url));
+                var challengeForm = await _repository.GetChallengeForm(key, resourceId, url);
+                return View("Sub", (object)challengeForm);
             }
             catch
             {
@@ -52,8 +56,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 return Redirect(result.RedirectUrl);
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, resourceId);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, resourceId);
+            ViewBag.SubNav = await _repository.GetNav(key, resourceId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
             return View("Sub", (object)result.Page);
         }
 
@@ -75,11 +79,12 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 }
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, id);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, id);
+            ViewBag.SubNav = await _repository.GetNav(key, id);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
             try
             {
-                return View("Sub", (object)_repository.GetResourcePage(key, id));
+                var masterName = await _repository.GetResourcePage(key, id);    
+                return View("Sub", (object)masterName);
             }
             catch
             {

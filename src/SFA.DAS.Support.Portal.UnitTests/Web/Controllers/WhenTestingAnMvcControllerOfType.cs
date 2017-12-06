@@ -11,7 +11,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
         protected T Unit;
         protected ActionResult ActionResultResponse;
    
-
+        /// <summary>
+        /// Override if you require a non default constructor setup
+        /// </summary>
         [SetUp]
         public virtual void Setup()
         {

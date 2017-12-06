@@ -7,6 +7,7 @@ using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.Settings;
 using StructureMap.Configuration.DSL;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
@@ -15,6 +16,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     {
         public WebRegistry()
         {
+            For<HttpClient>().AlwaysUnique().Use(new HttpClient());
             For<IRequestContext>().Use(x => new RequestContext(new HttpContextWrapper(HttpContext.Current)));
             For<IMappingService>().Use<MappingService>();
             For<ICheckPermissions>().Use<PermissionCookieProvider>();

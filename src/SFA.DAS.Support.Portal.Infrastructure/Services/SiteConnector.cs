@@ -10,12 +10,11 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
     public class SiteConnector : ISiteConnector
     {
         private readonly HttpClient _client;
-        private const string ExceptionMessage = "Request status code indicates abnormal response";
         private const string TheHttpClientMayNotBeNull = "The Http client may not be null";
 
         public SiteConnector(HttpClient client)
         {
-            _client = client ?? throw new ArgumentException(TheHttpClientMayNotBeNull);
+            _client = client?? throw new ArgumentException(TheHttpClientMayNotBeNull);
         }
 
         public async Task<T> Download<T>(string url) where T : class
@@ -41,10 +40,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
+
             var response = await _client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(content);
+
         }
     }
 }
