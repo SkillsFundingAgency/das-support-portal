@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class WebRegistry : Registry
     {
         public WebRegistry()

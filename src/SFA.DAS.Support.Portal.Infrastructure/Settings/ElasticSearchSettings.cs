@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Portal.Core.Services;
 
-namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
+namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
     public class ElasticSearchSettings : ISearchSettings
     {

@@ -21,9 +21,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         // GET: Challenge
         [HttpGet]
-        public ActionResult Challenge(string id, string resourceId, string key, string url)
+        public async Task<ActionResult> Challenge(string id, string resourceId, string key, string url)
         {
-            if (!_repository.ChallengeExists(key))
+            if (!await _repository.ChallengeExists(key))
             {
                 return HttpNotFound();
             }
@@ -42,10 +42,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Challenge(string id, string resourceId, string key, FormCollection formData)
+        public async Task<ActionResult> Challenge(string id, string resourceId, string key, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
-            var result = _repository.SubmitChallenge(resourceId, pairs);
+            var result = await _repository.SubmitChallenge(resourceId, pairs);
 
             if (result.HasRedirect)
             {
@@ -58,17 +58,15 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Sub", (object)result.Page);
         }
 
-
-        // GET: Resource
         [HttpGet]
-        public ActionResult Index(string key, string id)
+        public async Task<ActionResult> Index(string key, string id)
         {
-            if (!_repository.ResourceExists(key))
+            if (!await _repository.ResourceExists(key))
             {
                 return View("Sub", (object)"<h3>This resource isn't registered</h3>");
             }
 
-            var resource = _repository.GetResource(key);
+            var resource = await _repository.GetResource(key);
 
             if (!string.IsNullOrEmpty(resource.Challenge))
             {

@@ -6,80 +6,82 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Extensions
 {
-    public static class HttpClientExtensions
-    {
-        public static async Task<T> DownloadAs<T>(this HttpClient client, Uri uri) where T : class
-        {
+    //public static class HttpClientExtensions
+    //{
+    //    public static async Task<T> DownloadAs<T>(this HttpClient client, Uri uri) where T : class
+    //    {
 
-            // I know I am firing this on another thread
-            // to keep UI free from any smallest task like
-            // preparing httpclient, setting headers
-            // checking for result or anything..., why do that on
-            // UI Thread?
+    //        // I know I am firing this on another thread
+    //        // to keep UI free from any smallest task like
+    //        // preparing httpclient, setting headers
+    //        // checking for result or anything..., why do that on
+    //        // UI Thread?
 
-            // this helps us using excessive logging required for
-            // debugging and diagnostics
+    //        // this helps us using excessive logging required for
+    //        // debugging and diagnostics
 
             
 
-                // following parses url and makes sure
-                // it is a valid url
-                // there is no need for this to be done on 
-                // UI thread
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+    //            // following parses url and makes sure
+    //            // it is a valid url
+    //            // there is no need for this to be done on 
+    //            // UI thread
+    //            var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-                // do some checks, set some headers...
-                // secrete code !!!
+    //            // do some checks, set some headers...
+    //            // secrete code !!!
 
-                var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+    //            var response = await client.GetAsync(uri);
 
-                var content = await response.Content.ReadAsStringAsync();
+    //            //var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
-                if ((int)response.StatusCode > 300)
-                {
+    //            var content = await response.Content.ReadAsStringAsync();
 
-                    // it is good to receive error text details
-                    // not just reason phrase
+    //            if ((int)response.StatusCode > 300)
+    //            {
 
-                    //throw new InvalidOperationException(response.ReasonPhrase
-                    //                                    + "\r\n" + content);
-                    return null;
-                }
-                return JsonConvert.DeserializeObject<T>(content);
+    //                // it is good to receive error text details
+    //                // not just reason phrase
 
-            //});
-        }
+    //                //throw new InvalidOperationException(response.ReasonPhrase
+    //                //                                    + "\r\n" + content);
+    //                return null;
+    //            }
+    //            return JsonConvert.DeserializeObject<T>(content);
 
-        public static async Task<string> Download(this HttpClient client, Uri uri)
-        {
-            //return Task.Run(async () =>
-            //{
+    //        //});
+    //    }
 
-                // following parses url and makes sure
-                // it is a valid url
-                // there is no need for this to be done on 
-                // UI thread
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+    //    public static async Task<string> Download(this HttpClient client, Uri uri)
+    //    {
+    //        //return Task.Run(async () =>
+    //        //{
 
-                // do some checks, set some headers...
-                // secrete code !!!
-                var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+    //            // following parses url and makes sure
+    //            // it is a valid url
+    //            // there is no need for this to be done on 
+    //            // UI thread
+    //            var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-                var content = await response.Content.ReadAsStringAsync();
+    //            // do some checks, set some headers...
+    //            // secrete code !!!
+    //            var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
-                if ((int) response.StatusCode > 400)
-                {
+    //            var content = await response.Content.ReadAsStringAsync();
 
-                    // it is good to receive error text details
-                    // not just reason phrase
+    //            if ((int) response.StatusCode > 400)
+    //            {
 
-                    throw new HttpException((int) response.StatusCode, response.ReasonPhrase);
+    //                // it is good to receive error text details
+    //                // not just reason phrase
 
-                    //throw new InvalidOperationException(response.ReasonPhrase
-                    //                                    + "\r\n" + content);
-                }
-                return content;
-            //});
-        }
-    }
+    //                throw new HttpException((int) response.StatusCode, response.ReasonPhrase);
+
+    //                //throw new InvalidOperationException(response.ReasonPhrase
+    //                //                                    + "\r\n" + content);
+    //            }
+    //            return content;
+    //        //});
+    //    }
+    //}
 }

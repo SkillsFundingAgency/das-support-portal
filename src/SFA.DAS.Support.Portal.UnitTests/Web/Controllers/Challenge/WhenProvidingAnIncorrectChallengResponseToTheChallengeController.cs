@@ -33,7 +33,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Challenge
                 _accountRepository.Object,
                 _mediator.Object);
         }
-        [Ignore("TheUnit has been designed to be untestable, as it directly references the Request")]
+        [Ignore("The Unit has been designed to be untestable, as it directly references the Request")]
         [Test]
         public void ItShouldRedirectWithAnError()
         {

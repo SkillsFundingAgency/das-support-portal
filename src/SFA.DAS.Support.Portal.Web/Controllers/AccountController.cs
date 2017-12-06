@@ -27,18 +27,15 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var response = await _mediator.SendAsync(new AccountDetailOrganisationsQuery(id));
 
-            if (response.StatusCode == SearchResponseCodes.Success)
+            if (response.StatusCode != SearchResponseCodes.Success) return new HttpNotFoundResult();
+
+            var vm = new AccountDetailViewModel
             {
-                var vm = new AccountDetailViewModel
-                {
-                    Account = response.Account,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
-                };
+                Account = response.Account,
+                SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+            };
 
-                return View(vm);
-            }
-
-            return new HttpNotFoundResult();
+            return View(vm);
         }
 
         public async Task<ActionResult> TeamMembers(string id, string searchTerm)

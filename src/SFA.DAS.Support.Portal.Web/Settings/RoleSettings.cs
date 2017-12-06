@@ -4,7 +4,7 @@ using SFA.DAS.Support.Portal.Core.Services;
 
 namespace SFA.DAS.Support.Portal.Web.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class RoleSettings : IRoleSettings
     {
         private readonly IProvideSettings _settings;

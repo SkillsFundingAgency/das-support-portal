@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Services

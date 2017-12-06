@@ -5,7 +5,7 @@ using System.Web.Routing;
 
 namespace SFA.DAS.Support.Portal.Web
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)

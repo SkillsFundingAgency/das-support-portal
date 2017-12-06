@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
-using SFA.DAS.Support.Portal.Infrastructure.Extensions;
 using System.Web;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
@@ -28,72 +27,5 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
         }
-
-        [Test]
-        public async Task ItShouldDownloadJsonSuccessfully()
-        {
-            // Arrange
-            _mockHttpMessageHandler
-               .When("http://localost/api/user/*")
-               .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
-
-            // Act
-            var response = await _httpClient.Download(_testUri);
-
-            Assert.IsNotNull(response);
-        }
-
-        [TestCase(HttpStatusCode.BadRequest)]// 400
-        public async Task ItShouldNotThrowAnExceptionWhenDownloadRecievesHttpStatus(HttpStatusCode code)
-        {
-            // Arrange
-            _mockHttpMessageHandler
-                .When("http://localost/api/user/*")
-                .Respond(code, "application/json", _validTestResponseData)
-                ;
-
-            try
-            {
-                var response = await _httpClient.Download(_testUri);
-            }
-            catch (HttpException e)
-            {
-                Assert.Fail($"Exception of type {nameof(HttpException)} thrown");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail($"Exception of type {nameof(Exception)} thrown");
-            }
-            Assert.Pass("No Exception was thrown");
-        }
-
-        [TestCase(HttpStatusCode.Unauthorized)] // 401
-        [TestCase(HttpStatusCode.Conflict)] // 409
-        [TestCase(HttpStatusCode.ExpectationFailed)] // 417
-        [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
-        [TestCase(HttpStatusCode.BadGateway)] // 502
-        public async Task ItShouldThrowAnExceptionWhenDownloadRecievesHttpStatus(HttpStatusCode code)
-        {
-            // Arrange
-            _mockHttpMessageHandler
-                .When("http://localost/api/user/*")
-                .Respond(code, "application/json", "{}")
-                ;
-
-            try
-            {
-                var response = await _httpClient.Download(_testUri);
-
-            }
-            catch (HttpException e)
-            {
-                Assert.Pass($"Exception of type {nameof(HttpException)} thrown");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail($"Exception of type {nameof(Exception)} thrown");
-            }
-            Assert.Fail("No Exception was thrown");
-        }
-    }
+  }
 }

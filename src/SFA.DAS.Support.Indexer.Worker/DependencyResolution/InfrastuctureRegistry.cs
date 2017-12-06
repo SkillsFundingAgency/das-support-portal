@@ -13,6 +13,7 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.NLog.Logger;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Reflection;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
@@ -23,9 +24,12 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         {
             For<ILog>().Use(x => new NLogLogger(x.ParentType, null, GetProperties())).AlwaysUnique();
 
+            For<HttpClient>().AlwaysUnique().Use(new HttpClient());
+
             For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
+
             For<IGetSiteManifest>().Use<ManifestProvider>();
-      
+
             if (Debugger.IsAttached)
                 For<IProvideSettings>().Use(c => new CloudServiceSettingsProvider(new MachineSettings(string.Empty)));
             else

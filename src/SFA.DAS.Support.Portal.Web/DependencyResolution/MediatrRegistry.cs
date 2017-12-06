@@ -4,7 +4,7 @@ using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class MediatrRegistry : Registry
     {
         public MediatrRegistry()

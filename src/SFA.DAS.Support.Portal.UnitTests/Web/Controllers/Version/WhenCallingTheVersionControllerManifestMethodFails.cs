@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
@@ -10,19 +11,17 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
         public void ItShouldThrowAnException()
         {
             
-            MockManifestRepository.SetupGet(r => r.Manifests).Throws<System.Exception>();
-            Assert.Throws<System.Exception>(() => Unit.Manifests());
-            
+            MockManifestRepository.Setup(r => r.GetManifests()).Throws<System.Exception>();
+            Assert.That(async () => await Unit.Manifests(), Throws.Exception.TypeOf<System.Exception>());
+
         }
         [Test]
-        public void ItShouldLogTheException()
+        public async Task ItShouldLogTheException()
         {
 
-            MockManifestRepository.SetupGet(r => r.Manifests).Throws<System.Exception>();
-            Assert.Throws<System.Exception>(()=> Unit.Manifests());
+            MockManifestRepository.Setup(r => r.GetManifests()).Throws<System.Exception>();
+            Assert.That(async () => await Unit.Manifests(), Throws.Exception.TypeOf<System.Exception>());
             MockLogger.Verify(l=> l.Error(It.IsAny<System.Exception>(),  It.IsAny<string>()));
-            
-
         }
     }
 }

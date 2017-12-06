@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Shared;
 
@@ -6,15 +7,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
     public interface IManifestRepository
     {
-        bool ChallengeExists(string key);
-        SiteChallenge GetChallenge(string key);
-        bool ResourceExists(string key);
-        SiteResource GetResource(string key);
-        string GetResourcePage(string key, string id);
-        NavViewModel GetNav(string key, string id);
-        object GenerateHeader(string key, string id);
-        string GetChallengeForm(string key, string id, string url);
-        ChallengeResult SubmitChallenge(string id, IDictionary<string, string> pairs);
-        ICollection<SiteManifest> Manifests { get; }
+        Task<bool> ChallengeExists(string key);
+        Task<SiteChallenge> GetChallenge(string key);
+        Task<bool> ResourceExists(string key);
+        Task<SiteResource> GetResource(string key);
+        Task<string> GetResourcePage(string key, string id);
+        Task<NavViewModel> GetNav(string key, string id);
+        Task<object> GenerateHeader(string key, string id);
+        Task<string> GetChallengeForm(string key, string id, string url);
+        Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> pairs);
+        Task<List<SiteManifest>> GetManifests();
     }
 }

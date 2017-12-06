@@ -219,6 +219,7 @@
     <Compile Include="Repository\EmployerUserRepositoryTests.cs" />
     <Compile Include="Repository\LevySubmissionsRepositoryTests.cs" />
     <Compile Include="TestType.cs" />
+    <Compile Include="WebDownloaderconstructorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

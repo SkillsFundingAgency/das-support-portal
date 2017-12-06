@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Elasticsearch.Net;
 
-namespace SFA.DAS.Support.Common.Infrastucture
+namespace SFA.DAS.Support.Common.Infrastucture.Extensions
 {
     public class MyCertificateIgnoringHttpConnection : HttpConnection
     {

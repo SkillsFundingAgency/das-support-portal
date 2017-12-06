@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Http;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
@@ -40,41 +43,41 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             };
         }
 
-        [System.Web.Http.Route("api/manifest")]
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.AllowAnonymous]
-        public ICollection<SiteManifest> Manifests()
+        [Route("api/manifest")]
+        [AcceptVerbs("GET")]
+        [AllowAnonymous]
+        public async Task<ICollection<SiteManifest>> Manifests()
         {
             try
             {
-                return _repository.Manifests;
+                var result = await _repository.GetManifests();
+                
+                return result;
             }
             catch (Exception ex)
             {
-                _log.Error(ex, "Get manifests");
+                _log.Error(ex, $"{nameof(IManifestRepository)}.{nameof(IManifestRepository.GetManifests)}");
                 throw;
             }
         }
 
-        [System.Web.Http.Route("api/groups")]
-        [System.Web.Http.Authorize]
+        [Route("api/groups")]
+        [Authorize]
         public IEnumerable<string[]> GetGroups()
         {
-            foreach (IdentityReference group in _requestLogonUserIdentity?.Groups?? new IdentityReferenceCollection())
-            {
-                yield return new string[] {group.Value, group.Translate(typeof(NTAccount)).ToString()};
-            }
+            return from @group in _requestLogonUserIdentity?.Groups ?? new IdentityReferenceCollection()
+                   select new string[] { @group.Value, @group.Translate(typeof(NTAccount)).ToString() };
         }
 
-        [System.Web.Http.Route("api/claims")]
+        [Route("api/claims")]
         //[Authorize]
         public IEnumerable<Claim> GetClaims()
         {
-            return _requestLogonUserIdentity?.Claims?? new List<Claim>();
+            return _requestLogonUserIdentity?.Claims ?? new List<Claim>();
         }
 
-        [System.Web.Http.Route("api/test")]
-        [System.Web.Http.Authorize(Roles = "ConsoleUser")]
+        [Route("api/test")]
+        [Authorize(Roles = "ConsoleUser")]
         public bool GetTest()
         {
             return true;

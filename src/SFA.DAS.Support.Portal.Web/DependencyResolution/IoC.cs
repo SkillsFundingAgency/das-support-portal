@@ -25,6 +25,9 @@ using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using StructureMap;
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
 
     public static class IoC {
         public static IContainer Initialize() {

@@ -3,7 +3,7 @@ using Microsoft.Azure;
 
 namespace SFA.DAS.Support.Portal.Web.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class AuthSettings : IAuthSettings
     {
         public string Realm => CloudConfigurationManager.GetSetting("ida_Wtrealm");

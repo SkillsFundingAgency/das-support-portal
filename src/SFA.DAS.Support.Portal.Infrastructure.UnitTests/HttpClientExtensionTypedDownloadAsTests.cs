@@ -6,19 +6,23 @@ using System.Web;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
-using SFA.DAS.Support.Portal.Infrastructure.Extensions;
+using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Portal.Infrastructure.Services;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {
     [TestFixture]
-    public class HttpClientExtensionTypedDownloadAsTests
+    public class WebDownloaderTests
     {
         private MockHttpMessageHandler _mockHttpMessageHandler;
         private HttpClient _httpClient;
-        private Uri _testUri = new Uri("http://localost/api/user/1234");
+        private Uri _testUri;
         private string _validTestResponseData;
         private string _emptyJsonContent;
         private TestType _testType;
+        private ISiteConnector _unit;
+        private string _testUrlMatch;
+        private static string _testUrl = "http://localhost/api/user/1234";
 
         [SetUp]
         public void Setup()
@@ -28,75 +32,95 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             _validTestResponseData = JsonConvert.SerializeObject(_testType);
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
+            _testUrlMatch = "http://localhost/api/user/*";
+            _testUrl = "http://localhost/api/user/1234";
+            _testUri = new Uri(_testUrl);
+            _unit = new SiteConnector(_httpClient);
         }
 
         [Test]
-        public async Task ItShouldDownloadJsonAndDeserializeSuccessfully()
+        public async Task ItShouldDownloadTypeSuccessfully()
         {
-            // Arrange
             _mockHttpMessageHandler
-                .When("http://localost/api/user/*")
+                .When(_testUrlMatch)
                 .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
 
-            // Act
-            var response = await _httpClient.DownloadAs<TestType>(_testUri);
+            var response = await _unit.Download<TestType>(_testUri);
 
             Assert.IsNotNull(response);
-
+            
         }
 
-
-        [TestCase(HttpStatusCode.Ambiguous)]// 300
-        public async Task ItShouldNotReturnNullWhenDownloadRecievesHttpStatus(HttpStatusCode code)
+        [Test]
+        public async Task ItShouldDownloadStringSuccessfully()
         {
-            // Arrange
             _mockHttpMessageHandler
-                .When("http://localost/api/user/*")
-                .Respond(code, "application/json", _validTestResponseData)
-                ;
+                .When(_testUrlMatch)
+                .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
 
-            TestType response = null;
-            try
-            {
-                response = await _httpClient.DownloadAs<TestType>(_testUri);
-            }
-            catch (HttpException e)
-            {
-                Assert.Fail($"Exception of type {nameof(HttpException)} thrown");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail($"Exception of type {nameof(Exception)} thrown");
-            }
+            var response = await _unit.Download(_testUrl);
             Assert.IsNotNull(response);
+            Assert.IsInstanceOf<string>(response);
         }
 
+
+        [TestCase(HttpStatusCode.Ambiguous)] // 300
+        [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Unauthorized)] // 401
         [TestCase(HttpStatusCode.Conflict)] // 409
         [TestCase(HttpStatusCode.ExpectationFailed)] // 417
         [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
         [TestCase(HttpStatusCode.BadGateway)] // 502
-        public async Task ItShouldThrowreturnNullWhenDownloadRecievesHttpStatus(HttpStatusCode code)
+        public async Task ItShouldThrowAnExceptionWhenDownloadTypeRecievesHttpStatus(HttpStatusCode code)
         {
-            // Arrange
             _mockHttpMessageHandler
-                .When("http://localost/api/user/*")
+                .When(_testUrlMatch)
                 .Respond(code, "application/json", _validTestResponseData)
                 ;
             TestType response = null;
             try
             {
-                response = await _httpClient.DownloadAs<TestType>(_testUri);
+                response = await _unit.Download<TestType>(_testUri);
             }
-            catch (HttpException e)
+            catch (HttpRequestException e)
             {
-                Assert.Fail($"Exception of type {nameof(HttpException)} thrown");
+                Assert.IsTrue(e.Message.StartsWith($"Response status code does not indicate success: {(int)code}"));
             }
             catch (Exception e)
             {
                 Assert.Fail($"Exception of type {nameof(Exception)} thrown");
             }
-            Assert.IsNull(response);
+            
         }
+
+        [TestCase(HttpStatusCode.Ambiguous)]// 300
+        [TestCase(HttpStatusCode.BadRequest)]// 400
+        [TestCase(HttpStatusCode.Unauthorized)] // 401
+        [TestCase(HttpStatusCode.Conflict)] // 409
+        [TestCase(HttpStatusCode.ExpectationFailed)] // 417
+        [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
+        [TestCase(HttpStatusCode.BadGateway)] // 502
+        public async Task ItShouldThrowAnExceptionWhenDownloadStringRecievesHttpStatus(HttpStatusCode code)
+        {
+            _mockHttpMessageHandler
+                 .When(_testUrlMatch)
+                 .Respond(code, "application/json", "{}")
+                 ;
+
+            try
+            {
+                var response = await _unit.Download(_testUrlMatch);
+            }
+            catch (HttpRequestException e)
+            {
+                Assert.IsTrue(e.Message.StartsWith($"Response status code does not indicate success: {(int)code}"));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Exception of type {nameof(Exception)} thrown {e.Message}");
+            }
+        }
+
+
     }
 }

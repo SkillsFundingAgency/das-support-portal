@@ -212,6 +212,10 @@
       <Project>{FC05B066-5813-403D-BCD7-ABC01EE6041B}</Project>
       <Name>SFA.DAS.Support.Portal.Health</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Portal.Infrastructure\SFA.DAS.Support.Portal.Infrastructure.csproj">
+      <Project>{4CC506AE-F6BC-46B2-910A-D6BF29DA8D90}</Project>
+      <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Web\SFA.DAS.Support.Portal.Web.csproj">
       <Project>{5B06A69D-8660-4D15-B6B1-6A7DDBAA5CE5}</Project>
       <Name>SFA.DAS.Support.Portal.Web</Name>

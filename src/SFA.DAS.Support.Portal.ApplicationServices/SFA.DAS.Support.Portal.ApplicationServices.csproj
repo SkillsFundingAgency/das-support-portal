@@ -130,7 +130,7 @@
     <Compile Include="Services\IChallengeService.cs" />
     <Compile Include="Services\ICrypto.cs" />
     <Compile Include="Services\IDatetimeService.cs" />
-    <Compile Include="Services\IDownload.cs" />
+    <Compile Include="Services\ISiteConnector.cs" />
     <Compile Include="Services\IFormMapper.cs" />
     <Compile Include="Services\IGetCurrentIdentity.cs" />
     <Compile Include="Services\IManifestRepository.cs" />

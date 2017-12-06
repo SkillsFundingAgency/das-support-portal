@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MediatR;
+﻿using MediatR;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;
@@ -12,7 +11,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution
     {
         public ApplicationServicesRegistry()
         {
-            this.Scan(
+            Scan(
                 scan =>
                 {
                     scan.AssemblyContainingType<ApplicationServicesRegistry>();
@@ -21,10 +20,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution
                     scan.AddAllTypesOf(typeof(IRequestHandler<,>));
                     scan.AddAllTypesOf(typeof(IAsyncRequestHandler<,>));
                 });
-            this.For<ICrypto>().Use<Crypto>();
-            this.For<ICryptoSettings>().Use<CryptoSettings>();
-            this.For<IChallengeService>().Use<ChallengeService>();
-            this.For<IDatetimeService>().Use<DatetimeService>();
+            For<ICrypto>().Use<Crypto>();
+            For<ICryptoSettings>().Use<CryptoSettings>();
+            For<IChallengeService>().Use<ChallengeService>();
+            For<IDatetimeService>().Use<DatetimeService>();
             For<ISiteSettings>().Use<SiteSettings>();
             For<IManifestRepository>().Use<ManifestRepository>();
         }

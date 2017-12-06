@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Support.Portal.Web.RazorGeneratorMvcStart), "Start")]
 
 namespace SFA.DAS.Support.Portal.Web {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public static class RazorGeneratorMvcStart {
         public static void Start() {
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {
