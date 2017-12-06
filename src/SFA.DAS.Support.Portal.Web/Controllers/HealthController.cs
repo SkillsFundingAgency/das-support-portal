@@ -17,7 +17,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _healthService = healthService;
         }
 
-        // GET: Health
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
@@ -34,6 +34,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [Route("Health/Image")]
         [AllowAnonymous]
+        [HttpGet]
         public async Task<ActionResult> HealthImage()
         {
             var viewModel = await _healthService.CreateHealthModel();
@@ -46,6 +47,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public async Task<ActionResult> EmployerUser()
         {
             var viewModel = await _healthService.CreateHealthEmployerUserModel();
@@ -61,6 +63,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [Route("Health/EmployerUser/Image")]
         [AllowAnonymous]
+        [HttpGet]
         public async Task<ActionResult> EmployerUserImage()
         {
             var viewModel = await _healthService.CreateHealthEmployerUserModel();
@@ -72,6 +75,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return File(path, "image/png");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> Accounts()
         {
@@ -86,6 +90,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
         [Route("Health/Accounts/Image")]
         [AllowAnonymous]
         public async Task<ActionResult> AccountsImage()

@@ -10,6 +10,7 @@ using System.Web.Http;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
+using SFA.DAS.Support.Portal.Web.Models;
 using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
@@ -18,7 +19,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     {
         private readonly IManifestRepository _repository;
         private readonly ILog _log;
-        private readonly WindowsIdentity _requestLogonUserIdentity;
         private readonly IWindowsLogonIdentityProvider _logonIdentityProvider;
 
         public VersionController(IManifestRepository repository, ILog log, IWindowsLogonIdentityProvider logonIdentityProvider)
@@ -26,10 +26,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _repository = repository;
             _log = log;
             _logonIdentityProvider = logonIdentityProvider;
-            _requestLogonUserIdentity = _logonIdentityProvider.GetIdentity();
         }
 
         // GET: api/Version
+        [HttpGet]
         public VersionInformation Get()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -44,7 +44,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [Route("api/manifest")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ICollection<SiteManifest>> Manifests()
         {
@@ -62,22 +62,25 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [Route("api/groups")]
+        [HttpGet]
         [Authorize]
         public IEnumerable<string[]> GetGroups()
         {
-            return from @group in _requestLogonUserIdentity?.Groups ?? new IdentityReferenceCollection()
+            return from @group in _logonIdentityProvider.GetIdentity()?.Groups ?? new IdentityReferenceCollection()
                    select new string[] { @group.Value, @group.Translate(typeof(NTAccount)).ToString() };
         }
 
         [Route("api/claims")]
-        //[Authorize]
+        [Authorize]
+        [HttpGet]
         public IEnumerable<Claim> GetClaims()
         {
-            return _requestLogonUserIdentity?.Claims ?? new List<Claim>();
+            return _logonIdentityProvider.GetIdentity()?.Claims ?? new List<Claim>();
         }
 
         [Route("api/test")]
         [Authorize(Roles = "ConsoleUser")]
+        [HttpGet]
         public bool GetTest()
         {
             return true;

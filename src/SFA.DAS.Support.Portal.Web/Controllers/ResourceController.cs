@@ -19,7 +19,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _granter = granter;
         }
 
-        // GET: Challenge
         [HttpGet]
         public async Task<ActionResult> Challenge(string id, string resourceId, string key, string url)
         {

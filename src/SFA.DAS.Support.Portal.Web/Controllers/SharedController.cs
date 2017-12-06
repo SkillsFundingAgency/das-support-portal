@@ -6,7 +6,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public class SharedController : Controller
     {
-        // GET: Shared
+        [HttpGet]
         public PartialViewResult Header()
         {
             var viewModel = new HeaderViewModel

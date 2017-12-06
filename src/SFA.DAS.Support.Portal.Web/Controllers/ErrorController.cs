@@ -8,6 +8,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     public sealed class ErrorController : Controller
     {
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult BadRequest()
         {
@@ -16,6 +17,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error400");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult NotFound()
         {
@@ -24,6 +26,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error404");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult Error()
         {
@@ -32,6 +35,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error500");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult NoError()
         {
