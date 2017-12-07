@@ -131,6 +131,7 @@
     <Compile Include="Handlers\ChallengePermissionsHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserDetailHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserSearchHandlerTests.cs" />
+    <Compile Include="Handlers\SearchHandlerTests.cs" />
     <Compile Include="Handlers\UserStatusTestDataClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ChallengeServiceTests.cs" />
