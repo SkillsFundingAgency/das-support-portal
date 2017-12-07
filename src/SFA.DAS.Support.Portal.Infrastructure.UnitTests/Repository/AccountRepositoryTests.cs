@@ -8,12 +8,52 @@ using NUnit.Framework;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
 using SFA.DAS.Support.Portal.Core.Helpers;
+using SFA.DAS.Support.Portal.Core.Services;
+using SFA.DAS.Support.Portal.Infrastructure.Services;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
 {
+
+    [TestFixture]
+    public class EntityRepositoryTests
+    {
+        private Mock<ISearchProvider> _mockSearchProvider;
+        private IEntityRepository _unit;
+        [SetUp]
+        public void Setup()
+        {
+            _mockSearchProvider = new Mock<ISearchProvider>();
+            _unit = new EntityRepository(_mockSearchProvider.Object);
+        }
+
+        [Test]
+        public void ItShouldReturnTheSearchResultsAsAListOfTheSuppliedData()
+        {
+            var query = "somethig";
+            var expected = new List<string>() { "<div>A hit 1</div>", "<div>A hit 2</div>", "<div>A hit 3</div>" };
+            var searchResultItems = new List<SearchItem>()
+            {
+                new SearchItem(){ Html = "<div>A hit 1</div>"},
+                new SearchItem(){ Html = "<div>A hit 2</div>"},
+                new SearchItem(){ Html = "<div>A hit 3</div>"},
+            };
+            _mockSearchProvider
+                .Setup(x => x.Search<SearchItem>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(searchResultItems);
+
+            var actual = _unit.Search(query).ToList();
+
+            CollectionAssert.IsNotEmpty(actual);
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+    }
+
     [TestFixture]
     public class AccountRepositoryTests
     {

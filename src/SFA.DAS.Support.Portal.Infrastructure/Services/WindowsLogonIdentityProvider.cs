@@ -1,7 +1,9 @@
-﻿using System.Security.Principal;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Principal;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Services
 {
+    [ExcludeFromCodeCoverage]
     public class WindowsLogonIdentityProvider : IWindowsLogonIdentityProvider
     {
         public WindowsIdentity GetIdentity()

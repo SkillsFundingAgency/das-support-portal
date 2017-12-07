@@ -12,7 +12,7 @@ using SFA.DAS.Support.Portal.Infrastructure.Services;
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {
     [TestFixture]
-    public class WebDownloaderTests
+    public class SiteConnectorTests
     {
         private MockHttpMessageHandler _mockHttpMessageHandler;
         private HttpClient _httpClient;
