@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -37,9 +38,21 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             _testUri = new Uri(_testUrl);
             _unit = new SiteConnector(_httpClient);
         }
-
         [Test]
-        public async Task ItShouldDownloadTypeSuccessfully()
+        public async Task ItShouldUploadByUriAndFormDataSuccessfully()
+        {
+            _mockHttpMessageHandler
+                .When(_testUrlMatch)
+                .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
+
+            var formData = new Dictionary<string, string> {{"key", "value"}};
+            var response = await _unit.Upload<TestType>(_testUri, formData);
+
+            Assert.IsNotNull(response);
+
+        }
+        [Test]
+        public async Task ItShouldDownloadTypeByUriSuccessfully()
         {
             _mockHttpMessageHandler
                 .When(_testUrlMatch)
@@ -50,7 +63,17 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             Assert.IsNotNull(response);
             
         }
+        [Test]
+        public async Task ItShouldDownloadTypeByUrlSuccessfully()
+        {
+            _mockHttpMessageHandler
+                .When(_testUrlMatch)
+                .Respond(HttpStatusCode.OK, "application/json", _validTestResponseData);
 
+            var response = await _unit.Download<TestType>(_testUrl);
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<TestType>(response);
+        }
         [Test]
         public async Task ItShouldDownloadStringSuccessfully()
         {
