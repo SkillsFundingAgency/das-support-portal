@@ -1,5 +1,8 @@
-﻿namespace SFA.DAS.Support.Portal.Web.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SFA.DAS.Support.Portal.Web.Models
 {
+    [ExcludeFromCodeCoverage]
     public class NavPages
     {
         public const string PayeSchemeDetails = "payeSchemeDetails";

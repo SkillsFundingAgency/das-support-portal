@@ -1,11 +1,7 @@
-﻿using SFA.DAS.Support.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using SFA.DAS.Support.Shared;
 
-namespace SFA.DAS.Support.Portal.Infrastructure.Services
+namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 {
     public interface ISearchProvider
     {

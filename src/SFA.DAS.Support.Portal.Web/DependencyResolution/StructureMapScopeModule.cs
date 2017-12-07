@@ -4,7 +4,9 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
     using SFA.DAS.Support.Portal.Web.App_Start;
 
     using StructureMap.Web.Pipeline;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class StructureMapScopeModule : IHttpModule {
         #region Public Methods and Operators
 

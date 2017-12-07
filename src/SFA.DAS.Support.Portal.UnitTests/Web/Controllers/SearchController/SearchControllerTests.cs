@@ -12,16 +12,15 @@ using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
 using SFA.DAS.Support.Portal.Web;
-using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SearchController
 {
     [TestFixture]
     public sealed class SearchControllerTests
     {
-        private SearchController _sut;
+        private Portal.Web.Controllers.SearchController _sut;
         private Mock<ILog> _mockLogger;
         private Mock<IMappingService> _mockMappingService;
         private Mock<IMediator> _mockMediator;
@@ -33,7 +32,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
             _mockMappingService = new Mock<IMappingService>();
             _mockMediator = new Mock<IMediator>();
 
-            _sut = new SearchController(
+            _sut = new Portal.Web.Controllers.SearchController(
                 _mockMappingService.Object,
                 _mockMediator.Object);
         }

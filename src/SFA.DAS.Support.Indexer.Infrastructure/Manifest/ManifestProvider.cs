@@ -10,22 +10,26 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.Manifest
 {
     public class ManifestProvider : IGetSearchItemsFromASite, IGetSiteManifest
     {
+        private readonly HttpClient _httpClient;
+        private readonly TimeSpan _httpClientSearchItemTimeout = new TimeSpan(0, 1, 0, 0);
+
+        public ManifestProvider(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+
         public async Task<IEnumerable<SearchItem>> GetSearchItems(Uri collectionUri)
         {
-            using (var client = new HttpClient())
-            {
-                client.Timeout = new TimeSpan(0, 1, 0, 0);
-                return await client.DownloadAs<IEnumerable<SearchItem>>(collectionUri);
-            }
+            _httpClient.Timeout = _httpClientSearchItemTimeout;
+            return await _httpClient.DownloadAs<IEnumerable<SearchItem>>(collectionUri);
         }
 
         public async Task<SiteManifest> GetSiteManifest(Uri siteUri)
         {
-            using (var client = new HttpClient())
-            {
-                client.Timeout = new TimeSpan(0, 0, 1, 0);
-                return await client.DownloadAs<SiteManifest>(new Uri(siteUri, "/api/manifest"));
-            }
+            _httpClient.Timeout = new TimeSpan(0, 0, 1, 0);
+            return await _httpClient.DownloadAs<SiteManifest>(new Uri(siteUri, "/api/manifest"));
         }
+
     }
 }

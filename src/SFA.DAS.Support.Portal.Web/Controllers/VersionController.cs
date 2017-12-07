@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Http;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Portal.Infrastructure.Services;
+using SFA.DAS.Support.Portal.Web.Models;
 using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
@@ -15,14 +19,17 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     {
         private readonly IManifestRepository _repository;
         private readonly ILog _log;
+        private readonly IWindowsLogonIdentityProvider _logonIdentityProvider;
 
-        public VersionController(IManifestRepository repository, ILog log)
+        public VersionController(IManifestRepository repository, ILog log, IWindowsLogonIdentityProvider logonIdentityProvider)
         {
             _repository = repository;
             _log = log;
+            _logonIdentityProvider = logonIdentityProvider;
         }
 
         // GET: api/Version
+        [HttpGet]
         public VersionInformation Get()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -37,49 +44,46 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [Route("api/manifest")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         [AllowAnonymous]
-        public ICollection<SiteManifest> Manifests()
+        public async Task<ICollection<SiteManifest>> Manifests()
         {
             try
             {
-                return _repository.Manifests;
+                var result = await _repository.GetManifests();
+                
+                return result;
             }
             catch (Exception ex)
             {
-                _log.Error(ex, "Get manifests");
+                _log.Error(ex, $"{nameof(IManifestRepository)}.{nameof(IManifestRepository.GetManifests)}");
                 throw;
             }
         }
 
         [Route("api/groups")]
+        [HttpGet]
         [Authorize]
         public IEnumerable<string[]> GetGroups()
         {
-            foreach (IdentityReference group in System.Web.HttpContext.Current.Request.LogonUserIdentity.Groups)
-            {
-                yield return new string[] {group.Value, group.Translate(typeof(NTAccount)).ToString()};
-            }
+            return from @group in _logonIdentityProvider.GetIdentity()?.Groups ?? new IdentityReferenceCollection()
+                   select new string[] { @group.Value, @group.Translate(typeof(NTAccount)).ToString() };
         }
 
         [Route("api/claims")]
         [Authorize]
+        [HttpGet]
         public IEnumerable<Claim> GetClaims()
         {
-            return System.Web.HttpContext.Current.Request.LogonUserIdentity.Claims;
+            return _logonIdentityProvider.GetIdentity()?.Claims ?? new List<Claim>();
         }
 
         [Route("api/test")]
         [Authorize(Roles = "ConsoleUser")]
+        [HttpGet]
         public bool GetTest()
         {
             return true;
         }
-    }
-
-    public class VersionInformation
-    {
-        public string AssemblyVersion { get; set; }
-        public string Version { get; set; }
     }
 }

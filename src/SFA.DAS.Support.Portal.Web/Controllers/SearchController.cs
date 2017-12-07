@@ -21,8 +21,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _mappingService = mappingService;
             _mediator = mediator;
         }
-        
-        // GET: Search
+
+        [HttpGet]
         public async Task<ActionResult> Index(EmployerUserSearchQuery query)
         {
             if (!string.IsNullOrEmpty(query.SearchTerm))
@@ -56,7 +56,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View(new SearchResultsViewModel());
         }
 
-        // GET: Detail
+        [HttpGet]
         public async Task<ActionResult> Detail(string id, string searchTerm)
         {
             var response = await _mediator.SendAsync(new EmployerUserQuery(id));

@@ -1,6 +1,6 @@
 ﻿using Elasticsearch.Net;
 using Nest;
-using SFA.DAS.Support.Common.Infrastucture;
+using SFA.DAS.Support.Common.Infrastucture.Extensions;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch

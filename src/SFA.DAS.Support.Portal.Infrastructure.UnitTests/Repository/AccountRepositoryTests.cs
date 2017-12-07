@@ -17,14 +17,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
     [TestFixture]
     public class AccountRepositoryTests
     {
-        private Mock<ILog> _mockLogger;
-        private Mock<IAccountApiClient> _mockAccountApiClient;
-        private AccountRepository _sut;
-
-        private AccountDetailViewModel _mockedAccount;
-        private Mock<IPayeSchemeObfuscator> _mockPayeObfuscator;
-        private Mock<IDatetimeService> _mockDatetimeService;
-
         [SetUp]
         public void Init()
         {
@@ -40,7 +32,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
                 _mockAccountApiClient.Object,
                 _mockPayeObfuscator.Object,
                 _mockDatetimeService.Object
-                );
+            );
 
             IEnumerable<ResourceViewModel> resourceViewModelList = new List<ResourceViewModel>
             {
@@ -93,53 +85,71 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
                 LegalEntities = new ResourceList(legalentityresourceViewModelList)
             };
         }
-        
-        [Test]
-        public async Task ShouldReturnPayeSchemeIntoAccountIfAddedDateIsInThePastAndRemovedDateIsNull()
-        {
-            var mockedPayeScheme = new PayeSchemeViewModel
-            {
-                DasAccountId = "DasAccountId",
-                Name = "Name",
-                AddedDate = DateTime.UtcNow.AddHours(-1),
-                RemovedDate = null,
-                Ref = "12345678"
-            };
 
-            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.IsAny<string>()))
-                .Returns(Task.FromResult(_mockedAccount));
+        private Mock<ILog> _mockLogger;
+        private Mock<IAccountApiClient> _mockAccountApiClient;
+        private AccountRepository _sut;
 
-            _mockAccountApiClient.Setup(x => x.GetResource<PayeSchemeViewModel>(It.IsAny<string>()))
-                .Returns(Task.FromResult(mockedPayeScheme));
-
-            var result = await _sut.Get("112344", AccountFieldsSelection.PayeSchemes);
-
-            result.Should().NotBeNull();
-            result.PayeSchemes.Count().Should().Equals(1);
-        }
+        private AccountDetailViewModel _mockedAccount;
+        private Mock<IPayeSchemeObfuscator> _mockPayeObfuscator;
+        private Mock<IDatetimeService> _mockDatetimeService;
 
         [Test]
-        public async Task ShouldReturnPayeSchemeIntoAccountIfDatesAreValid()
+        public async Task ShouldNotReturnLegalEntityIfExpiredOrRemoved()
         {
-            var mockedPayeScheme = new PayeSchemeViewModel
+            var mockedlegalEntities = new List<LegalEntityViewModel>
             {
-                DasAccountId = "DasAccountId",
-                Name = "Name",
-                AddedDate = DateTime.UtcNow.AddHours(-1),
-                RemovedDate = DateTime.UtcNow.AddHours(1),
-                Ref = "12345678"
+                new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Signed
+                },
+                new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Pending
+                },
+                new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Superseded
+                },
+                new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Removed
+                },
+                new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Expired
+                },
+                new LegalEntityViewModel
+                {
+                    Name = "EmployerAgreementStatus is null or empty"
+                }
             };
 
-            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.IsAny<string>()))
+            _mockAccountApiClient.Setup(x =>
+                    x.GetResource<AccountDetailViewModel>(It.Is<string>(y => y == "/api/accounts/112344")))
                 .Returns(Task.FromResult(_mockedAccount));
 
-            _mockAccountApiClient.Setup(x => x.GetResource<PayeSchemeViewModel>(It.IsAny<string>()))
-                .Returns(Task.FromResult(mockedPayeScheme));
+            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/1")))
+                .Returns(Task.FromResult(mockedlegalEntities[0]));
+            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/2")))
+                .Returns(Task.FromResult(mockedlegalEntities[1]));
+            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/3")))
+                .Returns(Task.FromResult(mockedlegalEntities[2]));
+            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/4")))
+                .Returns(Task.FromResult(mockedlegalEntities[3]));
+            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/5")))
+                .Returns(Task.FromResult(mockedlegalEntities[4]));
+            _mockAccountApiClient.Setup(x =>
+                    x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/NullOrEmpty")))
+                .Returns(Task.FromResult(mockedlegalEntities[5]));
 
-            var result = await _sut.Get("112344", AccountFieldsSelection.PayeSchemes);
+            var result = await _sut.Get("112344", AccountFieldsSelection.Organisations);
 
             result.Should().NotBeNull();
-            result.PayeSchemes.Count().Should().Equals(1);
+            result.LegalEntities.Count().Should().Equals(3);
+            result.LegalEntities.Any(x => x.AgreementStatus == EmployerAgreementStatus.Removed ||
+                                          x.AgreementStatus == EmployerAgreementStatus.Expired ||
+                                          x.AgreementStatus == 0).Should().BeFalse();
         }
 
         [Test]
@@ -218,6 +228,54 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         }
 
         [Test]
+        public async Task ShouldReturnPayeSchemeIntoAccountIfAddedDateIsInThePastAndRemovedDateIsNull()
+        {
+            var mockedPayeScheme = new PayeSchemeViewModel
+            {
+                DasAccountId = "DasAccountId",
+                Name = "Name",
+                AddedDate = DateTime.UtcNow.AddHours(-1),
+                RemovedDate = null,
+                Ref = "12345678"
+            };
+
+            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.IsAny<string>()))
+                .Returns(Task.FromResult(_mockedAccount));
+
+            _mockAccountApiClient.Setup(x => x.GetResource<PayeSchemeViewModel>(It.IsAny<string>()))
+                .Returns(Task.FromResult(mockedPayeScheme));
+
+            var result = await _sut.Get("112344", AccountFieldsSelection.PayeSchemes);
+
+            result.Should().NotBeNull();
+            result.PayeSchemes.Count().Should().Equals(1);
+        }
+
+        [Test]
+        public async Task ShouldReturnPayeSchemeIntoAccountIfDatesAreValid()
+        {
+            var mockedPayeScheme = new PayeSchemeViewModel
+            {
+                DasAccountId = "DasAccountId",
+                Name = "Name",
+                AddedDate = DateTime.UtcNow.AddHours(-1),
+                RemovedDate = DateTime.UtcNow.AddHours(1),
+                Ref = "12345678"
+            };
+
+            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.IsAny<string>()))
+                .Returns(Task.FromResult(_mockedAccount));
+
+            _mockAccountApiClient.Setup(x => x.GetResource<PayeSchemeViewModel>(It.IsAny<string>()))
+                .Returns(Task.FromResult(mockedPayeScheme));
+
+            var result = await _sut.Get("112344", AccountFieldsSelection.PayeSchemes);
+
+            result.Should().NotBeNull();
+            result.PayeSchemes.Count().Should().Equals(1);
+        }
+
+        [Test]
         public async Task ShouldReturnTeamMembers()
         {
             ICollection<TeamMemberViewModel> mockedPayeScheme = new List<TeamMemberViewModel>
@@ -256,62 +314,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             result.Should().NotBeNull();
             result.TeamMembers.Count.Should().Equals(3);
             result.TeamMembers.First().Name.Equals("Test1");
-        }
-
-        [Test]
-        public async Task ShouldNotReturnLegalEntityIfExpiredOrRemoved()
-        {
-            var mockedlegalEntities = new List<LegalEntityViewModel>
-            {
-                new LegalEntityViewModel
-                {
-                    AgreementStatus = EmployerAgreementStatus.Signed
-                },
-                new LegalEntityViewModel
-                {
-                    AgreementStatus = EmployerAgreementStatus.Pending
-                },
-                new LegalEntityViewModel
-                {
-                    AgreementStatus = EmployerAgreementStatus.Superseded
-                },
-                new LegalEntityViewModel
-                {
-                    AgreementStatus = EmployerAgreementStatus.Removed
-                },
-                new LegalEntityViewModel
-                {
-                    AgreementStatus = EmployerAgreementStatus.Expired
-                },
-                new LegalEntityViewModel
-                {
-                    Name = "EmployerAgreementStatus is null or empty",
-                }
-            };
-
-            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.Is<string>(y => y == "/api/accounts/112344")))
-                .Returns(Task.FromResult(_mockedAccount));
-
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/1")))
-                .Returns(Task.FromResult(mockedlegalEntities[0]));
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/2")))
-                .Returns(Task.FromResult(mockedlegalEntities[1]));
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/3")))
-                .Returns(Task.FromResult(mockedlegalEntities[2]));
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/4")))
-                .Returns(Task.FromResult(mockedlegalEntities[3]));
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/5")))
-                .Returns(Task.FromResult(mockedlegalEntities[4]));
-            _mockAccountApiClient.Setup(x => x.GetResource<LegalEntityViewModel>(It.Is<string>(y => y == "href/NullOrEmpty")))
-                .Returns(Task.FromResult(mockedlegalEntities[5]));
-
-            var result = await _sut.Get("112344", AccountFieldsSelection.Organisations);
-
-            result.Should().NotBeNull();
-            result.LegalEntities.Count().Should().Equals(3);
-            result.LegalEntities.Any(x => x.AgreementStatus == EmployerAgreementStatus.Removed || 
-                                          x.AgreementStatus == EmployerAgreementStatus.Expired ||
-                                          x.AgreementStatus == 0).Should().BeFalse();
         }
     }
 }

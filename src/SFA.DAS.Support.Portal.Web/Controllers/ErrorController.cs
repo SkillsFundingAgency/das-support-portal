@@ -1,12 +1,14 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [AllowAnonymous]
     public sealed class ErrorController : Controller
     {
 
-        // GET: Error
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult BadRequest()
         {
@@ -15,6 +17,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error400");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult NotFound()
         {
@@ -23,6 +26,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error404");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult Error()
         {
@@ -31,6 +35,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Error500");
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult NoError()
         {

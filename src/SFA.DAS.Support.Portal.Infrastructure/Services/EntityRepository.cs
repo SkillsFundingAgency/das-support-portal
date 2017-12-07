@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Shared;
 

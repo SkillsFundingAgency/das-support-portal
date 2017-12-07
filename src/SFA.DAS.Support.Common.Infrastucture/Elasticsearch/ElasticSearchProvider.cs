@@ -1,10 +1,10 @@
 ﻿using Nest;
-using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch

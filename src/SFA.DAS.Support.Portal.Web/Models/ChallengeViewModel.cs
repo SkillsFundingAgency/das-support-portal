@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.Web.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ChallengeViewModel
     {
         public string Id { get; set; }

@@ -13,9 +13,9 @@ using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.TokenService.Api.Client;
 using StructureMap.Configuration.DSL;
-using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
@@ -72,7 +72,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 
 
             For<IEntityRepository>().Use<EntityRepository>();
-            For<IDownload>().Use<WebDownloader>();
+            For<ISiteConnector>().Use<SiteConnector>();
             For<IFormMapper>().Use<FormMapper>();
         }
 

@@ -11,7 +11,7 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 {
     [TestFixture]
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     public sealed class EmployerUserDetailHandlerTests
     {
         [SetUp]

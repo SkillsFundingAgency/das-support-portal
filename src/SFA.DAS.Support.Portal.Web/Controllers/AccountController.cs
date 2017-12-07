@@ -23,24 +23,23 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _checker = checker;
         }
 
+        [HttpGet]
         public async Task<ActionResult> Index(string id, string searchTerm)
         {
             var response = await _mediator.SendAsync(new AccountDetailOrganisationsQuery(id));
 
-            if (response.StatusCode == SearchResponseCodes.Success)
+            if (response.StatusCode != SearchResponseCodes.Success) return new HttpNotFoundResult();
+
+            var vm = new AccountDetailViewModel
             {
-                var vm = new AccountDetailViewModel
-                {
-                    Account = response.Account,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
-                };
+                Account = response.Account,
+                SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+            };
 
-                return View(vm);
-            }
-
-            return new HttpNotFoundResult();
+            return View(vm);
         }
 
+        [HttpGet]
         public async Task<ActionResult> TeamMembers(string id, string searchTerm)
         {
             var response = await _mediator.SendAsync(new AccountTeamMembersQuery(id));
@@ -59,6 +58,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return new HttpNotFoundResult();
         }
 
+        [HttpGet]
         public async Task<ActionResult> PayeSchemes(string id, string searchTerm)
         {
             var response = await _mediator.SendAsync(new AccountPayeSchemesQuery(id));
@@ -77,6 +77,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return new HttpNotFoundResult();
         }
 
+        [HttpGet]
         public async Task<ActionResult> Finance(string id, string searchTerm)
         {
             if (!_checker.HasPermissions(Request, Response, User, id))
@@ -101,6 +102,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return new HttpNotFoundResult();
         }
 
+        [HttpGet]
         public async Task<ActionResult> PayeSchemeLevySubmissions(string accountId, string payePosition)
         {
             if (!_checker.HasPermissions(Request, Response, User, accountId))

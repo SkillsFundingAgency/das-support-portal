@@ -24,6 +24,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
         public async Task<ActionResult> Index(string id, string url, bool hasError = false)
         {
             var response = await _mediator.SendAsync(new ChallengeQuery(id));

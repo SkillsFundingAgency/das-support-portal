@@ -12,28 +12,31 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly ICheckPermissions _checker;
         private readonly IGrantPermissions _granter;
 
-        public ResourceController(IManifestRepository repository, ICheckPermissions checker, IGrantPermissions granter)
+        public ResourceController(
+            IManifestRepository repository, 
+            ICheckPermissions checker, 
+            IGrantPermissions granter)
         {
             _repository = repository;
             _checker = checker;
             _granter = granter;
         }
 
-        // GET: Challenge
         [HttpGet]
-        public ActionResult Challenge(string id, string resourceId, string key, string url)
+        public async Task<ActionResult> Challenge(string id, string resourceId, string key, string url)
         {
-            if (!_repository.ChallengeExists(key))
+            if (!await _repository.ChallengeExists(key))
             {
                 return HttpNotFound();
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, resourceId);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, resourceId);
+            ViewBag.SubNav = await _repository.GetNav(key, resourceId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
 
             try
             {
-                return View("Sub", (object)_repository.GetChallengeForm(key, resourceId, url));
+                var challengeForm = await _repository.GetChallengeForm(key, resourceId, url);
+                return View("Sub", (object)challengeForm);
             }
             catch
             {
@@ -42,10 +45,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Challenge(string id, string resourceId, string key, FormCollection formData)
+        public async Task<ActionResult> Challenge(string id, string resourceId, string key, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
-            var result = _repository.SubmitChallenge(resourceId, pairs);
+            var result = await _repository.SubmitChallenge(resourceId, pairs);
 
             if (result.HasRedirect)
             {
@@ -53,22 +56,20 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 return Redirect(result.RedirectUrl);
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, resourceId);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, resourceId);
+            ViewBag.SubNav = await _repository.GetNav(key, resourceId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
             return View("Sub", (object)result.Page);
         }
 
-
-        // GET: Resource
         [HttpGet]
-        public ActionResult Index(string key, string id)
+        public async Task<ActionResult> Index(string key, string id)
         {
-            if (!_repository.ResourceExists(key))
+            if (!await _repository.ResourceExists(key))
             {
                 return View("Sub", (object)"<h3>This resource isn't registered</h3>");
             }
 
-            var resource = _repository.GetResource(key);
+            var resource = await _repository.GetResource(key);
 
             if (!string.IsNullOrEmpty(resource.Challenge))
             {
@@ -78,11 +79,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 }
             }
 
-            ViewBag.SubNav = _repository.GetNav(key, id);
-            ViewBag.SubHeader = _repository.GenerateHeader(key, id);
+            ViewBag.SubNav = await _repository.GetNav(key, id);
+            ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
+
             try
             {
-                return View("Sub", (object)_repository.GetResourcePage(key, id));
+                var masterName = await _repository.GetResourcePage(key, id);    
+                return View("Sub", (object)masterName);
             }
             catch
             {
