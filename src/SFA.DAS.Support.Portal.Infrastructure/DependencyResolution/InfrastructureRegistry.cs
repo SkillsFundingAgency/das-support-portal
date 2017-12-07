@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using System.Threading.Tasks;
 using HMRC.ESFA.Levy.Api.Client;
 using Microsoft.Azure.Search;
@@ -19,6 +20,7 @@ using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public class InfrastructureRegistry : Registry
     {
         public InfrastructureRegistry()
@@ -58,7 +60,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 
             For<IEmployerUsersApiConfiguration>().Use<Settings.EmployerUsersApiConfiguration>();
             For<IAccountApiConfiguration>().Use<AccountsApiConfiguration>();
-            
+
             For<IEmployerUserRepository>().Use<EmployerUserRepository>();
             For<IAccountRepository>().Use<AccountRepository>();
             For<ILevySubmissionsRepository>().Use<LevySubmissionsRepository>();
