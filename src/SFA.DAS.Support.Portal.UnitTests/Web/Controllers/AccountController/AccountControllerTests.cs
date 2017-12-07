@@ -13,16 +13,15 @@ using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
-using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Account
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.AccountController
 {
     [TestFixture]
     public sealed class AccountControllerTests
     {
-        private AccountController _sut;
+        private Portal.Web.Controllers.AccountController _sut;
         private Mock<ILog> _mockLogger;
         private Mock<IMappingService> _mockMappingService;
         private Mock<IMediator> _mockMediator;
@@ -36,7 +35,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Account
             _mockMediator = new Mock<IMediator>();
             _mockChecker = new Mock<ICheckPermissions>();
 
-            _sut = new AccountController(
+            _sut = new Portal.Web.Controllers.AccountController(
                 _mockMediator.Object,
                 _mockChecker.Object);
         }

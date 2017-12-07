@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
 {
     public class WhenCallingTheVersionControllerGetGroupsMethod : WithAPreparedVersionController
     {

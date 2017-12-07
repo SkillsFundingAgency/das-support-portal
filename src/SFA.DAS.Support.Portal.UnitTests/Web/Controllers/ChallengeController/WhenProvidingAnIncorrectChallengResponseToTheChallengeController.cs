@@ -7,15 +7,14 @@ using SFA.DAS.Support.Portal.ApplicationServices;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
-using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.Services;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Challenge
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
 {
     [TestFixture]
     public class
         WhenProvidingAnIncorrectChallengResponseToTheChallengeController : WhenTestingAnMvcControllerOfType<
-            ChallengeController>
+            Portal.Web.Controllers.ChallengeController>
     {
         private Mock<IAccountRepository> _accountRepository;
         private Mock<IGrantPermissions> _granter;
@@ -28,7 +27,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Challenge
             _accountRepository = new Mock<IAccountRepository>();
             _mediator = new Mock<IMediator>();
 
-            Unit = new ChallengeController(
+            Unit = new Portal.Web.Controllers.ChallengeController(
                 _granter.Object,
                 _accountRepository.Object,
                 _mediator.Object);

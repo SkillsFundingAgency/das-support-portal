@@ -2,12 +2,11 @@
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.Health;
-using SFA.DAS.Support.Portal.Web.Controllers;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Health
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.HealthController
 {
     [TestFixture]
-    public class WhenTestingTheHealthController : WhenTestingAnMvcControllerOfType<HealthController> 
+    public class WhenTestingTheHealthController : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.HealthController> 
     {
         private Mock<IHealthService> _healthService;
 
@@ -15,7 +14,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Health
         public override void Setup()
         {
             _healthService = new Mock<IHealthService>();
-            Unit = new HealthController(_healthService.Object);
+            Unit = new Portal.Web.Controllers.HealthController(_healthService.Object);
         }
         [Ignore("Unit designed as untestable, refactoring requried to enable testing of this unit")]
         [Test]

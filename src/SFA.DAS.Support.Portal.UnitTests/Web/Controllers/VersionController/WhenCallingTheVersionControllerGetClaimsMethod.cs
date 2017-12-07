@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using NUnit.Framework;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
 {
     public class WhenCallingTheVersionControllerGetClaimsMethod : WithAPreparedVersionController
     {

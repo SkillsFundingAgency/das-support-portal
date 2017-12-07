@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Shared;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
 {
     public class WhenCallingTheVersionControllerManifestMethod : WithAPreparedVersionController
     {

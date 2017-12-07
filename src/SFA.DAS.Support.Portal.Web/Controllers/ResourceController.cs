@@ -81,6 +81,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
+
             try
             {
                 var masterName = await _repository.GetResourcePage(key, id);    

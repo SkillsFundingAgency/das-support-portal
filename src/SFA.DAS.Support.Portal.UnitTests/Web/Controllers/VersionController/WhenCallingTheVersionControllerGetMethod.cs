@@ -1,10 +1,7 @@
-﻿using Moq;
-using NUnit.Framework;
-using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.Web.Controllers;
+﻿using NUnit.Framework;
 using SFA.DAS.Support.Portal.Web.Models;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Version
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
 {
     public class WhenCallingTheVersionControllerGetMethod : WithAPreparedVersionController
     {

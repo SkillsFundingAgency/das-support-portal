@@ -1,10 +1,9 @@
 ﻿using System.Web.Mvc;
 using NUnit.Framework;
-using SFA.DAS.Support.Portal.Web.Controllers;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Home
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.HomeController
 {
-    public class WhenCallingTheHomeControllerIndexMethod : WhenTestingAnMvcControllerOfType<HomeController>
+    public class WhenCallingTheHomeControllerIndexMethod : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.HomeController>
     {
         [Test]
         public void ItShouldReturnAView()

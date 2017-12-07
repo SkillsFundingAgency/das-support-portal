@@ -1,12 +1,11 @@
 ﻿using System.Web.Mvc;
 using NUnit.Framework;
-using SFA.DAS.Support.Portal.Web.Controllers;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.Shared
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SharedController
 {
     [TestFixture]
-    public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<SharedController>
+    public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.SharedController>
     {
 
         [SetUp]
