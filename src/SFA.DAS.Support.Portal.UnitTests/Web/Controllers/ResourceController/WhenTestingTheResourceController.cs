@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.IO;
+﻿using System.IO;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Routing;
@@ -9,7 +7,6 @@ using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
 using System.Web.Mvc;
-using AngleSharp.Css.Values;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {
