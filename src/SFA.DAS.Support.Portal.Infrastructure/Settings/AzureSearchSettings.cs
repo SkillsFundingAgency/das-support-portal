@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class AzureSearchSettings : IAzureSearchSettings
     {
         private readonly IProvideSettings _settings;

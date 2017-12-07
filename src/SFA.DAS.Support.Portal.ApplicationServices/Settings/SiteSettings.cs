@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class SiteSettings : ISiteSettings
     {
         private readonly IProvideSettings _settings;

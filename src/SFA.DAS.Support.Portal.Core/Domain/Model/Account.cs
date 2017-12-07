@@ -5,7 +5,7 @@ using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Support.Portal.Core.Domain.Model
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class Account
     {
         public long AccountId { get; set; }

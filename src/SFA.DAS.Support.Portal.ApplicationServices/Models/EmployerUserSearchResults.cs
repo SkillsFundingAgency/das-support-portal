@@ -4,7 +4,7 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Models
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class EmployerUserSearchResults
     {
         public int Page { get; set; }

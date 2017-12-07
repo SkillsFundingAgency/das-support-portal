@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class LevySubmissionsApiConfiguration : ITokenServiceApiClientConfiguration
     {
         private readonly IProvideSettings _settings;
