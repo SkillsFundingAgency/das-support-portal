@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using MediatR;
 using Moq;
 using NUnit.Framework;
@@ -19,6 +22,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
         private Mock<IAccountRepository> _accountRepository;
         private Mock<IGrantPermissions> _granter;
         private Mock<IMediator> _mediator;
+        private Mock<HttpContextBase> _mockContextBase;
+        private ControllerContext _unitControllerContext;
 
         [SetUp]
         public override void Setup()
@@ -31,8 +36,18 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
                 _granter.Object,
                 _accountRepository.Object,
                 _mediator.Object);
+
+
+            _mockContextBase = new Mock<HttpContextBase>();
+
+            _mockContextBase.Setup(x => x.Request).Returns(new Mock<HttpRequestBase>().Object);
+            _mockContextBase.Setup(x => x.Response).Returns(new Mock<HttpResponseBase>().Object);
+            _mockContextBase.Setup(x => x.User).Returns(new Mock<IPrincipal>().Object);
+
+            _unitControllerContext = new ControllerContext(_mockContextBase.Object, new RouteData(), Unit);
+
+            Unit.ControllerContext = _unitControllerContext;
         }
-        [Ignore("The Unit has been designed to be untestable, as it directly references the Request")]
         [Test]
         public void ItShouldRedirectWithAnError()
         {
@@ -56,14 +71,14 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
 
             _mediator.Setup(x => x.SendAsync(It.IsAny<ChallengePermissionQuery>()))
                 .Returns(Task.FromResult(challengePermissionResponse));
-
-
+            _mockContextBase.Setup(x => x.Request.CurrentExecutionFilePath).Returns("SomePathOrOther");
+            // needs to mock 'Request.CurrentExecutionFilePath'
             ActionResultResponse = Unit.Index(challengeEntry).Result;
 
             Assert.IsInstanceOf<RedirectResult>(ActionResultResponse);
             var url = ((RedirectResult) ActionResultResponse).Url;
 
-            Assert.AreEqual($"?url={challengeEntry.Url}&hasError=true", url);
+            Assert.AreEqual($"SomePathOrOther?url={challengeEntry.Url}&hasError=true", url);
         }
     }
 }
