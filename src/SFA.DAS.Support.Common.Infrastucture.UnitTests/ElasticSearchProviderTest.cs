@@ -41,7 +41,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 new SearchItem
                 {
                     SearchId = "A001",
-                    Html = "<div></div>"
+                    SearchResultJson = "{'user':'john'}"
                 }
            };
 

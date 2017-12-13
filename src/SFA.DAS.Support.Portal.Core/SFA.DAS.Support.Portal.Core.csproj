@@ -57,6 +57,7 @@
     <Compile Include="Domain\Model\ChallengeEntry.cs" />
     <Compile Include="Domain\Model\EmployerUser.cs" />
     <Compile Include="Domain\Model\EmployerUserSummary.cs" />
+    <Compile Include="Domain\Model\GenericSearchResult.cs" />
     <Compile Include="Domain\Model\IUser.cs" />
     <Compile Include="Domain\Model\UserStatus.cs" />
     <Compile Include="Domain\Model\UserSummary.cs" />

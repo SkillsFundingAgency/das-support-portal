@@ -6,6 +6,9 @@ using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
+using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Shared;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
@@ -28,15 +31,12 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             if (!string.IsNullOrEmpty(query.SearchTerm))
             {
                 query.SearchTerm = query.SearchTerm.Trim();
+
                 if (Request.Headers.AllKeys.Contains("new"))
                 {
                     var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm });
-
-                    return View(new SearchResultsViewModel
-                    {
-                        SearchTerm = query.SearchTerm,
-                        NewResults = response.Results
-                    });
+                    var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
+                    return View(viewModel);
                 }
                 else
                 {
@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                     User = response.User,
                     SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
                 };
-                
+
                 return View(vm);
             }
 

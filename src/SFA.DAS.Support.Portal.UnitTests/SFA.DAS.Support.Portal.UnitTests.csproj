@@ -193,6 +193,7 @@
     <Compile Include="Web\Helpers\AccountHelperTests.cs" />
     <Compile Include="Web\Helpers\ChallengeHelperTests.cs" />
     <Compile Include="Web\Services\MappingServiceTests.cs" />
+    <Compile Include="Web\Services\SearchTableResultBuilderTest.cs" />
     <Compile Include="Web\Views\Account\AccountTeamMembersPage.cs" />
     <Compile Include="Web\Views\Account\PayeSchemeLevySubmissionsPage.cs" />
     <Compile Include="Web\Views\Account\PayeSchemePage.cs" />

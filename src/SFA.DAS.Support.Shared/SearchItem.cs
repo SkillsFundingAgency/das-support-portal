@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Shared
 {
@@ -10,6 +9,8 @@ namespace SFA.DAS.Support.Shared
 
         public string[] Keywords { get; set; }
 
-        public string Html { get; set; }
+        public string SearchResultJson { get; set; }
+
+        public string SearchResultCategory { get; set; }
     }
 }

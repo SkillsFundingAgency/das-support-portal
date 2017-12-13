@@ -389,7 +389,9 @@
     <Compile Include="Services\IGrantPermissions.cs" />
     <Compile Include="Services\ICheckPermissions.cs" />
     <Compile Include="Models\PermissionCookieModel.cs" />
+    <Compile Include="Services\ISearchTableResultBuilder.cs" />
     <Compile Include="Services\PermissionCookieProvider.cs" />
+    <Compile Include="Services\SearchTableResultBuilder.cs" />
     <Compile Include="Settings\IAuthSettings.cs" />
     <Compile Include="Settings\AuthSettings.cs" />
     <Compile Include="Settings\RoleSettings.cs" />
@@ -416,6 +418,8 @@
     <Compile Include="ViewModels\AccountDetailViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
+    <Compile Include="ViewModels\ResultCell.cs" />
+    <Compile Include="ViewModels\ResultRow.cs" />
     <Compile Include="ViewModels\SearchResultsViewModel.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="Global.asax.cs">
@@ -423,6 +427,7 @@
     </Compile>
     <Compile Include="Models\ChallengeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\SearchTableResultViewModel.cs" />
     <Compile Include="Views\Account\PayeSchemeLevySubmissions.generated.cs">
       <DependentUpon>PayeSchemeLevySubmissions.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -458,11 +463,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Detail.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Search\Index.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -472,10 +472,6 @@
     </Content>
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Search\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\SignOutCallback.cshtml" />
     <Content Include="Views\Search\Detail.cshtml">
@@ -532,6 +528,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\_Analytics.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

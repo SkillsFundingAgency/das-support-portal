@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
@@ -10,12 +11,14 @@ namespace SFA.DAS.Support.Portal.Web.Services
     {
         private readonly ILog _logger;
         private readonly IMapper _mapper;
+        private readonly ISearchTableResultBuilder _searchTableResultBuilder;
 
-        public MappingService(ILog logger)
+        public MappingService(ILog logger, ISearchTableResultBuilder searchTableResultBuilder)
         {
             _logger = logger;
             Configuration = Config();
             _mapper = Configuration.CreateMapper();
+            _searchTableResultBuilder = searchTableResultBuilder;
         }
 
         public MapperConfiguration Configuration { get; private set; }
@@ -50,15 +53,27 @@ namespace SFA.DAS.Support.Portal.Web.Services
         {
             cfg.CreateMap<EmployerUserSearchResponse, SearchResultsViewModel>()
                 .ForMember(x => x.Results, opt => opt.MapFrom(y => y.Results))
-                .ForMember(x => x.NewResults, y => y.Ignore())
+                .ForMember(x => x.CustomSearchResult, y => y.Ignore())
                 .ForMember(x => x.ErrorMessage, y => y.Ignore());
         }
+
+        private void CreateSearchTableResultsMappings(IMapperConfiguration cfg)
+        {
+            cfg.CreateMap<SearchResponse, SearchResultsViewModel>()
+                .ForMember(x => x.Results, o => o.Ignore())
+                .ForMember(x => x.ErrorMessage, y => y.Ignore())
+                .ForMember(x => x.CustomSearchResult, opt => opt.MapFrom(o => _searchTableResultBuilder.CreateTableResult(o)));
+        }
+
+     
 
         private MapperConfiguration Config()
         {
             return new MapperConfiguration(cfg =>
             {
                 CreateEmployerUserSearchResultsMappings(cfg);
+                CreateSearchTableResultsMappings(cfg);
+
             });
         }
     }

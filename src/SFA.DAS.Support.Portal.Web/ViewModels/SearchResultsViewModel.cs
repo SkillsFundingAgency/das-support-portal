@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Web.ViewModels
 {
@@ -12,12 +13,13 @@ namespace SFA.DAS.Support.Portal.Web.ViewModels
         public int Page { get; set; }
         public int LastPage { get; set; }
         public string ErrorMessage { get; set; }
-        public IEnumerable<string> NewResults { get; set; }
+        public SearchTableResultViewModel CustomSearchResult { get; set; }
 
         public SearchResultsViewModel()
         {
             Results = new List<UserSummary>();
             Page = 1;
         }
+
     }
 }

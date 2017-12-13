@@ -9,10 +9,10 @@
 {
     <div class="search-input">
         <label for="search-main">
-                    
+
         </label>
         @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
-        <input type="hidden" name="Page" value="1"/>
+        <input type="hidden" name="Page" value="1" />
         <div class="search-submit">
             <button type="submit" class="">Search</button>
         </div>
@@ -45,7 +45,7 @@ else if (Model.Results != null && Model.Results.Any())
         {
             <tr>
                 <td>
-                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "Detail", new {id = item.Id, searchTerm = Model.SearchTerm})
+                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "Detail", new { id = item.Id, searchTerm = Model.SearchTerm })
                 </td>
                 <td>
                     @item.Email
@@ -78,13 +78,13 @@ else if (Model.Results != null && Model.Results.Any())
 
         @if (Model.Page > 1)
         {
-            @Html.ActionLink("< Prev", "Index", new {Model.SearchTerm, Page = Model.Page - 1}, new {@class = "previous"})
+            @Html.ActionLink("< Prev", "Index", new { Model.SearchTerm, Page = Model.Page - 1 }, new { @class = "previous" })
             ;
         }
 
         @if (Model.Results.Any() && Model.Page != Model.LastPage)
         {
-            @Html.ActionLink("Next >", "Index", new {Model.SearchTerm, Page = Model.Page + 1}, new {@class = "next"})
+            @Html.ActionLink("Next >", "Index", new { Model.SearchTerm, Page = Model.Page + 1 }, new { @class = "next" })
             ;
         }
 
@@ -95,14 +95,33 @@ else if (Model.Results != null && Model.Results.Any())
 
     </div>
 }
-else if (Model.NewResults != null && Model.NewResults.Any())
+else if (Model.CustomSearchResult != null)
 {
-    foreach (var item in Model.NewResults)
-    {
-        @Html.Raw(item)
-    }
+
+    <table>
+        @foreach (var column in Model.CustomSearchResult.Columns)
+        {
+
+            <tr>
+                <th scope="col">column</th>
+            </tr>
+        }
+        @foreach (var row in Model.CustomSearchResult.Rows)
+        {
+            <tr>
+                @foreach (var cell in row.CellValues)
+                {
+
+                    <td>
+                        @cell.Value
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+
 }
-else if(!Model.Results.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
+else if (!Model.Results.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
 {
     <p>No user found</p>
 }

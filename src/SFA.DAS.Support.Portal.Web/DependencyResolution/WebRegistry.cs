@@ -26,6 +26,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IAuthSettings>().Use<AuthSettings>();
 
             For<IGetCurrentIdentity>().Use<IdentityService>();
+            For<ISearchTableResultBuilder>().Use<SearchTableResultBuilder>();
         }
     }
 }
