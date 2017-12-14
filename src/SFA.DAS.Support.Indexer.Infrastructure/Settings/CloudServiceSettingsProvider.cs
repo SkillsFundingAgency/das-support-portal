@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure;
 using SFA.DAS.Support.Indexer.Core.Services;
 
 namespace SFA.DAS.Support.Indexer.Infrastructure.Settings
 {
+    [ExcludeFromCodeCoverage]
     public class CloudServiceSettingsProvider : IProvideSettings
     {
         private readonly IProvideSettings _baseSettings;

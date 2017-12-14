@@ -25,9 +25,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(EmployerUserSearchQuery query)
         {
-            if (!string.IsNullOrEmpty(query.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
                 query.SearchTerm = query.SearchTerm.Trim();
+
                 if (Request.Headers.AllKeys.Contains("new"))
                 {
                     var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm });
@@ -37,6 +38,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                         SearchTerm = query.SearchTerm,
                         NewResults = response.Results
                     });
+
                 }
                 else
                 {

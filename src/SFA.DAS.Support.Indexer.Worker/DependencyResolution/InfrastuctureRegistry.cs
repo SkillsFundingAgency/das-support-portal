@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
-using Microsoft.Azure.Search;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Core.Services;
 using SFA.DAS.Support.Indexer.Infrastructure.AzureQueues;
-using SFA.DAS.Support.Indexer.Infrastructure.AzureSearch;
 using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
 using SFA.DAS.Support.Indexer.Infrastructure.Settings;
 using StructureMap.Configuration.DSL;
@@ -13,11 +11,13 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.NLog.Logger;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public class InfrastuctureRegistry : Registry
     {
         public InfrastuctureRegistry()

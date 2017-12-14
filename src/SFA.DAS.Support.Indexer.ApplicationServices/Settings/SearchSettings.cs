@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.Core.Services;
 using System.Linq;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
 {
+    [ExcludeFromCodeCoverage]
     public class SearchSettings : ISearchSettings
     {
         private readonly IProvideSettings _settings;

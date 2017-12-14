@@ -16,10 +16,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using System.Diagnostics.CodeAnalysis;
 using StructureMap;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public static class IoC
     {
         public static IContainer Initialize()
