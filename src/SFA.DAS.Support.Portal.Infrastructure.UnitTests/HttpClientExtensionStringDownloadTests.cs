@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
@@ -23,6 +24,22 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
+            
+
         }
-  }
+
+        [Test]
+        public void ItShoudMockAGetOperation()
+        {
+            _mockHttpMessageHandler.When("http://localhost/api/user/1234")
+                .Respond("application/json", _emptyJsonContent);
+
+            var result = _httpClient.GetAsync(new Uri("http://localhost/api/user/1234")).Result;
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.AreEqual(_emptyJsonContent, result.Content.ReadAsStringAsync().Result);
+
+        }
+
+    }
 }

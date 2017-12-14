@@ -157,7 +157,6 @@
   <ItemGroup>
     <Compile Include="DependencyResolution\ILoggingPropertyFactory.cs" />
     <Compile Include="DependencyResolution\LoggingPropertyFactory.cs" />
-    <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="LevySubmissionsRepository.cs" />
     <Compile Include="AccountRepository.cs" />
     <Compile Include="ChallengeRepository.cs" />
@@ -206,7 +205,9 @@
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

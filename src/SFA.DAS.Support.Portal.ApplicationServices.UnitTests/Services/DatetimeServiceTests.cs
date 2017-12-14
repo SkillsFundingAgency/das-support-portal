@@ -4,7 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 
-namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Service
+namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services
 {
     public class DatetimeServiceTests
     {

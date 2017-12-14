@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 
-namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Service
+namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services
 {
     [TestFixture]
     public class ChallengeServiceTests

@@ -69,6 +69,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<bool> ChallengeExists(string key)
         {
+            await PollSites();
             return await Task.FromResult(Challenges.ContainsKey(FormatKey(key)));
         }
 
@@ -214,7 +215,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             try
             {
-                var result = await _downloader.Download(AddQueryString(url));
+                var queryString = AddQueryString(url);
+                var result = await _downloader.Download(queryString);
 
                 return result;
             }
@@ -243,7 +245,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
 
             var list = new Dictionary<string, SiteManifest>();
-            foreach (var site in _settings.Sites.Where(x => !string.IsNullOrEmpty(x)))
+            var sites = _settings.Sites.Where(x => !string.IsNullOrEmpty(x));   
+            foreach (var site in sites)
             {
                 _log.Debug($"Downloading '{site}'");
                 var uri = new Uri(new Uri(site), "/api/manifest");

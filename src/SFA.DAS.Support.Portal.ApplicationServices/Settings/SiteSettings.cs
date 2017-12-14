@@ -14,6 +14,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
             _settings = settings;
         }
 
-        public IEnumerable<string> Sites => _settings.GetArray("Support:SubSite");
+        public IEnumerable<string> Sites
+        {
+            get
+            {
+                var sites = _settings.GetArray("Support:SubSite");
+                return  sites;
+            }
+        }
     }
 }
