@@ -112,16 +112,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
     }
 
-   
-
     [TestFixture]
     public class WhenCallingGetChallengeForm : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldReturnAnHtmlElementThatPresentsTheChallengeForm()
         {
             var result = await Unit.GetChallengeForm("key", "id", "url");
-            Assert.Fail("To Be Done");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
     }
 
@@ -129,10 +127,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     public class WhenCallingGetChallenge : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldReturnAChallengeObject()
         {
             var result = await Unit.GetChallenge("key");
-            Assert.Fail("To Be Done");
+            Assert.IsNotNull(result);
         }
     }
 
@@ -140,55 +138,55 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     public class WhenCallingGetNav : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldReturnTheNavObject()
         {
             var result = await Unit.GetNav("key", "id");
-            Assert.Fail("To Be Done");
+            Assert.IsNotNull(result);
         }
     }
-
-
 
     [TestFixture]
     public class WhenCallingGetManifests : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldReturnTheListOfManifestObjects()
         {
             var result = await Unit.GetManifests();
-            Assert.Fail("To Be Done");
+
+            CollectionAssert.IsNotEmpty(result);
         }
     }
-
 
     [TestFixture]
     public class WhenCallingGetResource : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldRetorunTheResourceObject()
         {
             var result = await Unit.GetResource("key");
-            Assert.Fail("To Be Done");
+            Assert.IsNotNull(result);
         }
     }
+
     [TestFixture]
     public class WhenCallingGetResourcePage : WhenTestingManifestRepository
     {
         [Test] 
-        public async Task ItShould()
+        public async Task ItShouldReturnTheHtmlPage()
         {
             var result = await Unit.GetResourcePage("key","id");
-            Assert.Fail("To Be Done");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
     }
+
     [TestFixture]
     public class WhenCallingSubmitChallenge : WhenTestingManifestRepository
     {
         [Test]
-        public async Task ItShould()
+        public async Task ItShouldReturnTheChallengObject()
         {
             var result = await Unit.SubmitChallenge("123", new Dictionary<string, string>());
-            Assert.Fail("To Be Done");
+            Assert.IsNotNull(result);
         }
     }
 }
