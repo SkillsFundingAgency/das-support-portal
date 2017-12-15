@@ -57,17 +57,30 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 .Setup(o => o.ApiCall)
                 .Returns(apiCall.Object);
 
+
+            var mockExistResponse = new Mock<IExistsResponse>();
+            mockExistResponse.SetupGet(x => x.Exists).Returns(false);
+            
+            _clientMock
+            .Setup(x => x.IndexExists(_indexName, string.Empty))
+            .Returns(mockExistResponse.Object);
+
             _clientMock
              .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty))
              .Returns(response.Object);
 
+                        
             //Act
             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.CreateIndex<SearchItem>(_indexName);
 
             //Assert 
             _clientMock
+             .Verify(x => x.IndexExists(_indexName, string.Empty), Times.AtLeastOnce);
+            
+            _clientMock
              .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.AtLeastOnce);
+
         }
 
         [Test]

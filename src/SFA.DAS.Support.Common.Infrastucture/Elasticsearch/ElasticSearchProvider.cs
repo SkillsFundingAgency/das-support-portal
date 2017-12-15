@@ -37,7 +37,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                                                     .Query(q => q
                                                     .MatchPhrasePrefix(mp => mp
                                                     .Query(searchText)
-                                                    .Field(f => f.Keywords))));
+                                                    .Field(f => f.Keywords))),string.Empty);
 
             if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK  || countResponse?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
             {

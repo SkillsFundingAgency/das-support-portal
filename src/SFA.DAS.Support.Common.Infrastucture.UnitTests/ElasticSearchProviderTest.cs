@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
     public class ElasticSearchProviderTest
     {
 
-        private  Mock<IElasticsearchCustomClient> _clientMock;
+        private Mock<IElasticsearchCustomClient> _clientMock;
         private const string _indexAliasName = "DummyIndex";
         private ElasticSearchProvider _sut;
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         {
             _clientMock = new Mock<IElasticsearchCustomClient>();
 
-          
+
         }
 
         [Test]
@@ -52,20 +52,22 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 .Returns((int)HttpStatusCode.OK);
 
             var response = new Mock<ISearchResponse<SearchItem>>();
-            response
-                .Setup(x => x.Documents)
-                .Returns(documents);
-            response
-              .Setup(x => x.ApiCall)
-              .Returns(apiCall.Object);
-
+            response.Setup(x => x.Documents).Returns(documents);
+            response.Setup(x => x.ApiCall).Returns(apiCall.Object);
             _clientMock
                 .Setup(x => x.Search(It.IsAny<Func<SearchDescriptor<SearchItem>, ISearchRequest>>(), string.Empty))
                 .Returns(response.Object);
 
+            var countResponse = new Mock<ICountResponse>();
+            countResponse.Setup(x => x.ApiCall).Returns(apiCall.Object);
+            countResponse.Setup(x => x.Count).Returns(documents.Count);
+            _clientMock
+                .Setup(x => x.Count(It.IsAny<Func<CountDescriptor<SearchItem>, ICountRequest>>(),string.Empty))
+                .Returns(countResponse.Object);
+            
             _sut = new ElasticSearchProvider(_clientMock.Object, _indexAliasName);
             //Act
-            var result =  _sut.Search("A001");
+            var result = _sut.Search("A001");
 
             //Assert
             result.Should().NotBeNull();

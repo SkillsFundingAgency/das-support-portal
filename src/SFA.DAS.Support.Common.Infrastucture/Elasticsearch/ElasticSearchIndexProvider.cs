@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndex<T>(string indexName) where T : class
         {
-            if (!_client.IndexExists(indexName).Exists)
+            if (!_client.IndexExists(indexName, string.Empty).Exists)
             {
                 var response = _client.CreateIndex(
                               indexName,
