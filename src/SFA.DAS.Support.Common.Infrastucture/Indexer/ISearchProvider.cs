@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.Support.Shared;
+﻿using SFA.DAS.Support.Common.Infrastucture.Models;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 {
-    public interface ISearchProvider
+    public interface ISearchProvider<T> where T:class
     {
-        IEnumerable<SearchItem> Search<SeachItem>(string searchText, int top = 50, int skip = 0);
+        PagedSearchResponse<T> Search(string searchText, int pageSize = 10, int pageNumber = 0);
     }
 }

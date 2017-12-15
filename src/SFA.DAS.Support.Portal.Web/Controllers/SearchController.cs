@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
                 if (Request.Headers.AllKeys.Contains("new"))
                 {
-                    var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm });
+                    var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm, Page = query.Page });
                     var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
                     return View(viewModel);
                 }

@@ -16,27 +16,28 @@ namespace SFA.DAS.Support.Portal.Web.Services
         {
             var result = new SearchTableResultViewModel();
 
-            if (model.SearchResultsMetadata != null && model.Results != null)
+            if (model.SearchResultsMetadata.Any() && model.Results.Any())
             {
                 var resultCategory = model.Results.Keys.FirstOrDefault();
                 var resultJsonStrings = model.Results.FirstOrDefault(o => o.Key == resultCategory);
 
-                var metaData = model.SearchResultsMetadata
-                                    .FirstOrDefault(x => x.SearchResultCategory == resultCategory);
+                var metaData = model.SearchResultsMetadata.FirstOrDefault(x => x.SearchResultCategory == resultCategory);
+                var columnsToshow = metaData?.ColumnDefinitions.Where(x => !x.HideColumn);
 
-                foreach (var columnDef in metaData.ColumnDefinitions)
+
+                foreach (var columnDef in columnsToshow)
                 {
                     result.Columns.Add(columnDef.Name);
                 }
 
-                result.Rows = GetResultRows(metaData.ColumnDefinitions, resultJsonStrings.Value);
+                result.Rows = GetResultRows(columnsToshow, resultJsonStrings.Value);
             }
 
             return result;
 
         }
 
-        private List<ResultRow> GetResultRows(List<SearchColumnDefinition> columnMetadata, List<string> jsonStrings)
+        private List<ResultRow> GetResultRows(IEnumerable<SearchColumnDefinition> columnMetadata, List<string> jsonStrings)
         {
             var rows = new List<ResultRow>();
 
@@ -48,7 +49,7 @@ namespace SFA.DAS.Support.Portal.Web.Services
                 {
 
                     var resultObject = JsonConvert.DeserializeObject<ExpandoObject>(resultJsonString);
-                    var columnCellText = resultObject.FirstOrDefault(o => o.Key.Equals(columnDef.Name, StringComparison.OrdinalIgnoreCase)).Value.ToString();
+                    var columnCellText = resultObject.FirstOrDefault(o => o.Key.Equals(columnDef.Name, StringComparison.OrdinalIgnoreCase)).Value?.ToString();
                     var linkUrl = string.Empty;
 
                     if (columnDef.Link != null)

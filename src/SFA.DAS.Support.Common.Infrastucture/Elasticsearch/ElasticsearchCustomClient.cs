@@ -32,6 +32,16 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
+        public ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector, [CallerMemberName] string callerName = "")
+           where T : class
+        {
+            var timer = Stopwatch.StartNew();
+            var result = _client.Count(selector);
+
+            SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Search : {callerName}");
+            return result;
+        }
+
         public IExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();

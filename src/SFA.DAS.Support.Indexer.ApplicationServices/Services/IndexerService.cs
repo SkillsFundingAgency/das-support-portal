@@ -103,12 +103,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             catch (Exception e)
             {
                 Console.WriteLine(e);
+
+                throw;
             }
         }
 
         private string CreateDerivedIndexName(string indexName, string environmentName)
         {
-            return $"{environmentName}-{indexName}-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}-{Guid.NewGuid().ToString()}";
+            return $"{environmentName}_{indexName}_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}";
         }
 
 

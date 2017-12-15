@@ -25,24 +25,25 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndex<T>(string indexName) where T : class
         {
-            var response = _client.CreateIndex(
-                indexName,
-                i => i
-                    .Settings(settings => settings
-                        .NumberOfShards(_settings.IndexShards)
-                        .NumberOfReplicas(_settings.IndexReplicas))
-                    .Mappings(ms => ms
-                        .Map<T>(m => m
-                            .AutoMap()
-                            .Properties(p => p)
-                        )),string.Empty);
-
-            if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+            if (!_client.IndexExists(indexName).Exists)
             {
-                throw new Exception($"Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode}");
+                var response = _client.CreateIndex(
+                              indexName,
+                              i => i
+                                  .Settings(settings => settings
+                                      .NumberOfShards(_settings.IndexShards)
+                                      .NumberOfReplicas(_settings.IndexReplicas))
+                                  .Mappings(ms => ms
+                                      .Map<T>(m => m
+                                          .AutoMap()
+                                          .Properties(p => p)
+                                      )), string.Empty);
+
+                if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+                {
+                    throw new Exception($"Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode}");
+                }
             }
-
-
         }
 
         public void IndexDocuments<T>(string indexName, IEnumerable<T> documents) where T : class

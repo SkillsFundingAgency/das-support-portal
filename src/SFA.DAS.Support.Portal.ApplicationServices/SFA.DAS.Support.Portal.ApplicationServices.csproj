@@ -141,6 +141,10 @@
     <Compile Include="Settings\ISiteSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Common.Infrastucture\SFA.DAS.Support.Common.Infrastucture.csproj">
+      <Project>{E233B49B-0294-41E0-B3AC-284D36E0B16E}</Project>
+      <Name>SFA.DAS.Support.Common.Infrastucture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
       <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
       <Name>SFA.DAS.Support.Portal.Core</Name>

@@ -164,9 +164,7 @@
     <Compile Include="EmployerUserRepository.cs" />
     <Compile Include="DependencyResolution\InfrastructureRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AzureSearchProvider.cs" />
     <Compile Include="Services\DocuentExtensions.cs" />
-    <Compile Include="Services\EntityRepository.cs" />
     <Compile Include="Services\FormMapper.cs" />
     <Compile Include="Services\IAzureSearchProvider.cs" />
     <Compile Include="Services\IWindowsLogonIdentityProvider.cs" />

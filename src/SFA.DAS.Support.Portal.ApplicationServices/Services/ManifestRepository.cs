@@ -176,14 +176,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             try
             {
-                var result = await Task.FromResult(_searchResultsMetadata);
-                return result;
+                await PollSites();
+                return _searchResultsMetadata;
             }
             catch (Exception ex)
             {
                 _log.Error(ex, nameof(GetManifests));
             }
-            return await Task.FromResult(new List<SearchResultMetadata>());
+
+            return new List<SearchResultMetadata>();
         }
 
         private Uri FindSiteForChallenge(string key)

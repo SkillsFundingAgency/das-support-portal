@@ -65,12 +65,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             _sut = new ElasticSearchProvider(_clientMock.Object, _indexAliasName);
             //Act
-            var result =  _sut.Search<SearchItem>("A001");
+            var result =  _sut.Search("A001");
 
             //Assert
             result.Should().NotBeNull();
-            result.Should().HaveSameCount(documents);
-            result.Should().AllBeOfType<SearchItem>();
+            result.TotalCount.Should().Be(documents.Count);
+            result.Results.Should().AllBeOfType<SearchItem>();
         }
 
     }
