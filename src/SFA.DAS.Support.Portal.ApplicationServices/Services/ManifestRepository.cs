@@ -77,10 +77,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             await PollSites();
             var challenge = Challenges[FormatKey(key)];
-            var site = Manifests.FirstOrDefault(x => x.Challenges.Select(y => FormatKey(y.ChallengeKey)).Contains(key.ToLower()));
+            var site = Manifests.FirstOrDefault(x => 
+                    x.Challenges.Select(y => FormatKey(y.ChallengeKey))
+                    .Contains(key.ToLower()));
             if (site == null || site.BaseUrl == null)
             {
-                throw new NullReferenceException($"The challenge {FormatKey(key)} could not be found in any manifest");
+                throw new NullReferenceException(
+                    $"The challenge {FormatKey(key)} could not be found in any manifest"
+                    );
             }
 
             challenge.ChallengeUrlFormat = new Uri(new Uri(site.BaseUrl), challenge.ChallengeUrlFormat).ToString();
