@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,12 +10,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     public class Crypto : ICrypto
     {
         private readonly byte[] _salt;
-        private string _secret;
+        private readonly string _sharedSecret;
 
         public Crypto(ICryptoSettings settings)
         {
             _salt = Encoding.ASCII.GetBytes(settings.Salt);
-            _secret = settings.Secret;
+            _sharedSecret = settings.Secret;
         }
 
         //While an app specific salt is not the best practice for
@@ -26,21 +27,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         /// DecryptStringAES().  The sharedSecret parameters must match.
         /// </summary>
         /// <param name="plainText">The text to encrypt.</param>
-        /// <param name="sharedSecret">A password used to generate a key for encryption.</param>
         public string EncryptStringAES(string plainText)
         {
             if (string.IsNullOrEmpty(plainText))
-                throw new ArgumentNullException("plainText");
-            if (string.IsNullOrEmpty(_secret))
-                throw new ArgumentNullException("sharedSecret");
+                throw new ArgumentNullException(nameof(plainText));
+            if (string.IsNullOrEmpty(_sharedSecret))
+                throw new ArgumentNullException(nameof(_sharedSecret));
 
-            string outStr = null;                       // Encrypted string to return
+            string outStr;                              // Encrypted string to return
             RijndaelManaged aesAlg = null;              // RijndaelManaged object used to encrypt the data.
 
             try
             {
                 // generate the key from the shared secret and the salt
-                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_secret, _salt);
+                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_sharedSecret, _salt);
 
                 // Create a RijndaelManaged object
                 aesAlg = new RijndaelManaged();
@@ -82,13 +82,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         /// EncryptStringAES(), using an identical sharedSecret.
         /// </summary>
         /// <param name="cipherText">The text to decrypt.</param>
-        /// <param name="sharedSecret">A password used to generate a key for decryption.</param>
         public string DecryptStringAES(string cipherText)
         {
             if (string.IsNullOrEmpty(cipherText))
-                throw new ArgumentNullException("cipherText");
-            if (string.IsNullOrEmpty(_secret))
-                throw new ArgumentNullException("sharedSecret");
+                throw new ArgumentNullException(nameof(cipherText));
+            if (string.IsNullOrEmpty(_sharedSecret))
+                throw new ArgumentNullException(nameof(_sharedSecret));
 
             // Declare the RijndaelManaged object
             // used to decrypt the data.
@@ -101,7 +100,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             try
             {
                 // generate the key from the shared secret and the salt
-                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_secret, _salt);
+                Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(_sharedSecret, _salt);
 
                 // Create the streams used for decryption.                
                 byte[] bytes = Convert.FromBase64String(cipherText);
@@ -134,7 +133,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             return plaintext;
         }
-
+        [ExcludeFromCodeCoverage]
         private static byte[] ReadByteArray(Stream s)
         {
             byte[] rawLength = new byte[sizeof(int)];

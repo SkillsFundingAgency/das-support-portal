@@ -120,6 +120,7 @@
     <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.1.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -145,6 +146,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crytpo\CryptoFailureTests.cs" />
     <Compile Include="Crytpo\CryptoTests.cs" />
     <Compile Include="Handlers\AccountDetailHandlerTests.cs" />
     <Compile Include="Handlers\AccountDetailTeamMemberHandlerTests.cs" />
@@ -162,6 +164,13 @@
     <Compile Include="Services\DatetimeServiceTests.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingChallengeExists.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGenerateHeader.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetChallenge.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetChallengeForm.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetManifests.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetNav.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetResource.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetResourcePage.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingSubmitChallenge.cs" />
     <Compile Include="Services\ManifestRepository\WhenTestingManifestRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -6,7 +7,7 @@ using NUnit.Framework;
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
     [TestFixture]
-    public class WhenCallingChallengeExists : WhenTestingManifestRepository
+    public class WhenCallingGetChallenge : WhenTestingManifestRepository
     {
         [TearDown]
         public void Teardown()
@@ -15,19 +16,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
 
         [Test]
-        public async Task ItShouldReturnFalseIfTheChallengedoesNotExist()
+        public async Task ItShouldReturnAChallengeObject()
         {
-            var result = await Unit.ChallengeExists("key");
-
-            Assert.IsFalse(result);
+            var result = await Unit.GetChallenge("challengekey");
+            Assert.IsNotNull(result);
         }
 
         [Test]
-        public async Task ItShouldReturnTrueIfTheChallengeExists()
+        public void ItShouldThrowAnExceptionWhenTheKeyIsNotFound()
         {
-            var result = await Unit.ChallengeExists("ChallengeKey");
-
-            Assert.IsTrue(result);
+            Assert.ThrowsAsync<KeyNotFoundException>(() => Unit.GetChallenge("key"));
         }
     }
 }
