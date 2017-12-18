@@ -217,6 +217,19 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         }
 
         [Test]
+        public async Task ItShouldLogApiException()
+        {
+            
+            _mockAccountApiClient.Setup(x => x.GetResource<AccountDetailViewModel>(It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            
+            Assert.IsNull(await _sut.Get("112344", AccountFieldsSelection.PayeSchemes));
+            _mockLogger.Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
+
+        }
+
+        [Test]
         public async Task ShouldNotReturnPayeSchemeIfRemovedDateIsInThePast()
         {
             var mockedPayeScheme = new PayeSchemeViewModel
@@ -355,5 +368,50 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             result.TeamMembers.Count.Should().Equals(3);
             result.TeamMembers.First().Name.Equals("Test1");
         }
+
+        [Test]
+        public async Task ItShouldReturnTheBalanceFromGetAccountBalance()
+        {
+
+            var id = "123";
+            var accountWithBalanceViewModel = new AccountWithBalanceViewModel()
+            {
+                Balance = 999m
+                
+            };        
+            _mockAccountApiClient.Setup( x => x.GetResource<AccountWithBalanceViewModel>($"/api/accounts/{id}"))
+                .ReturnsAsync( accountWithBalanceViewModel);
+            var actual = await _sut.GetAccountBalance(id);
+            Assert.AreEqual(accountWithBalanceViewModel.Balance, actual);
+        }
+        [Test]
+        public async Task ItShouldLogExceptionAndReturnZeroBalanceIfApiThrowsExceptionFromGetAccountBalance()
+        {
+
+            var id = "123";
+            
+            _mockAccountApiClient.Setup(x => x.GetResource<AccountWithBalanceViewModel>($"/api/accounts/{id}"))
+                .ThrowsAsync( new Exception());
+            var actual = await _sut.GetAccountBalance(id);
+
+            _mockLogger.Verify(x=>x.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
+
+            Assert.AreEqual(0m, actual);
+        }
+
+        [Test]
+        public async Task ItShouldXXWhenGetAccountTransactions() // Private where called?
+        {
+
+            
+        }
+        [Test]
+        public async Task ItShouldLogExceptionAndReturnEmptyListWhenGetAccountTeamMembersAPIThrowsException()
+        {
+
+
+        }
+        
+
     }
 }
