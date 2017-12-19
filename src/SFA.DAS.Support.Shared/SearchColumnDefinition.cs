@@ -13,5 +13,7 @@
         public SortOrder? Sort { get; set; }
 
         public bool HideColumn { get; set; }
+
+        public string DisplayName { get; set; }
     }
 }

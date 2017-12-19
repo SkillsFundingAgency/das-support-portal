@@ -21,16 +21,17 @@ namespace SFA.DAS.Support.Portal.Web.Services
                 var resultCategory = model.Results.Keys.FirstOrDefault();
                 var resultJsonStrings = model.Results.FirstOrDefault(o => o.Key == resultCategory);
 
-                var metaData = model.SearchResultsMetadata.FirstOrDefault(x => x.SearchResultCategory == resultCategory);
+                var metaData = model.SearchResultsMetadata.First(x => x.SearchResultCategory == resultCategory);
                 var columnsToshow = metaData?.ColumnDefinitions.Where(x => !x.HideColumn);
-
 
                 foreach (var columnDef in columnsToshow)
                 {
-                    result.Columns.Add(columnDef.Name);
+                    var columnName = string.IsNullOrEmpty(columnDef.DisplayName) ? columnDef.Name : columnDef.DisplayName;
+                    result.Columns.Add(columnName);
                 }
 
                 result.Rows = GetResultRows(columnsToshow, resultJsonStrings.Value);
+
             }
 
             return result;

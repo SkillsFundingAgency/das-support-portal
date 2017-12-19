@@ -72,6 +72,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<ISearchProvider<SearchItem>>().Use(x => new ElasticSearchProvider(x.GetInstance<IElasticsearchCustomClient>(), x.GetInstance<ISearchSettings>().IndexName));
             For<ISiteConnector>().Use<SiteConnector>();
             For<IFormMapper>().Use<FormMapper>();
+
+            For<IWindowsLogonIdentityProvider>().Use<WindowsLogonIdentityProvider>();
         }
 
         private HttpClient GetLevyHttpClient(ITokenServiceApiClientConfiguration levySubmissionsApiConfiguration, IHmrcClientConfiguration hmrcClientConfiguration)

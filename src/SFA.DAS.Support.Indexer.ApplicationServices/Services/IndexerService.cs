@@ -7,6 +7,7 @@ using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
@@ -17,6 +18,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         private readonly ISiteSettings _settings;
         private readonly IGetSiteManifest _siteService;
         private readonly ISearchSettings _searchSettings;
+        private readonly ILog _logger;
 
 
         private readonly Stopwatch _indexTimer = new Stopwatch();
@@ -27,48 +29,49 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             IGetSiteManifest siteService,
             IGetSearchItemsFromASite downloader,
             IIndexProvider indexProvider,
-            ISearchSettings searchSettings)
+            ISearchSettings searchSettings,
+            ILog logger)
         {
             _settings = settings;
             _siteService = siteService;
             _downloader = downloader;
             _indexProvider = indexProvider;
             _searchSettings = searchSettings;
+            _logger = logger;
         }
 
-        public void Run()
+        public async Task Run()
         {
             try
             {
-                var derivedIndexName = CreateDerivedIndexName(_searchSettings.IndexName, _settings.EnvironmentName);
+                var derivedIndexName = CreateDerivedIndexName(_searchSettings.IndexName, _settings.EnvironmentName, DateTime.UtcNow);
 
                 CreateIndex(derivedIndexName);
 
                 _runtimer.Start();
-                Console.WriteLine($"Loading index {derivedIndexName} with data ...");
-                MergeOrCreateItems(derivedIndexName).Wait();
+                _logger.Info($"Loading index {derivedIndexName} with data ...");
+                await MergeOrCreateItems(derivedIndexName);
 
-                Console.WriteLine($"Creating Index Alias and Swapping from old to new index ...");
+               _logger.Info($"Creating Index Alias and Swapping from old to new index ...");
                 _indexProvider.CreateIndexAlias(derivedIndexName, _searchSettings.IndexName);
 
                 _indexTimer.Stop();
                 _queryTimer.Stop();
-                Console.WriteLine($"Indexer: Elapsed {_runtimer.Elapsed}\r\nQuery: {_queryTimer.Elapsed}\r\nIndexing {_indexTimer.Elapsed}");
+               _logger.Info($"Indexer: Elapsed {_runtimer.Elapsed}\r\nQuery: {_queryTimer.Elapsed}\r\nIndexing {_indexTimer.Elapsed}");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.Error(ex, "Exception while running indexer");
             }
         }
 
         private void CreateIndex(string derivedIndexName)
         {
-            Console.WriteLine($"Creating Index {derivedIndexName}...");
+           _logger.Info($"Creating Index {derivedIndexName}...");
 
             _indexProvider.CreateIndex<SearchItem>(derivedIndexName);
 
-            Console.WriteLine($" Index  {derivedIndexName} sucessfully created...");
+           _logger.Info($" Index  {derivedIndexName} sucessfully created...");
 
         }
 
@@ -82,13 +85,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                     var siteManifest = await _siteService.GetSiteManifest(new Uri(setting));
                     _queryTimer.Stop();
                     if (string.IsNullOrEmpty(siteManifest.BaseUrl)) continue;
-                    Console.WriteLine($"Site Manifest: Uri: {siteManifest.BaseUrl ?? "Missing Url"} Version: {siteManifest.Version ?? "Missing Version"} # Challenges: {siteManifest.Challenges?.Count() ?? 0} # Resources: {siteManifest.Resources?.Count() ?? 0}");
+                   _logger.Info($"Site Manifest: Uri: {siteManifest.BaseUrl ?? "Missing Url"} Version: {siteManifest.Version ?? "Missing Version"} # Challenges: {siteManifest.Challenges?.Count() ?? 0} # Resources: {siteManifest.Resources?.Count() ?? 0}");
 
                     foreach (var resource in siteManifest.Resources ?? new List<SiteResource>())
                     {
                         if (string.IsNullOrEmpty(resource.SearchItemsUrl)) continue;
 
-                        Console.WriteLine($"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
+                       _logger.Info($"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
+
                         var baseUri = new Uri(siteManifest.BaseUrl);
                         var uri = new Uri(baseUri, resource.SearchItemsUrl);
                         _queryTimer.Start();
@@ -102,15 +106,15 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+               _logger.Error(e, "Error while indexing site resource Items");
 
                 throw;
             }
         }
 
-        private string CreateDerivedIndexName(string indexName, string environmentName)
+        private string CreateDerivedIndexName(string indexName, string environmentName, DateTime date)
         {
-            return $"{environmentName}_{indexName}_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}";
+            return $"{environmentName}_{indexName}_{date.ToString("yyyy-MM-dd-HH-mm-ss")}";
         }
 
 
