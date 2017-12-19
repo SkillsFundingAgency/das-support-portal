@@ -51,6 +51,9 @@
     <Reference Include="SFA.DAS.NLog.Targets.Redis, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Targets.Redis.1.0.0.47445\lib\net45\SFA.DAS.NLog.Targets.Redis.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.49994, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.49994\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
     </Reference>
@@ -86,12 +89,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
-      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
-      <Name>SFA.DAS.Support.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

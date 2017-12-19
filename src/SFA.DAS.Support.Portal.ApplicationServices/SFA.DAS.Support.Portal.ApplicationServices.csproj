@@ -61,6 +61,9 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.49994, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.49994\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.3.1.1.134\lib\net40\StructureMap.dll</HintPath>
       <Private>True</Private>
@@ -144,10 +147,6 @@
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
       <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
       <Name>SFA.DAS.Support.Portal.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
-      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
-      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
