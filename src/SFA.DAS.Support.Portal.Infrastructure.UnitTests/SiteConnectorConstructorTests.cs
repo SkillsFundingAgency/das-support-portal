@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 
@@ -9,17 +8,9 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
     public class SiteConnectorConstructorTests
     {
         [Test]
-        public void ItShouldThrowAnArgumentNullExceptionIfPassedANullHttpClient()
+        public void ItShouldThrowAnArgumentExceptionIfPassedANullHttpClient()
         {
-            Assert.Throws<ArgumentNullException>(() => new SiteConnector(null));
+            Assert.Throws<ArgumentException>(() => new SiteConnector(null));
         }
-
-        [Test]
-        public void ItShouldThrowAnArgumentExceptionIfPassedAnHttpClientWithoutAnAuthorizationHeader()
-        {
-            Assert.Throws<ArgumentException>(() => new SiteConnector(new HttpClient()));
-        }
-
-
     }
 }

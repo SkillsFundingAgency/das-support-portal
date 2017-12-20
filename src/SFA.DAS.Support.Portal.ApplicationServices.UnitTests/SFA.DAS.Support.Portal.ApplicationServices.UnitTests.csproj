@@ -189,6 +189,10 @@
       <Project>{4CC506AE-F6BC-46B2-910A-D6BF29DA8D90}</Project>
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{324A9892-D5E5-4B63-9A43-9C9FD3F80B45}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
