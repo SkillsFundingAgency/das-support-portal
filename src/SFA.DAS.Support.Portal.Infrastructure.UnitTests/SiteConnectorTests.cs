@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Moq;
 using Newtonsoft.Json;
@@ -24,27 +25,20 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
             _validTestResponseData = JsonConvert.SerializeObject(_testType);
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");
+
             _testUrlMatch = "http://localhost/api/user/*";
             _testUrl = "http://localhost/api/user/1234";
             _testUri = new Uri(_testUrl);
-            _mockActiveDirectoryClientAuthenticator = new Mock<IActiveDirectoryClientAuthenticator>();
 
-            _mockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
-            _mockSiteConnectorSettings.SetupGet(x => x.ClientId).Returns("123123123");
-            _mockSiteConnectorSettings.SetupGet(x => x.AppKey).Returns("986309687059683756");
-            _mockSiteConnectorSettings.SetupGet(x => x.ResourceId).Returns("89789789789789789789");
-            _mockSiteConnectorSettings.SetupGet(x => x.Tenant).Returns("TENANT");
-
-            _unit = new SiteConnector(_httpClient, _mockActiveDirectoryClientAuthenticator.Object, _mockSiteConnectorSettings.Object);
+            _unit = new SiteConnector(_httpClient);
         }
 
         [TearDown]
         public void Teardown()
         {
 
-            _mockActiveDirectoryClientAuthenticator.Verify(x =>
-                    x.Authenticate(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
-                Times.Once);
         }
         private MockHttpMessageHandler _mockHttpMessageHandler;
         private HttpClient _httpClient;
@@ -55,8 +49,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
         private ISiteConnector _unit;
         private string _testUrlMatch;
         private static string _testUrl = "http://localhost/api/user/1234";
-        private Mock<IActiveDirectoryClientAuthenticator> _mockActiveDirectoryClientAuthenticator;
-        private Mock<ISiteConnectorSettings> _mockSiteConnectorSettings;
+
         [TestCase(HttpStatusCode.Ambiguous)] // 300
         [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Unauthorized)] // 401

@@ -9,22 +9,17 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
     public class SiteConnectorConstructorTests
     {
         [Test]
-        public void ItShouldThrowAnArgumentExceptionIfPassedANullHttpClient()
+        public void ItShouldThrowAnArgumentNullExceptionIfPassedANullHttpClient()
         {
-            Assert.Throws<ArgumentException>(() => new SiteConnector(null, null, null));
+            Assert.Throws<ArgumentNullException>(() => new SiteConnector(null));
         }
 
         [Test]
-        public void ItShouldThrowAnArgumentExceptionIfPassedANullClientAuthenticator()
+        public void ItShouldThrowAnArgumentExceptionIfPassedAnHttpClientWithoutAnAuthorizationHeader()
         {
-            Assert.Throws<ArgumentException>(() => new SiteConnector(new HttpClient(), null, null));
+            Assert.Throws<ArgumentException>(() => new SiteConnector(new HttpClient()));
         }
 
 
-        [Test]
-        public void ItShouldThrowAnArgumentExceptionIfPassedANullSettings()
-        {
-            Assert.Throws<ArgumentException>(() => new SiteConnector(new HttpClient(), null, null));
-        }
     }
 }

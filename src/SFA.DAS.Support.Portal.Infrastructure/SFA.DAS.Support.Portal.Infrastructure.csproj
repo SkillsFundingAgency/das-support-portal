@@ -171,7 +171,7 @@
     <Compile Include="Services\DocuentExtensions.cs" />
     <Compile Include="Services\EntityRepository.cs" />
     <Compile Include="Services\FormMapper.cs" />
-    <Compile Include="Services\IActiveDirectoryClientAuthenticator.cs" />
+    <Compile Include="Services\IClientAuthenticator.cs" />
     <Compile Include="Services\IAzureSearchProvider.cs" />
     <Compile Include="Services\IWindowsLogonIdentityProvider.cs" />
     <Compile Include="Services\SiteConnector.cs" />
