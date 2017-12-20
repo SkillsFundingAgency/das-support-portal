@@ -172,6 +172,9 @@
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengePost.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerIndexGet.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenTestingTheResourceController.cs" />
+    <Compile Include="Web\Controllers\SearchController\WhenCallingDetailGet.cs" />
+    <Compile Include="Web\Controllers\SearchController\WhenTestingSearchController.cs" />
+    <Compile Include="Web\Domain\WhenAnEmployerUserIsBothActiveAndLocked.cs" />
     <Compile Include="Web\Helpers\PayeSchemeObfuscatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Controllers\AccountController\AccountControllerTests.cs" />

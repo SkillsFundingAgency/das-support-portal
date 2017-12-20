@@ -1,5 +1,5 @@
-﻿using MediatR;
-using SFA.DAS.NLog.Logger;
+﻿using System.Diagnostics.CodeAnalysis;
+using MediatR;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;
@@ -7,7 +7,7 @@ using StructureMap.Graph;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public sealed class ApplicationServicesRegistry : Registry
     {
         public ApplicationServicesRegistry()

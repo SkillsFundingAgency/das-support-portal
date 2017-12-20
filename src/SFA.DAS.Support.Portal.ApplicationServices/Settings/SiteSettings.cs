@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class SiteSettings : ISiteSettings
     {
         private readonly IProvideSettings _settings;
@@ -14,6 +14,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
             _settings = settings;
         }
 
-        public IEnumerable<string> Sites => _settings.GetArray("Support:SubSite");
+        public IEnumerable<string> Sites
+        {
+            get
+            {
+                var sites = _settings.GetArray("Support:SubSite");
+                return  sites;
+            }
+        }
     }
 }

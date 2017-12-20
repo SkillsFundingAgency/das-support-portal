@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SFA.DAS.Support.Indexer.Core.Services;
 
 namespace SFA.DAS.Support.Indexer.Infrastructure.Settings
 {
+    [ExcludeFromCodeCoverage]
     public sealed class MachineSettings : IProvideSettings
     {
         private readonly string _prefix;

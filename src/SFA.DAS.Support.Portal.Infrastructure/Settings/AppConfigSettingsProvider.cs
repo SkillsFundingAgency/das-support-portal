@@ -7,7 +7,7 @@ using SFA.DAS.Support.Portal.Core.Services;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class AppConfigSettingsProvider : IProvideSettings
     {
         private readonly IProvideSettings _baseSettings;

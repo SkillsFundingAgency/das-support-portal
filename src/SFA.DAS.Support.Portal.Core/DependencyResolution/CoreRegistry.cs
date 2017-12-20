@@ -4,7 +4,7 @@ using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Portal.Core.DependencyResolution
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class CoreRegistry : Registry
     {
         public CoreRegistry()

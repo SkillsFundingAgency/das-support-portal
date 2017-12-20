@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HMRC.ESFA.Levy.Api.Client;
 using HMRC.ESFA.Levy.Api.Types;
+using HMRC.ESFA.Levy.Api.Types.Exceptions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
+using HMRC.ESFA.Levy.Api.Types.Exceptions;
+using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.Support.Portal.Core.Domain.Exceptions;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
 {
@@ -83,5 +88,30 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             result.EmpRef.Should().Be("12345");
             result.Declarations.First().Id.Should().Be("6");
         }
+
+        [Test]
+        public async Task ItShouldThrowAnEntityNotFoundExceptionWhenApiClientThrowsApiHttpExceptionWithNotFoundStatus()
+        {
+            _mockApprenticeshipLevyApliClient
+                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null) )
+                .ThrowsAsync(new ApiHttpException((int)HttpStatusCode.NotFound, "", "/api/whatever", "body", null) { });
+
+            Assert.ThrowsAsync<EntityNotFoundException>(()=> _sut.Get("123/4567"));
+
+
+        }
+
+        [Test]
+        public async Task ItShouldThrowAnApiHttpExceptionWhenApiClientThrowsApiHttpExceptionWhenNotNotFoundStatus()
+        {
+            _mockApprenticeshipLevyApliClient
+                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null))
+                .ThrowsAsync(new ApiHttpException((int)HttpStatusCode.BadRequest, "", "/api/whatever", "body", null) { });
+
+            Assert.ThrowsAsync<ApiHttpException>(() => _sut.Get("123/4567"));
+
+
+        }
+
     }
 }

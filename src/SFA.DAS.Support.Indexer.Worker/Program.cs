@@ -1,9 +1,11 @@
-﻿using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
+﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
 using Topshelf;
 using Topshelf.HostConfigurators;
 
 namespace SFA.DAS.Support.Indexer.Worker
 {
+    [ExcludeFromCodeCoverage]
     public class Program : TopshelfRoleEntryPoint
     {
         protected override void Configure(HostConfigurator hostConfigurator)

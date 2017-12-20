@@ -61,6 +61,9 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Primitives.4.0.1\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
     </Reference>
@@ -75,6 +78,9 @@
     </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="RichardSzalay.MockHttp, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RichardSzalay.MockHttp.3.2.1\lib\net45\RichardSzalay.MockHttp.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.40326, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.40326\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
@@ -93,9 +99,28 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.1.0\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.2.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.0.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.0.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.1.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -121,6 +146,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crytpo\CryptoFailureTests.cs" />
     <Compile Include="Crytpo\CryptoTests.cs" />
     <Compile Include="Handlers\AccountDetailHandlerTests.cs" />
     <Compile Include="Handlers\AccountDetailTeamMemberHandlerTests.cs" />
@@ -131,10 +157,21 @@
     <Compile Include="Handlers\ChallengePermissionsHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserDetailHandlerTests.cs" />
     <Compile Include="Handlers\EmployerUserSearchHandlerTests.cs" />
+    <Compile Include="Handlers\SearchHandlerTests.cs" />
     <Compile Include="Handlers\UserStatusTestDataClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\ChallengeServiceTests.cs" />
-    <Compile Include="Service\DatetimeServiceTests.cs" />
+    <Compile Include="Services\ChallengeServiceTests.cs" />
+    <Compile Include="Services\DatetimeServiceTests.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingChallengeExists.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGenerateHeader.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetChallenge.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetChallengeForm.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetManifests.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetNav.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetResource.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingGetResourcePage.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingSubmitChallenge.cs" />
+    <Compile Include="Services\ManifestRepository\WhenTestingManifestRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.ApplicationServices\SFA.DAS.Support.Portal.ApplicationServices.csproj">
@@ -148,6 +185,10 @@
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Infrastructure\SFA.DAS.Support.Portal.Infrastructure.csproj">
       <Project>{4CC506AE-F6BC-46B2-910A-D6BF29DA8D90}</Project>
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{324A9892-D5E5-4B63-9A43-9C9FD3F80B45}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

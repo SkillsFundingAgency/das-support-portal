@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
@@ -8,6 +9,7 @@ using Topshelf.Logging;
 
 namespace SFA.DAS.Support.Indexer.Worker
 {
+    [ExcludeFromCodeCoverage]
     public class HostService : ServiceControl
     {
         private readonly CancellationTokenSource _cancel = new CancellationTokenSource();

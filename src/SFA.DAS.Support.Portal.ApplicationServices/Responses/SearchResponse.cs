@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Responses
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class SearchResponse
     {
         public IEnumerable<string> Results { get; set; }

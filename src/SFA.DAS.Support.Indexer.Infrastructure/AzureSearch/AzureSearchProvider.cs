@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
-using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 namespace SFA.DAS.Support.Indexer.Infrastructure.AzureSearch

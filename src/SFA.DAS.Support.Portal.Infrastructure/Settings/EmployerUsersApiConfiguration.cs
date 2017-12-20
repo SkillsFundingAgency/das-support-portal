@@ -4,7 +4,7 @@ using SFA.DAS.Support.Portal.Core.Services;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class EmployerUsersApiConfiguration : IEmployerUsersApiConfiguration
     {
         private readonly IProvideSettings _settings;

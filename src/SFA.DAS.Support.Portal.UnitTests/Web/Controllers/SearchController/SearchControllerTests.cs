@@ -1,92 +1,246 @@
-﻿using System.Threading.Tasks;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.Routing;
-using FluentAssertions;
-using FluentAssertions.Mvc.Fakes;
-using MediatR;
+using Castle.Core.Configuration;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
-using SFA.DAS.Support.Portal.Web;
-using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
+using AccountDetailViewModel = SFA.DAS.EAS.Account.Api.Types.AccountDetailViewModel;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SearchController
 {
     [TestFixture]
-    public sealed class SearchControllerTests
+    public sealed class WhenCallingIndexGet : WhenTestingSearchController
     {
-        private Portal.Web.Controllers.SearchController _sut;
-        private Mock<ILog> _mockLogger;
-        private Mock<IMappingService> _mockMappingService;
-        private Mock<IMediator> _mockMediator;
-
-        [SetUp]
-        public void Init()
+        [Test]
+        public async Task ItShouldReturnADefaultViewWhenTheSearchTermIsEmpty()
         {
-            _mockLogger = new Mock<ILog>();
-            _mockMappingService = new Mock<IMappingService>();
-            _mockMediator = new Mock<IMediator>();
+            var query = new EmployerUserSearchQuery {SearchTerm = string.Empty};
 
-            _sut = new Portal.Web.Controllers.SearchController(
-                _mockMappingService.Object,
-                _mockMediator.Object);
+            var result = await Unit.Index(query);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ViewResult>(result);
+
+            var view = (ViewResult) result;
+
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
+
+            var model = (SearchResultsViewModel) view.Model;
+
+            CollectionAssert.IsEmpty(model.Results);
         }
 
         [Test]
-        public async Task ShouldSetDefaultSearchUrl()
+        public async Task ItShouldReturnADefaultViewWhenTheSearchTermIsNull()
         {
-            var routes = new RouteCollection();
+            var query = new EmployerUserSearchQuery {SearchTerm = null};
 
-            RouteConfig.RegisterRoutes(routes);
+            var result = await Unit.Index(query);
 
-            var context = new Mock<HttpContextBase>();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ViewResult>(result);
 
-            var response = new Mock<HttpResponseBase>();
+            var view = (ViewResult) result;
 
-            response.Setup(x => x.ApplyAppPathModifier(It.IsAny<string>())).Returns((string url) => url);
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
 
-            context.SetupGet(x => x.Request).Returns(new FakeHttpRequest("/", "/"));
-            context.SetupGet(x => x.Response).Returns(response.Object);
+            var model = (SearchResultsViewModel) view.Model;
 
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
-                .Returns(Task.FromResult(new EmployerUserResponse
+            CollectionAssert.IsEmpty(model.Results);
+        }
+
+        [Test]
+        public async Task ItShouldReturnADefaultViewWhenTheSearchTermIsWhiteSpace()
+        {
+            var query = new EmployerUserSearchQuery {SearchTerm = " "};
+
+            var result = await Unit.Index(query);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ViewResult>(result);
+
+            var view = (ViewResult) result;
+
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
+
+            var model = (SearchResultsViewModel) view.Model;
+
+            CollectionAssert.IsEmpty(model.Results);
+        }
+
+        [Test]
+        public async Task ItShouldReturnTheV2BehaviourWhenTheNewHeaderIsFound()
+        {
+            var query = new EmployerUserSearchQuery { SearchTerm = "find me something nice" };
+
+            var configurationAttributeCollection = new ConfigurationAttributeCollection
+            {
+                new NameValueCollection
                 {
-                    User = new EmployerUser
-                    {
-                        FirstName = "Joe",
-                        LastName = "Bloggs",
-                        Email = "joe@bloggs.com",
-                        IsActive = true,
-                        IsLocked = false
-                    },
-                    StatusCode = SearchResponseCodes.Success
-                }));
+                    {"new", ""}
+                }
+            };
+
+            MockRequestBase.Setup(x => x.Headers).Returns(configurationAttributeCollection);
+
+         
+            var mediatorResponse = new SearchResponse()
+            {
+                Results = new List<string>() {  "Some", "results"}
+            };    
+
+
+            MockMediator.Setup(x=>x.SendAsync(It.IsAny<SearchQuery>()))
+                .ReturnsAsync(mediatorResponse);
             
-            _sut.Url = new UrlHelper(new RequestContext(context.Object, new RouteData()), routes);
 
-            var result = await _sut.Detail("112344", "Bob");
-            var vr = result as ViewResult;
-            var vm = vr.Model as DetailViewModel;
 
-            AssertionExtensions.Should(result).NotBeNull();
+            var result = await Unit.Index(query);
 
-            vm.SearchUrl.ShouldBeEquivalentTo("/search?SearchTerm=Bob");
+            Assert.IsNotNull(result);
+
+            Assert.IsInstanceOf<ViewResult>(result);
+
+            var view = (ViewResult) result;
+
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
+
+            var model = (SearchResultsViewModel) view.Model;
+
+            Assert.AreEqual(query.SearchTerm, model.SearchTerm);
+            CollectionAssert.IsEmpty(model.Results);
+            CollectionAssert.IsNotEmpty(model.NewResults);
+
+
         }
+
+
         [Test]
-        public async Task ShouldReturnPageNotFoundWhenNoUserRecordFound()
+        public async Task ItShouldReturnTheV1ViewWhenTheNewHeaderIsNotFoundAndTheSearchIsSuccessful()
         {
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
-                .Returns(Task.FromResult(new EmployerUserResponse()));
+            var query = new EmployerUserSearchQuery { SearchTerm = "find me something nice" };
 
-            var result = await _sut.Detail("112344", "Bob");
-            var vr = result as HttpNotFoundResult;
+            var configurationAttributeCollection = new ConfigurationAttributeCollection
+            {
+                new NameValueCollection
+                {
+                  // No special headers
+                }
+            };
 
-            AssertionExtensions.Should(vr).NotBeNull();
+            MockRequestBase.Setup(x => x.Headers).Returns(configurationAttributeCollection);
+
+
+            var mediatorResponse = new EmployerUserSearchResponse()
+            {
+                StatusCode = SearchResponseCodes.Success,
+                Results = new List<UserSummary>() { new UserSummary()
+                {
+                    Email = "some.one@tempuri.org",
+                    FirstName = "Some", LastName = "one", Href = "https://tempuri.org", Id = "123", Status = UserStatus.Active, Accounts = new List<AccountDetailViewModel>(){}
+                } },
+                Page = 1,
+                SearchTerm = query.SearchTerm,
+                LastPage = 1
+            };
+
+
+            MockMediator.Setup(x => x.SendAsync(query))
+                .ReturnsAsync(mediatorResponse);
+
+
+            var viewModel = new SearchResultsViewModel()
+            {
+                Results = mediatorResponse.Results // mapper only maps this property
+            };
+
+            MockMappingService.Setup(x =>
+                x.Map<EmployerUserSearchResponse, SearchResultsViewModel>(mediatorResponse))
+                .Returns(viewModel);
+
+
+
+            var result = await Unit.Index(query);
+
+            Assert.IsNotNull(result);
+
+            Assert.IsInstanceOf<ViewResult>(result);
+
+            var view = (ViewResult)result;
+
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
+
+            var model = (SearchResultsViewModel)view.Model;
+
+            Assert.IsNull(model.SearchTerm); 
+            Assert.IsNull(model.ErrorMessage);
+            CollectionAssert.IsNotEmpty(model.Results);
+
+
         }
+
+
+
+        [Test]
+        public async Task ItShouldReturnTheV1ViewWithErrorMessageWhenTheNewHeaderIsNotFoundAndTheSearchIsNotSuccessful()
+        {
+            var query = new EmployerUserSearchQuery { SearchTerm = "find me something nice" };
+
+            var configurationAttributeCollection = new ConfigurationAttributeCollection
+            {
+                new NameValueCollection
+                {
+                  // No special headers
+                }
+            };
+
+            MockRequestBase.Setup(x => x.Headers).Returns(configurationAttributeCollection);
+
+
+            var mediatorResponse = new EmployerUserSearchResponse()
+            {
+                StatusCode = SearchResponseCodes.SearchFailed,
+                Page = 1,
+                SearchTerm = query.SearchTerm,
+                LastPage = 1
+            };
+
+
+            MockMediator.Setup(x => x.SendAsync(query))
+                .ReturnsAsync(mediatorResponse);
+
+
+            
+            var result = await Unit.Index(query);
+
+
+
+            MockMappingService.Verify(x =>
+                    x.Map<EmployerUserSearchResponse, SearchResultsViewModel>(mediatorResponse), Times.Never );
+                
+
+
+            Assert.IsNotNull(result);
+
+            Assert.IsInstanceOf<ViewResult>(result);
+
+            var view = (ViewResult)result;
+
+            Assert.IsInstanceOf<SearchResultsViewModel>(view.Model);
+
+            var model = (SearchResultsViewModel)view.Model;
+
+            Assert.IsNull(model.SearchTerm);
+            Assert.IsNotNull(model.ErrorMessage);
+            CollectionAssert.IsEmpty(model.Results);
+
+
+        }
+
     }
 }

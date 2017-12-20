@@ -15,7 +15,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IMediator _mediator;
 
-        public ChallengeController(IGrantPermissions granter, 
+        public ChallengeController(IGrantPermissions granter,
             IAccountRepository accountRepository,
             IMediator mediator)
         {
@@ -29,7 +29,14 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var response = await _mediator.SendAsync(new ChallengeQuery(id));
 
-            return View(new ChallengeViewModel { Account = response.Account, Characters = response.Characters, Id = id, Url = url, HasError = hasError });
+            return View(new ChallengeViewModel
+            {
+                Account = response.Account,
+                Characters = response.Characters,
+                Id = id,
+                Url = url,
+                HasError = hasError
+            });
         }
 
         [HttpPost]
@@ -44,7 +51,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 _granter.GivePermissions(Response, User, challengeEntry.Id);
                 return Redirect(url);
             }
-            
+
             return Redirect($"{Request.CurrentExecutionFilePath}?url={challengeEntry.Url}&hasError=true");
         }
     }
