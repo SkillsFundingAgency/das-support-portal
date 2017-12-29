@@ -41,6 +41,7 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<IIndexProvider>().Use<ElasticSearchIndexProvider>();
             For<ITrigger>().Use<StorageQueueService>();
             For<IIndexSearchItems>().Use<IndexerService>();
+            For<IIndexNameCreator>().Use<IndexNameCreator>();
         }
 
         private IDictionary<string, object> GetProperties()

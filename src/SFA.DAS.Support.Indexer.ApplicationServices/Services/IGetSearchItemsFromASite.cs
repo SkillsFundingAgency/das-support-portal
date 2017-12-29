@@ -7,6 +7,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public interface IGetSearchItemsFromASite
     {
-        Task<IEnumerable<SearchItem>> GetSearchItems(Uri collectionUri);
+        Task<IEnumerable<T>> GetSearchItems<T>(Uri collectionUri);
     }
 }

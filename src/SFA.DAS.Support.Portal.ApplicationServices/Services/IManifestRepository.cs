@@ -17,6 +17,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         Task<string> GetChallengeForm(string key, string id, string url);
         Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> pairs);
         Task<List<SiteManifest>> GetManifests();
-        Task<List<SearchResultMetadata>> GetSearchResultsMetadata();
     }
 }

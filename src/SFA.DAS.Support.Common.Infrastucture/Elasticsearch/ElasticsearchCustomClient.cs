@@ -57,7 +57,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Delete Index {index.Name}");
             return result;
         }
-
         public IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null, [CallerMemberName] string callerName = "")
             where T : class
         {

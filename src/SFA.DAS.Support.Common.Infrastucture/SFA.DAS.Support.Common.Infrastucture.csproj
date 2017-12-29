@@ -78,7 +78,9 @@
     <Compile Include="Elasticsearch\IElasticsearchClientFactory.cs" />
     <Compile Include="Elasticsearch\IElasticsearchCustomClient.cs" />
     <Compile Include="Extensions\MyCertificateIgnoringHttpConnection.cs" />
+    <Compile Include="Indexer\IIndexNameCreator.cs" />
     <Compile Include="Indexer\IIndexProvider.cs" />
+    <Compile Include="Indexer\IndexNameCreator.cs" />
     <Compile Include="Indexer\ISearchProvider.cs" />
     <Compile Include="Models\PagedSearchResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +91,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
+      <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
+      <Name>SFA.DAS.Support.Portal.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
       <Name>SFA.DAS.Support.Shared</Name>

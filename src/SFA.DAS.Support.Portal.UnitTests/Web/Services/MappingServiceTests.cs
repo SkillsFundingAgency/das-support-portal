@@ -11,7 +11,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Services
         [Test]
         public void MappingConfigurationShouldBeValid()
         {
-            var service = new MappingService(Mock.Of<ILog>(), Mock.Of<ISearchTableResultBuilder>());
+            var service = new MappingService(Mock.Of<ILog>());
 
             service.Configuration.AssertConfigurationIsValid();
         }

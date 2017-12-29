@@ -17,17 +17,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
 
         public string AdminApiKey => _settings.GetSetting("Support:Azure:Search:AdminKey");
         public string ServiceName => _settings.GetSetting("Support:Azure:Search:ServiceName");
-
-
-        public string IndexName => string.Format(_settings.GetSetting("IndexNameFormat"), _settings.GetSetting("EnvironmentName"));
-
+        public string IndexNameFormat => _settings.GetSetting("IndexNameFormat");
         public IEnumerable<Uri> ElasticServerUrls
         {
             get
             {
                 var urls = _settings.GetSetting("Support:Elastic:Search:Url")?.Split(Convert.ToChar(","));
 
-                if(urls == null || urls.Length == 0)
+                if (urls == null || urls.Length == 0)
                 {
                     throw new ArgumentException($"invalid {nameof(ElasticServerUrls)} parameter specified in settings");
                 }
@@ -94,7 +91,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
                 return indexShards;
             }
         }
-       
+
         public int IndexReplicas
         {
             get

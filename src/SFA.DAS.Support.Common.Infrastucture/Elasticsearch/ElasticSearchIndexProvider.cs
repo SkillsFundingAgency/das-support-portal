@@ -71,8 +71,23 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             if (result == null || !result.Acknowledged)
             {
                 var msg = $"Unable to delete Index {indexName}";
-                throw new Exception(msg);
+                _logger.Error(result.OriginalException, msg);
             }
+        }
+
+        public void DeleteIndexes(Func<string, bool> indexNameMatch)
+        {
+            var indicesToBeDelete = _client.IndicesStats(Indices.All).Indices.Select(x => x.Key).Where(indexNameMatch);
+
+            _logger.Debug($"Deleting {indicesToBeDelete.Count()} indexes...");
+
+            foreach (var index in indicesToBeDelete)
+            {
+                _logger.Debug($"Deleting {index}");
+                DeleteIndex(index);
+            }
+
+            _logger.Debug("Deletion completed...");
         }
 
         public bool IndexExists(string indexName)

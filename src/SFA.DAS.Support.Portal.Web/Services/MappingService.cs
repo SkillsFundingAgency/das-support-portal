@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Web.ViewModels;
+using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Portal.Web.Services
 {
@@ -11,14 +13,12 @@ namespace SFA.DAS.Support.Portal.Web.Services
     {
         private readonly ILog _logger;
         private readonly IMapper _mapper;
-        private readonly ISearchTableResultBuilder _searchTableResultBuilder;
 
-        public MappingService(ILog logger, ISearchTableResultBuilder searchTableResultBuilder)
+        public MappingService(ILog logger)
         {
             _logger = logger;
             Configuration = Config();
             _mapper = Configuration.CreateMapper();
-            _searchTableResultBuilder = searchTableResultBuilder;
         }
 
         public MapperConfiguration Configuration { get; private set; }
@@ -53,7 +53,8 @@ namespace SFA.DAS.Support.Portal.Web.Services
         {
             cfg.CreateMap<EmployerUserSearchResponse, SearchResultsViewModel>()
                 .ForMember(x => x.Results, opt => opt.MapFrom(y => y.Results))
-                .ForMember(x => x.CustomSearchResult, y => y.Ignore())
+                .ForMember(x => x.AccountSearchResults, y => y.Ignore())
+                .ForMember(x => x.UserSearchResults, y => y.Ignore())
                 .ForMember(x => x.ErrorMessage, y => y.Ignore());
         }
 
@@ -62,10 +63,11 @@ namespace SFA.DAS.Support.Portal.Web.Services
             cfg.CreateMap<SearchResponse, SearchResultsViewModel>()
                 .ForMember(x => x.Results, o => o.Ignore())
                 .ForMember(x => x.ErrorMessage, y => y.Ignore())
-                .ForMember(x => x.CustomSearchResult, opt => opt.MapFrom(o => _searchTableResultBuilder.CreateTableResult(o)));
+                .ForMember(x => x.AccountSearchResults, o => o.MapFrom(x => x.AccountSearchResult == null ? new List<AccountSearchModel>() : x.AccountSearchResult.Results))
+                .ForMember(x => x.TotalAccountSearchItems, o => o.MapFrom(x => x.AccountSearchResult.TotalCount))
+                .ForMember(x => x.UserSearchResults, o => o.MapFrom(x => x.UserSearchResult == null ? new List<UserSearchModel>() : x.UserSearchResult.Results))
+                .ForMember(x => x.TotalUserSearchItems, o => o.MapFrom(x => x.UserSearchResult.TotalCount));
         }
-
-     
 
         private MapperConfiguration Config()
         {

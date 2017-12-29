@@ -4,15 +4,10 @@ using Moq;
 using Nest;
 using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
-using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 {
@@ -28,20 +23,17 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void Setup()
         {
             _clientMock = new Mock<IElasticsearchCustomClient>();
-
-
         }
 
         [Test]
-        public void ShouldReturnSearchDocuments()
+        public void ShouldReturnOnlyUserSearchDocuments()
         {
             //Arrange
-            var documents = new List<SearchItem>
+            var documents = new List<UserSearchModel>
             {
-                new SearchItem
+                new UserSearchModel
                 {
-                    SearchId = "A001",
-                    SearchResultJson = "{'user':'john'}"
+                    Id = "A001"
                 }
            };
 
@@ -51,28 +43,28 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 .Setup(x => x.HttpStatusCode)
                 .Returns((int)HttpStatusCode.OK);
 
-            var response = new Mock<ISearchResponse<SearchItem>>();
+            var response = new Mock<ISearchResponse<UserSearchModel>>();
             response.Setup(x => x.Documents).Returns(documents);
             response.Setup(x => x.ApiCall).Returns(apiCall.Object);
             _clientMock
-                .Setup(x => x.Search(It.IsAny<Func<SearchDescriptor<SearchItem>, ISearchRequest>>(), string.Empty))
+                .Setup(x => x.Search(It.IsAny<Func<SearchDescriptor<UserSearchModel>, ISearchRequest>>(), string.Empty))
                 .Returns(response.Object);
 
             var countResponse = new Mock<ICountResponse>();
             countResponse.Setup(x => x.ApiCall).Returns(apiCall.Object);
             countResponse.Setup(x => x.Count).Returns(documents.Count);
             _clientMock
-                .Setup(x => x.Count(It.IsAny<Func<CountDescriptor<SearchItem>, ICountRequest>>(),string.Empty))
+                .Setup(x => x.Count(It.IsAny<Func<CountDescriptor<UserSearchModel>, ICountRequest>>(),string.Empty))
                 .Returns(countResponse.Object);
             
             _sut = new ElasticSearchProvider(_clientMock.Object, _indexAliasName);
             //Act
-            var result = _sut.Search("A001");
+            var result = _sut.FindUsers("A001",SearchCategory.User);
 
             //Assert
             result.Should().NotBeNull();
             result.TotalCount.Should().Be(documents.Count);
-            result.Results.Should().AllBeOfType<SearchItem>();
+            result.Results.Should().AllBeOfType<UserSearchModel>();
         }
 
     }

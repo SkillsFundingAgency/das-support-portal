@@ -389,9 +389,7 @@
     <Compile Include="Services\IGrantPermissions.cs" />
     <Compile Include="Services\ICheckPermissions.cs" />
     <Compile Include="Models\PermissionCookieModel.cs" />
-    <Compile Include="Services\ISearchTableResultBuilder.cs" />
     <Compile Include="Services\PermissionCookieProvider.cs" />
-    <Compile Include="Services\SearchTableResultBuilder.cs" />
     <Compile Include="Settings\IAuthSettings.cs" />
     <Compile Include="Settings\AuthSettings.cs" />
     <Compile Include="Settings\RoleSettings.cs" />
@@ -427,7 +425,6 @@
     </Compile>
     <Compile Include="Models\ChallengeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\SearchTableResultViewModel.cs" />
     <Compile Include="Views\Account\PayeSchemeLevySubmissions.generated.cs">
       <DependentUpon>PayeSchemeLevySubmissions.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -462,6 +459,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Detail.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Search\Index.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -528,7 +530,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\_Analytics.cshtml" />
-    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Search\Index.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Index.generated.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -540,6 +546,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Common.Infrastucture\SFA.DAS.Support.Common.Infrastucture.csproj">
+      <Project>{E233B49B-0294-41E0-B3AC-284D36E0B16E}</Project>
+      <Name>SFA.DAS.Support.Common.Infrastucture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.ApplicationServices\SFA.DAS.Support.Portal.ApplicationServices.csproj">
       <Project>{CE85AAE2-BD07-45F0-A642-4FA376ED9BF1}</Project>
       <Name>SFA.DAS.Support.Portal.ApplicationServices</Name>

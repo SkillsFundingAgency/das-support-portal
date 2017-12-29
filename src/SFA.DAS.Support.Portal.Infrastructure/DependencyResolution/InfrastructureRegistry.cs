@@ -17,6 +17,7 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
@@ -69,7 +70,9 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<ISearchSettings>().Use<ElasticSearchSettings>();
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
-            For<ISearchProvider<SearchItem>>().Use(x => new ElasticSearchProvider(x.GetInstance<IElasticsearchCustomClient>(), x.GetInstance<ISearchSettings>().IndexName));
+
+            For<ISearchProvider>().Use<ElasticSearchProvider>();
+
             For<ISiteConnector>().Use<SiteConnector>();
             For<IFormMapper>().Use<FormMapper>();
 

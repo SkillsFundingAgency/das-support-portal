@@ -20,7 +20,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private List<SiteManifest> _manifests = new List<SiteManifest>();
         private IDictionary<string, SiteResource> _resources = new Dictionary<string, SiteResource>();
         private IDictionary<string, SiteChallenge> _challenges = new Dictionary<string, SiteChallenge>();
-        private List<SearchResultMetadata> _searchResultsMetadata;
 
         public ManifestRepository(ISiteSettings settings, ISiteConnector downloader, IFormMapper formMapper, ILog log)
         {
@@ -36,7 +35,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _manifests = await LoadManifest();
             _resources = new Dictionary<string, SiteResource>();
             _challenges = new Dictionary<string, SiteChallenge>();
-            _searchResultsMetadata = new List<SearchResultMetadata>();
 
             foreach (var siteManifest in _manifests)
             {
@@ -48,11 +46,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 {
                     _challenges.Add(item.ChallengeKey, item);
                 }
-
-                foreach (var metaData in siteManifest.SearchResultsMetadata ?? new List<SearchResultMetadata>())
-                {
-                    _searchResultsMetadata.Add(metaData);
-                }
+                
             }
         }
 
@@ -67,14 +61,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private IDictionary<string, SiteResource> Resources
         {
             get { return _resources; }
-        }
-
-        private List<SearchResultMetadata> SearchResultsMetadata
-        {
-            get
-            {
-                return _searchResultsMetadata;
-            }
         }
 
         private IDictionary<string, SiteChallenge> Challenges
@@ -170,21 +156,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 _log.Error(ex, nameof(GetManifests));
             }
             return await Task.FromResult(new List<SiteManifest>());
-        }
-
-        public async Task<List<SearchResultMetadata>> GetSearchResultsMetadata()
-        {
-            try
-            {
-                await PollSites();
-                return _searchResultsMetadata;
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex, nameof(GetManifests));
-            }
-
-            return new List<SearchResultMetadata>();
         }
 
         private Uri FindSiteForChallenge(string key)

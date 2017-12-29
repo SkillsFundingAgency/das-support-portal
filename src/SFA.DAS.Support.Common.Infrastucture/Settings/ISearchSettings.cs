@@ -8,8 +8,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Settings
 {
     public interface ISearchSettings
     {
-
-        string IndexName { get; }
+        string IndexNameFormat { get; }
 
         IEnumerable<Uri> ElasticServerUrls { get; }
 
@@ -27,7 +26,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Settings
 
 
         //----Azure search settings to be removed
-
         string AdminApiKey { get; }
         string ServiceName { get; }
 

@@ -18,7 +18,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Settings
         public string ServiceName => _settings.GetSetting("Support:Azure:Search:ServiceName");
 
 
-        public string IndexName => string.Format(_settings.GetSetting("IndexNameFormat"), _settings.GetSetting("EnvironmentName"));
+        public string IndexNameFormat => _settings.GetSetting("IndexNameFormat");
 
         public IEnumerable<Uri> ElasticServerUrls
         {

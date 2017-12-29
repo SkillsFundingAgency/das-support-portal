@@ -8,6 +8,7 @@ using SFA.DAS.Support.Portal.Web.Settings;
 using StructureMap.Configuration.DSL;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
@@ -26,7 +27,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IAuthSettings>().Use<AuthSettings>();
 
             For<IGetCurrentIdentity>().Use<IdentityService>();
-            For<ISearchTableResultBuilder>().Use<SearchTableResultBuilder>();
+            For<IIndexNameCreator>().Use<IndexNameCreator>();
         }
     }
 }

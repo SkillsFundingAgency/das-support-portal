@@ -19,9 +19,9 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.Manifest
         }
 
 
-        public async Task<IEnumerable<SearchItem>> GetSearchItems(Uri collectionUri)
+        public async Task<IEnumerable<T>> GetSearchItems<T>(Uri collectionUri)
         {
-            return await _httpClient.DownloadAs<IEnumerable<SearchItem>>(collectionUri);
+            return await _httpClient.DownloadAs<IEnumerable<T>>(collectionUri);
         }
 
         public async Task<SiteManifest> GetSiteManifest(Uri siteUri)

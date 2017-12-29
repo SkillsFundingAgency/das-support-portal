@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using SFA.DAS.Support.Shared.SearchIndexModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Shared
 {
@@ -10,5 +11,6 @@ namespace SFA.DAS.Support.Shared
         public string SearchItemsUrl { get; set; }
         public string ResourceTitle { get; set; }
         public string Challenge { get; set; }
+        public SearchCategory SearchCategory { get; set; }
     }
 }

@@ -8,49 +8,39 @@ using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
+using SFA.DAS.Support.Shared.SearchIndexModel;
+using SFA.DAS.Support.Common.Infrastucture.Models;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
     public class SearchHandler : IAsyncRequestHandler<SearchQuery, SearchResponse>
     {
-        private readonly ISearchProvider<SearchItem> _provider;
+        private readonly ISearchProvider _searchProvider;
         private readonly IManifestRepository _manifestRepository;
 
         private const int _pageSize = 10;
 
-        public SearchHandler(ISearchProvider<SearchItem> provider, IManifestRepository manifestRepository)
+        public SearchHandler(ISearchProvider searchProvider, IManifestRepository manifestRepository)
         {
-            _provider = provider;
+            _searchProvider = searchProvider;
             _manifestRepository = manifestRepository;
         }
 
         public async Task<SearchResponse> Handle(SearchQuery query)
         {
-            query.Page = query.Page <= 0 ? 10 : query.Page;
-
             var searchResponse = new SearchResponse
             {
-                Page = query.Page,
+                Page = query.Page <= 0 ? _pageSize : query.Page,
                 SearchTerm = query.Query
             };
 
-            var searchData = _provider.Search(query.Query, _pageSize, query.Page);
-            if (searchData != null && searchData.Results != null)
-            {
-                var results = searchData.Results
-                               .GroupBy(o => o.SearchResultCategory)
-                               .ToDictionary(g => g.Key, g => g.Select(x => x.SearchResultJson).ToList());
+            var userResponse = _searchProvider.FindUsers(query.Query, query.SearchType, _pageSize, query.Page);
+            searchResponse.UserSearchResult = userResponse;
 
-                searchResponse.Results = results;
+            var accountResponse = _searchProvider.FindAccounts(query.Query, query.SearchType, _pageSize, query.Page);
+            searchResponse.AccountSearchResult = accountResponse;
 
-                var searchMetaData = await _manifestRepository.GetSearchResultsMetadata();
-
-                searchResponse.SearchResultsMetadata = searchMetaData ?? new List<SearchResultMetadata>();
-                searchResponse.LastPage = searchData.LastPage;
-
-            }
-
-            return searchResponse;
+            return await Task.FromResult(searchResponse);
         }
     }
 }
