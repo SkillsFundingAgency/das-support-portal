@@ -28,10 +28,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
         public async Task<SearchResponse> Handle(SearchQuery query)
         {
+ 
             var searchResponse = new SearchResponse
             {
-                Page = query.Page <= 0 ? _pageSize : query.Page,
-                SearchTerm = query.Query
+                Page = query.Page,
+                SearchTerm = query.Query,
+                SearchType = query.SearchType
             };
 
             var userResponse = _searchProvider.FindUsers(query.Query, query.SearchType, _pageSize, query.Page);
@@ -39,7 +41,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
             var accountResponse = _searchProvider.FindAccounts(query.Query, query.SearchType, _pageSize, query.Page);
             searchResponse.AccountSearchResult = accountResponse;
-
+            
             return await Task.FromResult(searchResponse);
         }
     }

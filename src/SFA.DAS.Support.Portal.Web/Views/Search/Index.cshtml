@@ -11,6 +11,11 @@
     .form-label {
         display: inline-block !important;
     }
+
+    .sub-nav{
+        border: none !important;
+    }
+
 </style>
 
 <div class="grid-row">
@@ -23,7 +28,7 @@
                 <label for="search-main">
                 </label>
                 @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
-                <input type="hidden" name="Page" value="0" />
+                <input type="hidden" name="Page" value="1" />
                 <div class="search-submit">
                     <button type="submit" class="">Search</button>
                 </div>
@@ -32,12 +37,12 @@
             <div class="form-group">
                 <fieldset>
                     <label for="UserSearchCategory" class="form-label selection-button-radio form-control-1-4">
-                        <input type="radio" name="SearchType" id="UserSearchCategory" checked value="@SearchCategory.User">
+                        @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new { id= "UserSearchType" })
                         Users
                     </label>
 
                     <label for="AccountSearchCategory" class="form-label selection-button-radio form-control-1-4">
-                        <input type="radio" name="SearchType" id="AccountSearchCategory" value="@SearchCategory.Account">
+                        @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new { id = "AccountSearchType" })
                         Accounts
                     </label>
                 </fieldset>
@@ -51,7 +56,7 @@
 
 
 
-@if (Model.AccountSearchResults != null)
+@if (Model.AccountSearchResults != null && Model.SearchType == SearchCategory.Account)
 {
     <br />
     <br />
@@ -63,7 +68,10 @@
         </div>
     </div>
 
-    <div class="grid-row">
+
+    if (Model.AccountSearchResults.Any())
+    {
+      <div class="grid-row">
 
         <div class="column-two-thirds">
             <table>
@@ -82,37 +90,97 @@
                             @account.AccountID
                         </td>
                         <td>
-                            @Html.ActionLink("view", "Index", "Account", new { id = account.AccountID }, null)
+                            @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
                         </td>
                     </tr>
                 }
             </table>
 
-            <div class="pagination">
 
-                @if (Model.Page > 1)
-                {
-                    @Html.ActionLink("< Prev", "Index", new { Model.SearchTerm, Page = Model.Page - 1 }, new { @class = "previous" })
-
-                }
-
-                @if (Model.AccountSearchResults.Any() && Model.Page != Model.LastPage)
-                {
-                    @Html.ActionLink("Next >", "Index", new { Model.SearchTerm, Page = Model.Page + 1 }, new { @class = "next" })
-
-                }
-
-                @if (Model.Page != 1 && Model.LastPage != 1)
-                {
-                    <span>Page @Model.Page of @Model.LastPage</span>
-                }
-
-            </div>
-
+            @Pager()
 
         </div>
 
     </div>
+    }
+
+
+}
+else if (Model.UserSearchResults != null && Model.SearchType == SearchCategory.User)
+{
+    <br />
+    <br />
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <h2> Results</h2>
+            <p>  @Model.TotalUserSearchItems users found</p>
+        </div>
+    </div>
+
+    if (Model.UserSearchResults.Any())
+    {
+     <div class="grid-row">
+
+        <div class="column-two-thirds">
+            <table>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+                @foreach (var user in Model.UserSearchResults)
+                {
+                <tr>
+                    <td>
+                        @user.Name
+                    </td>
+                    <td>
+                        @user.Email
+                    </td>
+                    <td>
+                        @user.Status
+                    </td>
+                    <td>
+                        @Html.ActionLink("view", "Index", "Resource", new { key="user", id = user.Id }, null)
+                    </td>
+                </tr>
+                }
+            </table>
+
+
+            @Pager()
+
+        </div>
+
+    </div>
+    }
 }
 
+
+@helper Pager()
+    {
+
+        <div class="pagination">
+
+            @if (Model.Page > 1)
+            {
+                @Html.ActionLink("< Prev", "Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType }, new { @class = "previous" })
+
+            }
+
+            @if (Model.Page != Model.LastPage)
+            {
+                @Html.ActionLink("Next >", "Index", new { Model.SearchTerm, Page = Model.Page + 1 , SearchType = Model.SearchType}, new { @class = "next" })
+            }
+
+            @if (Model.Page != 1 && Model.LastPage != 1)
+            {
+                <span>Page @Model.Page of @Model.LastPage</span>
+            }
+
+        </div>
+
+}
 

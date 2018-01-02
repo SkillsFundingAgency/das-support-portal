@@ -32,7 +32,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexNameCreator = indexNameCreator;
         }
 
-        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 0)
+        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.User) return null;
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
             var response = _elasticSearchClient.Search<UserSearchModel>(s => s.Index(_indexAliasName)
                                                        .Type(Types.Type<UserSearchModel>())
-                                                        .Skip(pageSize * pageNumber )
+                                                        .Skip(pageSize * GetPage(pageNumber))
                                                        .Take(pageSize)
                                                        .Query(q => q
                                                        .MultiMatch(mp => mp
@@ -60,25 +60,17 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 throw new Exception($"Received non-200 response when trying to fetch the search items from elastic serach Index, Status Code:{response.ApiCall.HttpStatusCode}");
             }
 
-            var totalcount = countResponse == null ? 0 : countResponse.Count;
-            pageSize = pageSize == 0 ? 1 : pageSize;
-
-            return new PagedSearchResponse<UserSearchModel>
-            {
-                LastPage = (int)(totalcount / pageSize),
-                TotalCount = totalcount,
-                Results = response.Documents.Select(d => d).ToList()
-            };
+            return GetSearchResponse(pageSize, response, countResponse);
         }
 
-        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 0)
+        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.Account) return null;
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexNameFormat, _configurationSettings.EnvironmentName, searchType);
 
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
                                                        .Type(Types.Type<AccountSearchModel>())
-                                                       .Skip(pageSize * pageNumber)
+                                                       .Skip(pageSize * GetPage(pageNumber))
                                                        .Take(pageSize)
                                                        .Query(q => q
                                                        .MultiMatch(mp => mp
@@ -99,16 +91,27 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             {
                 throw new Exception($"Received non-200 response when trying to fetch the search items from elastic serach Index, Status Code:{response.ApiCall.HttpStatusCode}");
             }
+            return GetSearchResponse(pageSize, response, countResponse);
+        }
 
+        private PagedSearchResponse<T> GetSearchResponse<T>(int pageSize, ISearchResponse<T> response, ICountResponse countResponse) where T : class
+        {
             var totalcount = countResponse == null ? 0 : countResponse.Count;
-            pageSize = pageSize == 0 ? 1 : pageSize;
+            var responsePageSize = pageSize == 0 ? 1 : pageSize;
+            var lastPage = (int)(totalcount / responsePageSize);
 
-            return new PagedSearchResponse<AccountSearchModel>
+
+            return new PagedSearchResponse<T>
             {
-                LastPage =  (int)(totalcount / pageSize),
+                LastPage = lastPage <= 0 ? 1 : lastPage,
                 TotalCount = totalcount,
-                Results = response.Documents.Select(d => d).ToList()
+                Results = response?.Documents?.Select(d => d).ToList()
             };
+        }
+
+        private int GetPage(int pageNumber)
+        {
+           return pageNumber <= 1 ? 0 : pageNumber;
         }
     }
 }

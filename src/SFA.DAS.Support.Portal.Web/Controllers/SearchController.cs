@@ -32,25 +32,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             {
                 query.SearchTerm = query.SearchTerm.Trim();
 
-                if (Request.Headers.AllKeys.Contains("new"))
-                {
-                    var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm, Page = query.Page , SearchType = query.SearchType});
-                    var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
-                    return View(viewModel);
-                }
-                else
-                {
-                    var response = await _mediator.SendAsync(query);
-
-                    if (response.StatusCode != SearchResponseCodes.SearchFailed)
-                    {
-                        var viewModel = _mappingService.Map<EmployerUserSearchResponse, SearchResultsViewModel>(response);
-
-                        return View(viewModel);
-                    }
-                }
-
-                return View(new SearchResultsViewModel { ErrorMessage = $"No results found for '{query.SearchTerm}'" });
+                var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm, Page = query.Page, SearchType = query.SearchType });
+                var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
+                return View(viewModel);
             }
 
             return View(new SearchResultsViewModel());

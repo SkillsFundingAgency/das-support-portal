@@ -9,6 +9,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Responses
         public int Page { get; set; }
         public int LastPage { get; set; }
         public string SearchTerm { get; set; }
+        public SearchCategory SearchType { get; set; }
         public PagedSearchResponse<AccountSearchModel> AccountSearchResult { get; set; }
         public PagedSearchResponse<UserSearchModel> UserSearchResult { get; set; }
 
