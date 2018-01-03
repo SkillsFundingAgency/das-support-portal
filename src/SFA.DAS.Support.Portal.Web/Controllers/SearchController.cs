@@ -26,37 +26,19 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(EmployerUserSearchQuery query)
+        public async Task<ActionResult> Index(SearchQuery query)
         {
             if (!string.IsNullOrEmpty(query.SearchTerm))
             {
                 query.SearchTerm = query.SearchTerm.Trim();
 
-                var response = await _mediator.SendAsync(new SearchQuery { Query = query.SearchTerm, Page = query.Page, SearchType = query.SearchType });
+                var response = await _mediator.SendAsync(query);
+
                 var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
                 return View(viewModel);
             }
 
             return View(new SearchResultsViewModel());
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Detail(string id, string searchTerm)
-        {
-            var response = await _mediator.SendAsync(new EmployerUserQuery(id));
-
-            if (response.StatusCode == SearchResponseCodes.Success)
-            {
-                var vm = new DetailViewModel
-                {
-                    User = response.User,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
-                };
-
-                return View(vm);
-            }
-
-            return new HttpNotFoundResult();
         }
     }
 }

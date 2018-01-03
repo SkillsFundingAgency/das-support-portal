@@ -9,7 +9,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 
         void DeleteIndex(string name);
 
-        void DeleteIndexes(Func<string, bool> indexNameMatch);
+         void DeleteIndexes(int indexToRetain, string indexPrefix);
 
         void IndexDocuments<T>(string name, IEnumerable<T> documents) where T : class;
 

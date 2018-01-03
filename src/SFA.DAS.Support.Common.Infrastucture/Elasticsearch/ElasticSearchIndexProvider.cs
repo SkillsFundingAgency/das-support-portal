@@ -30,14 +30,15 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 var response = _client.CreateIndex(
                               indexName,
                               i => i
-                                  .Settings(settings => settings
+                                  .Settings(settings =>
+                                      settings
                                       .NumberOfShards(_settings.IndexShards)
                                       .NumberOfReplicas(_settings.IndexReplicas))
                                   .Mappings(ms => ms
                                       .Map<T>(m => m
                                           .AutoMap()
-                                          .Properties(p => p)
-                                      )), string.Empty);
+                                          .Properties(p => p)))
+                                  , string.Empty);
 
                 if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 {
@@ -75,16 +76,33 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             }
         }
 
-        public void DeleteIndexes(Func<string, bool> indexNameMatch)
+        public void DeleteIndexes(int indexToRetain, string indexPrefix)
         {
-            var indicesToBeDelete = _client.IndicesStats(Indices.All).Indices.Select(x => x.Key).Where(indexNameMatch);
+            var indexNameDelimeter = new char[] {'_'};
 
-            _logger.Debug($"Deleting {indicesToBeDelete.Count()} indexes...");
+            var indexToDeleteCount = _client
+                                        .IndicesStats(Indices.All)
+                                        .Indices
+                                        .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
 
-            foreach (var index in indicesToBeDelete)
+            if (indexToDeleteCount > indexToRetain)
             {
-                _logger.Debug($"Deleting {index}");
-                DeleteIndex(index);
+                var indicesToBeDelete = _client
+                                         .IndicesStats(Indices.All)
+                                         .Indices
+                                         .Where(x => x.Key.StartsWith(indexPrefix))
+                                         .OrderBy(x => x.Key.Split(indexNameDelimeter).Last())
+                                         .Skip(indexToRetain)
+                                         .ToList();
+
+                _logger.Debug($"Deleting {indicesToBeDelete.Count()} indexes...");
+
+                foreach (var index in indicesToBeDelete)
+                {
+                    _logger.Debug($"Deleting {index.Key}");
+                    DeleteIndex(index.Key);
+                }
+
             }
 
             _logger.Debug("Deletion completed...");

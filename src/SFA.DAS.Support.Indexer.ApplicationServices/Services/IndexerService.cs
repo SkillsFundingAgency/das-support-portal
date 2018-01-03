@@ -22,10 +22,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         private readonly ILog _logger;
         private readonly IIndexNameCreator _indexNameCreator;
 
-
         private readonly Stopwatch _indexTimer = new Stopwatch();
         private readonly Stopwatch _queryTimer = new Stopwatch();
         private readonly Stopwatch _runtimer = new Stopwatch();
+
+        private const int _indexToRetain = 5;
 
         public IndexerService(ISiteSettings settings,
             IGetSiteManifest siteService,
@@ -118,7 +119,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexNameFormat, _settings.EnvironmentName, resource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
-                DeleteIndex(newIndexName, 0, resource.SearchCategory);
+
+                _logger.Info($"Deleting Old Indexes ...");
+                _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
+                _logger.Info($"Deleting Old Indexes Completed...");
 
                 _indexTimer.Stop();
                 _queryTimer.Stop();
@@ -140,13 +144,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger.Info($" Index  {derivedIndexName} sucessfully created...");
         }
 
-        private void DeleteIndex(string newIndexName, int fromDayInterval, SearchCategory searchCategory)
-        {
-            _logger.Info($"Deleting Indexes ...");
-            var deleteIndexName = _indexNameCreator.CreateIndexesToDeleteName(_searchSettings.IndexNameFormat, _settings.EnvironmentName, searchCategory);
-            _indexProvider.DeleteIndexes(x => x.StartsWith(deleteIndexName) && !x.Equals(newIndexName, StringComparison.OrdinalIgnoreCase));
-            _logger.Info($"Deleting Old Indexes Completed...");
-        }
 
     }
 }

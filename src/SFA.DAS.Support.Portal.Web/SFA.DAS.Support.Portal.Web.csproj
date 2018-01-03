@@ -334,6 +334,12 @@
     <Content Include="Content\favicons\mstile-310x310.png" />
     <Content Include="Content\favicons\mstile-70x70.png" />
     <Content Include="Content\favicons\safari-pinned-tab.svg" />
+    <Content Include="Content\gulpfile.es5.js">
+      <DependentUpon>gulpfile.js</DependentUpon>
+    </Content>
+    <Content Include="Content\gulpfile.es5.min.js">
+      <DependentUpon>gulpfile.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\gulpfile.js" />
     <Content Include="Content\src\scripts\app.js" />
     <Content Include="favicon.ico" />
@@ -351,7 +357,6 @@
     <Content Include="Content\src\styles\_tables.scss" />
     <Content Include="Content\src\styles\_typography.scss" />
     <Content Include="Content\src\styles\_variables.scss" />
-    <Content Include="Content\package.json" />
     <Content Include="Content\favicons\manifest.json" />
     <Content Include="member-details.html" />
     <Content Include="members.html" />
@@ -375,6 +380,7 @@
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ChallengeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\VersionInformation.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyScope.cs" />
@@ -455,15 +461,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Search\Detail.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Detail.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Search\Index.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\User\Detail.generated.cs">
+      <DependentUpon>Detail.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -476,10 +482,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\SignOutCallback.cshtml" />
-    <Content Include="Views\Search\Detail.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Detail.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Content\src\styles\_layout.scss" />
@@ -534,6 +536,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Index.generated.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\User\Detail.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Detail.generated.cs</LastGenOutput>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

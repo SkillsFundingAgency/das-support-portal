@@ -32,14 +32,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             var searchResponse = new SearchResponse
             {
                 Page = query.Page,
-                SearchTerm = query.Query,
+                SearchTerm = query.SearchTerm,
                 SearchType = query.SearchType
             };
 
-            var userResponse = _searchProvider.FindUsers(query.Query, query.SearchType, _pageSize, query.Page);
+            var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, _pageSize, query.Page);
             searchResponse.UserSearchResult = userResponse;
 
-            var accountResponse = _searchProvider.FindAccounts(query.Query, query.SearchType, _pageSize, query.Page);
+            var accountResponse = _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
             searchResponse.AccountSearchResult = accountResponse;
             
             return await Task.FromResult(searchResponse);

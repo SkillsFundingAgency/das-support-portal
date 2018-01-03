@@ -11,20 +11,10 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
             return $"{string.Format(IndexNameFormat, environment)}-{indexType}".ToLower();
         }
 
-        public string CreateIndexesToDeleteName(string IndexNameFormat, string environment, SearchCategory searchCategory)
-        {
-            return CreateDerivedIndexName(IndexNameFormat, environment, searchCategory, DateTime.UtcNow.AddDays(-1), "yyyy-MMM-dd");
-        }
-
         public string CreateNewIndexName(string IndexNameFormat, string environment, SearchCategory searchCategory)
         {
-          return CreateDerivedIndexName(IndexNameFormat, environment, searchCategory, DateTime.UtcNow, "yyyy-MMM-dd-HH-mm");
-        }
-
-        private string CreateDerivedIndexName(string IndexNameFormat, string environmentName, SearchCategory searchCategory, DateTime date, string dateFormat)
-        {
-            var aliasName = CreateIndexesAliasName(IndexNameFormat, environmentName, searchCategory);
-            return $"{aliasName}_{date.ToString(dateFormat)}".ToLower();
+            var aliasName = CreateIndexesAliasName(IndexNameFormat, environment, searchCategory);
+            return $"{aliasName}_{DateTime.UtcNow.ToString("yyyyMMddHHmmss")}".ToLower();
         }
 
     }

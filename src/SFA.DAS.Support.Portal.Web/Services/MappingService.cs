@@ -56,7 +56,8 @@ namespace SFA.DAS.Support.Portal.Web.Services
                 .ForMember(x => x.UserSearchResults, y => y.Ignore())
                 .ForMember(x => x.ErrorMessage, y => y.Ignore())
                 .ForMember(x => x.TotalAccountSearchItems, y => y.Ignore())
-                .ForMember(x => x.TotalUserSearchItems, y => y.Ignore());
+                .ForMember(x => x.TotalUserSearchItems, y => y.Ignore())
+                .ForMember(x => x.SearchType, y => y.Ignore());
         }
 
         private void CreateSearchTableResultsMappings(IMapperConfiguration cfg)
