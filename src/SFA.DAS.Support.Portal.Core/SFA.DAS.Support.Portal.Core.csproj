@@ -49,7 +49,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\IConfigurationSettings.cs" />
     <Compile Include="DependencyResolution\CoreRegistry.cs" />
     <Compile Include="Domain\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Domain\Model\Account.cs" />
@@ -64,11 +63,13 @@
     <Compile Include="Helpers\PayeSchemeObfuscator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IEntityRepository.cs" />
-    <Compile Include="Services\IProvideSettings.cs" />
     <Compile Include="Services\IRoleSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

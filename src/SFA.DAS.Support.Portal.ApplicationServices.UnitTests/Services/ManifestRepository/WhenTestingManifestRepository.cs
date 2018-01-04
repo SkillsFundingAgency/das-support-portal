@@ -19,10 +19,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         protected Mock<ISiteSettings> MockSiteSettings;
 
         protected SiteManifest TestSiteManifest;
-        protected List<string> TestSites;
-        protected Uri TestSiteUri;
-
+        protected string TestSites;
+       
         protected IManifestRepository Unit;
+        protected Uri TestSiteUri;
 
 
         [SetUp]
@@ -75,12 +75,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 Version = "1.0.0.0"
             };
 
-            TestSites = new List<string> {HttpsTestsite};
+            TestSites = HttpsTestsite;
 
-            MockSiteSettings.SetupGet(x => x.Sites)
+            MockSiteSettings.SetupGet(x => x.BaseUrls)
                 .Returns(TestSites);
 
-            TestSiteUri = new Uri($"{TestSites.First()}/api/manifest");
+            TestSiteUri = TestSites.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).Where(x=>!string.IsNullOrWhiteSpace(x)).Select(x=> new Uri(x)).First();
+            TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
 
             MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);
         }

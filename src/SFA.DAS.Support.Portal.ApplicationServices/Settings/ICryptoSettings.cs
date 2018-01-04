@@ -2,7 +2,7 @@
 {
     public interface ICryptoSettings
     {
-        string Salt { get; }
-        string Secret { get; }
+        string Salt { get; set; }
+        string Secret { get; set; }
     }
 }

@@ -15,10 +15,10 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
         public SiteConnector(HttpClient client)
         {
             _client = client ?? throw new ArgumentNullException( TheHttpClientMayNotBeNull);
-            if (_client.DefaultRequestHeaders.Authorization == null)
-            {
-                throw new ArgumentException(TheHttpClientMustHaveAnAuthoriszationHeaderSupplied, nameof(_client.DefaultRequestHeaders.Authorization) );
-            }
+            //if (_client.DefaultRequestHeaders.Authorization == null)
+            //{
+            //    throw new ArgumentException(TheHttpClientMustHaveAnAuthoriszationHeaderSupplied, nameof(_client.DefaultRequestHeaders.Authorization) );
+            //}
         }
 
         public async Task<T> Download<T>(string url) where T : class

@@ -84,6 +84,7 @@
     <Compile Include="Indexer\IIndexProvider.cs" />
     <Compile Include="Indexer\ISearchProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\ElasticSearchSettings.cs" />
     <Compile Include="Settings\ISearchSettings.cs" />
   </ItemGroup>
   <ItemGroup>

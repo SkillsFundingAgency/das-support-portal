@@ -16,45 +16,9 @@
     </Sites>
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
-
-      <Setting name="EmpUserApiBaseUrl" />
-      <Setting name="EmpUserApiClientId" />
-      <Setting name="EmpUserApiClientSecret" />
-      <Setting name="EmpUserApiIdentifierUri" />
-      <Setting name="EmpUserApiTenant" />
-      <Setting name="EmpUserApiCertificateThumbprint" />
-
-      <Setting name="AccountApiBaseUrl" />
-      <Setting name="AccountApiClientId" />
-      <Setting name="AccountApiClientSecret" />
-      <Setting name="AccountApiIdentifierUri" />
-      <Setting name="AccountApiTenant" />
-      <Setting name="AccountApiCertificateThumbprint" />
-
-      <Setting name="LevyApiBaseUrl" />
-      <Setting name="LevyApiClientId" />
-      <Setting name="LevyApiClientSecret" />
-      <Setting name="LevyApiIdentifierUri" />
-      <Setting name="LevyApiTenant" />
-      <Setting name="LevyTokenCertificate" />
-      <Setting name="LevyHttpClientBaseUrl" />
-
+      <Setting name="ConfigurationStorageConnectionString" />
       <Setting name="LoggingRedisConnectionString" />
       <Setting name="EnvironmentName"/>
-      <Setting name="ida_ADFSMetadata" />
-      <Setting name="ida_Wtrealm" />
-      <Setting name="ida_GroupClaim"/>
-      <Setting name="ida_Tier2Claim"/>
-      <Setting name="ConfigurationStorageConnectionString" />
-      <Setting name="CryptoSalt" />
-      <Setting name="CryptoSecret" />
-      <Setting name="ChallengeTimeout" />
-
-      <Setting name="Support_Azure_Search_QueryKey" />
-      <Setting name="Support_Azure_Search_ServiceName" />
-      <Setting name="Support_SubSite_0" />
-      <Setting name="Support_SubSite_1" />
-
       <Setting name="InstrumentationKey"/>
     </ConfigurationSettings>
     <Endpoints>

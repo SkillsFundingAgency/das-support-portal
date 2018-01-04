@@ -2,13 +2,11 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using HMRC.ESFA.Levy.Api.Client;
-using Microsoft.Azure.Search;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerUsers.Api.Client;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.Core.Configuration;
 using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
@@ -27,16 +25,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
         {
             For<ILoggingPropertyFactory>().Use<LoggingPropertyFactory>();
 
-            For<IProvideSettings>().Use(c => new AppConfigSettingsProvider(new MachineSettings("DAS_")));
             For<ILog>().Use(x => new NLogLogger(
                    x.ParentType,
                    x.GetInstance<IRequestContext>(),
                    x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
-            For<IConfigurationSettings>().Use<ApplicationSettings>();
-
-            For<ITokenServiceApiClientConfiguration>().Use<LevySubmissionsApiConfiguration>();
-
+           
             For<IEmployerUsersApiClient>().Use("", (ctx) =>
             {
                 var empUserApiSettings = ctx.GetInstance<IEmployerUsersApiConfiguration>();
@@ -58,16 +52,14 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
                 return new ApprenticeshipLevyApiClient(httpClient);
             });
 
-            For<IEmployerUsersApiConfiguration>().Use<Settings.EmployerUsersApiConfiguration>();
-            For<IAccountApiConfiguration>().Use<AccountsApiConfiguration>();
-
+            
             For<IEmployerUserRepository>().Use<EmployerUserRepository>();
             For<IAccountRepository>().Use<AccountRepository>();
             For<ILevySubmissionsRepository>().Use<LevySubmissionsRepository>();
             For<IChallengeRepository>().Use<ChallengeRepository>();
-            For<IHmrcClientConfiguration>().Use<HmrcClientConfiguration>();
-
-            For<ISearchSettings>().Use<ElasticSearchSettings>();
+           
+            
+            
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
             For<ISearchProvider>().Use(x => new ElasticSearchProvider(x.GetInstance<IElasticsearchCustomClient>(), x.GetInstance<ISearchSettings>().IndexName));

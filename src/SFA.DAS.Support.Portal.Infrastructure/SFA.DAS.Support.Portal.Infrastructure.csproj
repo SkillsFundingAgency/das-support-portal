@@ -176,18 +176,14 @@
     <Compile Include="Services\IWindowsLogonIdentityProvider.cs" />
     <Compile Include="Services\SiteConnector.cs" />
     <Compile Include="Services\WindowsLogonIdentityProvider.cs" />
-    <Compile Include="Settings\AppConfigSettingsProvider.cs" />
-    <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\AccountsApiConfiguration.cs" />
-    <Compile Include="Settings\AzureSearchSettings.cs" />
     <Compile Include="Settings\HmrcClientConfiguration.cs" />
     <Compile Include="Settings\IAzureSearchSettings.cs" />
     <Compile Include="Settings\IHmrcClientConfiguration.cs" />
+    <Compile Include="Settings\ILevySubmissionsApiConfiguration.cs" />
     <Compile Include="Settings\ISiteConnectorSettings.cs" />
     <Compile Include="Settings\LevySubmissionsApiConfiguration.cs" />
     <Compile Include="Settings\EmployerUsersApiConfiguration.cs" />
-    <Compile Include="Settings\MachineSettings.cs" />
-    <Compile Include="Settings\ElasticSearchSettings.cs" />
     <Compile Include="Settings\SiteConnectorSettings.cs" />
   </ItemGroup>
   <ItemGroup>

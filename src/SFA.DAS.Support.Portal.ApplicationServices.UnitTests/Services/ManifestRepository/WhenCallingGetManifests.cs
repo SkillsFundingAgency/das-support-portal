@@ -14,7 +14,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [TearDown]
         public void Teardown()
         {
-            MockLogger.Verify(x => x.Debug($"Downloading '{TestSites.First()}'"), Times.Once);
+            MockLogger.Verify(x => x.Debug($"Downloading '{TestSiteUri}'"), Times.Once);
         }
 
         [Test]

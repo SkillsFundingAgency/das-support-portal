@@ -1,4 +1,5 @@
-﻿using Elasticsearch.Net;
+﻿using System.Linq;
+using Elasticsearch.Net;
 using Nest;
 using SFA.DAS.Support.Common.Infrastucture.Extensions;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
@@ -16,10 +17,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public IElasticClient GetElasticClient()
         {
+            var indexerSettingsElasticServerUrls = _indexerSettings.ElasticServerUrls.ToList();
+
             if (_indexerSettings.IgnoreSslCertificateEnabled)
             {
                 using (var settings = new ConnectionSettings(
-                    new StaticConnectionPool(_indexerSettings.ElasticServerUrls),
+                    new StaticConnectionPool(indexerSettingsElasticServerUrls),
                     new MyCertificateIgnoringHttpConnection()))
                 {
                     SetDefaultSettings(settings);
@@ -28,7 +31,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 }
             }
 
-            using (var settings = new ConnectionSettings(new StaticConnectionPool(_indexerSettings.ElasticServerUrls)))
+            using (var settings = new ConnectionSettings(new StaticConnectionPool(indexerSettingsElasticServerUrls)))
             {
                 SetDefaultSettings(settings);
 

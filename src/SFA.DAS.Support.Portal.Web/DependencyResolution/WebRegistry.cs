@@ -19,7 +19,6 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     {
         public WebRegistry()
         {
-            For<ISiteConnectorSettings>().Use<SiteConnectorSettings>();
             For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>()
@@ -32,10 +31,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IMappingService>().Use<MappingService>();
             For<ICheckPermissions>().Use<PermissionCookieProvider>();
             For<IGrantPermissions>().Use<PermissionCookieProvider>();
-            For<IChallengeSettings>().Use<ChallengeSettings>();
-            For<IRoleSettings>().Use<RoleSettings>();
-            For<IAuthSettings>().Use<AuthSettings>();
-
+           
             For<IGetCurrentIdentity>().Use<IdentityService>();
         }
 
@@ -43,13 +39,13 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
         {
             var secureClient = new HttpClient();
 
-            var token = authenticator.Authenticate(settings.ClientId,
-                                                    settings.AppKey,
-                                                    settings.ResourceId,
-                                                    settings.Tenant).Result;
+            //var token = authenticator.Authenticate(settings.ClientId,
+            //                                        settings.AppKey,
+            //                                        settings.ResourceId,
+            //                                        settings.Tenant).Result;
 
-            secureClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                                                                                                token);
+            //secureClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+            //                                                                                    token);
 
             return secureClient;
         }

@@ -156,7 +156,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                             .Contains(lowerCasedKey)
                             );
 
-            // DEV NOTES:  ASCS-87 - The design requries that all challengkeys are unique across all sites.
+            // DEV NOTES:  ASCS-87 - The design requries that all challenge keys are unique across all sites.
             // Its possible for two or more sites to have same challenge key by accident. 
             // Then this may return wrong one.
             return new Uri(siteManifest.BaseUrl);
@@ -258,19 +258,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private async Task<List<SiteManifest>> LoadManifest()
         {
-
             var list = new Dictionary<string, SiteManifest>();
-            var sites = _settings.Sites.Where(x => !string.IsNullOrEmpty(x));
+            var sites = _settings.BaseUrls.Split( new []{','}, StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x));
             foreach (var site in sites)
             {
-                _log.Debug($"Downloading '{site}'");
-                var uri = new Uri(new Uri(site), "/api/manifest");
-
+                var uri = new Uri(new Uri(site), "api/manifest");
+                _log.Debug($"Downloading '{uri}'");
                 try
                 {
                     var manifest = await _downloader.Download<SiteManifest>(uri);
                     list.Add(uri.ToString(), manifest);
-
                 }
                 catch (Exception ex)
                 {
