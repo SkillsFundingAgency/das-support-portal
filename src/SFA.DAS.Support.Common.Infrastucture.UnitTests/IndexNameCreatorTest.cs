@@ -22,15 +22,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer.Tests
             Assert.AreEqual(actual, expected);
         }
 
-        [Test]
-        public void CreateIndexesToDeleteNameTest()
-        {
-            var _sut = new IndexNameCreator();
-            var actual = _sut.CreateIndexesToDeleteName("{0}_das_support", "Local", SearchCategory.User);
-            var expected = $"local_das_support-user_{DateTime.UtcNow.AddDays(-1).ToString("yyyy-MMM-dd").ToLower()}";
-            Assert.AreEqual(actual, expected);
-        }
-
         [Test()]
         public void CreateNewIndexNameTest()
         {
