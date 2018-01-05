@@ -2,6 +2,6 @@
 {
     public interface IChallengeSettings
     {
-        int ChallengeTimeoutMinutes { get; }
+        int ChallengeTimeoutMinutes { get; set; }
     }
 }

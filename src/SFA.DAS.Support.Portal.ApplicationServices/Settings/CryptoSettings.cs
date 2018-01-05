@@ -1,19 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Support.Portal.Core.Services;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
 {
     [ExcludeFromCodeCoverage]
     public class CryptoSettings : ICryptoSettings
     {
-        private readonly IProvideSettings _settings;
-
-        public CryptoSettings(IProvideSettings settings)
-        {
-            _settings = settings;
-        }
-
-        public string Salt => _settings.GetSetting("CryptoSalt");
-        public string Secret => _settings.GetSetting("CryptoSecret");
+        [JsonRequired]
+        public string Salt { get; set; }
+        [JsonRequired]
+        public string Secret { get; set; }
     }
 }

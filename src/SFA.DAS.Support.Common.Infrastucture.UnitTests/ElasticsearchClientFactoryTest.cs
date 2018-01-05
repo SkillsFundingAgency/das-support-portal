@@ -24,7 +24,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             _settingMock = new Mock<ISearchSettings>();
             _settingMock.Setup(x => x.IgnoreSslCertificateEnabled).Returns(true);
-            _settingMock.Setup(x => x.ElasticServerUrls).Returns(new List<Uri> { new Uri("http://localhost:9200/", UriKind.Absolute) });
+            _settingMock.Setup(x => x.ServerUrls).Returns("https://localhost:9200/" );
+            _settingMock.Setup(x => x.ElasticServerUrls).Returns(new []{ new Uri("https://localhost:9200/") });
             _settingMock.Setup(x => x.Elk5Enabled).Returns(true);
             _sut = new ElasticsearchClientFactory(_settingMock.Object);
         }

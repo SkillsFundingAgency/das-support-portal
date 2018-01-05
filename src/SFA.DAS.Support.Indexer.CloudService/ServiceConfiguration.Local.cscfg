@@ -4,14 +4,11 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="ConfigurationStorageConnectionString" value="UseDevelopmentStorage=true"/>
       <Setting name="LoggingRedisConnectionString" value="" />
-      <Setting name="EnvironmentName" value="local" />
-      <Setting name="Support_Azure_Search_AdminKey" value="" />
-      <Setting name="Support_Azure_Search_ServiceName" value="" />
-      <Setting name="Support_SubSite_0" value="http://localhost:51274/" />
-      <Setting name="Support_SubSite_1" value="http://localhost:19722/" />
-      <Setting name="Support_SubSite_2" value="" />
-      <Setting name="Support_SubSite_3" value="" />
+      <Setting name="EnvironmentName" value="LOCAL" />
+      <Setting name="InstrumentationKey" value=""/>
+
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

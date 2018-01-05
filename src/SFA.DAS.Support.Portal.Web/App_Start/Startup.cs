@@ -45,7 +45,7 @@ namespace SFA.DAS.Support.Portal.Web
                                     {
                                         //{"ticket.properties", notification.AuthenticationTicket?.Properties?.Dictionary },
                                         {"claims", JsonConvert.SerializeObject(notification.AuthenticationTicket.Identity.Claims.Select(x=>new {x.Value, x.ValueType, x.Type})) },
-                                        {"authenticeation-type", notification.AuthenticationTicket.Identity.AuthenticationType },
+                                        {"authentication-type", notification.AuthenticationTicket.Identity.AuthenticationType },
                                         {"role-type", notification.AuthenticationTicket.Identity.RoleClaimType }
 
                                     });

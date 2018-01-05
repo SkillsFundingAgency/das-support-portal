@@ -13,6 +13,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
         {
             Assert.Throws<ArgumentNullException>(() => new SiteConnector(null));
         }
+        [Ignore("Will be re-applied in issue ASCS-57")]
         [Test]
         public void ItShouldThrowAnArgumentExceptionIfPassedAnHttpClientWithoutAnAuthorizationHeader()
         {

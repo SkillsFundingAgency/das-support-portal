@@ -77,7 +77,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             try
             {
                 _queryTimer.Start();
-                foreach (var setting in _settings.Sites.Where(x => !string.IsNullOrEmpty(x)))
+                foreach (var setting in _settings.BaseUrls.Split( new []{','}, StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)))
                 {
                     var siteManifest = await _siteService.GetSiteManifest(new Uri(setting));
                     _queryTimer.Stop();

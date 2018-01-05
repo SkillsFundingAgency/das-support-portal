@@ -2,10 +2,10 @@
 {
     public interface IRoleSettings
     {
-        string ConsoleUserRole { get; }
-        string T2Role { get; }
-        bool ForceT2UserLocally { get; }
-        string GroupClaim { get; }
-        string Tier2Claim { get; }
+        string ConsoleUserRole { get; set; }
+        string T2Role { get;  set;}
+        bool ForceT2UserLocally { get;  set;}
+        string GroupClaim { get;  set;}
+        string Tier2Claim { get;  set;}
     }
 }

@@ -28,9 +28,9 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         {
             return new Container(c =>
             {
+                c.AddRegistry<DefaultRegistry>();
                 c.AddRegistry<InfrastuctureRegistry>();
                 c.AddRegistry<ApplicationRegistry>();
-                //c.AddRegistry<CoreRegistry>();
             });
         }
     }

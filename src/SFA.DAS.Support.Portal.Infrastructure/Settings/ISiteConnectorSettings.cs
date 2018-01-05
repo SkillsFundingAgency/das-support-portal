@@ -2,9 +2,10 @@
 {
     public interface ISiteConnectorSettings
     {
-        string ClientId { get; }
-        string AppKey { get; }
-        string ResourceId { get; }
-        string Tenant { get; }
+        string ApiBaseUrl { get; set; }
+        string ClientId { get; set; }
+        string ClientSecret { get; set; }
+        string IdentifierUri { get; set; }
+        string Tenant { get; set; }
     }
 }
