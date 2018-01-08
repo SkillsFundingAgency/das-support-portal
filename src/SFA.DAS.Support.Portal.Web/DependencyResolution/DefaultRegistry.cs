@@ -15,6 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using SFA.DAS.EmployerUsers.Api.Client;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.Support.Portal.Web.Settings;
@@ -69,13 +70,21 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
         {
             var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? 
                                 "AT";
+
             var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
                                 "UseDevelopmentStorage=true;";
 
+
+            
+            
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
 
             var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
 
+
+            throw new ArgumentNullException($"configuration Variables are not set correctly: ServiceName: {ServiceName} environment: {environment} Version: {Version} storageConnectionString: {storageConnectionString}");
+
+            
             var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
 
             return configurationService.Get<WebConfiguration>();
