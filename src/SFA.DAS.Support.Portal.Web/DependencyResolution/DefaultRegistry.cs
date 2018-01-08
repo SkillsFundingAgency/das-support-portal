@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
         private WebConfiguration GetConfiguration()
         {
             var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? 
-                                "LOCAL";
+                                "AT";
             var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
                                 "UseDevelopmentStorage=true;";
 
