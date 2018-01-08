@@ -92,7 +92,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
 
             throw new ArgumentException(
-                $"Configuration {ServiceName} {environment} {Version} Dev Connection: {storageConnectionString.Equals($"UseDevelopmentStorage=true;")} Data Found: [{!string.IsNullOrWhiteSpace(configurationRepository.Get(ServiceName, environment, Version))}]");
+                $"Configuration {ServiceName} {environment} {Version} Dev Connection: {storageConnectionString.Equals($"UseDevelopmentStorage=true;")} Data Found: [{!string.IsNullOrWhiteSpace(configurationRepository.GetAsync(ServiceName, environment, Version).Result)}]");
 
 
            return configurationService.Get<WebConfiguration>();
