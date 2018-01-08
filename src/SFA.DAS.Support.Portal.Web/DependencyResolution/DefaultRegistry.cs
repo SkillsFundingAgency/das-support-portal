@@ -77,11 +77,13 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
         private WebConfiguration GetConfiguration()
         {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ??
-                                "AT";
+            var environment = CloudConfigurationManager.GetSetting("EnvironmentName");
 
-            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
-                                "UseDevelopmentStorage=true;";
+            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ;
+
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
+            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
+
 
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
 
@@ -90,7 +92,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
 
             throw new ArgumentException(
-                $"Configuration data length [{configurationRepository.Get(ServiceName, environment, Version)?.Length ?? 0}]");
+                $"Configuration {ServiceName} {environment} {Version} Dev Connection: {storageConnectionString.Equals($"UseDevelopmentStorage=true;")} Data Found: [{!string.IsNullOrWhiteSpace(configurationRepository.Get(ServiceName, environment, Version))}]");
 
 
            return configurationService.Get<WebConfiguration>();
