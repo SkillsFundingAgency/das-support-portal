@@ -26,9 +26,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using SFA.DAS.Configuration;
     using SFA.DAS.Configuration.AzureTableStorage;
     using SFA.DAS.EAS.Account.Api.Client;
+    using SFA.DAS.NLog.Logger;
     using SFA.DAS.Support.Common.Infrastucture.Settings;
     using SFA.DAS.Support.Portal.ApplicationServices.Settings;
     using SFA.DAS.Support.Portal.Core.Services;
+    using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
@@ -38,7 +40,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     {
         private const string ServiceName = "SFA.DAS.Support.Portal";
         private const string Version = "1.0";
-      
+
 
         public DefaultRegistry()
         {
@@ -49,7 +51,14 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                     scan.WithDefaultConventions();
                     scan.With(new ControllerConvention());
                 });
-            
+            For<ILoggingPropertyFactory>().Use<LoggingPropertyFactory>();
+
+
+            For<ILog>().Use(x => new NLogLogger(
+                x.ParentType,
+                x.GetInstance<IRequestContext>(),
+                x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
+
             WebConfiguration configuration = GetConfiguration();
 
             For<IWebConfiguration>().Use(configuration);
@@ -68,28 +77,23 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
         private WebConfiguration GetConfiguration()
         {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? 
+            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ??
                                 "AT";
 
             var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
                                 "UseDevelopmentStorage=true;";
 
-
-            
-            
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
 
             var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
-
-
-            throw new ArgumentNullException($"configuration Variables are not set correctly: ServiceName: {ServiceName} environment: {environment} Version: {Version} storageConnectionString: {storageConnectionString}");
-
             
+            //var x = configurationRepository.Get(ServiceName, environment, Version);
+
+           // throw new ArgumentNullException($"configuration Variables are: ServiceName: data: {x}");
+
             var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
 
             return configurationService.Get<WebConfiguration>();
         }
-
-       
     }
 }
