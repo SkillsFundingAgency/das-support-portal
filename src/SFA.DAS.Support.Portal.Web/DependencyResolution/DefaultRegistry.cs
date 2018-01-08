@@ -89,13 +89,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             
             var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
 
-            new ArgumentException(
+            throw new ArgumentException(
                 $"Configuration data length [{configurationRepository.Get(ServiceName, environment, Version)?.Length ?? 0}]");
 
 
-            //var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
-
-            return configurationService.Get<WebConfiguration>();
+           return configurationService.Get<WebConfiguration>();
         }
     }
 }
