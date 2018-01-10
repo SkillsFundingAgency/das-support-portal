@@ -60,14 +60,15 @@
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
+    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Targets.Redis, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Targets.Redis.1.0.0.47445\lib\net45\SFA.DAS.NLog.Targets.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.49994, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.49994\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
+    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.51801, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
@@ -93,6 +94,7 @@
     <Compile Include="ElasticsearchClientFactoryTest.cs" />
     <Compile Include="ElasticSearchIndexProviderTest.cs" />
     <Compile Include="ElasticSearchProviderTest.cs" />
+    <Compile Include="IndexNameCreatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +105,14 @@
     <ProjectReference Include="..\SFA.DAS.Support.Common.Infrastucture\SFA.DAS.Support.Common.Infrastucture.csproj">
       <Project>{E233B49B-0294-41E0-B3AC-284D36E0B16E}</Project>
       <Name>SFA.DAS.Support.Common.Infrastucture</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
+      <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
+      <Name>SFA.DAS.Support.Portal.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

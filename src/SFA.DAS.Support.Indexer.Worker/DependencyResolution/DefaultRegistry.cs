@@ -2,6 +2,7 @@
 using Microsoft.Azure;
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;
@@ -15,10 +16,15 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         private const string Version = "1.0";
           public DefaultRegistry()
         {
-            
-            
-            WebConfiguration configuration = GetConfiguration();
+            For<IRequestContext>().Use<FakeRequestContext>();
 
+            For<ILoggingPropertyFactory>().Use<LoggingPropertyFactory>();
+            For<ILog>().Use(x => new NLogLogger(
+                x.ParentType,
+                x.GetInstance<IRequestContext>(),
+                x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
+
+            WebConfiguration configuration = GetConfiguration();
             For<IWebConfiguration>().Use(configuration);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);

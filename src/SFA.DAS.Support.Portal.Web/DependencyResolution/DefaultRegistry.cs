@@ -51,9 +51,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                     scan.WithDefaultConventions();
                     scan.With(new ControllerConvention());
                 });
+
             For<ILoggingPropertyFactory>().Use<LoggingPropertyFactory>();
-
-
             For<ILog>().Use(x => new NLogLogger(
                 x.ParentType,
                 x.GetInstance<IRequestContext>(),

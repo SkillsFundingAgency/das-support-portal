@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
+using System;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 
@@ -21,9 +22,6 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
-
-           
-            For<ILog>().Use(x => new NLogLogger(x.ParentType, null, GetProperties())).AlwaysUnique();
 
             For<HttpClient>().AlwaysUnique().Use(new HttpClient());
 
@@ -37,10 +35,11 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 
             For<IIndexProvider>().Use<ElasticSearchIndexProvider>();
 
-            For<IIndexSearchItems>().Use<IndexerService>();
+          
 
             For<ITrigger>().Use<StorageQueueService>();
-            
+            For<IIndexSearchItems>().Use<IndexerService>();
+            For<IIndexNameCreator>().Use<IndexNameCreator>();
         }
 
         private IDictionary<string, object> GetProperties()

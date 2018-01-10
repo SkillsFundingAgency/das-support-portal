@@ -7,6 +7,7 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -57,17 +58,30 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 .Setup(o => o.ApiCall)
                 .Returns(apiCall.Object);
 
+
+            var mockExistResponse = new Mock<IExistsResponse>();
+            mockExistResponse.SetupGet(x => x.Exists).Returns(false);
+            
+            _clientMock
+            .Setup(x => x.IndexExists(_indexName, string.Empty))
+            .Returns(mockExistResponse.Object);
+
             _clientMock
              .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty))
              .Returns(response.Object);
 
+                        
             //Act
             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
-            _sut.CreateIndex<SearchItem>(_indexName);
+            _sut.CreateIndex<UserSearchModel>(_indexName);
 
             //Assert 
             _clientMock
+             .Verify(x => x.IndexExists(_indexName, string.Empty), Times.AtLeastOnce);
+            
+            _clientMock
              .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.AtLeastOnce);
+
         }
 
         [Test]
@@ -88,7 +102,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Act
              _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
-            Action action = () => _sut.CreateIndex<SearchItem>(_indexName);
+            Action action = () => _sut.CreateIndex<UserSearchModel>(_indexName);
 
             //Assert 
             action.ShouldThrow<Exception>();
@@ -100,12 +114,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         {
             //Arrange 
 
-            var documents = new List<SearchItem>
+            var documents = new List<UserSearchModel>
             {
-                new SearchItem
+                new UserSearchModel
                 {
-                    SearchId = "A001",
-                    Html = "<div></div>"
+                    Id = "A001"
                 }
            };
 

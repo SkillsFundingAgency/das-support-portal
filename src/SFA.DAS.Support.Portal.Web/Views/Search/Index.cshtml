@@ -1,108 +1,211 @@
-﻿@model SFA.DAS.Support.Portal.Web.ViewModels.SearchResultsViewModel
+﻿@using SFA.DAS.Support.Shared.SearchIndexModel
+@model SFA.DAS.Support.Portal.Web.ViewModels.SearchResultsViewModel
 @{
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
     ViewBag.currentSection = "search";
-    ViewBag.currentPage = "users";
+    ViewBag.currentPage = "DAS Support-Search";
 }
 
-<h1 class="heading-xlarge">Search for a user</h1>
-@using (Html.BeginForm("Index", "Search", FormMethod.Get, new { accept_charset = "utf-8", @class = "search-field", role = "search" }))
-{
-    <div class="search-input">
-        <label for="search-main">
-                    
-        </label>
-        @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
-        <input type="hidden" name="Page" value="1"/>
-        <div class="search-submit">
-            <button type="submit" class="">Search</button>
+
+<style>
+    @@media (min-width: 769px) {
+        #content {
+            padding-bottom: 10px !important;
+        }
+    }
+</style>
+
+
+<div id="content" class="search no-search-term">
+    @using (Html.BeginForm("Index", "Search", FormMethod.Get, new { accept_charset = "utf-8", @class = "search-header search-header-2", role = "search" }))
+    {
+        <div class="searchfield form-group">
+            <fieldset class="search-input">
+                <h1 class="heading-large">Search</h1>
+                @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
+
+                @Html.HiddenFor(m => m.Page)
+            </fieldset>
+
+            <fieldset class="search-submit">
+                <button type="submit" class="button">Search</button>
+            </fieldset>
+        </div>
+
+        <div class="form-group">
+            <fieldset class="inline">
+
+                <div class="multiple-choice">
+                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new { id = "UserSearchType", @checked = "" })
+                    <label for="UserSearchType">Users</label>
+                </div>
+                <div class="multiple-choice">
+                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new { id = "AccountSearchType" })
+                    <label for="AccountSearchType">Accounts</label>
+                </div>
+
+            </fieldset>
+        </div>
+    }
+
+    <div class="grid-row">
+        <div class="column-full">
+
+            @if (Model.AccountSearchResults != null && Model.SearchType == SearchCategory.Account)
+            {
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h2 class="heading-large"> Results</h2>
+                        <p>  @Model.TotalAccountSearchItems accounts found</p>
+                    </div>
+                </div>
+
+
+                if (Model.AccountSearchResults.Any())
+                {
+                    <div class="grid-row">
+
+                        <div class="column-two-thirds">
+                            <table>
+                                <tr>
+                                    <th scope="col">Account</th>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                @foreach (var account in Model.AccountSearchResults)
+                                {
+                                    <tr>
+                                        <td>
+                                            @account.Account
+                                        </td>
+                                        <td>
+                                            @account.AccountID
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+
+                    </div>
+
+                    @Pager()
+                }
+
+
+            }
+            else if (Model.UserSearchResults != null && Model.SearchType == SearchCategory.User)
+            {
+
+
+
+                <div class="grid-row">
+                    <div class="column-full">
+                        <h2 class="heading-large"> Results</h2>
+                        <p>  @Model.TotalUserSearchItems users found</p>
+                    </div>
+                </div>
+
+                if (Model.UserSearchResults.Any())
+                {
+                    <div class="grid-row">
+
+                        <div class="column-full">
+                            <table>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                @foreach (var user in Model.UserSearchResults)
+                                {
+                                    <tr>
+                                        <td>
+                                            @user.Name
+                                        </td>
+                                        <td>
+                                            @user.Email
+                                        </td>
+                                        <td>
+                                            @user.Status
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    @Pager()
+
+                }
+            }
         </div>
     </div>
-}
 
-@if (!string.IsNullOrEmpty(Model.SearchTerm))
-{
-    <p>@Html.ActionLink("Clear search", "Index")</p>
-}
+</div>
 
-@if (!Model.Results.Any() && Model.Page > 1)
-{
-    <p>There are no more results.</p>
-}
-else if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <p>@Model.ErrorMessage</p>
-}
-else if (Model.Results != null && Model.Results.Any())
-{
-    <table>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Accounts</th>
-            <th scope="col">Status</th>
-        </tr>
-        @foreach (var item in Model.Results)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "Detail", new {id = item.Id, searchTerm = Model.SearchTerm})
-                </td>
-                <td>
-                    @item.Email
-                </td>
-                <td>
-                    @if (item.Accounts != null && item.Accounts.Any())
-                    {
-                        <ul class="list">
-                            @foreach (var account in item.Accounts)
-                            {
-                                <li>
-                                    @Html.ActionLink(account.DasAccountName, "Index", "Account", new { id = account.HashedAccountId }, null)
-                                </li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <span>NA</span>
-                    }
-                </td>
-                <td>
-                    @item.Status
-                </td>
-            </tr>
-        }
-    </table>
 
-    <div class="pagination">
 
-        @if (Model.Page > 1)
-        {
-            @Html.ActionLink("< Prev", "Index", new {Model.SearchTerm, Page = Model.Page - 1}, new {@class = "previous"})
-            ;
-        }
-
-        @if (Model.Results.Any() && Model.Page != Model.LastPage)
-        {
-            @Html.ActionLink("Next >", "Index", new {Model.SearchTerm, Page = Model.Page + 1}, new {@class = "next"})
-            ;
-        }
-
-        @if (Model.Page != 1 && Model.LastPage != 1)
-        {
-            <span>Page @Model.Page of @Model.LastPage</span>
-        }
-
-    </div>
-}
-else if (Model.NewResults != null && Model.NewResults.Any())
-{
-    foreach (var item in Model.NewResults)
+@helper Pager()
     {
-        @Html.Raw(item)
-    }
+        <div class="grid-row">
+            <div class="column-full">
+                <div class="page-navigation">
+
+
+
+                    @if (Model.Page > 1)
+                    {
+                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
+                            <i class="arrow-button fa fa-angle-left"></i>
+                            <span class="description">Previous <span class="hide-mob">page</span></span>
+                            <span class="counter">@Model.Page of @Model.LastPage</span>
+                        </a>
+                    }
+
+
+
+                    @if (Model.Page != Model.LastPage)
+                    {
+                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn next">
+                            <i class="arrow-button fa fa-angle-right"></i>
+                            <span class="description">Next <span class="hide-mob">page</span></span>
+                            <span class="counter">@Model.Page of @Model.LastPage</span>
+                        </a>
+                    }
+
+                </div>
+
+
+                @*<div class="pagination">
+
+
+                        @if (Model.Page > 1)
+                        {
+                            @Html.ActionLink("< Prev", "Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType }, new { @class = "previous" })
+
+                        }
+
+                        @if (Model.Page != Model.LastPage)
+                        {
+                            @Html.ActionLink("Next >", "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType }, new { @class = "next" })
+                        }
+
+                        @if (Model.Page != 1 && Model.LastPage != 1)
+                        {
+                            <span>Page @Model.Page of @Model.LastPage</span>
+                        }
+
+                    </div>*@
+            </div>
+        </div>
 }
-else if(!Model.Results.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
-{
-    <p>No user found</p>
-}
+

@@ -49,6 +49,9 @@
     <Reference Include="HMRC.ESFA.Levy.Api.Types, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HMRC.ESFA.Levy.Api.Types.1.0.30\lib\net452\HMRC.ESFA.Levy.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediatR.2.1.0\lib\net45\MediatR.dll</HintPath>
     </Reference>
@@ -79,11 +82,17 @@
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="RazorGenerator.Testing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorGenerator.Testing.2.4.7\lib\net40\RazorGenerator.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="ReflectionMagic, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReflectionMagic.2.0.0\lib\net40\ReflectionMagic.dll</HintPath>
+    </Reference>
     <Reference Include="RichardSzalay.MockHttp, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RichardSzalay.MockHttp.3.2.1\lib\net45\RichardSzalay.MockHttp.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.40326, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.40326\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.51148, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.51148\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.36226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.36226\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
@@ -99,9 +108,10 @@
     </Reference>
     <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.49994\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
@@ -178,6 +188,10 @@
     <Compile Include="Services\ManifestRepository\WhenTestingManifestRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Support.Common.Infrastucture\SFA.DAS.Support.Common.Infrastucture.csproj">
+      <Project>{E233B49B-0294-41E0-B3AC-284D36E0B16E}</Project>
+      <Name>SFA.DAS.Support.Common.Infrastucture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Portal.ApplicationServices\SFA.DAS.Support.Portal.ApplicationServices.csproj">
       <Project>{ce85aae2-bd07-45f0-a642-4fa376ed9bf1}</Project>
       <Name>SFA.DAS.Support.Portal.ApplicationServices</Name>
@@ -191,15 +205,13 @@
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
-      <Project>{324A9892-D5E5-4B63-9A43-9C9FD3F80B45}</Project>
+      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

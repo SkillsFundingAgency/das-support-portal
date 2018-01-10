@@ -15,6 +15,7 @@ using StructureMap.Configuration.DSL;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
@@ -57,12 +58,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
-            For<ISearchProvider>().Use(x => new ElasticSearchProvider(x.GetInstance<IElasticsearchCustomClient>(), x.GetInstance<ISearchSettings>().IndexName));
 
+            For<ISearchProvider>().Use<ElasticSearchProvider>();
 
-            For<IEntityRepository>().Use<EntityRepository>();
             For<ISiteConnector>().Use<SiteConnector>();
             For<IFormMapper>().Use<FormMapper>();
+
+            For<IWindowsLogonIdentityProvider>().Use<WindowsLogonIdentityProvider>();
         }
 
         private HttpClient GetLevyHttpClient(ITokenServiceApiClientConfiguration levySubmissionsApiConfiguration, IHmrcClientConfiguration hmrcClientConfiguration)

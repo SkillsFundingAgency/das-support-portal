@@ -1,7 +1,9 @@
-﻿namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
+﻿using System.Threading.Tasks;
+
+namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public interface IIndexSearchItems
     {
-        void Run();
+        Task Run();
     }
 }

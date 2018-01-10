@@ -25,24 +25,26 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndex<T>(string indexName) where T : class
         {
-            var response = _client.CreateIndex(
-                indexName,
-                i => i
-                    .Settings(settings => settings
-                        .NumberOfShards(_settings.IndexShards)
-                        .NumberOfReplicas(_settings.IndexReplicas))
-                    .Mappings(ms => ms
-                        .Map<T>(m => m
-                            .AutoMap()
-                            .Properties(p => p)
-                        )),string.Empty);
-
-            if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+            if (!_client.IndexExists(indexName, string.Empty).Exists)
             {
-                throw new Exception($"Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode}");
+                var response = _client.CreateIndex(
+                              indexName,
+                              i => i
+                                  .Settings(settings =>
+                                      settings
+                                      .NumberOfShards(_settings.IndexShards)
+                                      .NumberOfReplicas(_settings.IndexReplicas))
+                                  .Mappings(ms => ms
+                                      .Map<T>(m => m
+                                          .AutoMap()
+                                          .Properties(p => p)))
+                                  , string.Empty);
+
+                if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+                {
+                    throw new Exception($"Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode}");
+                }
             }
-
-
         }
 
         public void IndexDocuments<T>(string indexName, IEnumerable<T> documents) where T : class
@@ -70,8 +72,40 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             if (result == null || !result.Acknowledged)
             {
                 var msg = $"Unable to delete Index {indexName}";
-                throw new Exception(msg);
+                _logger.Error(result.OriginalException, msg);
             }
+        }
+
+        public void DeleteIndexes(int indexToRetain, string indexPrefix)
+        {
+            var indexNameDelimeter = new char[] {'_'};
+
+            var indexToDeleteCount = _client
+                                        .IndicesStats(Indices.All)
+                                        .Indices
+                                        .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
+
+            if (indexToDeleteCount > indexToRetain)
+            {
+                var indicesToBeDelete = _client
+                                         .IndicesStats(Indices.All)
+                                         .Indices
+                                         .Where(x => x.Key.StartsWith(indexPrefix))
+                                         .OrderBy(x => x.Key.Split(indexNameDelimeter).Last())
+                                         .Skip(indexToRetain)
+                                         .ToList();
+
+                _logger.Debug($"Deleting {indicesToBeDelete.Count()} indexes...");
+
+                foreach (var index in indicesToBeDelete)
+                {
+                    _logger.Debug($"Deleting {index.Key}");
+                    DeleteIndex(index.Key);
+                }
+
+            }
+
+            _logger.Debug("Deletion completed...");
         }
 
         public bool IndexExists(string indexName)

@@ -32,6 +32,16 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
+        public ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector, [CallerMemberName] string callerName = "")
+           where T : class
+        {
+            var timer = Stopwatch.StartNew();
+            var result = _client.Count(selector);
+
+            SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Search : {callerName}");
+            return result;
+        }
+
         public IExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
@@ -47,7 +57,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Delete Index {index.Name}");
             return result;
         }
-
         public IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null, [CallerMemberName] string callerName = "")
             where T : class
         {

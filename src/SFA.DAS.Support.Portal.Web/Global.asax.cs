@@ -4,9 +4,11 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.ProviderApprenticeshipsService.Web;
 
 namespace SFA.DAS.Support.Portal.Web
 {
@@ -27,6 +29,7 @@ namespace SFA.DAS.Support.Portal.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
             ControllerFilters.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             logger.Info("Web Role started");
         }

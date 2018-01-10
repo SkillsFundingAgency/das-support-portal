@@ -33,37 +33,30 @@
   <ItemGroup>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.13.8.999, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.13.8.999, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.40326, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.40326\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.51148, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.51148\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.36226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.36226\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.EmployerUsers.Api.Client, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Client.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Client.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.EmployerUsers.Api.Types, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Types.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Types.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="StructureMap, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.3.1.1.134\lib\net40\StructureMap.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="StructureMap.Net4, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.3.1.1.134\lib\net40\StructureMap.Net4.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
