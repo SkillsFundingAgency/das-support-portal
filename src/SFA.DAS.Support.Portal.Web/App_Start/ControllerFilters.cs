@@ -13,9 +13,7 @@ namespace SFA.DAS.Support.Portal.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             var roleSettings = DependencyResolver.Current.GetService<IRoleSettings>();
-
-            //filters.Add(new HandleErrorAttribute());
-            if (!System.Diagnostics.Debugger.IsAttached && !string.IsNullOrEmpty(AdfsMetadata.Trim()))
+            if (!System.Diagnostics.Debugger.IsAttached && !string.IsNullOrWhiteSpace(AdfsMetadata))
             {
                 filters.Add(new AuthorizeAttribute { Roles = roleSettings.ConsoleUserRole });
             }

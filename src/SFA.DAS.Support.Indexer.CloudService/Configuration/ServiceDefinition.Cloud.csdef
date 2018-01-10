@@ -3,15 +3,10 @@
   <WorkerRole name="SFA.DAS.Support.Indexer.Worker" vmsize="small">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
-
+      <Setting name="ConfigurationStorageConnectionString" />
       <Setting name="LoggingRedisConnectionString" />
       <Setting name="EnvironmentName" />
-      <Setting name="Support_Azure_Search_AdminKey" />
-      <Setting name="Support_Azure_Search_ServiceName" />
-      <Setting name="Support_SubSite_0" />
-      <Setting name="Support_SubSite_1" />
-      <Setting name="Support_SubSite_2" />
-      <Setting name="Support_SubSite_3" />
+      <Setting name="InstrumentationKey" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

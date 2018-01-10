@@ -3,9 +3,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 {
     public interface IIndexNameCreator
     {
-        string CreateNewIndexName(string IndexNameFormat, string environment, SearchCategory searchCategory);
+        string CreateIndexesAliasName(string indexName, SearchCategory searchCategory);
 
-        string CreateIndexesAliasName(string IndexNameFormat, string environment, SearchCategory searchCategory);
+        string CreateNewIndexName(string indexName, SearchCategory searchCategory);
     }
 }
    

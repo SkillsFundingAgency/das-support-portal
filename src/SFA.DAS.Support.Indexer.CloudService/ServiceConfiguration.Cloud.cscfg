@@ -4,14 +4,10 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="__StorageConnectionString__" />
+      <Setting name="ConfigurationStorageConnectionString"  value="__ConfigurationStorageConnectionString__" />
       <Setting name="LoggingRedisConnectionString" value="__LoggingRedisConnectionString__" />
       <Setting name="EnvironmentName" value="__EnvironmentName__" />
-      <Setting name="Support_Azure_Search_AdminKey" value="__Search_AdminKey__" />
-      <Setting name="Support_Azure_Search_ServiceName" value="__Search_ServiceName__" />
-      <Setting name="Support_SubSite_0" value="__SubSite_0__" />
-      <Setting name="Support_SubSite_1" value="__SubSite_1__" />
-      <Setting name="Support_SubSite_2" value="__SubSite_2__" />
-      <Setting name="Support_SubSite_3" value="__SubSite_3__" />
+      <Setting name="InstrumentationKey" value="__InstrumentationKey__"/>
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

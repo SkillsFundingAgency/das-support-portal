@@ -52,7 +52,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             try
             {
 
-                var subSites = _settings.Sites.Where(x => !string.IsNullOrEmpty(x));
+                var subSites = _settings.BaseUrls?.Split(Convert.ToChar(","))?.Where(x => !string.IsNullOrEmpty(x));
 
                 foreach (var subSite in subSites)
                 {
@@ -102,7 +102,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         {
             try
             {
-                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexNameFormat, _settings.EnvironmentName, resource.SearchCategory);
+                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resource.SearchCategory);
                 CreateIndex<T>(newIndexName);
 
                 _queryTimer.Start();
@@ -116,7 +116,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 _indexTimer.Stop();
 
                 _logger.Info($"Creating Index Alias and Swapping from old to new index ...");
-                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexNameFormat, _settings.EnvironmentName, resource.SearchCategory);
+                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
 

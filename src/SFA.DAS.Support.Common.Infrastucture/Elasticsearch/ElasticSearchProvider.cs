@@ -8,26 +8,22 @@ using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Models;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.Support.Portal.Core.Configuration;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 {
     public class ElasticSearchProvider : ISearchProvider
     {
         private readonly IElasticsearchCustomClient _elasticSearchClient;
-        private readonly IConfigurationSettings _configurationSettings;
         private readonly ISearchSettings _searchSettings;
         private readonly IIndexNameCreator _indexNameCreator;
 
         private string _indexAliasName;
 
         public ElasticSearchProvider(IElasticsearchCustomClient elasticSearchClient,
-                                    IConfigurationSettings configurationSettings,
                                     ISearchSettings searchSettings,
                                     IIndexNameCreator indexNameCreator)
         {
             _elasticSearchClient = elasticSearchClient;
-            _configurationSettings = configurationSettings;
             _searchSettings = searchSettings;
             _indexNameCreator = indexNameCreator;
         }
@@ -36,7 +32,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         {
             if (searchType != SearchCategory.User) return null;
 
-            _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexNameFormat, _configurationSettings.EnvironmentName, searchType);
+            _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<UserSearchModel>(s => s.Index(_indexAliasName)
                                                        .Type(Types.Type<UserSearchModel>())
@@ -66,7 +62,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.Account) return null;
-            _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexNameFormat, _configurationSettings.EnvironmentName, searchType);
+            _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
                                                        .Type(Types.Type<AccountSearchModel>())

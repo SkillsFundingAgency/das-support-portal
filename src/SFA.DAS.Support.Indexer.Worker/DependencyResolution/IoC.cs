@@ -16,19 +16,21 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using System.Diagnostics.CodeAnalysis;
 using StructureMap;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
+    [ExcludeFromCodeCoverage]
     public static class IoC
     {
         public static IContainer Initialize()
         {
             return new Container(c =>
             {
+                c.AddRegistry<DefaultRegistry>();
                 c.AddRegistry<InfrastuctureRegistry>();
                 c.AddRegistry<ApplicationRegistry>();
-                //c.AddRegistry<CoreRegistry>();
             });
         }
     }

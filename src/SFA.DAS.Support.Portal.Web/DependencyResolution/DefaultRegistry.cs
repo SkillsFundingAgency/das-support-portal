@@ -15,25 +15,86 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
+using System;
+using SFA.DAS.EmployerUsers.Api.Client;
+using SFA.DAS.Support.Portal.Infrastructure.Settings;
+using SFA.DAS.Support.Portal.Web.Settings;
+
+namespace SFA.DAS.Support.Portal.Web.DependencyResolution
+{
+    using Microsoft.Azure;
+    using SFA.DAS.Configuration;
+    using SFA.DAS.Configuration.AzureTableStorage;
+    using SFA.DAS.EAS.Account.Api.Client;
+    using SFA.DAS.NLog.Logger;
+    using SFA.DAS.Support.Common.Infrastucture.Settings;
+    using SFA.DAS.Support.Portal.ApplicationServices.Settings;
+    using SFA.DAS.Support.Portal.Core.Services;
+    using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public class DefaultRegistry : Registry {
-        #region Constructors and Destructors
+    public class DefaultRegistry : Registry
+    {
+        private const string ServiceName = "SFA.DAS.Support.Portal";
+        private const string Version = "1.0";
 
-        public DefaultRegistry() {
+
+        public DefaultRegistry()
+        {
             Scan(
-                scan => {
+                scan =>
+                {
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
-					scan.With(new ControllerConvention());
+                    scan.With(new ControllerConvention());
                 });
-            //For<IExample>().Use<Example>();
+
+            For<ILoggingPropertyFactory>().Use<LoggingPropertyFactory>();
+            For<ILog>().Use(x => new NLogLogger(
+                x.ParentType,
+                x.GetInstance<IRequestContext>(),
+                x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
+
+            WebConfiguration configuration = GetConfiguration();
+
+            For<IWebConfiguration>().Use(configuration);
+            For<IChallengeSettings>().Use(configuration.Challenge);
+            For<ISearchSettings>().Use(configuration.ElasticSearch);
+            For<IHmrcClientConfiguration>().Use(configuration.HmrcClient);
+            For<IAccountApiConfiguration>().Use(configuration.AccountsApi);
+            For<IEmployerUsersApiConfiguration>().Use(configuration.EmployerUsersApi);
+            For<ILevySubmissionsApiConfiguration>().Use(configuration.LevySubmissionsApi);
+            For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
+            For<ISiteSettings>().Use(configuration.Site);
+            For<IRoleSettings>().Use(configuration.Roles);
+            For<IAuthSettings>().Use(configuration.Authentication);
+            For<ICryptoSettings>().Use(configuration.Crypto);
         }
 
-        #endregion
+        private WebConfiguration GetConfiguration()
+        {
+            var environment = CloudConfigurationManager.GetSetting("EnvironmentName");
+
+            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString");
+
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
+            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
+
+
+            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
+
+            var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
+
+            var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
+
+            var webConfiguration = configurationService.Get<WebConfiguration>();
+
+            if (webConfiguration == null) throw new ArgumentOutOfRangeException($"The requried configuration settings were not retrieved, please check the environmentName case, and the configuration connection string is correct.");
+
+            return webConfiguration;
+        }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.Support.Portal.Core.Services;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class SiteSettings : ISiteSettings
     {
-        private readonly IProvideSettings _settings;
-
-        public SiteSettings(IProvideSettings settings)
-        {
-            _settings = settings;
-        }
-
-        public IEnumerable<string> Sites => _settings.GetArray("Support:SubSite");
+        
+        [JsonRequired]
+        public string BaseUrls { get; set; }
     }
 }

@@ -13,12 +13,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer.Tests
     public class IndexNameCreatorTest
     {
 
-        [TestCase("{0}_das_support", "Local",SearchCategory.User, "local_das_support-user")]
-        [TestCase("{0}_das_support", "Test", SearchCategory.Account, "test_das_support-account")]
-        public void CreateIndexesAliasNameTest(string IndexNameFormat, string environment, SearchCategory searchCategory, string expected)
+        [TestCase("local_das_support",SearchCategory.User, "local_das_support-user")]
+        [TestCase("test_das_support", SearchCategory.Account, "test_das_support-account")]
+        public void CreateIndexesAliasNameTest(string indexName, SearchCategory searchCategory, string expected)
         {
             var _sut = new IndexNameCreator();
-            var actual =_sut.CreateIndexesAliasName(IndexNameFormat, environment, searchCategory);
+            var actual =_sut.CreateIndexesAliasName(indexName, searchCategory);
             Assert.AreEqual(actual, expected);
         }
 
@@ -26,9 +26,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer.Tests
         public void CreateNewIndexNameTest()
         {
             var _sut = new IndexNameCreator();
-            var actual = _sut.CreateNewIndexName("{0}_das_support", "Local", SearchCategory.User);
-            var expected = $"local_das_support-user_{DateTime.UtcNow.ToString("yyyy-MMM-dd-HH-mm").ToLower()}";
-            Assert.AreEqual(actual, expected);
+            var actual = _sut.CreateNewIndexName("local_das_support", SearchCategory.User);
+            var expected = $"local_das_support-user_{DateTime.UtcNow.ToString("yyyyMMddHHmmss").ToLower()}";
+            Assert.AreEqual(expected,actual);
         }
     }
 }

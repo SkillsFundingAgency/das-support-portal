@@ -1,11 +1,10 @@
-﻿using System.Web;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Web.Mvc;
-using System.Web.Routing;
-using Moq;
 using NUnit.Framework;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class WhenTestingAnMvcControllerOfType<T> where T : Controller
     {
         protected T Unit;

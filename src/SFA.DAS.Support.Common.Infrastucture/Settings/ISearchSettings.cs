@@ -1,33 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Settings
 {
     public interface ISearchSettings
     {
-        string IndexNameFormat { get; }
 
-        IEnumerable<Uri> ElasticServerUrls { get; }
+        string IndexName { get; set; }
 
-        string ElasticUsername { get; }
+        IEnumerable<Uri> ElasticServerUrls { get;  }
 
-        string ElasticPassword { get; }
+        /// <summary>
+        /// A comma separated list of server Url's 
+        /// e.g. 'https://localhost:43311,https://localhost:43312'
+        /// </summary>
+        string ServerUrls { get; set; }
 
-        bool Elk5Enabled { get; }
+        string ElasticUsername { get; set; }
 
-        bool IgnoreSslCertificateEnabled { get; }
+        string ElasticPassword { get; set; }
 
-        int IndexShards { get; }
+        bool Elk5Enabled { get; set; }
 
-        int IndexReplicas { get; }
+        bool IgnoreSslCertificateEnabled { get; set; }
 
+        int IndexShards { get; set; }
 
-        //----Azure search settings to be removed
-        string AdminApiKey { get; }
-        string ServiceName { get; }
+        int IndexReplicas { get; set; }
+
+        int IndexCopyCount { get; set; }
+
 
     }
 }

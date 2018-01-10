@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.Support.Portal.Core.Configuration;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         private Mock<IElasticsearchCustomClient> _clientMock;
         private const string _indexAliasName = "DummyIndex";
         private ElasticSearchProvider _sut;
-        private Mock<IConfigurationSettings> _configurationSettingsMock;
         private Mock<ISearchSettings> _searchSettingsMock;
         private Mock<IIndexNameCreator> _indexNameCreatorMock;
         private Mock<IApiCallDetails>  _apiCall = new Mock<IApiCallDetails>();
@@ -30,12 +28,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void Setup()
         {
             _clientMock = new Mock<IElasticsearchCustomClient>();
-            _configurationSettingsMock = new Mock<IConfigurationSettings>();
             _searchSettingsMock = new Mock<ISearchSettings>();
             _indexNameCreatorMock = new Mock<IIndexNameCreator>();
 
             _indexNameCreatorMock
-                .Setup(x => x.CreateIndexesAliasName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchCategory>()))
+                .Setup(x => x.CreateIndexesAliasName(It.IsAny<string>(), It.IsAny<SearchCategory>()))
                 .Returns("local_das_test");
 
             _apiCall
@@ -60,7 +57,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             ConfigureTesShareResources(documents);
 
             _sut = new ElasticSearchProvider(_clientMock.Object,
-                                    _configurationSettingsMock.Object,
                                     _searchSettingsMock.Object,
                                    _indexNameCreatorMock.Object);
             //Act
@@ -89,7 +85,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             ConfigureTesShareResources(documents);
 
             _sut = new ElasticSearchProvider(_clientMock.Object,
-                                    _configurationSettingsMock.Object,
                                     _searchSettingsMock.Object,
                                    _indexNameCreatorMock.Object);
             //Act

@@ -1,18 +1,13 @@
-﻿using SFA.DAS.Support.Portal.Core.Services;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class HmrcClientConfiguration : IHmrcClientConfiguration
     {
-        private readonly IProvideSettings _settings;
-
-        public HmrcClientConfiguration(IProvideSettings settings)
-        {
-            _settings = settings;
-        }
-
-        public string HttpClientBaseUrl => _settings.GetSetting("LevyHttpClientBaseUrl");
+        
+        [JsonRequired]
+        public string HttpClientBaseUrl { get; set; }
     }
 }

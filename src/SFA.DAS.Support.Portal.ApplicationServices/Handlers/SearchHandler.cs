@@ -16,14 +16,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
     public class SearchHandler : IAsyncRequestHandler<SearchQuery, SearchResponse>
     {
         private readonly ISearchProvider _searchProvider;
-        private readonly IManifestRepository _manifestRepository;
-
         private const int _pageSize = 10;
 
-        public SearchHandler(ISearchProvider searchProvider, IManifestRepository manifestRepository)
+        public SearchHandler(ISearchProvider searchProvider)
         {
             _searchProvider = searchProvider;
-            _manifestRepository = manifestRepository;
         }
 
         public async Task<SearchResponse> Handle(SearchQuery query)

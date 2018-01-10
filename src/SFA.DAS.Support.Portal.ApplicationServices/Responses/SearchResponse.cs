@@ -3,7 +3,6 @@ using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Responses
 {
-    //[ExcludeFromCodeCoverage]
     public class SearchResponse
     {
         public int Page { get; set; }

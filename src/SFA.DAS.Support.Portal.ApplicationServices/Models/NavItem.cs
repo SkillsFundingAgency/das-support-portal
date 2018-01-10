@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Models
 {
-    //[ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class NavItem
     {
         public string Title { get; set; }
