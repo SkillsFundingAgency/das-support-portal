@@ -24,9 +24,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
     {
         public InfrastructureRegistry()
         {
-           
-
-           
             For<IEmployerUsersApiClient>().Use("", (ctx) =>
             {
                 var empUserApiSettings = ctx.GetInstance<IEmployerUsersApiConfiguration>();
@@ -38,7 +35,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
                 return new AccountApiClient(empUserApiSettings);
             });
 
-
             For<IApprenticeshipLevyApiClient>().Use("", (ctx) =>
             {
                 var levySubmissionsApiConfiguration = ctx.GetInstance<ITokenServiceApiClientConfiguration>();
@@ -48,14 +44,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
                 return new ApprenticeshipLevyApiClient(httpClient);
             });
 
-            
             For<IEmployerUserRepository>().Use<EmployerUserRepository>();
             For<IAccountRepository>().Use<AccountRepository>();
             For<ILevySubmissionsRepository>().Use<LevySubmissionsRepository>();
             For<IChallengeRepository>().Use<ChallengeRepository>();
-           
-            
-            
+
+            For<IIndexNameCreator>().Use<IndexNameCreator>();
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
 
@@ -65,6 +59,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<IFormMapper>().Use<FormMapper>();
 
             For<IWindowsLogonIdentityProvider>().Use<WindowsLogonIdentityProvider>();
+
         }
 
         private HttpClient GetLevyHttpClient(ITokenServiceApiClientConfiguration levySubmissionsApiConfiguration, IHmrcClientConfiguration hmrcClientConfiguration)
