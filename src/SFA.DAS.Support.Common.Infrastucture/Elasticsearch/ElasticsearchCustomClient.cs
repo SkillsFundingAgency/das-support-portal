@@ -52,8 +52,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                //throw;
+                _logger.Debug($"IndexExists: {e.Message}");
             }
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Index Exists {index.Name}");
             return result;
