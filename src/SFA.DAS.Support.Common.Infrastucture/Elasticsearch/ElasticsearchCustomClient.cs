@@ -45,7 +45,16 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         public IExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.IndexExists(index);
+            IExistsResponse result = null;
+            try
+            {
+                result = _client.IndexExists(index);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                //throw;
+            }
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Index Exists {index.Name}");
             return result;
         }

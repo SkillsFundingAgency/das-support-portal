@@ -33,7 +33,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                                   .Settings(settings =>
                                       settings
                                       .NumberOfShards(_settings.IndexShards)
-                                      .NumberOfReplicas(_settings.IndexReplicas))
+                                      .NumberOfReplicas(_settings.IndexReplicas)
+                                      )
                                   .Mappings(ms => ms
                                       .Map<T>(m => m
                                           .AutoMap()
@@ -42,7 +43,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
                 if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 {
-                    throw new Exception($"Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode}");
+                    throw new Exception($"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode??-1}\r\n{response.DebugInformation}", response.OriginalException );
                 }
             }
         }
