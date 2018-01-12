@@ -92,7 +92,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                                          .IndicesStats(Indices.All)
                                          .Indices
                                          .Where(x => x.Key.StartsWith(indexPrefix))
-                                         .OrderBy(x => x.Key.Split(indexNameDelimeter).Last())
+                                         .OrderByDescending(x => x.Key.Split(indexNameDelimeter).Last())
                                          .Skip(indexToRetain)
                                          .ToList();
 
