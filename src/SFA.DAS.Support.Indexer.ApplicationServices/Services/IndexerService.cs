@@ -52,7 +52,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             try
             {
 
-                var subSites = _settings.BaseUrls?.Split(Convert.ToChar(","))?.Where(x => !string.IsNullOrEmpty(x));
+                var subSites = _settings.BaseUrls?
+                                        .Split(Convert.ToChar(","))?
+                                            .Where(x => !string.IsNullOrEmpty(x));
 
                 foreach (var subSite in subSites)
                 {
@@ -77,10 +79,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                         switch (resource.SearchCategory)
                         {
                             case SearchCategory.User:
-                                await ProcessResource<UserSearchModel>(resource, uri);
+                                await ProcessResource<UserSearchModel>(resource, uri).ConfigureAwait(false);
                                 break;
                             case SearchCategory.Account:
-                                await ProcessResource<AccountSearchModel>(resource, uri);
+                                await ProcessResource<AccountSearchModel>(resource, uri).ConfigureAwait(false);
                                 break;
                         }
 

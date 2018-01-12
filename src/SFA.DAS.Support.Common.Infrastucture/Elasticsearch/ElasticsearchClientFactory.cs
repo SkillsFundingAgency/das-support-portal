@@ -22,10 +22,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             ServicePointManager.SecurityProtocol =
                                                    SecurityProtocolType.Tls12 
                 ; /*
-             SecurityProtocolType.Ssl3 
+                                                     SecurityProtocolType.Ssl3 
                                                    | SecurityProtocolType.Tls 
-                                                   | SecurityProtocolType.Tls11 
-                                                   | 
+                                                   | SecurityProtocolType.Tls11
                                                    */
             var connectionPool = new SingleNodeConnectionPool(indexerSettingsElasticServerUrls.First());
             ConnectionSettings settings = null;
