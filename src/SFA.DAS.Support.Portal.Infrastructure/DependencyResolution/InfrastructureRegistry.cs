@@ -53,6 +53,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
 
+            For<IIndexNameCreator>().Use<IndexNameCreator>();
             For<ISearchProvider>().Use<ElasticSearchProvider>();
 
             For<ISiteConnector>().Use<SiteConnector>();
