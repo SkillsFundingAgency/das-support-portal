@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using Elasticsearch.Net;
 using Nest;
 using SFA.DAS.Support.Common.Infrastucture.Extensions;
@@ -18,25 +19,35 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         public IElasticClient GetElasticClient()
         {
             var indexerSettingsElasticServerUrls = _indexerSettings.ElasticServerUrls.ToList();
-
+            ServicePointManager.SecurityProtocol =
+                                                   SecurityProtocolType.Tls12 
+                ; /*
+                                                     SecurityProtocolType.Ssl3 
+                                                   | SecurityProtocolType.Tls 
+                                                   | SecurityProtocolType.Tls11
+                                                   */
+            var connectionPool = new SingleNodeConnectionPool(indexerSettingsElasticServerUrls.First());
+            ConnectionSettings settings = null;
             if (_indexerSettings.IgnoreSslCertificateEnabled)
             {
-                using (var settings = new ConnectionSettings(
-                    new StaticConnectionPool(indexerSettingsElasticServerUrls),
-                    new MyCertificateIgnoringHttpConnection()))
-                {
-                    SetDefaultSettings(settings);
+                var myCertificateIgnoringHttpConnection = new MyCertificateIgnoringHttpConnection();
 
-                    return new ElasticClient(settings);
-                }
-            }
+                settings = new ConnectionSettings(
+                   connectionPool,
+                   myCertificateIgnoringHttpConnection);
 
-            using (var settings = new ConnectionSettings(new StaticConnectionPool(indexerSettingsElasticServerUrls)))
-            {
                 SetDefaultSettings(settings);
 
                 return new ElasticClient(settings);
+
             }
+
+            settings = new ConnectionSettings(connectionPool);
+
+            SetDefaultSettings(settings);
+
+            return new ElasticClient(settings);
+
         }
 
         private void SetDefaultSettings(ConnectionSettings settings)
