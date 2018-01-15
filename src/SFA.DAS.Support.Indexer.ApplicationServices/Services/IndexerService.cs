@@ -102,6 +102,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         private async Task ProcessResource<T>(SiteResource resource, Uri uri) where T : class
         {
+            var indexedResorce = Enum.GetName(typeof(SearchCategory), resource.SearchCategory);
+
             try
             {
                 var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resource.SearchCategory);
@@ -121,19 +123,18 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
-
                 _logger.Info($"Deleting Old Indexes ...");
                 _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
                 _logger.Info($"Deleting Old Indexes Completed...");
 
                 _indexTimer.Stop();
                 _queryTimer.Stop();
-                _logger.Info($"Query Elapse Time For {nameof(T)} : {_queryTimer.Elapsed} - Indexing Time {_indexTimer.Elapsed}");
+                _logger.Info($"Query Elapse Time For {indexedResorce} : {_queryTimer.Elapsed} - Indexing Time {_indexTimer.Elapsed}");
 
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Exception while Indexing {nameof(T)}");
+                _logger.Error(ex, $"Exception while Indexing {indexedResorce} from url : {uri}");
             }
         }
 

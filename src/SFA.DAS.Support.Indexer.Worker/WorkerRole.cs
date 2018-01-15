@@ -20,8 +20,6 @@ namespace SFA.DAS.Support.Indexer.Worker
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
         private IIndexSearchItems _indexer;
         private ILog _logger;
-        private ISearchSettings _searchSettings;
-
         private int _delayTimeInSeconds = 1800 * 1000;
 
 
@@ -53,6 +51,8 @@ namespace SFA.DAS.Support.Indexer.Worker
             {
                 _delayTimeInSeconds = configDelayTime * 1000;
             }
+
+            _logger.Info($"Support.Indexer.Worker delay time in seconds: {_delayTimeInSeconds}");
 
             var result = base.OnStart();
             _logger.Info("ESFA.DAS.Support.Indexer.Worker has been started");
