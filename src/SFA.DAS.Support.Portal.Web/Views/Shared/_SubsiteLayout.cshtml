@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.SubHeader != null)
+{
+    <div class="secondary-header">
+        @Html.Raw(ViewBag.SubHeader)
+    </div>
+}
+
+<div class="grid-row">
+    <div class="column-one-third column__no-padding-right">
+
+        @if (ViewBag.SubNav != null && ViewBag.SubNav.Items != null && ViewBag.SubNav.Items.Length > 0)
+        {
+            <nav class="sub-nav">
+                <ul role="menu">
+                    @foreach (var item in ViewBag.SubNav.Items)
+                    {
+                        <li><a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a></li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+
+    <div class="column-two-thirds column__double-padding-left column__border-left">
+        @RenderBody()
+    </div>
+</div>

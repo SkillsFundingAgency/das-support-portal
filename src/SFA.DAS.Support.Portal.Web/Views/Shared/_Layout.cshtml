@@ -11,103 +11,101 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>DAS Support</title>
-    <meta name="description" content="">
+    <meta charset="utf-8" />
+    <title>GOV.UK - The best place to find government services and information</title>
+    <!--[if gt IE 8]><!-->
+    <link rel="stylesheet" media="screen" href="/assets/stylesheets/govuk-template.css" /><!--<![endif]-->
+    <!--[if IE 6]><link rel="stylesheet" media="screen" href="/assets/stylesheets/govuk-template-ie6.css"/><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" media="screen" href="/assets/stylesheets/govuk-template-ie7.css"/><![endif]-->
+    <!--[if IE 8]><link rel="stylesheet" media="screen" href="/assets/stylesheets/govuk-template-ie8.css"/><![endif]-->
+    <link rel="stylesheet" media="print" href="/assets/stylesheets/govuk-template-print.css" />
+    <!--[if IE 8]><link rel="stylesheet" media="all" href="/assets/stylesheets/fonts-ie8.css"/><![endif]-->
+    <!--[if gte IE 9]><!-->
+    <link rel="stylesheet" media="all" href="/assets/stylesheets/fonts.css" />
+    <!--<![endif]-->
+    <link href="/assets/stylesheets/govuk_elements/stylesheets/govuk-elements-styles.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/assets/stylesheets/application.css" rel="stylesheet" />
+    <link href="/assets/fontawesome-5.0.2/web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]><script src="/assets/javascripts/ie.js"></script><![endif]-->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+
+    <link rel="mask-icon" href="/assets/images/gov.uk_logotype_crown.svg" color="#0b0c0c">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+
+    <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" href="~/Content/apple-touch-icon.png">
-    <link rel="stylesheet" href="~/Content/dist/css/fonts.css">
-    <link rel="stylesheet" href="~/Content/dist/css/screen.css">
+    <meta property="og:image" content="/assets/images/opengraph-image.png">
 
     @Html.Partial("_Analytics")
 </head>
 <body>
-    @Html.Action("Header", "Shared")
-    @if (!string.IsNullOrEmpty(ViewBag.modelTitle))
-    {
-        <div class="secondary-header">
-            <h1>
-                @ViewBag.modelTitle
-                @if (!string.IsNullOrEmpty(ViewBag.accountId))
-                {
-                    <span>
-                        Account ID @ViewBag.accountId @ViewBag.dateRegisteredDatails
-                    </span>
-                }
-            </h1>
-        </div>
-    }
-    @if (ViewBag.SubHeader != null)
-    {
-        <div class="secondary-header">
-            @Html.Raw(ViewBag.SubHeader)
-        </div>
-    }
-    <div id="content">
-        @if (ViewBag.SubNav != null && ViewBag.SubNav.Items != null && ViewBag.SubNav.Items.Length > 0)
-        {
-            <div class="sub-nav">
-                <ul role="menu">
-                    @foreach (var item in ViewBag.SubNav.Items)
-                    {
-                        <li><a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a></li>
-                    }
-                </ul>
-            </div>
-        }
-        else
-        {
-            <div class="sub-nav">
-                <ul role="menu">
-                    @if (ViewBag.currentSection == "search")
-                    {
-                        <li><a href="@Url.Action("Index", "Search")">User search</a></li>
-                    }
-                    @if (ViewBag.currentSection == "user")
-                    {
-                        <li><a href="@Url.Action("Index", "Search")">User search</a></li>
-                    }
-                    @if (ViewBag.currentSection == "account")
-                    {
-                        <li><a href="@Url.Action("Index", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.Overview ? "selected" : string.Empty)">Organisations</a></li>
-                        <li><a href="@Url.Action("PayeSchemes", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.PayeSchemes ? "selected" : string.Empty)">PAYE Schemes</a></li>
-                        <li><a href="@Url.Action("TeamMembers", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.TeamMembers ? "selected" : string.Empty)">Team members</a></li>
-                        <li>
-                            <a href="@Url.Action("Finance", "Account", new {id = ViewBag.accountId})" class="@(ViewBag.currentPage == NavPages.Finance || ViewBag.currentPage == NavPages.Challenge ? "selected" : string.Empty)">Finance</a>
-                            @if (ViewBag.currentPage == NavPages.Finance || ViewBag.currentPage == NavPages.PayeSchemeDetails)
-                            {
-                                var payePosition = -1;
-                                if (ViewBag.PayePosition != null)
-                                {
-                                    payePosition = int.Parse(ViewBag.PayePosition);
-                                }
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-                                <ul>
-                                    @{ int count = 0; }
-                                    @foreach (var payeScheme in ViewBag.payeSchemes)
-                                    {
-                                        <li><a href="@Url.Action("PayeSchemeLevySubmissions", "Account", new {accountId = payeScheme.DasAccountId, payePosition = count})" class="@(payePosition == count ? "selected" : string.Empty)">@payeScheme.Ref.ToString() levy declarations</a></li>
-                                        count++;
-                                    }
-                                </ul>
-                            }
-                        </li>
-                    }
-                </ul>
-            </div>
-
-        }
-        <main>
-            @RenderBody()
-        </main>
+    <div id="skiplink-container">
+        <div>
+            <a href="#content" class="skiplink">Skip to main content</a>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-            integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
-            crossorigin="anonymous"></script>
-    <script src="~/Content/dist/js/app.min.js"></script>
+    <div id="global-cookie-message">
 
-    @RenderSection("script",false)
+        <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
+
+    </div>
+
+    @Html.Action("Header", "Shared")
+
+
+    <main id="content" role="main">
+
+        @RenderBody()
+       
+    </main>
+
+    <footer class="group js-footer" id="footer" role="contentinfo">
+        <div class="footer-wrapper">
+
+            <div class="footer-meta">
+                <div class="footer-meta-inner">
+
+                    <div class="open-government-licence">
+                        <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+
+                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+
+                    </div>
+                </div>
+                <div class="copyright">
+                    <a href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="~/Content/dist/js/app.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".tabs-menu a").click(function (e) {
+                e.preventDefault();
+                $(this).parent().addClass("current");
+                $(this).parent().siblings().removeClass("current");
+                var tab = $(this).attr("href");
+                $(".tab-content").not(tab).css("display", "none");
+                $(tab).fadeIn();
+            });
+        });
+
+     
+    </script>
+
+    @RenderSection("script", false)
 
 </body>
 </html>
