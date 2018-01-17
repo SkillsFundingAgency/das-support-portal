@@ -17,16 +17,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
         private readonly ISiteSettings _settings;
-        private List<SiteManifest> _manifests = new List<SiteManifest>();
+        private List<SiteManifest> _manifests ;
         private IDictionary<string, SiteResource> _resources = new Dictionary<string, SiteResource>();
         private IDictionary<string, SiteChallenge> _challenges = new Dictionary<string, SiteChallenge>();
 
-        public ManifestRepository(ISiteSettings settings, ISiteConnector downloader, IFormMapper formMapper, ILog log)
+        public ManifestRepository(ISiteSettings settings, ISiteConnector downloader, IFormMapper formMapper, ILog log, List<SiteManifest> manifests)
         {
             _downloader = downloader;
             _formMapper = formMapper;
             _log = log;
             _settings = settings;
+            _manifests = manifests;
         }
 
         private async Task PollSites()

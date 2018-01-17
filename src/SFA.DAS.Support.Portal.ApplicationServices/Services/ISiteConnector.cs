@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         Task<string> Download(string url);
         Task<T> Download<T>(Uri uri) where T : class;
         Task<T> Download<T>(string url) where T : class;
-        Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData);
+        Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class;
+        Exception LastException { get; set; }
+        HttpStatusCode LastCode { get; set; }
     }
 }
