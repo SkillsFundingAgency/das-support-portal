@@ -11,7 +11,9 @@ namespace SFA.DAS.Support.Portal.Web
     [ExcludeFromCodeCoverage]
     public partial class Startup
     {
-        public static List<SiteManifest> SiteManifests = new List<SiteManifest>();
+        public static readonly List<SiteManifest> SiteManifests = new List<SiteManifest>();
+        public static readonly Dictionary<string, SiteResource> SiteResources = new Dictionary<string, SiteResource>();
+        public static readonly Dictionary<string, SiteChallenge> SiteChallenges = new Dictionary<string, SiteChallenge>();
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);

@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Nest;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -21,51 +20,59 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
         private readonly ILog _logger;
         public HttpStatusCode LastCode { get; set; }
 
-       
-        public SiteConnector(HttpClient client, 
-            IClientAuthenticator clientAuthenticator, 
-            ISiteConnectorSettings settings, 
+
+        public SiteConnector(HttpClient client,
+            IClientAuthenticator clientAuthenticator,
+            ISiteConnectorSettings settings,
             ILog logger)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
-            _clientAuthenticator = clientAuthenticator?? throw new ArgumentNullException(nameof(clientAuthenticator));
-            _settings = settings?? throw new ArgumentNullException(nameof(settings));
-            _logger = logger?? throw new ArgumentNullException(nameof(logger));
+            _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        private void ExamineResponse(HttpResponseMessage message)
+        private async Task ExamineResponse(HttpResponseMessage message)
         {
-            try
+            await Task.Run(() =>
             {
-                LastCode = HttpStatusCode.OK;
-                LastException = null;
-                message.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException ex)
-            {
-                LastCode = message.StatusCode;
-                LastException = ex;
-                switch (message.StatusCode)
+                try
                 {
-                    case HttpStatusCode.Unauthorized:
-                        _client.DefaultRequestHeaders.Authorization = null;
-                        _logger.Error(ex, $"Unexpected Http Status Code ({(int)message.StatusCode}) {message.StatusCode} during inter-site communication, changing token for retry");
-                        break;
-                    case HttpStatusCode.Forbidden:
-                        _logger.Error(ex, $"Unexpected Http Status Code ({(int)message.StatusCode}) {message.StatusCode} during inter-site communication, resource access denied");
-                        break;
-                    default:
-                        _logger.Error(ex, $"Unexpected Http Status Code ({(int)message.StatusCode}) {message.StatusCode} during inter-site communication");
-                        throw;
+                    LastCode = HttpStatusCode.OK;
+                    LastException = null;
+                    message.EnsureSuccessStatusCode();
+
                 }
-            }
-            catch (Exception ex)
-            {
-                LastCode = message.StatusCode;
-                LastException = ex;
-                _logger.Error(ex, $"Unexpected exception during inter-site communication");
-                throw;
-            }
+                catch (HttpRequestException ex)
+                {
+                    LastCode = message.StatusCode;
+                    LastException = ex;
+                    switch (message.StatusCode)
+                    {
+                        case HttpStatusCode.Unauthorized:
+                            _client.DefaultRequestHeaders.Authorization = null;
+                            _logger.Error(ex,
+                                $"Unexpected Http Status Code ({(int) message.StatusCode}) {message.StatusCode} during inter-site communication, changing token for retry");
+                            break;
+                        case HttpStatusCode.Forbidden:
+                            _logger.Error(ex,
+                                $"Unexpected Http Status Code ({(int) message.StatusCode}) {message.StatusCode} during inter-site communication, resource access denied");
+                            break;
+                        default:
+                            _logger.Error(ex,
+                                $"Unexpected Http Status Code ({(int) message.StatusCode}) {message.StatusCode} during inter-site communication");
+                            throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LastCode = message.StatusCode;
+                    LastException = ex;
+                    _logger.Error(ex, $"Unexpected exception during inter-site communication");
+                    throw;
+                }
+            });
+
         }
 
         public Exception LastException { get; set; }
@@ -76,31 +83,33 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
             return await Download<T>(new Uri(url));
         }
 
-        private void EnsureClientAuthorizationHeader()
+        private async Task EnsureClientAuthorizationHeader()
         {
-            if (_client.DefaultRequestHeaders.Authorization != null) return;
+            if (_client.DefaultRequestHeaders.Authorization == null)
+            {
+                var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
+                             _settings.ClientSecret,
+                             _settings.IdentifierUri,
+                             _settings.Tenant);
 
-            var token = _clientAuthenticator.Authenticate(_settings.ClientId,
-                _settings.ClientSecret,
-                _settings.IdentifierUri,
-                _settings.Tenant).Result;
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
         }
 
         public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class
         {
-            EnsureClientAuthorizationHeader();
-            var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
-            
-            ExamineResponse(response);
+            await EnsureClientAuthorizationHeader();
 
-            if (LastCode == HttpStatusCode.Unauthorized || LastCode == HttpStatusCode.Forbidden) return null as T;
-            
+            var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
+
+            await ExamineResponse(response);
+
+            if (LastCode == HttpStatusCode.Unauthorized || LastCode == HttpStatusCode.Forbidden) return null;
+
             var content = await response.Content.ReadAsStringAsync();
-            
+
             if (typeof(T) == typeof(string)) return content as T;
-            
+
             return JsonConvert.DeserializeObject<T>(content);
 
         }
@@ -114,14 +123,14 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
         public async Task<T> Download<T>(Uri uri) where T : class
         {
 
-            EnsureClientAuthorizationHeader();
+            await EnsureClientAuthorizationHeader();
 
             var response = await _client.GetAsync(uri);
 
-            ExamineResponse(response);
-            
-            if (LastCode == HttpStatusCode.Unauthorized || LastCode == HttpStatusCode.Forbidden) return null as T;
-            
+            await ExamineResponse(response);
+
+            if (LastCode == HttpStatusCode.Unauthorized || LastCode == HttpStatusCode.Forbidden) return null;
+
             var content = await response.Content.ReadAsStringAsync();
 
             if (typeof(T) == typeof(string)) return content as T;

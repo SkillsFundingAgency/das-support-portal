@@ -18,21 +18,28 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private readonly ILog _log;
         private readonly ISiteSettings _settings;
         private List<SiteManifest> _manifests ;
-        private IDictionary<string, SiteResource> _resources = new Dictionary<string, SiteResource>();
-        private IDictionary<string, SiteChallenge> _challenges = new Dictionary<string, SiteChallenge>();
+        private IDictionary<string, SiteResource> _resources;
+        private IDictionary<string, SiteChallenge> _challenges;
 
-        public ManifestRepository(ISiteSettings settings, ISiteConnector downloader, IFormMapper formMapper, ILog log, List<SiteManifest> manifests)
+        public ManifestRepository(ISiteSettings settings, 
+            ISiteConnector downloader, 
+            IFormMapper formMapper, 
+            ILog log, 
+            List<SiteManifest> manifests,Dictionary<string, SiteResource> resources,Dictionary<string, SiteChallenge> challenges
+            )
         {
             _downloader = downloader;
             _formMapper = formMapper;
             _log = log;
             _settings = settings;
             _manifests = manifests;
+            _resources = resources;
+            _challenges = challenges;
         }
 
         private async Task PollSites()
         {
-            if (_manifests.Any()) return;
+            if (_manifests.Any() && _resources.Any() && _challenges.Any()) return;
             _manifests = await LoadManifest();
             _resources = new Dictionary<string, SiteResource>();
             _challenges = new Dictionary<string, SiteChallenge>();

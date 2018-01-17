@@ -7,6 +7,7 @@ using SFA.DAS.Support.Portal.Web.Services;
 using StructureMap.Configuration.DSL;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using Nest;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Shared;
 
@@ -20,9 +21,17 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
         public WebRegistry()
         {
            
-            For<List<SiteManifest>>().Singleton()
+            For<List<SiteManifest>>()
+                .Singleton()
                 .Use<List<SiteManifest>>(x =>  Startup.SiteManifests);
+            For<Dictionary<string, SiteChallenge>>()
+                .Singleton()
+                .Use<Dictionary<string, SiteChallenge>>(x =>  Startup.SiteChallenges);
+            For<Dictionary<string, SiteResource>>()
+                .Singleton()
+                .Use<Dictionary<string, SiteResource>>(x =>  Startup.SiteResources);
 
+           
             For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>().Use((c) => new HttpClient());
