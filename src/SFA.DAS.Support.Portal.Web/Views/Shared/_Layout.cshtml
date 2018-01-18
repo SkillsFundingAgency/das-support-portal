@@ -86,25 +86,8 @@
     </footer>
 
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="~/Content/dist/js/app.min.js"></script>
-    <script>
-
-        $(document).ready(function () {
-
-            $(".tabs-menu a").click(function (e) {
-                e.preventDefault();
-                $(this).parent().addClass("current");
-                $(this).parent().siblings().removeClass("current");
-                var tab = $(this).attr("href");
-                $(".tab-content").not(tab).css("display", "none");
-                $(tab).fadeIn();
-            });
-        });
-
-     
-    </script>
-
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="~/assets/javascripts/app.js"></script>
     @RenderSection("script", false)
 
 </body>
