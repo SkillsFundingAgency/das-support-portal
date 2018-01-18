@@ -38,8 +38,8 @@ sfa.tabs = {
 
         tabs.on('click touchstart', function (e) {
 
-            tabs.removeClass('selected');
-            $(this).addClass('selected');
+            tabs.closest('li').removeClass('current');
+            $(this).closest('li').addClass('current');
 
             var target = $(this).attr('href');
 
