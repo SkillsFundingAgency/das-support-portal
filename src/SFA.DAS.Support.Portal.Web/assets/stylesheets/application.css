@@ -313,14 +313,14 @@
 #tabs-container {
   margin-bottom: 10px;
 }
-#tabs-container .tabs-menu {
+#tabs-container .js-tabs {
   float: left;
   border-bottom: 1px solid #d4d4d1;
   width: 100%;
   padding-left: 10px;
   box-sizing: border-box;
 }
-#tabs-container .tabs-menu li {
+#tabs-container .js-tabs li {
   float: left;
   text-align: center;
   margin-right: 5px;
@@ -332,14 +332,14 @@
   bottom: -1px;
   line-height: 44px;
 }
-#tabs-container .tabs-menu li:hover {
+#tabs-container .js-tabs li:hover {
   line-height: 51px;
   margin-top: -6px;
   margin-bottom: -1px;
   background: #f8f8f8;
   /* text-decoration: underline; */
 }
-#tabs-container .tabs-menu li.current {
+#tabs-container .js-tabs li.current {
   position: relative;
   background-color: #fff;
   border-bottom: 1px solid #fff;
@@ -348,54 +348,54 @@
   margin-bottom: -1px;
   margin-top: -7px;
 }
-#tabs-container .tabs-menu li.current a {
+#tabs-container .js-tabs li.current a {
   color: #000;
 }
-#tabs-container .tabs-menu li a {
+#tabs-container .js-tabs li a {
   padding: 15px;
   margin-top: 0px;
   color: #005ea5;
   text-decoration: none;
 }
-#tabs-container .tabs-menu li a:focus {
+#tabs-container .js-tabs li a:focus {
   background: none;
   border: 0;
   outline: 0;
 }
-#tabs-container .tab-content {
+#tabs-container .js-tab-pane {
   overflow: auto;
   border-top: 0;
   padding: 15px 1px;
 }
 
 @media (max-width: 640px) {
-  #tabs-container .tabs-menu {
+  #tabs-container .js-tabs {
     padding-left: 0;
   }
 
-  #tabs-container .tabs-menu li,
-  #tabs-container .tabs-menu li:hover,
-  #tabs-container .tabs-menu li.current {
+  #tabs-container .js-tabs li,
+  #tabs-container .js-tabs li:hover,
+  #tabs-container .js-tabs li.current {
     line-height: 1;
     border: 0;
     margin: 0;
   }
 
-  #tabs-container .tabs-menu li {
+  #tabs-container .js-tabs li {
     display: block;
     width: 100%;
     padding: 0;
   }
 
-  #tabs-container .tabs-menu li a {
+  #tabs-container .js-tabs li a {
     display: block;
   }
 
-  #tabs-container .tabs-menu li.current {
+  #tabs-container .js-tabs li.current {
     background-color: #005ea5;
   }
 
-  #tabs-container .tabs-menu li.current a {
+  #tabs-container .js-tabs li.current a {
     color: #fff;
   }
 }
