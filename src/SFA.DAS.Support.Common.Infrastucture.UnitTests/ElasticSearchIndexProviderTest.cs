@@ -10,7 +10,9 @@ using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
+using System.Linq;
 
 
 namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
@@ -21,7 +23,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
         private Mock<IElasticsearchCustomClient> _clientMock;
         private Mock<ILog> _loggerMock;
-        private  Mock<ISearchSettings> _settings;
+        private Mock<ISearchSettings> _settings;
+        private Mock<IDeleteIndexResponse> _deleteResponse;
 
         private ElasticSearchIndexProvider _sut;
 
@@ -43,6 +46,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                .Setup(x => x.IndexReplicas)
                .Returns(0);
 
+            _loggerMock
+                .Setup(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()));
+
+            _deleteResponse = new Mock<IDeleteIndexResponse>();
+            _deleteResponse
+                .Setup(x => x.Acknowledged)
+                .Returns(true);
         }
 
         [Test]
@@ -61,7 +71,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             var mockExistResponse = new Mock<IExistsResponse>();
             mockExistResponse.SetupGet(x => x.Exists).Returns(false);
-            
+
             _clientMock
             .Setup(x => x.IndexExists(_indexName, string.Empty))
             .Returns(mockExistResponse.Object);
@@ -70,7 +80,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
              .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty))
              .Returns(response.Object);
 
-                        
+
             //Act
             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.CreateIndex<UserSearchModel>(_indexName);
@@ -78,7 +88,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             //Assert 
             _clientMock
              .Verify(x => x.IndexExists(_indexName, string.Empty), Times.AtLeastOnce);
-            
+
             _clientMock
              .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.AtLeastOnce);
 
@@ -101,7 +111,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
              .Verifiable();
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             Action action = () => _sut.CreateIndex<UserSearchModel>(_indexName);
 
             //Assert 
@@ -128,7 +138,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.IndexDocuments(_indexName, documents);
 
             //Assert 
@@ -142,17 +152,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenDeletingIndex()
         {
             //Arrange 
-            var deleteResponse = new Mock<IDeleteIndexResponse>();
-            deleteResponse
-                .Setup(x => x.Acknowledged)
-                .Returns(true);
-
             _clientMock
              .Setup(x => x.DeleteIndex(_indexName, string.Empty))
-            .Returns(deleteResponse.Object);
+            .Returns(_deleteResponse.Object);
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.DeleteIndex(_indexName);
 
             //Assert 
@@ -172,13 +177,63 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
              .Returns(deleteResponse);
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             Action action = () => _sut.DeleteIndex(_indexName);
 
             //Assert 
             action.ShouldThrow<Exception>();
 
         }
+
+        [Test]
+        public void ShouldDeleteOnlyOldIndexes()
+        {
+            //Arrange 
+            var indexToDelete01 = "at-das-support-portal-account_20180119100000";
+            var indexToDelete02 = "at-das-support-portal-account_20180119103000";
+            var indexToKeep01 = "at-das-support-portal-account_20180119110000";
+            var indexToKeep02 = "at-das-support-portal-account_20180119113000";
+
+
+            var indexList = new Dictionary<string, IndicesStats>();
+            indexList.Add(indexToDelete01, new IndicesStats());
+            indexList.Add(indexToKeep01, new IndicesStats());
+            indexList.Add(indexToDelete02, new IndicesStats());
+            indexList.Add(indexToKeep02, new IndicesStats());
+
+            var readOnlyMockResult = new ReadOnlyDictionary<string, IndicesStats>(indexList);
+
+            var indicesStatsResult = new Mock<IIndicesStatsResponse>();
+            indicesStatsResult
+                .SetupGet(x => x.Indices)
+                .Returns(readOnlyMockResult);
+
+            _clientMock
+             .Setup(x => x.IndicesStats(Indices.All, null, string.Empty))
+             .Returns(indicesStatsResult.Object);
+
+            _clientMock
+                .Setup(x => x.DeleteIndex(It.IsAny<IndexName>(), string.Empty))
+                .Returns(_deleteResponse.Object)
+                .Verifiable();
+
+            //Act
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut.DeleteIndexes(2, "at-das-support-portal-account");
+
+            //Assert 
+
+            _clientMock
+                   .Verify(x => x.DeleteIndex(indexToDelete01, string.Empty), Times.Once);
+
+            _clientMock
+                  .Verify(x => x.DeleteIndex(indexToDelete02, string.Empty), Times.Once);
+
+            _clientMock
+                .Verify(x => x.DeleteIndex(It.IsAny<IndexName>(), string.Empty), Times.Exactly(2));
+
+        }
+
 
         [Test]
         public void ShouldCallClientWhenCheckingIfIndexExists()
@@ -195,7 +250,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
              .Verifiable();
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.IndexExists(_indexName);
 
             //Assert 
@@ -225,7 +280,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
              .Verifiable();
 
             //Act
-             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
+            _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.CreateIndexAlias(_indexName, _aliasName);
 
             //Assert 

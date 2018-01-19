@@ -82,14 +82,14 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var indexNameDelimeter = new char[] {'_'};
 
             var indexToDeleteCount = _client
-                                        .IndicesStats(Indices.All)
+                                        .IndicesStats(Indices.All, null, string.Empty)
                                         .Indices
                                         .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
 
             if (indexToDeleteCount > indexToRetain)
             {
                 var indicesToBeDelete = _client
-                                         .IndicesStats(Indices.All)
+                                         .IndicesStats(Indices.All, null, string.Empty)
                                          .Indices
                                          .Where(x => x.Key.StartsWith(indexPrefix))
                                          .OrderByDescending(x => x.Key.Split(indexNameDelimeter).Last())
