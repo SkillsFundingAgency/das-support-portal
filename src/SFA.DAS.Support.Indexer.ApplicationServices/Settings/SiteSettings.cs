@@ -13,5 +13,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Settings
 
         [JsonRequired]
         public string EnvironmentName { get; set; }
+
+        [JsonRequired]
+        public string DelayTimeInSeconds { get; set; }
+
     }
 }

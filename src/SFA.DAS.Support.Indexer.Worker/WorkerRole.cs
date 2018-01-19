@@ -9,6 +9,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
+using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
 
 namespace SFA.DAS.Support.Indexer.Worker
@@ -16,13 +17,14 @@ namespace SFA.DAS.Support.Indexer.Worker
     [ExcludeFromCodeCoverage]
     public class WorkerRole : RoleEntryPoint
     {
+        const int SecondsToMilliSeconds = 1000;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
         private IIndexSearchItems _indexer;
         private ILog _logger;
         private ISearchSettings _searchSettings;
-
-        private int _delayTimeInSeconds = 1800 * 1000;
+        private ISiteSettings _siteSettings;
+        private int _delayTime = 1800 * SecondsToMilliSeconds;
 
 
         public override void Run()
@@ -48,10 +50,11 @@ namespace SFA.DAS.Support.Indexer.Worker
 
             _indexer = container.GetInstance<IIndexSearchItems>();
             _logger = container.GetInstance<ILog>();
+            _siteSettings = container.GetInstance<ISiteSettings>();
 
-            if (int.TryParse(CloudConfigurationManager.GetSetting("DelayTimeInSeconds"), out int configDelayTime))
+            if (int.TryParse(_siteSettings.DelayTimeInSeconds, out int configDelayTime))
             {
-                _delayTimeInSeconds = configDelayTime * 1000;
+                _delayTime = configDelayTime * SecondsToMilliSeconds;
             }
 
             var result = base.OnStart();
@@ -77,7 +80,7 @@ namespace SFA.DAS.Support.Indexer.Worker
             while (!cancellationToken.IsCancellationRequested)
             {
                 await _indexer.Run();
-                await Task.Delay(_delayTimeInSeconds);
+                await Task.Delay(_delayTime);
             }
         }
     }
