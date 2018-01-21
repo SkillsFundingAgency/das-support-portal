@@ -119,7 +119,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldProvideTheMissingViewIfGetResourcePageThrowsAnyException()
         {
-            NavViewModel navResponse = new NavViewModel() { Current = "", Items = new ApplicationServices.Models.NavItem[] { new ApplicationServices.Models.NavItem() { Href = "", Key = "", Title = "" }, } };
+            NavViewModel navResponse = new NavViewModel() { Current = "", Items = new NavItem[] { 
+                new NavItem() { Href = "", Key = "", Title = "" }, } };
             MockManifestRepository.Setup(x => x.ResourceExists(It.IsAny<string>())).Returns(Task.FromResult(true));
 
 

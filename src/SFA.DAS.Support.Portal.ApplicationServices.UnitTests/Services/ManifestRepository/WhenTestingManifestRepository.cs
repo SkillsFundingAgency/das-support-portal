@@ -7,6 +7,7 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
@@ -23,6 +24,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
        
         protected IManifestRepository Unit;
         protected Uri TestSiteUri;
+        private Dictionary<string, SiteChallenge> _siteChallenges = new Dictionary<string, SiteChallenge>();
+        private Dictionary<string, SiteResource> _siteResources = new Dictionary<string, SiteResource>();
+        private List<SiteManifest> _siteManifests = new List<SiteManifest>();
 
 
         [SetUp]
@@ -33,11 +37,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockFormMapper = new Mock<IFormMapper>();
             MockLogger = new Mock<ILog>();
 
+            _siteChallenges = new Dictionary<string, SiteChallenge>();
+            _siteResources = new Dictionary<string, SiteResource>();
+            _siteManifests = new List<SiteManifest>();
             Unit = new ApplicationServices.Services.ManifestRepository(
                 MockSiteSettings.Object,
                 MockSiteConnector.Object,
                 MockFormMapper.Object,
-                MockLogger.Object);
+                MockLogger.Object, _siteManifests, _siteResources, _siteChallenges  );
 
 
             HttpsTestsite = "https://testsite";

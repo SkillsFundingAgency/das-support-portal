@@ -4,18 +4,16 @@ using System.Threading.Tasks;
 using HMRC.ESFA.Levy.Api.Client;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerUsers.Api.Client;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.TokenService.Api.Client;
 using StructureMap.Configuration.DSL;
-using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {

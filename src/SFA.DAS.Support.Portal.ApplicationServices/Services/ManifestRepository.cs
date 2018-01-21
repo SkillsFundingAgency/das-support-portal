@@ -7,7 +7,8 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
-using NavItem = SFA.DAS.Support.Portal.ApplicationServices.Models.NavItem;
+using SFA.DAS.Support.Shared.SiteConnection;
+
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {

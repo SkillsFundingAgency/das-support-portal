@@ -34,7 +34,8 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
                 Site = new SiteSettings()
                 {
                     BaseUrls ="https://127.0.0.1:51274,https://127.0.0.1:19722", 
-                    EnvironmentName = "LOCAL"
+                    EnvironmentName = "LOCAL",
+                    DelayTimeInSeconds = "1800"
                 }
                 
             };

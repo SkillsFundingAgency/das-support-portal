@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject></StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
@@ -96,9 +97,6 @@
     </Reference>
     <Reference Include="SFA.DAS.NLog.Targets.Redis, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Targets.Redis.1.0.0.47445\lib\net45\SFA.DAS.NLog.Targets.Redis.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.51801, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
@@ -177,6 +175,10 @@
     <ProjectReference Include="..\SFA.DAS.Support.Indexer.Infrastructure\SFA.DAS.Support.Indexer.Infrastructure.csproj">
       <Project>{dcf11d5a-4e9e-4902-befe-11d6de23ecc4}</Project>
       <Name>SFA.DAS.Support.Indexer.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

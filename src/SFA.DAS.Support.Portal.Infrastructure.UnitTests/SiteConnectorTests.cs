@@ -4,15 +4,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.Infrastructure.Services;
-using SFA.DAS.Support.Portal.Infrastructure.Settings;
+using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {

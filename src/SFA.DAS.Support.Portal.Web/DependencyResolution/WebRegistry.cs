@@ -32,7 +32,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                 .Use<Dictionary<string, SiteResource>>(x =>  Startup.SiteResources);
 
            
-            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+            For<Shared.IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>().Use((c) => new HttpClient());
 

@@ -116,10 +116,6 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.1.0\lib\net46\System.AppContext.dll</HintPath>
@@ -251,6 +247,10 @@
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {

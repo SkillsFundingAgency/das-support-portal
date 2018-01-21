@@ -57,9 +57,6 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.51801, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="StructureMap, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.3.1.1.134\lib\net40\StructureMap.dll</HintPath>
     </Reference>
@@ -95,7 +92,6 @@
     <Compile Include="Models\EmployerUserSearchResults.cs" />
     <Compile Include="Handlers\EmployerUserSearchHandler.cs" />
     <Compile Include="IEmployerUserRepository.cs" />
-    <Compile Include="Models\NavItem.cs" />
     <Compile Include="Models\NavViewModel.cs" />
     <Compile Include="Queries\AccountLevySubmissionsQuery.cs" />
     <Compile Include="Queries\ChallengePermissionQuery.cs" />
@@ -127,7 +123,6 @@
     <Compile Include="Services\IChallengeService.cs" />
     <Compile Include="Services\ICrypto.cs" />
     <Compile Include="Services\IDatetimeService.cs" />
-    <Compile Include="Services\ISiteConnector.cs" />
     <Compile Include="Services\IFormMapper.cs" />
     <Compile Include="Services\IGetCurrentIdentity.cs" />
     <Compile Include="Services\IManifestRepository.cs" />
@@ -145,6 +140,10 @@
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Core\SFA.DAS.Support.Portal.Core.csproj">
       <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
       <Name>SFA.DAS.Support.Portal.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

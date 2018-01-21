@@ -189,9 +189,6 @@
     <Reference Include="SFA.DAS.NLog.Targets.Redis, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Targets.Redis.1.0.0.47445\lib\net45\SFA.DAS.NLog.Targets.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Support.Shared, Version=1.0.0.51801, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Support.Shared.1.0.0.51801\lib\net462\SFA.DAS.Support.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.TokenService.Api.Client, Version=1.0.0.26382, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.TokenService.Api.Client.1.0.0.26382\lib\net45\SFA.DAS.TokenService.Api.Client.dll</HintPath>
     </Reference>
@@ -669,6 +666,10 @@
     <ProjectReference Include="..\SFA.DAS.Support.Portal.Infrastructure\SFA.DAS.Support.Portal.Infrastructure.csproj">
       <Project>{4cc506ae-f6bc-46b2-910a-d6bf29da8d90}</Project>
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+      <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
+      <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
+using SFA.DAS.Support.Shared;
 
 namespace SFA.DAS.Support.Portal.Web.Settings
 {

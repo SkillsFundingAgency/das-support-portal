@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using SFA.DAS.Support.Shared;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Models
 {

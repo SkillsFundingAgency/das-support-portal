@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Net.Http;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Portal.Infrastructure.Services;
-using SFA.DAS.Support.Portal.Infrastructure.Settings;
+using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {
