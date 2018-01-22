@@ -31,13 +31,11 @@ namespace SFA.DAS.Support.Shared.Authentication
         private readonly string _scope;
         const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
 
-        public TokenValidationHandler(ISiteConnectorSettings settings, ILog logger)
+        public TokenValidationHandler(ISiteValidatorSettings settings, ILog logger)
         {
             _logger = logger;
-
-            var tenant = settings.Tenant;
             _audience = settings.Audience;
-            _authority = $"{AuthorityBaseUrl}{tenant}";
+            _authority = $"{AuthorityBaseUrl}{settings.Tenant}";
             _scope = settings.Scope;
         }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,

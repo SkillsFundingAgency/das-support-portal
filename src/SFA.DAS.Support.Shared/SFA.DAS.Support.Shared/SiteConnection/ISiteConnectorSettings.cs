@@ -7,8 +7,5 @@
         string ClientSecret { get; set; }
         string IdentifierUri { get; set; }
         string Tenant { get; set; }
-
-        string Audience { get; set; }
-        string Scope { get; set; }
     }
 }

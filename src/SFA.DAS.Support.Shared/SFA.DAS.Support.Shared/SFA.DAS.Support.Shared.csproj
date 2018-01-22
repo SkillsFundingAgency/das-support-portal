@@ -81,6 +81,7 @@
     <Compile Include="Authentication\TokenValidationHandler.cs" />
     <Compile Include="Authentication\TokenValidationFilter.cs" />
     <Compile Include="Authentication\IClientAuthenticator.cs" />
+    <Compile Include="SiteConnection\ISiteValidatorSettings.cs" />
     <Compile Include="SiteConnection\SiteConnectorSettings.cs" />
     <Compile Include="SiteConnection\ISiteConnector.cs" />
     <Compile Include="SiteConnection\ISiteConnectorSettings.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="SiteConnection\SiteConnector.cs" />
     <Compile Include="Discovery\SiteManifest.cs" />
     <Compile Include="Discovery\SiteResource.cs" />
+    <Compile Include="SiteConnection\SiteValidatorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

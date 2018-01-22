@@ -17,9 +17,5 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         [JsonRequired]
         public string Tenant { get; set; }
 
-        [JsonRequired]
-        public string Audience { get; set; }
-        [JsonRequired]
-        public string Scope { get; set; }
     }
 }

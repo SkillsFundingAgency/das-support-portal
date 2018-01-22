@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Selectors;
 using System.IdentityModel.Tokens;
 using System.Linq;
@@ -15,13 +16,12 @@ using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Shared.Authentication
 {
+    [ExcludeFromCodeCoverage]
     public class TokenValidationFilter : FilterAttribute, IAuthorizationFilter
     {
         private readonly ILog _logger;
         private static string _audience = string.Empty;
         private readonly string _authority;
-
-        private readonly string _tenant;
 
         private string _issuer = string.Empty;
         private List<SecurityToken> _signingTokens;
@@ -30,12 +30,11 @@ namespace SFA.DAS.Support.Shared.Authentication
         private readonly string _scope;
         const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
 
-        public TokenValidationFilter(ISiteConnectorSettings settings, ILog logger)
+        public TokenValidationFilter(ISiteValidatorSettings settings, ILog logger)
         {
             _logger = logger;
-            _tenant = settings.Tenant;
             _audience = settings.Audience;
-            _authority = $"{AuthorityBaseUrl}{_tenant}";
+            _authority = $"{AuthorityBaseUrl}{settings.Tenant}";
             _scope = settings.Scope;
         }
         public void OnAuthorization(System.Web.Mvc.AuthorizationContext filterContext)

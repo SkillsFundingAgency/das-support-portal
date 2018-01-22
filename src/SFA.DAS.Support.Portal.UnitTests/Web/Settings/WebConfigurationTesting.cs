@@ -77,6 +77,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     IdentifierUri = "--- configuration value goes here ---",
                     Tenant = "--- configuration value goes here ---"
                 },
+                SiteValidator = new SiteValidatorSettings()
+                {
+                    Audience = "--- configuration value goes here ---",
+                    Scope = "--- configuration value goes here ---",
+                    Tenant = "--- configuration value goes here ---"
+                },
                 Roles = new RoleSettings()
                 {
                     ConsoleUserRole = "--- configuration value goes here ---",
