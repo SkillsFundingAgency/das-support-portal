@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Shared.Authentication;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
 {

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.Support.Shared;
 using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Support.Shared.Navigation;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Models
 {

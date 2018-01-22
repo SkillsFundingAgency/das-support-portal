@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.Authentication
 {
     public interface IClientAuthenticator
     {

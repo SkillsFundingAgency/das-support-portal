@@ -15,7 +15,7 @@ using SFA.DAS.Support.Portal.Web;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
 
-namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SearchController
+namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.UserController
 {
     [TestFixture]
     public sealed class UserControllerTests

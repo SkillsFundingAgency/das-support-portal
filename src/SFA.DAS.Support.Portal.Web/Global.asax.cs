@@ -8,7 +8,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.ProviderApprenticeshipsService.Web;
 
 namespace SFA.DAS.Support.Portal.Web
 {

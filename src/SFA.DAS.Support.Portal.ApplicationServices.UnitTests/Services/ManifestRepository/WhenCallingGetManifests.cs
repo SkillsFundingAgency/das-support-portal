@@ -5,6 +5,7 @@ using System.Web;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.Authentication
 {
     [ExcludeFromCodeCoverage]
     public class ActiveDirectoryClientAuthenticator : IClientAuthenticator

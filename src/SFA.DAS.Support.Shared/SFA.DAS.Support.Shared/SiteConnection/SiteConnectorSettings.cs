@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.SiteConnection
 {
     [ExcludeFromCodeCoverage]
     public sealed class SiteConnectorSettings : ISiteConnectorSettings
@@ -16,5 +16,10 @@ namespace SFA.DAS.Support.Shared
         public string IdentifierUri { get; set; }
         [JsonRequired]
         public string Tenant { get; set; }
+
+        [JsonRequired]
+        public string Audience { get; set; }
+        [JsonRequired]
+        public string Scope { get; set; }
     }
 }

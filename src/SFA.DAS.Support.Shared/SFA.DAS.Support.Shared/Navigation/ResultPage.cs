@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.Navigation
 {
     [ExcludeFromCodeCoverage]
     public class ResultPage<T>

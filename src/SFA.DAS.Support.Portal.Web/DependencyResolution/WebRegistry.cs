@@ -10,6 +10,8 @@ using System.Net.Http;
 using Nest;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
@@ -32,7 +34,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                 .Use<Dictionary<string, SiteResource>>(x =>  Startup.SiteResources);
 
            
-            For<Shared.IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>().Use((c) => new HttpClient());
 

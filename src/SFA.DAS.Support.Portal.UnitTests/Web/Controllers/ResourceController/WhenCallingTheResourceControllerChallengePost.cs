@@ -8,6 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Navigation;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.Authentication
 {
     [ExcludeFromCodeCoverage]
     public class SiteChallenge

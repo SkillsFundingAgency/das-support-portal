@@ -7,6 +7,9 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.Navigation;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 

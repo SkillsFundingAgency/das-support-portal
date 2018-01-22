@@ -7,6 +7,8 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository

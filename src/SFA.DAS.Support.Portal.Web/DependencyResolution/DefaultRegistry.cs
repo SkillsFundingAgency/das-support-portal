@@ -19,6 +19,7 @@ using System;
 using SFA.DAS.EmployerUsers.Api.Client;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.Support.Portal.Web.Settings;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {

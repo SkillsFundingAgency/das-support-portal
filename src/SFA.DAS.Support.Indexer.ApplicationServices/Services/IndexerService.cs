@@ -8,6 +8,7 @@ using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services

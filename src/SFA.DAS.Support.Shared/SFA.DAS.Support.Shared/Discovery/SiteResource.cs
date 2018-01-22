@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 
-namespace SFA.DAS.Support.Shared
+namespace SFA.DAS.Support.Shared.Discovery
 {
     [ExcludeFromCodeCoverage]
     public class SiteResource

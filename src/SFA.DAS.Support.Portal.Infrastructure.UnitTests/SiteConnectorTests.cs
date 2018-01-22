@@ -10,6 +10,7 @@ using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests

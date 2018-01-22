@@ -7,7 +7,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Shared;
-using NavItem = SFA.DAS.Support.Shared.NavItem;
+using SFA.DAS.Support.Shared.Discovery;
+using NavItem = SFA.DAS.Support.Shared.Navigation.NavItem;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {

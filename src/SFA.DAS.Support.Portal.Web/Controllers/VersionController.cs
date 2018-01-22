@@ -12,6 +12,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Web.Models;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {

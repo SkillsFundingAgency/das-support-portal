@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using Owin;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Web
 {

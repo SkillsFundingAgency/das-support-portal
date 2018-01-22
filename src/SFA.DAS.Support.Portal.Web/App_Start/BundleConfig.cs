@@ -1,8 +1,6 @@
-﻿using System;
-using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace SFA.DAS.ProviderApprenticeshipsService.Web
+namespace SFA.DAS.Support.Portal.Web
 {
     public class BundleConfig
     {

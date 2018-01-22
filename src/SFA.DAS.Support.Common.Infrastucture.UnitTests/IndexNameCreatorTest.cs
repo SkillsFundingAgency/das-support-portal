@@ -1,13 +1,9 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Shared.SearchIndexModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Support.Common.Infrastucture.Indexer.Tests
+namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 {
     [TestFixture()]
     public class IndexNameCreatorTest
