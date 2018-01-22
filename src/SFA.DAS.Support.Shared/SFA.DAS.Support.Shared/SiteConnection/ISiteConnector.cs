@@ -13,6 +13,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class;
         Exception LastException { get; set; }
         HttpStatusCode LastCode { get; set; }
-
+        HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
     }
 }

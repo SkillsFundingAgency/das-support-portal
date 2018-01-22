@@ -10,10 +10,10 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
 {
     [TestFixture]
     public class
-        WhenProvidingAnIncorrectChallengResponseToTheChallengeController : WhenTestingTheChallengeController
+        WhenProvidingACorrectChallengResponseToTheChallengeController : WhenTestingTheChallengeController
     {
         [Test]
-        public void ItShouldRedirectWithAnError()
+        public void ItShouldRedirectWithoutAnError()
         {
             var challengeEntry = new ChallengeEntry
             {
@@ -29,20 +29,28 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
             var challengePermissionResponse = new ChallengePermissionResponse
             {
                 Id = "123123",
-                IsValid = false,
+                IsValid = true,
                 Url = "some/url"
             };
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<ChallengePermissionQuery>()))
                 .Returns(Task.FromResult(challengePermissionResponse));
-            MockContextBase.Setup(x => x.Request.CurrentExecutionFilePath).Returns("SomePathOrOther");
+
+            MockContextBase.SetupGet(x => x.Request.CurrentExecutionFilePath).Returns("SomePathOrOther");
+
             
             ActionResultResponse = Unit.Index(challengeEntry).Result;
 
+            MockGranter.Verify(x => x.GivePermissions(MockResponse.Object, MockUser.Object, challengeEntry.Id)
+                , Times.Once);
+            
             Assert.IsInstanceOf<RedirectResult>(ActionResultResponse);
+
             var url = ((RedirectResult)ActionResultResponse).Url;
 
-            Assert.AreEqual($"SomePathOrOther?url={challengeEntry.Url}&hasError=true", url);
+            Assert.AreEqual(challengeEntry.Url, url);
+            Assert.IsFalse(url.Contains("hasError=true"));
+
         }
     }
 }

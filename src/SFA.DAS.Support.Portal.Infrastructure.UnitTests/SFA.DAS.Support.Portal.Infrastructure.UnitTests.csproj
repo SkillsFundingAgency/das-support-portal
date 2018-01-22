@@ -216,13 +216,10 @@
   <ItemGroup>
     <Compile Include="FormMapperTests.cs" />
     <Compile Include="HttpClientExtensionStringDownloadTests.cs" />
-    <Compile Include="SiteConnectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ChallengeRepositoryTests.cs" />
     <Compile Include="Repository\EmployerUserRepositoryTests.cs" />
     <Compile Include="Repository\LevySubmissionsRepositoryTests.cs" />
-    <Compile Include="TestType.cs" />
-    <Compile Include="SiteConnectorConstructorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -245,9 +242,9 @@
       <Project>{4cc506ae-f6bc-46b2-910a-d6bf29da8d90}</Project>
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
-      <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
-      <Name>SFA.DAS.Support.Shared</Name>
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.Tests\SFA.DAS.Support.Shared.Tests.csproj">
+      <Project>{DB114C77-4906-4F20-9824-C01BEEB26EDC}</Project>
+      <Name>SFA.DAS.Support.Shared.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
@@ -257,8 +254,6 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

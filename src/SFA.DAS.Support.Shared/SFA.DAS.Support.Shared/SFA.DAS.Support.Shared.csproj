@@ -81,7 +81,13 @@
     <Compile Include="Authentication\TokenValidationHandler.cs" />
     <Compile Include="Authentication\TokenValidationFilter.cs" />
     <Compile Include="Authentication\IClientAuthenticator.cs" />
+    <Compile Include="SiteConnection\StrategyForClientErrorStatusCode.cs" />
+    <Compile Include="SiteConnection\StrategyForRedirectionStatusCode.cs" />
+    <Compile Include="SiteConnection\HttpStatusCodeDecision.cs" />
+    <Compile Include="SiteConnection\IHttpStatusCodeStrategy.cs" />
+    <Compile Include="SiteConnection\StrategyForInformationStatusCode.cs" />
     <Compile Include="SiteConnection\ISiteValidatorSettings.cs" />
+    <Compile Include="SiteConnection\StrategyForSuccessStatusCode.cs" />
     <Compile Include="SiteConnection\SiteConnectorSettings.cs" />
     <Compile Include="SiteConnection\ISiteConnector.cs" />
     <Compile Include="SiteConnection\ISiteConnectorSettings.cs" />
@@ -99,6 +105,7 @@
     <Compile Include="Discovery\SiteManifest.cs" />
     <Compile Include="Discovery\SiteResource.cs" />
     <Compile Include="SiteConnection\SiteValidatorSettings.cs" />
+    <Compile Include="SiteConnection\StrategyForSystemErrorStatusCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

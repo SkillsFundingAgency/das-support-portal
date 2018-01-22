@@ -62,10 +62,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SiteConnectorConstructorTests.cs" />
+    <Compile Include="SiteConnector\SiteConnectorConstructorTests.cs" />
+    <Compile Include="SiteConnector\SiteConnectorTestBase.cs" />
+    <Compile Include="HttpStatusStrategy\StrategyForClientErrorStatusCodeTests.cs" />
+    <Compile Include="HttpStatusStrategy\StrategyForInformationStatusCodeTests.cs" />
+    <Compile Include="HttpStatusStrategy\StrategyForRedirectionStatusCodeTests.cs" />
+    <Compile Include="HttpStatusStrategy\StrategyForSuccessStatusCodeTests.cs" />
+    <Compile Include="StrategyTestBase.cs" />
     <Compile Include="TestType.cs" />
-    <Compile Include="SiteConnectorTests.cs" />
+    <Compile Include="SiteConnector\SiteConnectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SiteConnector\UnAuthorisedSiteConnectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

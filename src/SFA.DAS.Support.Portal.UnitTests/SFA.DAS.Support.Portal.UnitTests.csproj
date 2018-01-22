@@ -148,6 +148,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Controllers\ChallengeController\WhenFirstIssuingAChallenge.cs" />
+    <Compile Include="Web\Controllers\ChallengeController\WhenProvidingACorrectChallengResponseToTheChallengeController.cs" />
+    <Compile Include="Web\Controllers\ChallengeController\WhenReIssuingAChallenge.cs" />
+    <Compile Include="Web\Controllers\ChallengeController\WhenTestingTheChallengeController.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengeGet.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengePost.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerIndexGet.cs" />
@@ -155,6 +159,9 @@
     <Compile Include="Web\Controllers\UserController\UserControllerTests.cs" />
     <Compile Include="Web\Controllers\SearchController\WhenTestingSearchController.cs" />
     <Compile Include="Web\Domain\WhenAnEmployerUserIsBothActiveAndLocked.cs" />
+    <Compile Include="Web\Domain\WhenAnEmployerUserIsBothActiveAndNotLocked.cs" />
+    <Compile Include="Web\Domain\WhenAnEmployerUserIsNeitherActiveNorLocked.cs" />
+    <Compile Include="Web\Domain\WhenTestingEmployerUser.cs" />
     <Compile Include="Web\Helpers\PayeSchemeObfuscatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Controllers\AccountController\AccountControllerTests.cs" />

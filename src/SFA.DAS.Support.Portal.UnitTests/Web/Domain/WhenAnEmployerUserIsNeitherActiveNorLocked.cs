@@ -4,21 +4,20 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Domain
 {
     [TestFixture]
-    public class WhenAnEmployerUserIsBothActiveAndLocked: WhenTestingEmployerUser
+    public class WhenAnEmployerUserIsNeitherActiveNorLocked : WhenTestingEmployerUser
     {
         [SetUp]
         protected override void Setup()
         {
-
             base.Setup();
-            Unit.IsActive = true;
-            Unit.IsLocked = true;
+            Unit.IsActive = false;
+            Unit.IsLocked = false;
         }
 
         [Test]
-        public void ItShouldHaveAStatusOfLocked()
+        public void ItShouldHaveAStatusOfUnverified()
         {
-            Assert.AreEqual(UserStatus.Locked , Unit.Status);
+            Assert.AreEqual(UserStatus.Unverified, Unit.Status);
         }
 
     }

@@ -140,7 +140,7 @@
     <Compile Include="DependencyResolution\InfrastuctureRegistry.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="DependencyResolution\LoggingPropertyFactory.cs" />
-    <Compile Include="DependencyResolution\RequestContext.cs" />
+    <Compile Include="DependencyResolution\FakeRequestContext.cs" />
     <Compile Include="IWebConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebConfiguration.cs" />
