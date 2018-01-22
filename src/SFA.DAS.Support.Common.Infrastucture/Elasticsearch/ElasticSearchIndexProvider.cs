@@ -16,6 +16,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         private readonly ILog _logger;
         private readonly ISearchSettings _settings;
 
+        private const int _defautltIndexCopyCount = 3;
+
         public ElasticSearchIndexProvider(IElasticsearchCustomClient elasticsearchCustomClient, ILog logger, ISearchSettings settings)
         {
             _client = elasticsearchCustomClient;
@@ -79,17 +81,19 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void DeleteIndexes(int indexToRetain, string indexPrefix)
         {
+            indexToRetain = (indexToRetain <= 0) ? _defautltIndexCopyCount : indexToRetain;
+
             var indexNameDelimeter = new char[] {'_'};
 
             var indexToDeleteCount = _client
-                                        .IndicesStats(Indices.All)
+                                        .IndicesStats(Indices.All, null, string.Empty)
                                         .Indices
                                         .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
 
             if (indexToDeleteCount > indexToRetain)
             {
                 var indicesToBeDelete = _client
-                                         .IndicesStats(Indices.All)
+                                         .IndicesStats(Indices.All, null, string.Empty)
                                          .Indices
                                          .Where(x => x.Key.StartsWith(indexPrefix))
                                          .OrderByDescending(x => x.Key.Split(indexNameDelimeter).Last())
