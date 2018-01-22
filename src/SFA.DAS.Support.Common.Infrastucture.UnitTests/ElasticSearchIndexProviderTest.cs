@@ -221,7 +221,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
             _sut.DeleteIndexes(2, "at-das-support-portal-account");
 
-            //Assert 
+            ////Assert 
 
             _clientMock
                    .Verify(x => x.DeleteIndex(indexToDelete01, string.Empty), Times.Once);

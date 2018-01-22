@@ -52,9 +52,12 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             try
             {
 
-                var subSites = _settings.BaseUrls?
-                                        .Split(Convert.ToChar(","))?
-                                            .Where(x => !string.IsNullOrEmpty(x));
+                var subSites = _settings.BaseUrls?.Split(Convert.ToChar(","))?.Where(x => !string.IsNullOrEmpty(x));
+
+                if(subSites == null)
+                {
+                   throw new Exception("Sub sites base Url not specified in config");
+                } 
 
                 foreach (var subSite in subSites)
                 {
@@ -124,7 +127,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
                 _logger.Info($"Deleting Old Indexes ...");
-                _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
+                _indexProvider.DeleteIndexes(_searchSettings.IndexCopyCount, indexAlias);
                 _logger.Info($"Deleting Old Indexes Completed...");
 
                 _indexTimer.Stop();
