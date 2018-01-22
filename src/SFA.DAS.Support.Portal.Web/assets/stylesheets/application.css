@@ -59,7 +59,7 @@
 }
 
 .search strong {
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .search .search-header {
@@ -547,4 +547,85 @@ table.responsive tr.total {
   table.responsive tr th.tw-70 {
     width: 70%;
   }
+}
+
+/* Equalise heading-large margins */
+
+.heading-large__equal-margins {
+  margin: 1.04167em 0;
+}
+
+@media (min-width: 641px) {
+  .heading-large__equal-margins {
+    margin: 1.25em 0;
+  }
+}
+
+
+
+/* Defenition list */
+
+dl {
+  width: 100%;
+  overflow: hidden;
+}
+
+dl dt,
+dl dd {
+  box-sizing: border-box;
+  display: inline-block;
+  zoom: 1;
+  vertical-align: top;
+  margin: 0;
+  
+}
+
+dl dt {
+  font-weight: bold;
+  float: left;
+  width: 100%;
+  clear: both;
+  padding: 10px 10px 0 0;
+  position: relative;
+}
+
+dl dd {
+  float: right;
+  width: 100%;
+  margin-left: 0;
+  padding: 5px 10px 8px 0;
+}
+
+dl dt.last-dt {
+  border-bottom: 0;
+}
+
+dl dd.last-dd {
+  border-bottom: 1px solid #bfc1bf;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 641px) {
+
+  dl dt {
+    width: 33.333333%;
+    padding: 10px 10px 8px 0;
+  }
+
+  dl dd {
+    width: 66.666666%;
+    padding: 10px 10px 8px 0;
+  }
+
+  dl dt.last-dt {
+    border-bottom: 1px solid #bfc1bf;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  dl dd.last-dd {
+    margin-bottom: 20px;
+  }
+
 }

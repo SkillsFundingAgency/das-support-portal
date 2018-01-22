@@ -62,31 +62,33 @@
                 if (Model.AccountSearchResults.Any())
                 {
                     <div class="grid-row">
-
                         <div class="column-two-thirds">
                             <table class="responsive">
-                                <tr>
-                                    <th scope="col">Account</th>
-                                    <th scope="col">Account ID</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                @foreach (var account in Model.AccountSearchResults)
-                                {
+                                <thead>
                                     <tr>
-                                        <td data-label="Account">
-                                            @account.Account
-                                        </td>
-                                        <td data-label="Account ID">
-                                            @account.AccountID
-                                        </td>
-                                        <td data-label="">
-                                            @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
-                                        </td>
+                                        <th scope="col">Account</th>
+                                        <th scope="col">Account ID</th>
+                                        <th scope="col"></th>
                                     </tr>
-                                }
+                                </thead>
+                                <tbody>
+                                    @foreach (var account in Model.AccountSearchResults)
+                                    {
+                                        <tr>
+                                            <td data-label="Account">
+                                                @account.Account
+                                            </td>
+                                            <td data-label="Account ID">
+                                                @account.AccountID
+                                            </td>
+                                            <td data-label="">
+                                                @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
                             </table>
                         </div>
-
                     </div>
 
                     @Pager()
@@ -109,36 +111,37 @@
                 if (Model.UserSearchResults.Any())
                 {
                     <div class="grid-row">
-
                         <div class="column-full">
                             <table class="responsive">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                @foreach (var user in Model.UserSearchResults)
-                                {
+                                <thead>
                                     <tr>
-                                        <td data-label="Name">
-                                            @user.Name
-                                        </td>
-                                        <td data-label="Email">
-                                            @user.Email
-                                        </td>
-                                        <td data-label="Status">
-                                            @user.Status
-                                        </td>
-                                        <td data-label="">
-                                            @Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null)
-                                        </td>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col"></th>
                                     </tr>
-                                }
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.UserSearchResults)
+                                    {
+                                        <tr>
+                                            <td data-label="Name">
+                                                @user.Name
+                                            </td>
+                                            <td data-label="Email">
+                                                @user.Email
+                                            </td>
+                                            <td data-label="Status">
+                                                @user.Status
+                                            </td>
+                                            <td data-label="">
+                                                @Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
                             </table>
-
                         </div>
-
                     </div>
 
                     @Pager()
@@ -147,7 +150,6 @@
             }
         </div>
     </div>
-
 </section>
 
 
