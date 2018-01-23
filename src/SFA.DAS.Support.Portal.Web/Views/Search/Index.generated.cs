@@ -40,14 +40,14 @@ namespace ASP
     public partial class _Views_Search_Index_cshtml : System.Web.Mvc.WebViewPage<SFA.DAS.Support.Portal.Web.ViewModels.SearchResultsViewModel>
     {
 
-#line 155 "..\..\Views\Search\Index.cshtml"
+#line 157 "..\..\Views\Search\Index.cshtml"
 public System.Web.WebPages.HelperResult Pager()
     {
 #line default
 #line hidden
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
-#line 156 "..\..\Views\Search\Index.cshtml"
+#line 158 "..\..\Views\Search\Index.cshtml"
      
 
 
@@ -68,13 +68,13 @@ WriteLiteralTo(__razor_helper_writer, " class=\"page-navigation\"");
 WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n\r\n\r\n");
 
 
-#line 163 "..\..\Views\Search\Index.cshtml"
+#line 165 "..\..\Views\Search\Index.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 163 "..\..\Views\Search\Index.cshtml"
+#line 165 "..\..\Views\Search\Index.cshtml"
                      if (Model.Page > 1)
                     {
 
@@ -83,14 +83,14 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6239), Tuple.Create("\"", 6346)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6901), Tuple.Create("\"", 7008)
 
-#line 165 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6246), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
+#line 167 "..\..\Views\Search\Index.cshtml"
+, Tuple.Create(Tuple.Create("", 6908), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6246), false)
+, 6908), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " style=\"visibility: visible\"");
@@ -116,7 +116,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"counter\"");
 WriteLiteralTo(__razor_helper_writer, ">");
 
 
-#line 168 "..\..\Views\Search\Index.cshtml"
+#line 170 "..\..\Views\Search\Index.cshtml"
                     WriteTo(__razor_helper_writer, Model.Page);
 
 
@@ -125,7 +125,7 @@ WriteLiteralTo(__razor_helper_writer, ">");
 WriteLiteralTo(__razor_helper_writer, " of ");
 
 
-#line 168 "..\..\Views\Search\Index.cshtml"
+#line 170 "..\..\Views\Search\Index.cshtml"
                                    WriteTo(__razor_helper_writer, Model.LastPage);
 
 
@@ -134,7 +134,7 @@ WriteLiteralTo(__razor_helper_writer, " of ");
 WriteLiteralTo(__razor_helper_writer, "</span>\r\n                        </a>\r\n");
 
 
-#line 170 "..\..\Views\Search\Index.cshtml"
+#line 172 "..\..\Views\Search\Index.cshtml"
                     }
 
 
@@ -143,13 +143,13 @@ WriteLiteralTo(__razor_helper_writer, "</span>\r\n                        </a>\r
 WriteLiteralTo(__razor_helper_writer, "\r\n\r\n\r\n");
 
 
-#line 174 "..\..\Views\Search\Index.cshtml"
+#line 176 "..\..\Views\Search\Index.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 174 "..\..\Views\Search\Index.cshtml"
+#line 176 "..\..\Views\Search\Index.cshtml"
                      if (Model.Page != Model.LastPage)
                     {
 
@@ -158,14 +158,14 @@ WriteLiteralTo(__razor_helper_writer, "\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6846), Tuple.Create("\"", 6954)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7508), Tuple.Create("\"", 7616)
 
-#line 176 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6853), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
+#line 178 "..\..\Views\Search\Index.cshtml"
+, Tuple.Create(Tuple.Create("", 7515), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6853), false)
+, 7515), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " style=\"visibility: visible\"");
@@ -191,7 +191,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"counter\"");
 WriteLiteralTo(__razor_helper_writer, ">");
 
 
-#line 179 "..\..\Views\Search\Index.cshtml"
+#line 181 "..\..\Views\Search\Index.cshtml"
                     WriteTo(__razor_helper_writer, Model.Page);
 
 
@@ -200,7 +200,7 @@ WriteLiteralTo(__razor_helper_writer, ">");
 WriteLiteralTo(__razor_helper_writer, " of ");
 
 
-#line 179 "..\..\Views\Search\Index.cshtml"
+#line 181 "..\..\Views\Search\Index.cshtml"
                                    WriteTo(__razor_helper_writer, Model.LastPage);
 
 
@@ -209,7 +209,7 @@ WriteLiteralTo(__razor_helper_writer, " of ");
 WriteLiteralTo(__razor_helper_writer, "</span>\r\n                        </a>\r\n");
 
 
-#line 181 "..\..\Views\Search\Index.cshtml"
+#line 183 "..\..\Views\Search\Index.cshtml"
                     }
 
 
@@ -218,14 +218,14 @@ WriteLiteralTo(__razor_helper_writer, "</span>\r\n                        </a>\r
 WriteLiteralTo(__razor_helper_writer, "\r\n                </div>\r\n\r\n            </div>\r\n        </div>\r\n");
 
 
-#line 187 "..\..\Views\Search\Index.cshtml"
+#line 189 "..\..\Views\Search\Index.cshtml"
 
 
 #line default
 #line hidden
 });
 
-#line 187 "..\..\Views\Search\Index.cshtml"
+#line 189 "..\..\Views\Search\Index.cshtml"
 }
 #line default
 #line hidden
@@ -245,7 +245,7 @@ WriteLiteralTo(__razor_helper_writer, "\r\n                </div>\r\n\r\n       
             
             #line default
             #line hidden
-WriteLiteral("\r\n\r\n\r\n<div");
+WriteLiteral("\r\n\r\n\r\n<section");
 
 WriteLiteral(" class=\"search no-search-term\"");
 
@@ -418,7 +418,7 @@ WriteLiteral(">\r\n                        <h2");
 
 WriteLiteral(" class=\"heading-large\"");
 
-WriteLiteral("> Results</h2>\r\n                        <p>  ");
+WriteLiteral(">Results</h2>\r\n                        <p>  ");
 
             
             #line 57 "..\..\Views\Search\Index.cshtml"
@@ -443,104 +443,121 @@ WriteLiteral("                    <div");
 
 WriteLiteral(" class=\"grid-row\"");
 
-WriteLiteral(">\r\n\r\n                        <div");
+WriteLiteral(">\r\n                        <div");
 
 WriteLiteral(" class=\"column-two-thirds\"");
 
-WriteLiteral(">\r\n                            <table>\r\n                                <tr>\r\n   " +
-"                                 <th");
+WriteLiteral(">\r\n                            <table");
+
+WriteLiteral(" class=\"responsive\"");
+
+WriteLiteral(">\r\n                                <thead>\r\n                                    <" +
+"tr>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral(">Account</th>\r\n                                    <th");
+WriteLiteral(">Account</th>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral(">Account ID</th>\r\n                                    <th");
+WriteLiteral(">Account ID</th>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral("></th>\r\n                                </tr>\r\n");
+WriteLiteral("></th>\r\n                                    </tr>\r\n                              " +
+"  </thead>\r\n                                <tbody>\r\n");
 
             
-            #line 73 "..\..\Views\Search\Index.cshtml"
-                                
+            #line 75 "..\..\Views\Search\Index.cshtml"
+                                    
             
             #line default
             #line hidden
             
-            #line 73 "..\..\Views\Search\Index.cshtml"
-                                 foreach (var account in Model.AccountSearchResults)
-                                {
-
-            
-            #line default
-            #line hidden
-WriteLiteral("                                    <tr>\r\n                                       " +
-" <td>\r\n");
-
-WriteLiteral("                                            ");
-
-            
-            #line 77 "..\..\Views\Search\Index.cshtml"
-                                       Write(account.Account);
+            #line 75 "..\..\Views\Search\Index.cshtml"
+                                     foreach (var account in Model.AccountSearchResults)
+                                    {
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"        <td>\r\n");
+WriteLiteral("                                        <tr>\r\n                                   " +
+"         <td");
 
-WriteLiteral("                                            ");
+WriteLiteral(" data-label=\"Account\"");
 
-            
-            #line 80 "..\..\Views\Search\Index.cshtml"
-                                       Write(account.AccountID);
+WriteLiteral(">\r\n");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"        <td>\r\n");
-
-WriteLiteral("                                            ");
+WriteLiteral("                                                ");
 
             
-            #line 83 "..\..\Views\Search\Index.cshtml"
-                                       Write(Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null));
+            #line 79 "..\..\Views\Search\Index.cshtml"
+                                           Write(account.Account);
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"    </tr>\r\n");
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"                <td");
+
+WriteLiteral(" data-label=\"Account ID\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("                                                ");
 
             
-            #line 86 "..\..\Views\Search\Index.cshtml"
-                                }
+            #line 82 "..\..\Views\Search\Index.cshtml"
+                                           Write(account.AccountID);
 
             
             #line default
             #line hidden
-WriteLiteral("                            </table>\r\n                        </div>\r\n\r\n         " +
-"           </div>\r\n");
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"                <td");
+
+WriteLiteral(" data-label=\"\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("                                                ");
 
             
-            #line 91 "..\..\Views\Search\Index.cshtml"
+            #line 85 "..\..\Views\Search\Index.cshtml"
+                                           Write(Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"            </tr>\r\n");
+
+            
+            #line 88 "..\..\Views\Search\Index.cshtml"
+                                    }
+
+            
+            #line default
+            #line hidden
+WriteLiteral("                                </tbody>\r\n                            </table>\r\n " +
+"                       </div>\r\n                    </div>\r\n");
+
+            
+            #line 93 "..\..\Views\Search\Index.cshtml"
 
                     
             
             #line default
             #line hidden
             
-            #line 92 "..\..\Views\Search\Index.cshtml"
+            #line 94 "..\..\Views\Search\Index.cshtml"
                Write(Pager());
 
             
             #line default
             #line hidden
             
-            #line 92 "..\..\Views\Search\Index.cshtml"
+            #line 94 "..\..\Views\Search\Index.cshtml"
                             
                 }
 
@@ -567,10 +584,10 @@ WriteLiteral(">\r\n                        <h2");
 
 WriteLiteral(" class=\"heading-large\"");
 
-WriteLiteral("> Results</h2>\r\n                        <p>  ");
+WriteLiteral(">Results</h2>\r\n                        <p>  ");
 
             
-            #line 105 "..\..\Views\Search\Index.cshtml"
+            #line 107 "..\..\Views\Search\Index.cshtml"
                         Write(Model.TotalUserSearchItems);
 
             
@@ -579,7 +596,7 @@ WriteLiteral("> Results</h2>\r\n                        <p>  ");
 WriteLiteral(" users found</p>\r\n                    </div>\r\n                </div>\r\n");
 
             
-            #line 108 "..\..\Views\Search\Index.cshtml"
+            #line 110 "..\..\Views\Search\Index.cshtml"
 
                 if (Model.UserSearchResults.Any())
                 {
@@ -591,120 +608,141 @@ WriteLiteral("                    <div");
 
 WriteLiteral(" class=\"grid-row\"");
 
-WriteLiteral(">\r\n\r\n                        <div");
+WriteLiteral(">\r\n                        <div");
 
 WriteLiteral(" class=\"column-full\"");
 
-WriteLiteral(">\r\n                            <table>\r\n                                <tr>\r\n   " +
-"                                 <th");
+WriteLiteral(">\r\n                            <table");
+
+WriteLiteral(" class=\"responsive\"");
+
+WriteLiteral(">\r\n                                <thead>\r\n                                    <" +
+"tr>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral(">Name</th>\r\n                                    <th");
+WriteLiteral(">Name</th>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral(">Email</th>\r\n                                    <th");
+WriteLiteral(">Email</th>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral(">Status</th>\r\n                                    <th");
+WriteLiteral(">Status</th>\r\n                                        <th");
 
 WriteLiteral(" scope=\"col\"");
 
-WriteLiteral("></th>\r\n                                </tr>\r\n");
-
-            
-            #line 121 "..\..\Views\Search\Index.cshtml"
-                                
-            
-            #line default
-            #line hidden
-            
-            #line 121 "..\..\Views\Search\Index.cshtml"
-                                 foreach (var user in Model.UserSearchResults)
-                                {
-
-            
-            #line default
-            #line hidden
-WriteLiteral("                                    <tr>\r\n                                       " +
-" <td>\r\n");
-
-WriteLiteral("                                            ");
+WriteLiteral("></th>\r\n                                    </tr>\r\n                              " +
+"  </thead>\r\n                                <tbody>\r\n");
 
             
             #line 125 "..\..\Views\Search\Index.cshtml"
-                                       Write(user.Name);
+                                    
+            
+            #line default
+            #line hidden
+            
+            #line 125 "..\..\Views\Search\Index.cshtml"
+                                     foreach (var user in Model.UserSearchResults)
+                                    {
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"        <td>\r\n");
+WriteLiteral("                                        <tr>\r\n                                   " +
+"         <td");
 
-WriteLiteral("                                            ");
+WriteLiteral(" data-label=\"Name\"");
 
-            
-            #line 128 "..\..\Views\Search\Index.cshtml"
-                                       Write(user.Email);
+WriteLiteral(">\r\n");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"        <td>\r\n");
-
-WriteLiteral("                                            ");
+WriteLiteral("                                                ");
 
             
-            #line 131 "..\..\Views\Search\Index.cshtml"
-                                       Write(user.Status);
+            #line 129 "..\..\Views\Search\Index.cshtml"
+                                           Write(user.Name);
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"        <td>\r\n");
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"                <td");
 
-WriteLiteral("                                            ");
+WriteLiteral(" data-label=\"Email\"");
 
-            
-            #line 134 "..\..\Views\Search\Index.cshtml"
-                                       Write(Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null));
+WriteLiteral(">\r\n");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                                        </td>\r\n                                " +
-"    </tr>\r\n");
+WriteLiteral("                                                ");
 
             
-            #line 137 "..\..\Views\Search\Index.cshtml"
-                                }
+            #line 132 "..\..\Views\Search\Index.cshtml"
+                                           Write(user.Email);
 
             
             #line default
             #line hidden
-WriteLiteral("                            </table>\r\n\r\n                        </div>\r\n\r\n       " +
-"             </div>\r\n");
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"                <td");
+
+WriteLiteral(" data-label=\"Status\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("                                                ");
 
             
-            #line 143 "..\..\Views\Search\Index.cshtml"
+            #line 135 "..\..\Views\Search\Index.cshtml"
+                                           Write(user.Status);
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"                <td");
+
+WriteLiteral(" data-label=\"\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("                                                ");
+
+            
+            #line 138 "..\..\Views\Search\Index.cshtml"
+                                           Write(Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n                                            </td>\r\n                            " +
+"            </tr>\r\n");
+
+            
+            #line 141 "..\..\Views\Search\Index.cshtml"
+                                    }
+
+            
+            #line default
+            #line hidden
+WriteLiteral("                                </tbody>\r\n                            </table>\r\n " +
+"                       </div>\r\n                    </div>\r\n");
+
+            
+            #line 146 "..\..\Views\Search\Index.cshtml"
 
                     
             
             #line default
             #line hidden
             
-            #line 144 "..\..\Views\Search\Index.cshtml"
+            #line 147 "..\..\Views\Search\Index.cshtml"
                Write(Pager());
 
             
             #line default
             #line hidden
             
-            #line 144 "..\..\Views\Search\Index.cshtml"
+            #line 147 "..\..\Views\Search\Index.cshtml"
                             
 
                 }
@@ -713,7 +751,7 @@ WriteLiteral("                            </table>\r\n\r\n                      
             
             #line default
             #line hidden
-WriteLiteral("        </div>\r\n    </div>\r\n\r\n</div>\r\n\r\n\r\n\r\n");
+WriteLiteral("        </div>\r\n    </div>\r\n</section>\r\n\r\n\r\n\r\n");
 
 WriteLiteral("\r\n\r\n");
 

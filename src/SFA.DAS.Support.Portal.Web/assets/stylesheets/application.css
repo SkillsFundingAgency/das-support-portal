@@ -1,3 +1,7 @@
+body {
+  min-width: 190px;
+}
+
 /* Widening the layout */
 
 #global-header .header-wrapper {
@@ -83,7 +87,7 @@
 .search .search-header .search-input {
   position: static;
   margin: 0;
-  padding: 0 50px 0 0;
+  /* padding: 0 50px 0 0; */
 }
 
 .search .search-header .search-submit {
@@ -197,7 +201,7 @@
   display: block;
   width: 30px;
   height: 40px;
-  background: url(/Content/dist/images/arrow-sprite.png);
+  /* background: url(/Content/dist/images/arrow-sprite.png); */
   background-position: -4px -2px;
 }
 
@@ -421,6 +425,7 @@ table.responsive tr td {
   padding: 10px 10px 8px;
   box-sizing: border-box;
   border-bottom: 1px dotted #bfc1c3;
+  word-break: break-all;
 }
 table.responsive tr td:before {
   content: attr(data-label);
@@ -601,7 +606,8 @@ dl dt.last-dt {
 }
 
 dl dd.last-dd {
-  border-bottom: 1px solid #bfc1bf;
+  /* border-bottom: 1px solid #bfc1bf; */
+  border-bottom: 0;
   padding-bottom: 20px;
   margin-bottom: 10px;
 }
@@ -619,7 +625,8 @@ dl dd.last-dd {
   }
 
   dl dt.last-dt {
-    border-bottom: 1px solid #bfc1bf;
+    /* border-bottom: 1px solid #bfc1bf; */
+    border-bottom: 0;
     padding-bottom: 20px;
     margin-bottom: 20px;
   }
