@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +12,8 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Indexer.Worker
 {
@@ -25,7 +28,10 @@ namespace SFA.DAS.Support.Indexer.Worker
         private ISearchSettings _searchSettings;
         private ISiteSettings _siteSettings;
         private int _delayTime = 1800 * SecondsToMilliSeconds;
-
+        public static readonly List<SiteManifest> SiteManifests = new List<SiteManifest>();
+        public static readonly Dictionary<string, SiteResource> SiteResources = new Dictionary<string, SiteResource>();
+        public static readonly Dictionary<string, SiteChallenge> SiteChallenges = new Dictionary<string, SiteChallenge>();
+      
 
         public override void Run()
         {

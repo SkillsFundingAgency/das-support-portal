@@ -1,19 +1,16 @@
 ﻿using System.Diagnostics;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
-using SFA.DAS.Support.Indexer.Core.Services;
-using SFA.DAS.Support.Indexer.Infrastructure.AzureQueues;
 using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
 using StructureMap.Configuration.DSL;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
-using SFA.DAS.NLog.Logger;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using System;
-using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
@@ -23,7 +20,27 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         public InfrastuctureRegistry()
         {
 
-            For<HttpClient>().AlwaysUnique().Use(new HttpClient());
+            For<List<SiteManifest>>()
+                .Singleton()
+                .Use<List<SiteManifest>>(x =>  WorkerRole.SiteManifests);
+            For<Dictionary<string, SiteChallenge>>()
+                .Singleton()
+                .Use<Dictionary<string, SiteChallenge>>(x =>  WorkerRole.SiteChallenges);
+            For<Dictionary<string, SiteResource>>()
+                .Singleton()
+                .Use<Dictionary<string, SiteResource>>(x =>  WorkerRole.SiteResources);
+
+            For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForSuccessStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForInformationStatusCode>();
+
+            
+            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+
+            For<HttpClient>().Use((c) => new HttpClient());
+
 
             For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
 
@@ -35,17 +52,18 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 
             For<IIndexProvider>().Use<ElasticSearchIndexProvider>();
 
-          
+            For<ISiteConnector>().Use<SiteConnector>();
 
-            For<ITrigger>().Use<StorageQueueService>();
+            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+
             For<IIndexSearchItems>().Use<IndexerService>();
+
             For<IIndexNameCreator>().Use<IndexNameCreator>();
         }
 
         private IDictionary<string, object> GetProperties()
         {
-            var properties = new Dictionary<string, object>();
-            properties.Add("Version", GetVersion());
+            var properties = new Dictionary<string, object> {{"Version", GetVersion()}};
             return properties;
         }
 

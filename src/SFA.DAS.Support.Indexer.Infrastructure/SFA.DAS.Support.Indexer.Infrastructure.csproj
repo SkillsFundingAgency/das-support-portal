@@ -61,8 +61,6 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureQueues\StorageQueueService.cs" />
-    <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Manifest\ManifestProvider.cs" />
   </ItemGroup>
