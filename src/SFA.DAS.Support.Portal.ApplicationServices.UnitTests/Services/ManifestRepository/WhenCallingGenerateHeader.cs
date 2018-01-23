@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using Moq;
@@ -15,11 +16,18 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
 
         [Test]
-        public async Task ItShouldReturnAnEmtpyStringIfTheResourceDoesNotExist()
+        public async Task ItShouldReturnANullResourceIfTheResourceDoesNotExist()
         {
             var result = await Unit.GenerateHeader("nokey", "id");
-            Assert.AreEqual(string.Empty, result);
+            Assert.IsNull(result.Resource);
         }
+        [Test]
+        public async Task ItShouldReturnANotFoundStatusIfTheResourceDoesNotExist()
+        {
+            var result = await Unit.GenerateHeader("nokey", "id");
+            Assert.AreEqual(HttpStatusCode.NotFound,  result.StatusCode);
+        }
+
 
         [Test]
         public async Task ItShouldReturnAPageIfTheResourceDoesExistAndCanBeAccessed()
@@ -32,16 +40,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var result = await Unit.GenerateHeader("key", "id");
             Assert.IsNotNull(result);
             Assert.IsFalse($"{result}".Contains("There was a problem downloading this asset"));
-            Assert.AreEqual(html, result);
+            Assert.AreEqual(html, result.Resource);
         }
 
-        [Test]
-        public async Task ItShouldReturnAProblemDownloadingIfTheResourceDoesExistButCannotBeAccessed()
-        {
-            MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
-                .ThrowsAsync(new HttpException());
-            var result = await Unit.GenerateHeader("key", "id");
-            Assert.IsTrue($"{result}".Contains("There was a problem downloading this asset"));
-        }
+        
     }
 }

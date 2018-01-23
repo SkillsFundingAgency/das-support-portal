@@ -69,7 +69,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Assert.IsInstanceOf<NavViewModel>(viewResult.ViewBag.SubNav);
             Assert.IsInstanceOf<object>(viewResult.ViewBag.SubHeader);
             Assert.AreEqual("Sub", viewResult.ViewName);
-            Assert.IsInstanceOf<string>(viewResult.Model);
+            Assert.IsInstanceOf<ResourceResultModel>(viewResult.Model);
         }
 
         [Test]

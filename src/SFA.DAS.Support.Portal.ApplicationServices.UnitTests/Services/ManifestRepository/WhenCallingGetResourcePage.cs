@@ -10,14 +10,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingGetResourcePage : WhenTestingManifestRepository
     {
-        [Test]
-        public async Task ItShouldReturnAnEmptyHtmlPageIfThePageFailsToDownload()
-        {
-            MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
-                .ThrowsAsync(new HttpException());
-            var result = await Unit.GetResourcePage("resourcekey", "id");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
-        }
+       
 
         [Test]
         public async Task ItShouldReturnTheHtmlPage()

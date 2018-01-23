@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using SFA.DAS.NLog.Logger;
@@ -73,7 +74,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GenerateHeader(string key, string id)
         {
             var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey)) return new ResourceResultModel();
+            if (!await ResourceExists(headerKey)) return new ResourceResultModel(){ StatusCode = HttpStatusCode.NotFound};
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);

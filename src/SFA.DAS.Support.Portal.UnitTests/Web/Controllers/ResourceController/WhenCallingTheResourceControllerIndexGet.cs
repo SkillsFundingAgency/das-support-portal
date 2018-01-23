@@ -29,44 +29,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         private string _key;
         private string _url;
 
-        [Test]
-        public async Task ItShouldProvideTheMissingViewIfGetResourcePageThrowsAnyException()
-        {
-            var navResponse = new NavViewModel
-            {
-                Current = "",
-                Items = new[]
-                {
-                    new NavItem {Href = "", Key = "", Title = ""}
-                }
-            };
-            MockManifestRepository.Setup(x => x.ResourceExists(It.IsAny<string>())).Returns(Task.FromResult(true));
-
-
-            var siteResource = new SiteResource {Challenge = "A Challenge"};
-
-            MockManifestRepository.Setup(x => x.GetResource(It.IsAny<string>())).Returns(Task.FromResult(siteResource));
-
-            MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
-                It.IsAny<HttpResponseBase>(),
-                It.IsAny<IPrincipal>(), It.IsAny<string>())).Returns(true);
-
-            MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
-            MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
-                .Returns(Task.FromResult(new ResourceResultModel()));
-            MockManifestRepository.Setup(x => x.GetResourcePage(_key, _id)).Throws<Exception>();
-
-
-            ActionResultResponse = await Unit.Index(_key, _id);
-
-            Assert.IsInstanceOf<ViewResult>(ActionResultResponse);
-            var viewResult = (ViewResult) ActionResultResponse;
-
-
-            Assert.AreEqual("Missing", viewResult.ViewName);
-            Assert.IsNull(viewResult.Model);
-        }
-
+     
         /// <summary>
         ///     See <see cref="WhenTestingTheResourceController" /> for details of mocking HttpContext
         ///     Where hard coupling to [Http]Request is taken care of.
