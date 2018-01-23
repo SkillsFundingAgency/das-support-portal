@@ -2,6 +2,24 @@ body {
   min-width: 190px;
 }
 
+#global-header #no-logo {
+  float: left;
+  position: relative;
+  top: -1px;
+  height: 30px;
+  overflow: visible;
+  vertical-align: baseline;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 1em;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  margin-bottom: -3px;
+  padding-top: 2px;
+  border-bottom: 1px solid transparent;
+}
+
 /* Widening the layout */
 
 #global-header .header-wrapper {
@@ -422,9 +440,10 @@ table.responsive tr td {
   clear: left;
   float: left;
   width: 100%;
-  padding: 10px 10px 8px;
+  padding: 10px 0 8px;
   box-sizing: border-box;
   border-bottom: 1px dotted #bfc1c3;
+  font-size: 14px;
   word-break: break-all;
 }
 table.responsive tr td:before {
@@ -462,6 +481,7 @@ table.responsive tr.total {
     padding: 0.6em 1em 0.5em;
     border-bottom-style: solid;
     width: auto;
+    font-size: 16px;
   }
   table.responsive tr th:first-child,
   table.responsive tr td:first-child {
@@ -564,6 +584,10 @@ table.responsive tr.total {
   .heading-large__equal-margins {
     margin: 1.25em 0;
   }
+}
+
+.heading-medium__no-top-margin {
+  margin-top: 0;
 }
 
 

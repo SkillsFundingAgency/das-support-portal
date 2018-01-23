@@ -83,14 +83,14 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6901), Tuple.Create("\"", 7008)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6963), Tuple.Create("\"", 7070)
 
 #line 167 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6908), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 6970), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6908), false)
+, 6970), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " style=\"visibility: visible\"");
@@ -158,14 +158,14 @@ WriteLiteralTo(__razor_helper_writer, "\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7508), Tuple.Create("\"", 7616)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7570), Tuple.Create("\"", 7678)
 
 #line 178 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 7515), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 7577), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 7515), false)
+, 7577), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " style=\"visibility: visible\"");
@@ -416,7 +416,7 @@ WriteLiteral(" class=\"column-two-thirds\"");
 
 WriteLiteral(">\r\n                        <h2");
 
-WriteLiteral(" class=\"heading-large\"");
+WriteLiteral(" class=\"heading-medium heading-medium__no-top-margin\"");
 
 WriteLiteral(">Results</h2>\r\n                        <p>  ");
 
@@ -582,7 +582,7 @@ WriteLiteral(" class=\"column-full\"");
 
 WriteLiteral(">\r\n                        <h2");
 
-WriteLiteral(" class=\"heading-large\"");
+WriteLiteral(" class=\"heading-medium heading-medium__no-top-margin\"");
 
 WriteLiteral(">Results</h2>\r\n                        <p>  ");
 
