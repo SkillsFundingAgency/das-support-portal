@@ -6,7 +6,6 @@ using System.Web;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.Navigation;
@@ -17,7 +16,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
     public class ManifestRepository : IManifestRepository
     {
-        private readonly ISiteConnector _downloader;
+        private readonly ISiteConnector _siteConnector;
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
         private readonly ISiteSettings _settings;
@@ -26,13 +25,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private IDictionary<string, SiteChallenge> _challenges;
 
         public ManifestRepository(ISiteSettings settings, 
-            ISiteConnector downloader, 
+            ISiteConnector siteConnector, 
             IFormMapper formMapper, 
             ILog log, 
-            List<SiteManifest> manifests,Dictionary<string, SiteResource> resources,Dictionary<string, SiteChallenge> challenges
+            List<SiteManifest> manifests,Dictionary<string, SiteResource> resources,
+            Dictionary<string, SiteChallenge> challenges
             )
         {
-            _downloader = downloader;
+            _siteConnector = siteConnector;
             _formMapper = formMapper;
             _log = log;
             _settings = settings;
@@ -60,18 +60,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
         }
 
+        private IDictionary<string, SiteResource> Resources => _resources;
 
-
-
-        private IDictionary<string, SiteResource> Resources
-        {
-            get { return _resources; }
-        }
-
-        private IDictionary<string, SiteChallenge> Challenges
-        {
-            get { return _challenges; }
-        }
+        private IDictionary<string, SiteChallenge> Challenges => _challenges;
 
         public async Task<bool> ChallengeExists(string key)
         {
@@ -142,7 +133,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             formData.Remove("innerAction");
             formData.Remove(challengekey);
 
-            var html = await _downloader.Upload<string>(uri, formData);
+            var html = await _siteConnector.Upload<string>(uri, formData);
 
             if (string.IsNullOrWhiteSpace(html))
                 return new ChallengeResult { RedirectUrl = redirect };
@@ -243,7 +234,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             try
             {
                 var queryString = AddQueryString(url);
-                var result = await _downloader.Download(queryString);
+                var result = await _siteConnector.Download(queryString);
 
                 return result;
             }
@@ -278,7 +269,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 _log.Debug($"Downloading '{uri}'");
                 try
                 {
-                    var manifest = await _downloader.Download<SiteManifest>(uri);
+                    var manifest = await _siteConnector.Download<SiteManifest>(uri);
                     list.Add(uri.ToString(), manifest);
                 }
                 catch (Exception ex)

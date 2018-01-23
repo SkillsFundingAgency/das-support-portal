@@ -21,17 +21,17 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             switch (status)
             {
                 case HttpStatusCode.Unauthorized:
-                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from inter-site communication, changing token for retry");
+                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from Site Connector Request, changing token for retry");
                     client.DefaultRequestHeaders.Authorization = null;
                     return HttpStatusCodeDecision.ReturnNull;
                 case HttpStatusCode.Forbidden:
-                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from inter-site communication");
+                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from Site Connector Request");
                     return HttpStatusCodeDecision.ReturnNull;
                 case HttpStatusCode.NotFound:
-                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from inter-site communication");
+                    _logger.Warn( $"Http Status Code ({(int)status}) {status} returned from Site Connector Request");
                     return HttpStatusCodeDecision.ReturnNull;
                 default:
-                    _logger.Error( new Exception("Enforced Exeption after invalid Site Response"), $"Http Status Code ({(int)status}) {status} returned from inter-site communication");
+                    _logger.Error( new Exception("Enforced Exeption after invalid Site Response"), $"Http Status Code ({(int)status}) {status} returned from Site Connector Request");
                     return HttpStatusCodeDecision.ReturnNull;
             }
            

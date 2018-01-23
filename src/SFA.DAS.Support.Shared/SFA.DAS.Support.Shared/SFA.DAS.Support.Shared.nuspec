@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/SkillsFundingAgency/das-shared-packages/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/SkillsFundingAgency/das-shared-packages</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Classes shared for DAS Support inter-site communication.</description>
+    <description>Classes shared for DAS Support Site Connector Request.</description>
     <summary>DAS Support shared classes</summary>
     <releaseNotes />
     <dependencies>
