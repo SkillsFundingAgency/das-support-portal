@@ -1,3 +1,25 @@
+body {
+  min-width: 190px;
+}
+
+#global-header #no-logo {
+  float: left;
+  position: relative;
+  top: -1px;
+  height: 30px;
+  overflow: visible;
+  vertical-align: baseline;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 1em;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  margin-bottom: -3px;
+  padding-top: 2px;
+  border-bottom: 1px solid transparent;
+}
+
 /* Widening the layout */
 
 #global-header .header-wrapper {
@@ -83,7 +105,7 @@
 .search .search-header .search-input {
   position: static;
   margin: 0;
-  padding: 0 50px 0 0;
+  /* padding: 0 50px 0 0; */
 }
 
 .search .search-header .search-submit {
@@ -197,7 +219,7 @@
   display: block;
   width: 30px;
   height: 40px;
-  background: url(/Content/dist/images/arrow-sprite.png);
+  /* background: url(/Content/dist/images/arrow-sprite.png); */
   background-position: -4px -2px;
 }
 
@@ -418,9 +440,11 @@ table.responsive tr td {
   clear: left;
   float: left;
   width: 100%;
-  padding: 10px 10px 8px;
+  padding: 10px 0 8px;
   box-sizing: border-box;
   border-bottom: 1px dotted #bfc1c3;
+  font-size: 14px;
+  word-break: break-all;
 }
 table.responsive tr td:before {
   content: attr(data-label);
@@ -457,6 +481,7 @@ table.responsive tr.total {
     padding: 0.6em 1em 0.5em;
     border-bottom-style: solid;
     width: auto;
+    font-size: 16px;
   }
   table.responsive tr th:first-child,
   table.responsive tr td:first-child {
@@ -561,6 +586,10 @@ table.responsive tr.total {
   }
 }
 
+.heading-medium__no-top-margin {
+  margin-top: 0;
+}
+
 
 
 /* Defenition list */
@@ -601,7 +630,8 @@ dl dt.last-dt {
 }
 
 dl dd.last-dd {
-  border-bottom: 1px solid #bfc1bf;
+  /* border-bottom: 1px solid #bfc1bf; */
+  border-bottom: 0;
   padding-bottom: 20px;
   margin-bottom: 10px;
 }
@@ -619,7 +649,8 @@ dl dd.last-dd {
   }
 
   dl dt.last-dt {
-    border-bottom: 1px solid #bfc1bf;
+    /* border-bottom: 1px solid #bfc1bf; */
+    border-bottom: 0;
     padding-bottom: 20px;
     margin-bottom: 20px;
   }
