@@ -6,9 +6,13 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Helpers
     [TestFixture]
     public class PayeSchemeObfuscatorTests
     {
-        private PayeSchemeObfuscator _unit;
         [SetUp]
-        public void Setup() { _unit = new PayeSchemeObfuscator();}
+        public void Setup()
+        {
+            _unit = new PayeSchemeObfuscator();
+        }
+
+        private PayeSchemeObfuscator _unit;
 
         [TestCase("1/9", "1/9")]
         [TestCase("ABC/DEFGHI", "A**/*****I")]

@@ -20,16 +20,16 @@ namespace SFA.DAS.Support.Shared.Authentication
     [ExcludeFromCodeCoverage]
     public class TokenValidationHandler : DelegatingHandler
     {
-        private readonly ILog _logger;
+        private const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
         private static string _audience = string.Empty;
         private readonly string _authority;
+        private readonly ILog _logger;
+        private readonly string _scope;
+        private readonly string scopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
 
         private string _issuer = string.Empty;
         private List<SecurityToken> _signingTokens;
         private DateTime _stsMetadataRetrievalTime = DateTime.MinValue;
-        private readonly string scopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
-        private readonly string _scope;
-        const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
 
         public TokenValidationHandler(ISiteValidatorSettings settings, ILog logger)
         {
@@ -38,6 +38,7 @@ namespace SFA.DAS.Support.Shared.Authentication
             _authority = $"{AuthorityBaseUrl}{settings.Tenant}";
             _scope = settings.Scope;
         }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
@@ -53,26 +54,23 @@ namespace SFA.DAS.Support.Shared.Authentication
             }
 
             if (DateTime.UtcNow.Subtract(_stsMetadataRetrievalTime).TotalHours > 24
-                    || string.IsNullOrEmpty(_issuer)
-                    || _signingTokens == null)
-            {
+                || string.IsNullOrEmpty(_issuer)
+                || _signingTokens == null)
                 try
                 {
-
                     var stsDiscoveryEndpoint = $"{_authority}/.well-known/openid-configuration";
                     var configManager = new ConfigurationManager<OpenIdConnectConfiguration>(stsDiscoveryEndpoint);
                     var config = await configManager.GetConfigurationAsync(cancellationToken);
                     _issuer = config.Issuer;
                     _signingTokens = config.SigningTokens.ToList();
                     _stsMetadataRetrievalTime = DateTime.UtcNow;
-
                 }
                 catch (Exception e)
                 {
                     _logger.Error(e, $"Exception occured obtaining configuration from authority");
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 }
-            }
+
             var issuer = _issuer;
             var signingTokens = _signingTokens;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -97,7 +95,7 @@ namespace SFA.DAS.Support.Shared.Authentication
                 if (ClaimsPrincipal.Current.FindFirst(scopeClaimType) != null &&
                     ClaimsPrincipal.Current.FindFirst(scopeClaimType).Value != _scope)
                 {
-                    _logger.Warn($"The supplied token does not provide the required scope" );
+                    _logger.Warn($"The supplied token does not provide the required scope");
                     var response = BuildResponseErrorMessage(HttpStatusCode.Forbidden);
                     return response;
                 }
@@ -112,7 +110,7 @@ namespace SFA.DAS.Support.Shared.Authentication
             }
             catch (Exception e)
             {
-                _logger.Error(e , $"An exception has occurred validating the supplied token");
+                _logger.Error(e, $"An exception has occurred validating the supplied token");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }

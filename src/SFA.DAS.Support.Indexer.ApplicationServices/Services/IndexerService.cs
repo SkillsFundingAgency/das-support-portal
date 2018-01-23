@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 
@@ -13,19 +13,18 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public class IndexerService : IIndexSearchItems
     {
+        private const int _indexToRetain = 5;
         private readonly IGetSearchItemsFromASite _dataSource;
-        private readonly IIndexProvider _indexProvider;
-        private readonly ISiteSettings _settings;
-        private readonly IGetSiteManifest _siteService;
-        private readonly ISearchSettings _searchSettings;
-        private readonly ILog _logger;
         private readonly IIndexNameCreator _indexNameCreator;
+        private readonly IIndexProvider _indexProvider;
 
         private readonly Stopwatch _indexTimer = new Stopwatch();
+        private readonly ILog _logger;
         private readonly Stopwatch _queryTimer = new Stopwatch();
         private readonly Stopwatch _runtimer = new Stopwatch();
-
-        private const int _indexToRetain = 5;
+        private readonly ISearchSettings _searchSettings;
+        private readonly ISiteSettings _settings;
+        private readonly IGetSiteManifest _siteService;
 
         public IndexerService(ISiteSettings settings,
             IGetSiteManifest siteService,
@@ -42,7 +41,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _searchSettings = searchSettings;
             _logger = logger;
             _indexNameCreator = indexNameCreator;
-
         }
 
         public async Task Run()
@@ -50,17 +48,15 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _runtimer.Start();
             try
             {
-
                 var subSites = (_settings.BaseUrls ?? string.Empty)
-                                        .Split(Convert.ToChar(","))?
-                                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
+                    .Split(Convert.ToChar(","))?
+                    .Where(x => !string.IsNullOrEmpty(x)).ToList();
 
                 foreach (var subSite in subSites)
                 {
                     var siteUri = new Uri(subSite);
                     var siteManifest = await _siteService.GetSiteManifest(siteUri);
 
-                    
 
                     _queryTimer.Stop();
 
@@ -70,11 +66,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                         continue;
                     }
 
-                    _logger.Info($"Site Manifest: Uri: {siteManifest.BaseUrl ?? "Missing Url"} Version: {siteManifest.Version ?? "Missing Version"} # Challenges: {siteManifest.Challenges?.Count() ?? 0} # Resources: {siteManifest.Resources?.Count() ?? 0}");
+                    _logger.Info(
+                        $"Site Manifest: Uri: {siteManifest.BaseUrl ?? "Missing Url"} Version: {siteManifest.Version ?? "Missing Version"} # Challenges: {siteManifest.Challenges?.Count() ?? 0} # Resources: {siteManifest.Resources?.Count() ?? 0}");
 
                     var resourcesToIndex = siteManifest.Resources?.Where(x => !string.IsNullOrEmpty(x.SearchItemsUrl) &&
-                                                                    !string.IsNullOrEmpty(siteManifest.BaseUrl) &&
-                                                                    x.SearchCategory != SearchCategory.None);
+                                                                              !string.IsNullOrEmpty(
+                                                                                  siteManifest.BaseUrl) &&
+                                                                              x.SearchCategory != SearchCategory.None);
 
                     if (resourcesToIndex == null) continue;
 
@@ -86,7 +84,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                             continue;
                         }
 
-                        _logger.Info($"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
+                        _logger.Info(
+                            $"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
                         var baseUri = new Uri(siteManifest.BaseUrl);
                         var uri = new Uri(baseUri, resource.SearchItemsUrl);
 
@@ -123,48 +122,48 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         {
             try
             {
-                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resource.SearchCategory);
+                var newIndexName =
+                    _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resource.SearchCategory);
                 CreateIndex<T>(newIndexName);
 
                 _queryTimer.Start();
-                _logger.Info($" Downloading Index Records ...");
+                _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
                 var searchItems = await _dataSource.GetSearchItems<T>(uri);
                 _queryTimer.Stop();
 
                 _indexTimer.Start();
-                _logger.Info($" Indexing Documents ...");
-                _indexProvider.IndexDocuments<T>(newIndexName, searchItems);
+                _logger.Info($" Indexing Documents for type {typeof(T).Name}...");
+                _indexProvider.IndexDocuments(newIndexName, searchItems);
                 _indexTimer.Stop();
 
-                _logger.Info($"Creating Index Alias and Swapping from old to new index ...");
-                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resource.SearchCategory);
+                _logger.Info($"Creating Index Alias and Swapping from old to new index for type {typeof(T).Name}...");
+                var indexAlias =
+                    _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
 
-                _logger.Info($"Deleting Old Indexes ...");
+                _logger.Info($"Deleting Old Indexes for type {typeof(T).Name}...");
                 _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
-                _logger.Info($"Deleting Old Indexes Completed...");
+                _logger.Info($"Deleting Old Indexes Completed for type {typeof(T).Name}...");
 
                 _indexTimer.Stop();
                 _queryTimer.Stop();
-                _logger.Info($"Query Elapse Time For {nameof(T)} : {_queryTimer.Elapsed} - Indexing Time {_indexTimer.Elapsed}");
-
+                _logger.Info(
+                    $"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed} - Indexing Time {_indexTimer.Elapsed}");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Exception while Indexing {nameof(T)}");
+                _logger.Error(ex, $"Exception while Indexing {typeof(T).Name}");
             }
         }
 
         private void CreateIndex<T>(string derivedIndexName) where T : class
         {
-            _logger.Info($"Creating Index {derivedIndexName}...");
+            _logger.Info($"Creating Index {derivedIndexName} for type {typeof(T).Name}...");
 
             _indexProvider.CreateIndex<T>(derivedIndexName);
 
-            _logger.Info($" Index  {derivedIndexName} sucessfully created...");
+            _logger.Info($" Index  {derivedIndexName} sucessfully created for type {typeof(T).Name}...");
         }
-
-
     }
 }

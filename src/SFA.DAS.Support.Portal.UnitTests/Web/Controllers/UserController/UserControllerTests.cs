@@ -20,11 +20,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.UserController
     [TestFixture]
     public sealed class UserControllerTests
     {
-        private Portal.Web.Controllers.UserController _sut;
-        private Mock<ILog> _mockLogger;
-        private Mock<IMappingService> _mockMappingService;
-        private Mock<IMediator> _mockMediator;
-
         [SetUp]
         public void Init()
         {
@@ -35,6 +30,24 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.UserController
             _sut = new Portal.Web.Controllers.UserController(
                 _mockMappingService.Object,
                 _mockMediator.Object);
+        }
+
+        private Portal.Web.Controllers.UserController _sut;
+        private Mock<ILog> _mockLogger;
+        private Mock<IMappingService> _mockMappingService;
+        private Mock<IMediator> _mockMediator;
+
+        [Test]
+        public async Task ShouldReturnPageNotFoundWhenNoUserRecordFound()
+        {
+            _mockMediator
+                .Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
+                .Returns(Task.FromResult(new EmployerUserResponse()));
+
+            var result = await _sut.Index("112344", "Bob");
+            var vr = result as HttpNotFoundResult;
+
+            vr.Should().NotBeNull();
         }
 
         [Test]
@@ -73,21 +86,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.UserController
             var vr = result as ViewResult;
             var vm = vr.Model as DetailViewModel;
 
-            AssertionExtensions.Should(result).NotBeNull();
+            result.Should().NotBeNull();
             vm.Should().NotBeNull();
-
-        }
-        [Test]
-        public async Task ShouldReturnPageNotFoundWhenNoUserRecordFound()
-        {
-            _mockMediator
-                .Setup(x => x.SendAsync(It.IsAny<EmployerUserQuery>()))
-                .Returns(Task.FromResult(new EmployerUserResponse()));
-
-            var result = await _sut.Index("112344", "Bob");
-            var vr = result as HttpNotFoundResult;
-
-            AssertionExtensions.Should(vr).NotBeNull();
         }
     }
 }

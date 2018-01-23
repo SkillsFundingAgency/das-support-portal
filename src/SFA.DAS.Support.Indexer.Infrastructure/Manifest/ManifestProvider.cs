@@ -15,7 +15,7 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.Manifest
         {
             _siteConnector = siteConnector;
         }
-        
+
         public async Task<IEnumerable<T>> GetSearchItems<T>(Uri collectionUri)
         {
             return await _siteConnector.Download<IEnumerable<T>>(collectionUri);
@@ -26,6 +26,5 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.Manifest
             var uri = new Uri(siteUri, "/api/manifest");
             return await _siteConnector.Download<SiteManifest>(uri);
         }
-
     }
 }

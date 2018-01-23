@@ -9,8 +9,8 @@ namespace SFA.DAS.Support.Portal.Health
 {
     public class HealthService : IHealthService
     {
-        private readonly IEmployerUsersApiClient _client;
         private readonly IAccountApiClient _accountApiClient;
+        private readonly IEmployerUsersApiClient _client;
 
         public HealthService(IEmployerUsersApiClient client, IAccountApiClient accountApiClient)
         {
@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Portal.Health
 
         public async Task<HealthModel> CreateHealthModel()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
             var version = assembly.GetName().Version.ToString();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
@@ -35,13 +35,9 @@ namespace SFA.DAS.Support.Portal.Health
 
             if (employerUserModel.ApiStatus == Status.Green &&
                 accountModel.ApiStatus == Status.Green)
-            {
                 response.ApiStatus = Status.Green;
-            }
             else
-            {
                 response.ApiStatus = Status.Red;
-            }
 
             return response;
         }
@@ -70,7 +66,7 @@ namespace SFA.DAS.Support.Portal.Health
 
                 return Status.Green;
             }
-            catch 
+            catch
             {
                 return Status.Red;
             }

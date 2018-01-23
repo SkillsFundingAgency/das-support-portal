@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -18,15 +17,15 @@ namespace SFA.DAS.Support.Portal.Web
             {
                 routes.MapMvcAttributeRoutes();
             }
-            catch 
+            catch
             {
                 // not valid scenario
             }
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Search", action = "Index", id = UrlParameter.Optional }
+                "Default",
+                "{controller}/{action}/{id}",
+                new {controller = "Search", action = "Index", id = UrlParameter.Optional}
             );
         }
     }

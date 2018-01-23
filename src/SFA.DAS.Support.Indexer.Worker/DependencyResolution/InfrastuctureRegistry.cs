@@ -1,16 +1,16 @@
-﻿using System.Diagnostics;
-using SFA.DAS.Support.Indexer.ApplicationServices.Services;
-using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
-using StructureMap.Configuration.DSL;
-using SFA.DAS.Support.Common.Infrastucture.Indexer;
-using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
+using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
+using SFA.DAS.Support.Indexer.ApplicationServices.Services;
+using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
+using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
@@ -19,16 +19,15 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
-
             For<List<SiteManifest>>()
                 .Singleton()
-                .Use<List<SiteManifest>>(x =>  WorkerRole.SiteManifests);
+                .Use(x => WorkerRole.SiteManifests);
             For<Dictionary<string, SiteChallenge>>()
                 .Singleton()
-                .Use<Dictionary<string, SiteChallenge>>(x =>  WorkerRole.SiteChallenges);
+                .Use(x => WorkerRole.SiteChallenges);
             For<Dictionary<string, SiteResource>>()
                 .Singleton()
-                .Use<Dictionary<string, SiteResource>>(x =>  WorkerRole.SiteResources);
+                .Use(x => WorkerRole.SiteResources);
 
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
@@ -36,16 +35,16 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<IHttpStatusCodeStrategy>().Use<StrategyForSuccessStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForInformationStatusCode>();
 
-            
+
             For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
-            For<HttpClient>().Use((c) => new HttpClient());
+            For<HttpClient>().Use(c => new HttpClient());
 
 
             For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
 
             For<IGetSiteManifest>().Use<ManifestProvider>();
-           
+
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
 
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
@@ -73,8 +72,5 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fileVersionInfo.ProductVersion;
         }
-
-
-
     }
 }

@@ -1,22 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Support.Portal.ApplicationServices.Handlers;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Core.Domain.Model;
-using System.Collections.Generic;
-using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 {
     [TestFixture]
     public class ChallengeHandlerTests
     {
-        private ChallengeHandler _unit;
-        private Mock<IAccountRepository> _mockAccountRepository;
-        private Mock<IChallengeService> _mockChallengeService;
         [SetUp]
         public void Setup()
         {
@@ -25,24 +22,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             _unit = new ChallengeHandler(_mockAccountRepository.Object, _mockChallengeService.Object);
         }
 
-        [Test]
-        public async Task ItShouldReturnSuccessCodeWhenAccountIsFound()
-        {
-            var id = "123123";
-            var challengeQuery = new ChallengeQuery(id);
-
-            var account = new Account()
-            {
-                
-            };
-
-            _mockAccountRepository.Setup(r => r.Get(id, AccountFieldsSelection.PayeSchemes))
-                .Returns(Task.FromResult(account));
-
-            var response = await _unit.Handle(challengeQuery);
-
-            Assert.AreEqual(SearchResponseCodes.Success, response.StatusCode);
-        }
+        private ChallengeHandler _unit;
+        private Mock<IAccountRepository> _mockAccountRepository;
+        private Mock<IChallengeService> _mockChallengeService;
 
 
         [Test]
@@ -51,11 +33,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             var id = "123123";
             var challengeQuery = new ChallengeQuery(id);
 
-            var account = new Account()
+            var account = new Account
             {
-                PayeSchemes = new List<PayeSchemeViewModel>()
+                PayeSchemes = new List<PayeSchemeViewModel>
                 {
-                     new PayeSchemeViewModel(){ Name = "123/4567789"}
+                    new PayeSchemeViewModel {Name = "123/4567789"}
                 }
             };
 
@@ -68,9 +50,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             var response = await _unit.Handle(challengeQuery);
 
             CollectionAssert.AreEqual(characterIndexes, response.Characters);
-
-
         }
+
         [Test]
         public async Task ItShouldReturnNotFoundCodeCodeWhenAccountIsNotFound()
         {
@@ -79,11 +60,27 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 
 
             _mockAccountRepository.Setup(r => r.Get(id, AccountFieldsSelection.PayeSchemes))
-                .Returns(Task.FromResult(null  as Account));
+                .Returns(Task.FromResult(null as Account));
 
             var response = await _unit.Handle(challengeQuery);
 
             Assert.AreEqual(SearchResponseCodes.NoSearchResultsFound, response.StatusCode);
+        }
+
+        [Test]
+        public async Task ItShouldReturnSuccessCodeWhenAccountIsFound()
+        {
+            var id = "123123";
+            var challengeQuery = new ChallengeQuery(id);
+
+            var account = new Account();
+
+            _mockAccountRepository.Setup(r => r.Get(id, AccountFieldsSelection.PayeSchemes))
+                .Returns(Task.FromResult(account));
+
+            var response = await _unit.Handle(challengeQuery);
+
+            Assert.AreEqual(SearchResponseCodes.Success, response.StatusCode);
         }
     }
 }

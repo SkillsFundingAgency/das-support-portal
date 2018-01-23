@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MediatR;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 

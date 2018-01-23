@@ -11,6 +11,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Responses
         public SearchCategory SearchType { get; set; }
         public PagedSearchResponse<AccountSearchModel> AccountSearchResult { get; set; }
         public PagedSearchResponse<UserSearchModel> UserSearchResult { get; set; }
-
     }
 }

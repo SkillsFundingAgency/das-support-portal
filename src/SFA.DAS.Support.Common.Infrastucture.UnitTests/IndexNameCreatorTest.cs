@@ -5,26 +5,25 @@ using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 {
-    [TestFixture()]
+    [TestFixture]
     public class IndexNameCreatorTest
     {
-
-        [TestCase("local_das_support",SearchCategory.User, "local_das_support-user")]
+        [TestCase("local_das_support", SearchCategory.User, "local_das_support-user")]
         [TestCase("test_das_support", SearchCategory.Account, "test_das_support-account")]
         public void CreateIndexesAliasNameTest(string indexName, SearchCategory searchCategory, string expected)
         {
             var _sut = new IndexNameCreator();
-            var actual =_sut.CreateIndexesAliasName(indexName, searchCategory);
+            var actual = _sut.CreateIndexesAliasName(indexName, searchCategory);
             Assert.AreEqual(actual, expected);
         }
 
-        [Test()]
+        [Test]
         public void CreateNewIndexNameTest()
         {
             var _sut = new IndexNameCreator();
             var actual = _sut.CreateNewIndexName("local_das_support", SearchCategory.User);
             var expected = $"local_das_support-user_{DateTime.UtcNow.ToString("yyyyMMddHHmmss").ToLower()}";
-            Assert.AreEqual(expected,actual);
+            Assert.AreEqual(expected, actual);
         }
     }
 }

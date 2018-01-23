@@ -1,22 +1,21 @@
-﻿using System.IO;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
-using System.Web.Mvc;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {
-    public abstract class WhenTestingTheResourceController : 
+    public abstract class WhenTestingTheResourceController :
         WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.ResourceController>
     {
+        protected Mock<HttpContextBase> MockContextBase;
         protected Mock<IManifestRepository> MockManifestRepository;
         protected Mock<ICheckPermissions> MockPermissionsChecker;
         protected Mock<IGrantPermissions> MockPermissionsGranter;
-        protected Mock<HttpContextBase> MockContextBase;
         protected ControllerContext UnitControllerContext;
 
         [SetUp]
@@ -27,8 +26,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             MockPermissionsGranter = new Mock<IGrantPermissions>();
 
             Unit = new Portal.Web.Controllers.ResourceController(
-                MockManifestRepository.Object, 
-                MockPermissionsChecker.Object, 
+                MockManifestRepository.Object,
+                MockPermissionsChecker.Object,
                 MockPermissionsGranter.Object);
 
             MockContextBase = new Mock<HttpContextBase>();
@@ -36,8 +35,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             MockContextBase.Setup(x => x.Request).Returns(new Mock<HttpRequestBase>().Object);
             MockContextBase.Setup(x => x.Response).Returns(new Mock<HttpResponseBase>().Object);
             MockContextBase.Setup(x => x.User).Returns(new Mock<IPrincipal>().Object);
-           
-            UnitControllerContext = new ControllerContext(MockContextBase.Object, new RouteData(), Unit );
+
+            UnitControllerContext = new ControllerContext(MockContextBase.Object, new RouteData(), Unit);
 
             Unit.ControllerContext = UnitControllerContext;
 

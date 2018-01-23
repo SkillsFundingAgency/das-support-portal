@@ -3,7 +3,9 @@ using NUnit.Framework;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.HomeController
 {
-    public class WhenCallingTheHomeControllerIndexMethod : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.HomeController>
+    public class
+        WhenCallingTheHomeControllerIndexMethod : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.HomeController
+        >
     {
         [Test]
         public void ItShouldReturnAView()
@@ -11,6 +13,5 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.HomeController
             ActionResultResponse = Unit.Index();
             Assert.IsInstanceOf<ViewResult>(ActionResultResponse);
         }
-
     }
 }

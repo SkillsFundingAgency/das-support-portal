@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
@@ -20,18 +17,21 @@ namespace SFA.DAS.Support.Indexer.Worker
     [ExcludeFromCodeCoverage]
     public class WorkerRole : RoleEntryPoint
     {
-        const int SecondsToMilliSeconds = 1000;
+        private const int SecondsToMilliSeconds = 1000;
+        public static readonly List<SiteManifest> SiteManifests = new List<SiteManifest>();
+        public static readonly Dictionary<string, SiteResource> SiteResources = new Dictionary<string, SiteResource>();
+
+        public static readonly Dictionary<string, SiteChallenge> SiteChallenges =
+            new Dictionary<string, SiteChallenge>();
+
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+        private int _delayTime = 1800 * SecondsToMilliSeconds;
         private IIndexSearchItems _indexer;
         private ILog _logger;
         private ISearchSettings _searchSettings;
         private ISiteSettings _siteSettings;
-        private int _delayTime = 1800 * SecondsToMilliSeconds;
-        public static readonly List<SiteManifest> SiteManifests = new List<SiteManifest>();
-        public static readonly Dictionary<string, SiteResource> SiteResources = new Dictionary<string, SiteResource>();
-        public static readonly Dictionary<string, SiteChallenge> SiteChallenges = new Dictionary<string, SiteChallenge>();
-      
+
 
         public override void Run()
         {
@@ -58,10 +58,8 @@ namespace SFA.DAS.Support.Indexer.Worker
             _logger = container.GetInstance<ILog>();
             _siteSettings = container.GetInstance<ISiteSettings>();
 
-            if (int.TryParse(_siteSettings.DelayTimeInSeconds, out int configDelayTime))
-            {
+            if (int.TryParse(_siteSettings.DelayTimeInSeconds, out var configDelayTime))
                 _delayTime = configDelayTime * SecondsToMilliSeconds;
-            }
 
             var result = base.OnStart();
             _logger.Info("ESFA.DAS.Support.Indexer.Worker has been started");

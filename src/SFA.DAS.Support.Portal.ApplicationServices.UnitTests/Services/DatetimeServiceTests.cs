@@ -41,7 +41,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services
         [TestCase("01/05/2018", "01/04/2018")]
         public void ShouldGetBeginningOfFinancialYear(string date, string expected)
         {
-            var actual = _sut.GetBeginningFinancialYear(DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+            var actual =
+                _sut.GetBeginningFinancialYear(DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture));
 
             actual.Should().Be(DateTime.ParseExact(expected, "dd/MM/yyyy", CultureInfo.InvariantCulture));
         }

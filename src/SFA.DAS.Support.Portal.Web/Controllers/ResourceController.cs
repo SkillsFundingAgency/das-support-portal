@@ -8,13 +8,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public class ResourceController : Controller
     {
-        private readonly IManifestRepository _repository;
         private readonly ICheckPermissions _checker;
         private readonly IGrantPermissions _granter;
+        private readonly IManifestRepository _repository;
 
         public ResourceController(
-            IManifestRepository repository, 
-            ICheckPermissions checker, 
+            IManifestRepository repository,
+            ICheckPermissions checker,
             IGrantPermissions granter)
         {
             _repository = repository;
@@ -25,10 +25,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Challenge(string id, string resourceId, string key, string url)
         {
-            if (!await _repository.ChallengeExists(key))
-            {
-                return HttpNotFound();
-            }
+            if (!await _repository.ChallengeExists(key)) return HttpNotFound();
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
@@ -36,7 +33,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             try
             {
                 var challengeForm = await _repository.GetChallengeForm(key, resourceId, url);
-                return View("Sub", (object)challengeForm);
+                return View("Sub", (object) challengeForm);
             }
             catch
             {
@@ -58,34 +55,29 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
-            return View("Sub", (object)result.Page);
+            return View("Sub", (object) result.Page);
         }
 
         [HttpGet]
         public async Task<ActionResult> Index(string key, string id)
         {
             if (!await _repository.ResourceExists(key))
-            {
-                return View("Sub", (object)"<h3>This resource isn't registered</h3>");
-            }
+                return View("Sub", (object) "<h3>This resource isn't registered</h3>");
 
             var resource = await _repository.GetResource(key);
 
             if (!string.IsNullOrEmpty(resource.Challenge))
-            {
                 if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))
-                {
-                    return RedirectToAction("Challenge", new { key = resource.Challenge, resourceId = id, url = Request.RawUrl });
-                }
-            }
+                    return RedirectToAction("Challenge",
+                        new {key = resource.Challenge, resourceId = id, url = Request.RawUrl});
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
             try
             {
-                var masterName = await _repository.GetResourcePage(key, id);    
-                return View("Sub", (object)masterName);
+                var masterName = await _repository.GetResourcePage(key, id);
+                return View("Sub", (object) masterName);
             }
             catch
             {

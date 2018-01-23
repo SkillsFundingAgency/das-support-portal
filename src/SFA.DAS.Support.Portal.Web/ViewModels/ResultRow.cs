@@ -11,5 +11,4 @@ namespace SFA.DAS.Support.Portal.Web.ViewModels
 
         public List<ResultCell> CellValues { get; set; }
     }
-
 }

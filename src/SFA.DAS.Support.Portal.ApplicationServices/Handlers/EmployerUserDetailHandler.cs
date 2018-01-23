@@ -21,7 +21,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
                 StatusCode = SearchResponseCodes.NoSearchResultsFound
             };
 
-            var record = message.Id != null ?  await _repository.Get(message.Id) : null;
+            var record = message.Id != null ? await _repository.Get(message.Id) : null;
 
             if (record != null)
             {

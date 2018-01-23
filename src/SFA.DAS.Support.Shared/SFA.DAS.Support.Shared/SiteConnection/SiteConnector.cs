@@ -13,13 +13,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 {
     public class SiteConnector : ISiteConnector
     {
-        private readonly HttpClient _client;
         private const string TheHttpClientMayNotBeNull = "The Http client may not be null";
+        private readonly HttpClient _client;
         private readonly IClientAuthenticator _clientAuthenticator;
-        private readonly ISiteConnectorSettings _settings;
-        private readonly ILog _logger;
-        public HttpStatusCode LastCode { get; set; }
         private readonly List<IHttpStatusCodeStrategy> _handlers;
+        private readonly ILog _logger;
+        private readonly ISiteConnectorSettings _settings;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
@@ -35,6 +34,8 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        public HttpStatusCode LastCode { get; set; }
+
 
         public Exception LastException { get; set; }
         public HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
@@ -42,19 +43,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         public async Task<T> Download<T>(string url) where T : class
         {
             return await Download<T>(new Uri(url));
-        }
-
-        private async Task EnsureClientAuthorizationHeader()
-        {
-            if (_client.DefaultRequestHeaders.Authorization == null)
-            {
-                var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
-                                                                     _settings.ClientSecret,
-                                                                     _settings.IdentifierUri,
-                                                                     _settings.Tenant);
-
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
         }
 
         public async Task<string> Download(string url)
@@ -72,9 +60,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
             switch (HttpStatusCodeDecision)
             {
-
                 case HttpStatusCodeDecision.HandleException:
-                    LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                    LastException = LastException ??
+                                    new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                     throw LastException;
 
                 case HttpStatusCodeDecision.ReturnNull:
@@ -91,7 +79,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
-
             await EnsureClientAuthorizationHeader();
 
             var response = await _client.GetAsync(uri);
@@ -101,7 +88,8 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             switch (HttpStatusCodeDecision)
             {
                 case HttpStatusCodeDecision.HandleException:
-                    throw LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                    throw LastException ??
+                          new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
 
 
                 case HttpStatusCodeDecision.ReturnNull:
@@ -116,6 +104,20 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                     return JsonConvert.DeserializeObject<T>(content);
             }
         }
+
+        private async Task EnsureClientAuthorizationHeader()
+        {
+            if (_client.DefaultRequestHeaders.Authorization == null)
+            {
+                var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
+                    _settings.ClientSecret,
+                    _settings.IdentifierUri,
+                    _settings.Tenant);
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
         private HttpStatusCodeDecision ExamineResponse(HttpResponseMessage message)
         {
             LastException = null;
@@ -125,15 +127,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                                                       x.High >= LastCode &&
                                                       x.ExcludeStatuses.All(y => y != LastCode)).ToList();
 
-            if (handlerOptions.Any())
-            {
-                return handlerOptions.First().Handle(_client, LastCode);
-            }
+            if (handlerOptions.Any()) return handlerOptions.First().Handle(_client, LastCode);
 
             return HttpStatusCodeDecision.Continue;
-
-
         }
-
     }
 }

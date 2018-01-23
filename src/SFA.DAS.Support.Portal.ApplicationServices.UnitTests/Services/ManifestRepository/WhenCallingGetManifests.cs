@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
@@ -26,9 +24,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             var result = await Unit.GetManifests();
 
-            MockLogger.Verify(x=>x.Error(It.IsAny<HttpException>(), It.IsAny<string>()), Times.Once);
+            MockLogger.Verify(x => x.Error(It.IsAny<HttpException>(), It.IsAny<string>()), Times.Once);
             CollectionAssert.IsEmpty(result);
-
         }
 
         [Test]
@@ -40,6 +37,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             CollectionAssert.IsEmpty(result);
         }
+
         [Test]
         public async Task ItShouldReturnTheListOfManifestObjects()
         {

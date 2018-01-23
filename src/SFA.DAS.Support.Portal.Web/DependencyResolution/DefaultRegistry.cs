@@ -74,6 +74,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IRoleSettings>().Use(configuration.Roles);
             For<IAuthSettings>().Use(configuration.Authentication);
             For<ICryptoSettings>().Use(configuration.Crypto);
+
+
+            For<IADFSConfiguration>().Use<ADFSConfiguration>();
+
+
         }
 
         private WebConfiguration GetConfiguration()

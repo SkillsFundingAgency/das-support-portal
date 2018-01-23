@@ -5,6 +5,6 @@
         string BaseUrls { get; }
         string EnvironmentName { get; set; }
 
-        string DelayTimeInSeconds { get;set; }
+        string DelayTimeInSeconds { get; set; }
     }
 }

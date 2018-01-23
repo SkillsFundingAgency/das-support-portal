@@ -6,7 +6,7 @@ using RichardSzalay.MockHttp;
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 {
     [TestFixture]
-    public class UnAuthorisedSiteConnectorTests: SiteConnectorTestBase
+    public class UnAuthorisedSiteConnectorTests : SiteConnectorTestBase
     {
         [Test]
         public async Task ItShouldRequestATokenForUnAuthorisedClients()
@@ -23,6 +23,5 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Assert.IsInstanceOf<string>(response);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
         }
-
     }
 }

@@ -36,11 +36,11 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
             MockMediator.Setup(x => x.SendAsync(It.IsAny<ChallengePermissionQuery>()))
                 .Returns(Task.FromResult(challengePermissionResponse));
             MockContextBase.Setup(x => x.Request.CurrentExecutionFilePath).Returns("SomePathOrOther");
-            
+
             ActionResultResponse = Unit.Index(challengeEntry).Result;
 
             Assert.IsInstanceOf<RedirectResult>(ActionResultResponse);
-            var url = ((RedirectResult)ActionResultResponse).Url;
+            var url = ((RedirectResult) ActionResultResponse).Url;
 
             Assert.AreEqual($"SomePathOrOther?url={challengeEntry.Url}&hasError=true", url);
         }

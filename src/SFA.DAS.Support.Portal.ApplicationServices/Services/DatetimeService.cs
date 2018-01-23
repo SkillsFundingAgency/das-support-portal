@@ -6,7 +6,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     {
         private const int FirstFiscalYearMonth = 4;
         private const int MonthsPerYear = 12;
-        
+
         public int GetYear(DateTime date)
         {
             return date.Month >= FirstFiscalYearMonth ? date.Year : date.Year - 1;

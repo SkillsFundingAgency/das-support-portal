@@ -7,9 +7,8 @@ using SFA.DAS.Support.Shared.SiteConnection;
 namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
 {
     [TestFixture]
-    public class StrategyForClientErrorStatusCodeTests: StrategyTestBase<StrategyForClientErrorStatusCode>
+    public class StrategyForClientErrorStatusCodeTests : StrategyTestBase<StrategyForClientErrorStatusCode>
     {
-       
         [TestCase(HttpStatusCode.BadRequest)]
         [TestCase(HttpStatusCode.PaymentRequired)]
         [TestCase(HttpStatusCode.MethodNotAllowed)]
@@ -29,29 +28,30 @@ namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
         public void ItShouldLogErrorThenDecideToReturnNullWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.ReturnNull;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Error( It.IsAny<Exception>(), It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once());
             Assert.IsNotNull(_httpClient.DefaultRequestHeaders.Authorization);
         }
 
-        
+
         [TestCase(HttpStatusCode.Unauthorized)]
         public void ItShouldLogWarningDecideToReturnNullAndRemoveAuthorisationHeaderWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.ReturnNull;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Warn( It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Warn(It.IsAny<string>()), Times.Once());
             Assert.IsNull(_httpClient.DefaultRequestHeaders.Authorization);
         }
+
         [TestCase(HttpStatusCode.Forbidden)]
         public void ItShouldLogWarningDecideToReturnNullAndNotRemoveAuthorisationHeaderWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.ReturnNull;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Warn( It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Warn(It.IsAny<string>()), Times.Once());
             Assert.IsNotNull(_httpClient.DefaultRequestHeaders.Authorization);
         }
 
@@ -60,10 +60,9 @@ namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
         public void ItShouldLogWarnAndDecideToReturnNullWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.ReturnNull;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Warn( It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Warn(It.IsAny<string>()), Times.Once());
         }
-
     }
 }

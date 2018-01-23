@@ -6,9 +6,8 @@ using SFA.DAS.Support.Shared.SiteConnection;
 namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
 {
     [TestFixture]
-    public class StrategyForRedirectionStatusCodeTests: StrategyTestBase<StrategyForRedirectionStatusCode>
+    public class StrategyForRedirectionStatusCodeTests : StrategyTestBase<StrategyForRedirectionStatusCode>
     {
-       
         [TestCase(HttpStatusCode.MultipleChoices)]
         [TestCase(HttpStatusCode.Ambiguous)]
         [TestCase(HttpStatusCode.MovedPermanently)]
@@ -25,10 +24,9 @@ namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
         public void ItShouldLogInfoAndDecideToReturnNullWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.ReturnNull;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Info(It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Info(It.IsAny<string>()), Times.Once());
         }
-
     }
 }

@@ -29,7 +29,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             {
                 response.StatusCode = SearchResponseCodes.Success;
                 response.Account = account;
-                response.Balance = account.Transactions.Any() ? account.Transactions.First().Balance : await _accountRepository.GetAccountBalance(message.Id);
+                response.Balance = account.Transactions.Any()
+                    ? account.Transactions.First().Balance
+                    : await _accountRepository.GetAccountBalance(message.Id);
             }
 
             return response;

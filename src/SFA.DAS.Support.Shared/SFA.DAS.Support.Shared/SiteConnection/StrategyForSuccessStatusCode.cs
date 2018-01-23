@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using SFA.DAS.NLog.Logger;
 
@@ -13,13 +12,14 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             _logger = logger;
         }
+
         public HttpStatusCode Low { get; set; } = HttpStatusCode.OK;
         public HttpStatusCode High { get; set; } = HttpStatusCode.PartialContent;
-        public HttpStatusCode[] ExcludeStatuses { get; set; } = new HttpStatusCode[] { };
+        public HttpStatusCode[] ExcludeStatuses { get; set; } = { };
 
         public HttpStatusCodeDecision Handle(HttpClient client, HttpStatusCode status)
         {
-            _logger.Info( $"Http Status Code ({(int)status}) {status} returned from Site Connector Request");
+            _logger.Info($"Http Status Code ({(int) status}) {status} returned from Site Connector Request");
             return HttpStatusCodeDecision.Continue;
         }
     }

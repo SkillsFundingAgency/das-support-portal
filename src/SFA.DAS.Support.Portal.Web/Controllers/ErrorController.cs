@@ -7,7 +7,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     [AllowAnonymous]
     public sealed class ErrorController : Controller
     {
-
         [HttpGet]
         [AllowAnonymous]
         public ViewResult BadRequest()

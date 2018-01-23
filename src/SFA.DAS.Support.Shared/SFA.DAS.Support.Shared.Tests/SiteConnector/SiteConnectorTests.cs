@@ -7,11 +7,9 @@ using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 {
-
     [TestFixture]
     public class SiteConnectorTests : SiteConnectorTestBase
     {
-       
         [TestCase(HttpStatusCode.Ambiguous)] // 300
         [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Conflict)] // 409
@@ -20,7 +18,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         [TestCase(HttpStatusCode.BadGateway)] // 502
         public async Task ItShouldReturnNullWhenDownloadTypeRecievesHttpStatus(HttpStatusCode code)
         {
-
             MockHttpMessageHandler
                 .When(TestUrlMatch)
                 .Respond(code, "application/json", ValidTestResponseData)
@@ -42,13 +39,12 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(code, "application/json", "{}")
                 ;
 
-            var actual =  await Unit.Download(TestUrlMatch);
+            var actual = await Unit.Download(TestUrlMatch);
             Assert.IsNull(Unit.LastException);
             Assert.AreEqual(code, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.ReturnNull, Unit.HttpStatusCodeDecision);
             Assert.IsNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNull(actual);
-            
         }
 
         [Test]
@@ -59,14 +55,13 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
 
             var actual = await Unit.Download(TestUrl);
-            
+
             Assert.IsNull(Unit.LastException);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNotNull(actual);
             Assert.IsInstanceOf<string>(actual);
-
         }
 
         [Test]
@@ -77,15 +72,14 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
 
             var actual = await Unit.Download<TestType>(TestUri);
-            
-            
+
+
             Assert.IsNull(Unit.LastException);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNotNull(actual);
             Assert.IsInstanceOf<TestType>(actual);
-
         }
 
         [Test]
@@ -96,14 +90,13 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
 
             var actual = await Unit.Download<TestType>(TestUrl);
-            
+
             Assert.IsNull(Unit.LastException);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNotNull(actual);
             Assert.IsInstanceOf<TestType>(actual);
-
         }
 
         [Test]
@@ -113,19 +106,16 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .When(TestUrlMatch)
                 .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
 
-            var formData = new Dictionary<string, string> { { "key", "value" } };
+            var formData = new Dictionary<string, string> {{"key", "value"}};
             var actual = await Unit.Upload<TestType>(TestUri, formData);
-            
-            
+
+
             Assert.IsNull(Unit.LastException);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNotNull(actual);
             Assert.IsInstanceOf<TestType>(actual);
-
-
-
         }
     }
 }

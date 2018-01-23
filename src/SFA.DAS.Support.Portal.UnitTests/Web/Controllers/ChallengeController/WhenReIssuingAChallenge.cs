@@ -20,18 +20,18 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
             var url = "https://tempuri.org/challenge";
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<ChallengeQuery>()))
-                .ReturnsAsync(new ChallengeResponse()
+                .ReturnsAsync(new ChallengeResponse
                 {
                     Account = new Account(),
                     StatusCode = SearchResponseCodes.Success,
-                    Characters = new List<int>() { 1, 2 }
+                    Characters = new List<int> {1, 2}
                 });
             var actual = await Unit.Index(id, url, true);
 
             Assert.IsNotNull(actual);
             Assert.IsInstanceOf<ViewResult>(actual);
 
-            Assert.IsInstanceOf<ChallengeViewModel>(((ViewResult)actual).Model);
+            Assert.IsInstanceOf<ChallengeViewModel>(((ViewResult) actual).Model);
         }
     }
 }

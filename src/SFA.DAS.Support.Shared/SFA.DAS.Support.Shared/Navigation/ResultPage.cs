@@ -7,8 +7,7 @@ namespace SFA.DAS.Support.Shared.Navigation
     [ExcludeFromCodeCoverage]
     public class ResultPage<T>
     {
-        [JsonProperty("_links")]
-        public PageLinks Links { get; set; }
+        [JsonProperty("_links")] public PageLinks Links { get; set; }
 
         public IEnumerable<T> Results { get; set; }
         public int Size { get; set; }

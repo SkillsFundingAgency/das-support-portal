@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         {
             var indexerSettingsElasticServerUrls = _indexerSettings.ElasticServerUrls.ToList();
             ServicePointManager.SecurityProtocol =
-                                                   SecurityProtocolType.Tls12 
+                SecurityProtocolType.Tls12
                 ; /*
                                                      SecurityProtocolType.Ssl3 
                                                    | SecurityProtocolType.Tls 
@@ -33,13 +33,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 var myCertificateIgnoringHttpConnection = new MyCertificateIgnoringHttpConnection();
 
                 settings = new ConnectionSettings(
-                   connectionPool,
-                   myCertificateIgnoringHttpConnection);
+                    connectionPool,
+                    myCertificateIgnoringHttpConnection);
 
                 SetDefaultSettings(settings);
 
                 return new ElasticClient(settings);
-
             }
 
             settings = new ConnectionSettings(connectionPool);
@@ -47,15 +46,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             SetDefaultSettings(settings);
 
             return new ElasticClient(settings);
-
         }
 
         private void SetDefaultSettings(ConnectionSettings settings)
         {
             if (_indexerSettings.Elk5Enabled)
-            {
                 settings.BasicAuthentication(_indexerSettings.ElasticUsername, _indexerSettings.ElasticPassword);
-            }
         }
     }
 }

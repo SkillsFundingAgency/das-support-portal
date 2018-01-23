@@ -23,7 +23,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             };
 
             var record = await _accountRepository.Get(message.Id, AccountFieldsSelection.PayeSchemes);
-            
+
             if (record != null)
             {
                 response.StatusCode = SearchResponseCodes.Success;

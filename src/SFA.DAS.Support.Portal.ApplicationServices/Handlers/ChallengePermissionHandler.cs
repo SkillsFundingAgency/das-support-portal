@@ -6,12 +6,14 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class ChallengePermissionHandler : IAsyncRequestHandler<ChallengePermissionQuery, ChallengePermissionResponse>
+    public class
+        ChallengePermissionHandler : IAsyncRequestHandler<ChallengePermissionQuery, ChallengePermissionResponse>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IChallengeRepository _challengeRepository;
 
-        public ChallengePermissionHandler(IAccountRepository accountRepository, IChallengeRepository challengeRepository)
+        public ChallengePermissionHandler(IAccountRepository accountRepository,
+            IChallengeRepository challengeRepository)
         {
             _accountRepository = accountRepository;
             _challengeRepository = challengeRepository;
@@ -34,9 +36,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
                 || !int.TryParse(message.Balance.Split('.')[0].Replace("£", string.Empty), out balance)
                 || message.ChallengeElement1.Length != 1
                 || message.ChallengeElement2.Length != 1)
-            {
                 return response;
-            }
 
             var record = await _accountRepository.Get(message.Id, AccountFieldsSelection.ChallengePayeSchemes);
 

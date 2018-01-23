@@ -31,10 +31,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views
         {
             var element = html?.QuerySelectorAll(selector);
 
-            if (element == null)
-            {
-                return null;
-            }
+            if (element == null) return null;
 
             return element.Any() ? element[index - 1] : null;
         }
@@ -51,9 +48,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views
 
         private static string GetTextContent(IHtmlCollection<IElement> querySelectorAll, int index)
         {
-            return !querySelectorAll.Any() || querySelectorAll.Length < index ?
-                null :
-                querySelectorAll?[index - 1]?.TextContent?.Replace("\r", string.Empty).Trim();
+            return !querySelectorAll.Any() || querySelectorAll.Length < index
+                ? null
+                : querySelectorAll?[index - 1]?.TextContent?.Replace("\r", string.Empty).Trim();
         }
     }
 }

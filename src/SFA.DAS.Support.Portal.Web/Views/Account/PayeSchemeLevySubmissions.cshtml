@@ -1,8 +1,6 @@
-﻿
-@using HMRC.ESFA.Levy.Api.Types
+﻿@using HMRC.ESFA.Levy.Api.Types
 @using SFA.DAS.Support.Portal.ApplicationServices.Responses
 @using SFA.DAS.Support.Portal.Web.Helpers
-@using SFA.DAS.Support.Portal.Web.Models
 @model SFA.DAS.Support.Portal.Web.ViewModels.PayeSchemeLevySubmissionViewModel
 @{
     ViewBag.modelTitle = Model.Account?.DasAccountName;
@@ -20,7 +18,7 @@
 
     var reference = selectedScheme?.Ref;
     var name = selectedScheme?.Name;
-}    
+}
 
 <h1 class="heading-xlarge">@reference Levy declarations</h1>
 <h4 class="paye-scheme-name">@name</h4>
@@ -80,7 +78,7 @@
         <p id="no-declarations-found">No declarations found for this PAYE scheme</p>
     }
 }
-else if(Model.Status == AccountLevySubmissionsResponseCodes.AccountNotFound)
+else if (Model.Status == AccountLevySubmissionsResponseCodes.AccountNotFound)
 {
     <p id="no-account-found">Couldn't find the account</p>
 }

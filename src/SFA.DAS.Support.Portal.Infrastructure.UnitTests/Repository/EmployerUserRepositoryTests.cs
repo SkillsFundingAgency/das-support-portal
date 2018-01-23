@@ -34,6 +34,23 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         private Mock<IAccountApiClient> _accountApiClient;
 
         [Test]
+        public async Task ItShouldReturnNullAndLogExceptionIfExceptionIsThrown()
+        {
+            var id = "123123";
+
+            _employerUsersApiClient.Setup(
+                    e => e.GetResource<UserViewModel>(It.IsAny<string>()))
+                .Throws(new Exception());
+
+            var response = await _unit.Get(id);
+            _nLogLogger.Verify(l => l.Debug(It.IsAny<string>()), Times.Once);
+
+            _nLogLogger.Verify(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
+
+            Assert.IsNull(response);
+        }
+
+        [Test]
         public async Task ItShouldReturnResultsWhenThereAreSearchMatches()
         {
             var page = 1;
@@ -82,50 +99,26 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
                 .Returns(Task.FromResult(accountSearchResponse));
 
             var response = await _unit.Search(searchTerm, page);
-            
+
             _accountApiClient.Verify(a => a.GetUserAccounts(It.IsAny<string>()),
                 Times.Exactly(searchResponse.Data.Count));
 
 
-            _nLogLogger.Verify(l=>
+            _nLogLogger.Verify(l =>
                 l.Debug(It.IsAny<string>()), Times.Exactly(searchResponse.Data.Count + 1));
 
-            
+
             CollectionAssert.IsNotEmpty(response.Results);
-
-        
-        }
-
-        [Test]
-        public async Task ItShouldReturnNullAndLogExceptionIfExceptionIsThrown()
-        {
-            
-            string id = "123123";
-
-            _employerUsersApiClient.Setup(
-                    e => e.GetResource<UserViewModel>(It.IsAny<string>()))
-                .Throws(new Exception());
-
-            var response = await _unit.Get(id);
-            _nLogLogger.Verify(l => l.Debug(It.IsAny<string>()), Times.Once);
-
-            _nLogLogger.Verify(l=>l.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
-
-            Assert.IsNull(response);
         }
 
         [Test]
         public async Task ItShouldReturnSearchResultIfExceptionIsNotThrown()
         {
-
-            string id = "123123";
+            var id = "123123";
 
             _employerUsersApiClient.Setup(
                     e => e.GetResource<UserViewModel>(It.IsAny<string>()))
-                .Returns( Task.FromResult(new UserViewModel()
-                {
-                    
-                }));
+                .Returns(Task.FromResult(new UserViewModel()));
 
             var response = await _unit.Get(id);
 
@@ -134,10 +127,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             _nLogLogger.Verify(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Never);
 
             Assert.IsNotNull(response);
-
-
-
         }
-
     }
 }

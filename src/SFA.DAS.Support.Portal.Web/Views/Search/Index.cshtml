@@ -9,20 +9,18 @@
 
 <style>
     @@media (min-width: 769px) {
-        #content {
-            padding-bottom: 10px !important;
-        }
+        #content { padding-bottom: 10px !important; }
     }
 </style>
 
 
 <div id="content" class="search no-search-term">
-    @using (Html.BeginForm("Index", "Search", FormMethod.Get, new { accept_charset = "utf-8", @class = "search-header search-header-2", role = "search" }))
+    @using (Html.BeginForm("Index", "Search", FormMethod.Get, new {accept_charset = "utf-8", @class = "search-header search-header-2", role = "search"}))
     {
         <div class="searchfield form-group">
             <fieldset class="search-input">
                 <h1 class="heading-large">Search</h1>
-                @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
+                @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new {id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100"})
 
                 @Html.HiddenFor(m => m.Page)
             </fieldset>
@@ -36,11 +34,11 @@
             <fieldset class="inline">
 
                 <div class="multiple-choice">
-                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new { id = "UserSearchType", @checked = "" })
+                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new {id = "UserSearchType", @checked = ""})
                     <label for="UserSearchType">Users</label>
                 </div>
                 <div class="multiple-choice">
-                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new { id = "AccountSearchType" })
+                    @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new {id = "AccountSearchType"})
                     <label for="AccountSearchType">Accounts</label>
                 </div>
 
@@ -56,7 +54,7 @@
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <h2 class="heading-large"> Results</h2>
-                        <p>  @Model.TotalAccountSearchItems accounts found</p>
+                        <p> @Model.TotalAccountSearchItems accounts found</p>
                     </div>
                 </div>
 
@@ -82,7 +80,7 @@
                                             @account.AccountID
                                         </td>
                                         <td>
-                                            @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
+                                            @Html.ActionLink("view", "Index", "Resource", new {key = "account", id = account.AccountID}, null)
                                         </td>
                                     </tr>
                                 }
@@ -93,18 +91,13 @@
 
                     @Pager()
                 }
-
-
             }
             else if (Model.UserSearchResults != null && Model.SearchType == SearchCategory.User)
             {
-
-
-
                 <div class="grid-row">
                     <div class="column-full">
                         <h2 class="heading-large"> Results</h2>
-                        <p>  @Model.TotalUserSearchItems users found</p>
+                        <p> @Model.TotalUserSearchItems users found</p>
                     </div>
                 </div>
 
@@ -133,7 +126,7 @@
                                             @user.Status
                                         </td>
                                         <td>
-                                            @Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null)
+                                            @Html.ActionLink("view", "Index", "Resource", new {key = "user", id = user.Id}, null)
                                         </td>
                                     </tr>
                                 }
@@ -144,7 +137,6 @@
                     </div>
 
                     @Pager()
-
                 }
             }
         </div>
@@ -153,39 +145,38 @@
 </div>
 
 
-
 @helper Pager()
-    {
-        <div class="grid-row">
-            <div class="column-full">
-                <div class="page-navigation">
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <div class="page-navigation">
 
 
 
-                    @if (Model.Page > 1)
-                    {
-                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
-                            <i class="arrow-button fa fa-angle-left"></i>
-                            <span class="description">Previous <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
-                        </a>
-                    }
+                @if (Model.Page > 1)
+                {
+                    <a href="@Url.Action("Index", new {Model.SearchTerm, Page = Model.Page - 1, Model.SearchType})" style="visibility: visible" class="page-navigation__btn prev">
+                        <i class="arrow-button fa fa-angle-left"></i>
+                        <span class="description">Previous <span class="hide-mob">page</span></span>
+                        <span class="counter">@Model.Page of @Model.LastPage</span>
+                    </a>
+                }
 
 
 
-                    @if (Model.Page != Model.LastPage)
-                    {
-                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn next">
-                            <i class="arrow-button fa fa-angle-right"></i>
-                            <span class="description">Next <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
-                        </a>
-                    }
+                @if (Model.Page != Model.LastPage)
+                {
+                    <a href="@Url.Action("Index", new {Model.SearchTerm, Page = Model.Page + 1, Model.SearchType})" style="visibility: visible" class="page-navigation__btn next">
+                        <i class="arrow-button fa fa-angle-right"></i>
+                        <span class="description">Next <span class="hide-mob">page</span></span>
+                        <span class="counter">@Model.Page of @Model.LastPage</span>
+                    </a>
+                }
 
-                </div>
+            </div>
 
 
-                @*<div class="pagination">
+            @*<div class="pagination">
 
 
                         @if (Model.Page > 1)
@@ -205,7 +196,6 @@
                         }
 
                     </div>*@
-            </div>
         </div>
+    </div>
 }
-

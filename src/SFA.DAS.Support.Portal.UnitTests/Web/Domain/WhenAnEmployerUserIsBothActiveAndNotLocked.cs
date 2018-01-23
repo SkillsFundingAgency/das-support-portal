@@ -19,6 +19,5 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Domain
         {
             Assert.AreEqual(UserStatus.Active, Unit.Status);
         }
-
     }
 }

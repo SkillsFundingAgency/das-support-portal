@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace SFA.DAS.Support.Portal.Web
 {
     [ExcludeFromCodeCoverage]
-    public sealed class ApplicationInsightsInitializer : Microsoft.ApplicationInsights.Extensibility.ITelemetryInitializer
+    public sealed class ApplicationInsightsInitializer : ITelemetryInitializer
     {
         public void Initialize(ITelemetry telemetry)
         {

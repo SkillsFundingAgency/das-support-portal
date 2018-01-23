@@ -5,9 +5,10 @@ using SFA.DAS.Support.Portal.Web.ViewModels;
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SharedController
 {
     [TestFixture]
-    public class WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.SharedController>
+    public class
+        WhenCallingTheSharedControllerHeaderMethod : WhenTestingAnMvcControllerOfType<
+            Portal.Web.Controllers.SharedController>
     {
-
         [SetUp]
         public override void Setup()
         {
@@ -28,7 +29,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SharedController
         public void ItShouldReturnAUsernameInTheViewModel()
         {
             Assert.IsInstanceOf<HeaderViewModel>((ActionResultResponse as PartialViewResult).Model);
-            Assert.IsNotNull(((HeaderViewModel)(ActionResultResponse as PartialViewResult).Model).Username);
+            Assert.IsNotNull(((HeaderViewModel) (ActionResultResponse as PartialViewResult).Model).Username);
         }
     }
 }

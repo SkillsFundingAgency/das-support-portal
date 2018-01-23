@@ -24,6 +24,28 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         private Mock<IAccountRepository> _mockAccountRepository;
 
         [Test]
+        public async Task ItShouldQueryTheBalanceDirectlyIfNoTransactionsFound()
+        {
+            var id = "123";
+            _mockAccountRepository.Setup(r => r.Get(
+                    It.IsAny<string>(),
+                    It.Is<AccountFieldsSelection>(x => x == AccountFieldsSelection.Finance)))
+                .Returns(Task.FromResult(new Account
+                {
+                    Transactions = new List<TransactionViewModel>()
+                }));
+            _mockAccountRepository.Setup(r => r.GetAccountBalance(id)).Returns(Task.FromResult(100.99M));
+
+
+            var accountFinanceQuery = new AccountFinanceQuery(id);
+            var response = await Unit.Handle(accountFinanceQuery);
+
+            _mockAccountRepository.Verify(r => r.GetAccountBalance(id));
+
+            Assert.AreEqual(100.99M, response.Balance);
+        }
+
+        [Test]
         public async Task ItShouldReturnNoSearchResultsWithAnInvalidId()
         {
             var id = "123Invalid";
@@ -73,31 +95,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 
             Assert.AreEqual(100.99M, response.Balance);
         }
-
-        [Test]
-        public async Task ItShouldQueryTheBalanceDirectlyIfNoTransactionsFound()
-        {
-            var id = "123";
-            _mockAccountRepository.Setup(r => r.Get(
-                    It.IsAny<string>(),
-                    It.Is<AccountFieldsSelection>(x => x == AccountFieldsSelection.Finance)))
-                .Returns(Task.FromResult(new Account
-                {
-                    Transactions = new List<TransactionViewModel>
-                    {
-                       
-                    }
-                }));
-            _mockAccountRepository.Setup(r => r.GetAccountBalance(id)).Returns(Task.FromResult(100.99M));
-
-
-            var accountFinanceQuery = new AccountFinanceQuery(id);
-            var response = await Unit.Handle(accountFinanceQuery);
-
-            _mockAccountRepository.Verify(r=>r.GetAccountBalance(id));
-
-            Assert.AreEqual(100.99M, response.Balance);
-        }
-
     }
 }

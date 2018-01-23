@@ -11,8 +11,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public class ChallengeController : Controller
     {
-        private readonly IGrantPermissions _granter;
         private readonly IAccountRepository _accountRepository;
+        private readonly IGrantPermissions _granter;
         private readonly IMediator _mediator;
 
         public ChallengeController(IGrantPermissions granter,

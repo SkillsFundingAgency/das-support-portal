@@ -16,6 +16,5 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
             var aliasName = CreateIndexesAliasName(indexName, searchCategory);
             return $"{aliasName}_{DateTime.UtcNow.ToString("yyyyMMddHHmmss")}".ToLower();
         }
-
     }
 }

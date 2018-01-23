@@ -6,7 +6,6 @@ namespace SFA.DAS.Support.Portal.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-           
         }
     }
 }

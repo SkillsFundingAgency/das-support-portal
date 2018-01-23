@@ -18,13 +18,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var result = await Unit.GetResourcePage("resourcekey", "id");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
-        [Test]
-        public void ItShouldThrowAnExceptionIfTheSiteBaseUrlIsNull()
-        {
-            TestSiteManifest.BaseUrl = null;
-            Assert.ThrowsAsync<NullReferenceException>(() =>
-                Unit.GetResourcePage("resourcekey", "id"));
-        }
+
         [Test]
         public async Task ItShouldReturnTheHtmlPage()
         {
@@ -39,6 +33,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         public void ItShouldThrowAnExceptionIfTheKeyIsNotFound()
         {
             Assert.ThrowsAsync<KeyNotFoundException>(() => Unit.GetResourcePage("key", "id"));
+        }
+
+        [Test]
+        public void ItShouldThrowAnExceptionIfTheSiteBaseUrlIsNull()
+        {
+            TestSiteManifest.BaseUrl = null;
+            Assert.ThrowsAsync<NullReferenceException>(() =>
+                Unit.GetResourcePage("resourcekey", "id"));
         }
     }
 }

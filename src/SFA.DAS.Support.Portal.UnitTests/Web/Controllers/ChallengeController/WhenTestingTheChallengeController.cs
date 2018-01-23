@@ -14,12 +14,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
         WhenTestingTheChallengeController : WhenTestingAnMvcControllerOfType<Portal.Web.Controllers.ChallengeController>
     {
         protected Mock<IAccountRepository> AccountRepository;
+        protected Mock<HttpContextBase> MockContextBase;
         protected Mock<IGrantPermissions> MockGranter;
         protected Mock<IMediator> MockMediator;
-        protected Mock<HttpContextBase> MockContextBase;
-        protected ControllerContext UnitControllerContext;
         protected Mock<HttpResponseBase> MockResponse;
         protected Mock<IPrincipal> MockUser;
+        protected ControllerContext UnitControllerContext;
 
         [SetUp]
         public override void Setup()

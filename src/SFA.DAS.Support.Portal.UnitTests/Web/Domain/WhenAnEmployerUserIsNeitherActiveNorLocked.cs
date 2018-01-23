@@ -19,6 +19,5 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Domain
         {
             Assert.AreEqual(UserStatus.Unverified, Unit.Status);
         }
-
     }
 }

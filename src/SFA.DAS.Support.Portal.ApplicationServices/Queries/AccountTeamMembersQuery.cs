@@ -5,11 +5,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
     public class AccountTeamMembersQuery : IAsyncRequest<AccountDetailTeamMembersResponse>
     {
-        public string Id { get; private set; }
-
         public AccountTeamMembersQuery(string id)
         {
             Id = id;
         }
+
+        public string Id { get; }
     }
 }

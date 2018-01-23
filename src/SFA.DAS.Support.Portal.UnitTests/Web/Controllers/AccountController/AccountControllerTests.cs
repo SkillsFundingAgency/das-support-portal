@@ -65,66 +65,73 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.AccountController
         private Mock<HttpContextBase> _mockContextBase;
 
         [Test]
-        public async Task ShouldReturnPayeSchemeLevySubmissionsAddedDate()
+        public async Task ItShouldReturnNotFoundIfNoTeamMemberMatchFound()
         {
-            var addedDate = DateTime.Today;
+            var id = "123";
+            var searchTerm = "something";
 
+            var membersResponse = new AccountDetailTeamMembersResponse
+            {
+                Account = new Account(),
+                StatusCode = SearchResponseCodes.NoSearchResultsFound
+            };
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountTeamMembersQuery>())).Returns(
+                Task.FromResult(membersResponse));
+
+            var actual = await _unit.TeamMembers(id, searchTerm);
+            Assert.IsInstanceOf<HttpNotFoundResult>(actual);
+        }
+
+        [Test]
+        public async Task ItShouldReturnTeamMembersIfMatchFound()
+        {
+            var id = "123";
+            var searchTerm = "something";
+
+            var membersResponse = new AccountDetailTeamMembersResponse
+            {
+                Account = new Account
+                {
+                    TeamMembers = new List<TeamMemberViewModel>
+                    {
+                        new TeamMemberViewModel {Email = "a@tempuri.org"}
+                    }
+                },
+                StatusCode = SearchResponseCodes.Success
+            };
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountTeamMembersQuery>())).Returns(
+                Task.FromResult(membersResponse));
+
+            var actual = await _unit.TeamMembers(id, searchTerm);
+            Assert.IsInstanceOf<ViewResult>(actual);
+            CollectionAssert.IsNotEmpty(((actual as ViewResult).Model as AccountDetailViewModel).Account.TeamMembers);
+        }
+
+
+        [Test]
+        public async Task ShouldRedirectToActionOnFinanceWhenNoPermissions()
+        {
             _mockChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(), It.IsAny<HttpResponseBase>(),
                     It.IsAny<IPrincipal>(), It.IsAny<string>()))
-                .Returns(true);
+                .Returns(false);
 
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountLevySubmissionsQuery>()))
-                .Returns(Task.FromResult(new AccountLevySubmissionsResponse
-                {
-                    Account = new Account
-                    {
-                        PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate}}
-                    }
-                }));
 
-            var result = await _unit.PayeSchemeLevySubmissions("1", "1");
-            var vr = result as ViewResult;
-            var vm = vr.Model as PayeSchemeLevySubmissionViewModel;
+            var result = await _unit.Finance("1", "1");
 
-            Assert.AreEqual(addedDate, vm.Account.PayeSchemes.ToList()[0].AddedDate);
+            Assert.IsInstanceOf<ActionResult>(result);
         }
 
         [Test]
         public async Task ShouldRedirectToActionOnPayeSchemeLevySubmissionsWhenNoPermissions()
         {
-            
             _mockChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(), It.IsAny<HttpResponseBase>(),
                     It.IsAny<IPrincipal>(), It.IsAny<string>()))
                 .Returns(false);
 
-          
+
             var result = await _unit.PayeSchemeLevySubmissions("1", "1");
 
             Assert.IsInstanceOf<ActionResult>(result);
-
-        }
-
-        [Test]
-        public async Task ShouldReturnPayeSchemesWhenRecordsFound()
-        {
-            
-            DateTime addedDate = DateTime.Today;
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountPayeSchemesQuery>()))
-                .Returns(Task.FromResult(new AccountPayeSchemesResponse
-                {
-                    Account = new Account
-                    {
-                        PayeSchemes = new List<PayeSchemeViewModel> { new PayeSchemeViewModel { AddedDate = addedDate } }
-                    },
-                    StatusCode = SearchResponseCodes.Success
-                }));
-
-            var result = await _unit.PayeSchemes("1", "1");
-
-            Assert.IsInstanceOf<ViewResult>(result);
-            Assert.IsInstanceOf<AccountDetailViewModel>((result as ViewResult).Model);
-            Assert.AreEqual(addedDate , ((result as ViewResult).Model as AccountDetailViewModel).Account.PayeSchemes.ToList()[0].AddedDate);
-
         }
 
         [Test]
@@ -140,25 +147,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.AccountController
             var result = await _unit.PayeSchemes("1", "1");
 
             Assert.IsInstanceOf<HttpNotFoundResult>(result);
-
         }
 
-
-
-        [Test]
-        public async Task ShouldRedirectToActionOnFinanceWhenNoPermissions()
-        {
-
-            _mockChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(), It.IsAny<HttpResponseBase>(),
-                    It.IsAny<IPrincipal>(), It.IsAny<string>()))
-                .Returns(false);
-
-
-            var result = await _unit.Finance("1", "1");
-
-            Assert.IsInstanceOf<ActionResult>(result);
-
-        }
         [Test]
         public async Task ShouldReturnIncorrectInformationEntered()
         {
@@ -217,22 +207,53 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.AccountController
             vr.Should().NotBeNull();
         }
 
+        [Test]
+        public async Task ShouldReturnPayeSchemeLevySubmissionsAddedDate()
+        {
+            var addedDate = DateTime.Today;
+
+            _mockChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(), It.IsAny<HttpResponseBase>(),
+                    It.IsAny<IPrincipal>(), It.IsAny<string>()))
+                .Returns(true);
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountLevySubmissionsQuery>()))
+                .Returns(Task.FromResult(new AccountLevySubmissionsResponse
+                {
+                    Account = new Account
+                    {
+                        PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate}}
+                    }
+                }));
+
+            var result = await _unit.PayeSchemeLevySubmissions("1", "1");
+            var vr = result as ViewResult;
+            var vm = vr.Model as PayeSchemeLevySubmissionViewModel;
+
+            Assert.AreEqual(addedDate, vm.Account.PayeSchemes.ToList()[0].AddedDate);
+        }
 
         [Test]
-        public async Task ShouldReturnTheIndexViewWhenRecordFound()
+        public async Task ShouldReturnPayeSchemesWhenRecordsFound()
         {
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountDetailOrganisationsQuery>()))
-                .Returns(Task.FromResult(new AccountDetailOrganisationsResponse
+            var addedDate = DateTime.Today;
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountPayeSchemesQuery>()))
+                .Returns(Task.FromResult(new AccountPayeSchemesResponse
                 {
-                    Account = new Account(),
+                    Account = new Account
+                    {
+                        PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate}}
+                    },
                     StatusCode = SearchResponseCodes.Success
                 }));
 
-
-            var result = await _unit.Index("112344", "Bob");
+            var result = await _unit.PayeSchemes("1", "1");
 
             Assert.IsInstanceOf<ViewResult>(result);
+            Assert.IsInstanceOf<AccountDetailViewModel>((result as ViewResult).Model);
+            Assert.AreEqual(addedDate,
+                ((result as ViewResult).Model as AccountDetailViewModel).Account.PayeSchemes.ToList()[0].AddedDate);
         }
+
         [Test]
         public async Task ShouldReturnTheFinanceViewWhenHasPermissionsAndRecordFound()
         {
@@ -252,44 +273,22 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.AccountController
 
             Assert.IsInstanceOf<ViewResult>(result);
         }
+
+
         [Test]
-        public async Task ItShouldReturnNotFoundIfNoTeamMemberMatchFound()
+        public async Task ShouldReturnTheIndexViewWhenRecordFound()
         {
-            string id = "123";
-            var searchTerm = "something";
-
-            var membersResponse = new AccountDetailTeamMembersResponse()
-            {
-                Account = new Account(),
-                StatusCode = SearchResponseCodes.NoSearchResultsFound
-            };
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountTeamMembersQuery>())).Returns(
-                Task.FromResult(membersResponse));
-
-            var actual = await _unit.TeamMembers(id, searchTerm);
-            Assert.IsInstanceOf<HttpNotFoundResult>(actual);
-        }
-        [Test]
-        public async Task ItShouldReturnTeamMembersIfMatchFound()
-        {
-            string id = "123";
-            var searchTerm = "something";
-
-            var membersResponse = new AccountDetailTeamMembersResponse()
-            {
-                Account = new Account() { TeamMembers = new List<TeamMemberViewModel>()
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountDetailOrganisationsQuery>()))
+                .Returns(Task.FromResult(new AccountDetailOrganisationsResponse
                 {
-                    new TeamMemberViewModel(){Email = "a@tempuri.org"}
-                }},
-                StatusCode = SearchResponseCodes.Success
-            };
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<AccountTeamMembersQuery>())).Returns(
-                Task.FromResult(membersResponse));
-            
-            var actual = await _unit.TeamMembers(id, searchTerm);
-            Assert.IsInstanceOf<ViewResult>(actual);
-            CollectionAssert.IsNotEmpty((((actual as ViewResult).Model as Portal.Web.ViewModels.AccountDetailViewModel).Account).TeamMembers);
+                    Account = new Account(),
+                    StatusCode = SearchResponseCodes.Success
+                }));
 
+
+            var result = await _unit.Index("112344", "Bob");
+
+            Assert.IsInstanceOf<ViewResult>(result);
         }
     }
 }

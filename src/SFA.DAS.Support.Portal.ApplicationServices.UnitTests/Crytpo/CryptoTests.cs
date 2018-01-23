@@ -2,17 +2,12 @@
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Portal.Core.Services;
-using SFA.DAS.Support.Portal.Infrastructure.Settings;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Crytpo
 {
     [TestFixture]
     public class CryptoTests
     {
-        private ICrypto _unit;
-        private Mock<ICryptoSettings> _mockSettings;
-     
         [SetUp]
         public void Setup()
         {
@@ -22,19 +17,18 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Crytpo
             _mockSettings.SetupGet(x => x.Secret).Returns("SECRETSQUIRREL");
 
             _unit = new Crypto(_mockSettings.Object);
-
         }
+
+        private ICrypto _unit;
+        private Mock<ICryptoSettings> _mockSettings;
 
         [Test]
         public void ItShouldEncryptAndDecryptSymmetrically()
         {
-            string expected = "123456";
+            var expected = "123456";
             var encryptedValue = _unit.EncryptStringAES(expected);
             var actual = _unit.DecryptStringAES(encryptedValue);
             Assert.AreEqual(expected, actual);
         }
-
-
-
     }
 }

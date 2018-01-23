@@ -5,11 +5,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
     public class EmployerUserQuery : IAsyncRequest<EmployerUserResponse>
     {
-        public string Id { get; private set; }
-
         public EmployerUserQuery(string id)
         {
             Id = id;
         }
+
+        public string Id { get; }
     }
 }

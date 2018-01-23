@@ -15,7 +15,8 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         private const string ServiceName = "SFA.DAS.Support.Portal.Indexer.Worker";
         private const string Version = "1.0";
-          public DefaultRegistry()
+
+        public DefaultRegistry()
         {
             For<IRequestContext>().Use<FakeRequestContext>();
 
@@ -26,7 +27,7 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
 
-            WebConfiguration configuration = GetConfiguration();
+            var configuration = GetConfiguration();
             For<IWebConfiguration>().Use(configuration);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);
@@ -37,9 +38,11 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         {
             var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? "LOCAL";
 
-            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ?? "UseDevelopmentStorage=true;";
+            var storageConnectionString =
+                CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
+                "UseDevelopmentStorage=true;";
 
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); 
+            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
 
             var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
 

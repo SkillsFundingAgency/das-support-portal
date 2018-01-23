@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
@@ -21,7 +20,7 @@ namespace SFA.DAS.Support.Portal.Web.Services
             _mapper = Configuration.CreateMapper();
         }
 
-        public MapperConfiguration Configuration { get; private set; }
+        public MapperConfiguration Configuration { get; }
 
         public TDest Map<TSource, TDest>(TSource source)
         {
@@ -64,16 +63,22 @@ namespace SFA.DAS.Support.Portal.Web.Services
         {
             cfg.CreateMap<SearchResponse, SearchResultsViewModel>()
                 .ForMember(x => x.ErrorMessage, y => y.Ignore())
-                .ForMember(x => x.AccountSearchResults, o => o.MapFrom(x => x.AccountSearchResult == null ? new List<AccountSearchModel>() : x.AccountSearchResult.Results))
+                .ForMember(x => x.AccountSearchResults,
+                    o => o.MapFrom(x =>
+                        x.AccountSearchResult == null ? new List<AccountSearchModel>() : x.AccountSearchResult.Results))
                 .ForMember(x => x.TotalAccountSearchItems, o => o.MapFrom(x => x.AccountSearchResult.TotalCount))
-                .ForMember(x => x.UserSearchResults, o => o.MapFrom(x => x.UserSearchResult == null ? new List<UserSearchModel>() : x.UserSearchResult.Results))
+                .ForMember(x => x.UserSearchResults,
+                    o => o.MapFrom(x =>
+                        x.UserSearchResult == null ? new List<UserSearchModel>() : x.UserSearchResult.Results))
                 .ForMember(x => x.TotalUserSearchItems, o => o.MapFrom(x => x.UserSearchResult.TotalCount))
-               .ForMember(x => x.LastPage, o => o.MapFrom(x => GetLastPage(x)));
+                .ForMember(x => x.LastPage, o => o.MapFrom(x => GetLastPage(x)));
         }
 
         private int GetLastPage(SearchResponse response)
         {
-            var lastPage = response.SearchType == SearchCategory.Account ? response.AccountSearchResult?.LastPage : response.UserSearchResult?.LastPage;
+            var lastPage = response.SearchType == SearchCategory.Account
+                ? response.AccountSearchResult?.LastPage
+                : response.UserSearchResult?.LastPage;
             return lastPage.GetValueOrDefault();
         }
 
@@ -83,7 +88,6 @@ namespace SFA.DAS.Support.Portal.Web.Services
             {
                 CreateEmployerUserSearchResultsMappings(cfg);
                 CreateSearchTableResultsMappings(cfg);
-
             });
         }
     }

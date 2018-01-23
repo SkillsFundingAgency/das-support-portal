@@ -13,22 +13,23 @@ using System.Web.Mvc;
 using Microsoft.IdentityModel.Protocols;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.SiteConnection;
+using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
 namespace SFA.DAS.Support.Shared.Authentication
 {
     [ExcludeFromCodeCoverage]
     public class TokenValidationFilter : FilterAttribute, IAuthorizationFilter
     {
-        private readonly ILog _logger;
+        private const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
         private static string _audience = string.Empty;
         private readonly string _authority;
+        private readonly ILog _logger;
+        private readonly string _scope;
+        private readonly string scopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
 
         private string _issuer = string.Empty;
         private List<SecurityToken> _signingTokens;
         private DateTime _stsMetadataRetrievalTime = DateTime.MinValue;
-        private readonly string scopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
-        private readonly string _scope;
-        const string AuthorityBaseUrl = "https://login.microsoftonline.com/";
 
         public TokenValidationFilter(ISiteValidatorSettings settings, ILog logger)
         {
@@ -37,7 +38,8 @@ namespace SFA.DAS.Support.Shared.Authentication
             _authority = $"{AuthorityBaseUrl}{settings.Tenant}";
             _scope = settings.Scope;
         }
-        public void OnAuthorization(System.Web.Mvc.AuthorizationContext filterContext)
+
+        public void OnAuthorization(AuthorizationContext filterContext)
         {
             var request = filterContext.HttpContext.Request;
 
@@ -48,6 +50,7 @@ namespace SFA.DAS.Support.Shared.Authentication
                 filterContext.Result = new HttpUnauthorizedResult();
                 return;
             }
+
             var jwtToken = authHeader.Split(' ').LastOrDefault();
             if (jwtToken == null)
             {
@@ -56,20 +59,19 @@ namespace SFA.DAS.Support.Shared.Authentication
                 return;
             }
 
-            CancellationToken cancellationToken = new CancellationToken();
+            var cancellationToken = new CancellationToken();
             if (
-                DateTime.UtcNow.Subtract(_stsMetadataRetrievalTime).TotalHours > 24 || 
-                string.IsNullOrEmpty(_issuer) || 
+                DateTime.UtcNow.Subtract(_stsMetadataRetrievalTime).TotalHours > 24 ||
+                string.IsNullOrEmpty(_issuer) ||
                 _signingTokens == null
-                )
-            {
+            )
                 try
                 {
                     var stsDiscoveryEndpoint = $"{_authority}/.well-known/openid-configuration";
                     var configManager = new ConfigurationManager<OpenIdConnectConfiguration>(stsDiscoveryEndpoint);
                     var config = Task.Run(
-                        async () => await configManager.GetConfigurationAsync(cancellationToken).ConfigureAwait(false), 
-                        cancellationToken).Result; 
+                        async () => await configManager.GetConfigurationAsync(cancellationToken).ConfigureAwait(false),
+                        cancellationToken).Result;
                     _issuer = config.Issuer;
                     _signingTokens = config.SigningTokens.ToList();
                     _stsMetadataRetrievalTime = DateTime.UtcNow;
@@ -80,7 +82,7 @@ namespace SFA.DAS.Support.Shared.Authentication
                     filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
                     return;
                 }
-            }
+
             var issuer = _issuer;
             var signingTokens = _signingTokens;
 
@@ -106,8 +108,8 @@ namespace SFA.DAS.Support.Shared.Authentication
                 if (ClaimsPrincipal.Current.FindFirst(scopeClaimType) != null &&
                     ClaimsPrincipal.Current.FindFirst(scopeClaimType).Value != _scope)
                 {
-                    _logger.Warn($"The supplied token does not provide the required scope" );
-                    filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden );
+                    _logger.Warn($"The supplied token does not provide the required scope");
+                    filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
                 }
             }
             catch (SecurityTokenValidationException e)
@@ -117,11 +119,9 @@ namespace SFA.DAS.Support.Shared.Authentication
             }
             catch (Exception e)
             {
-                _logger.Error(e , $"An exception has occurred validating the supplied token");
+                _logger.Error(e, $"An exception has occurred validating the supplied token");
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
         }
-
-       
     }
 }

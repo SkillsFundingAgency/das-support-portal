@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
@@ -13,5 +12,4 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         HttpStatusCodeDecision Handle(HttpClient client, HttpStatusCode status);
     }
-
 }

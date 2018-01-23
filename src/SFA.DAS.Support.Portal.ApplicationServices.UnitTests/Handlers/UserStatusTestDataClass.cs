@@ -8,7 +8,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
     {
         public static IEnumerable UserStatusTestCases
         {
-            get { yield return new TestCaseData(false, true).SetName("CheckThatAnInActiveAndLockedUserHasAnUnverifiedStatus").Returns(UserStatus.Unverified); }
+            get
+            {
+                yield return new TestCaseData(false, true)
+                    .SetName("CheckThatAnInActiveAndLockedUserHasAnUnverifiedStatus").Returns(UserStatus.Unverified);
+            }
         }
     }
 }

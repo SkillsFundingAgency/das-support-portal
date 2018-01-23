@@ -7,15 +7,14 @@ using System.Reflection;
 using System.Security.Claims;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Core.Services;
-using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
 {
     [ExcludeFromCodeCoverage]
     public class LoggingPropertyFactory : ILoggingPropertyFactory
     {
-        private readonly IRoleSettings _roleSettings;
         private readonly IGetCurrentIdentity _getCurrentIdentity;
+        private readonly IRoleSettings _roleSettings;
 
         public LoggingPropertyFactory(IRoleSettings roleSettings, IGetCurrentIdentity getCurrentIdentity)
         {
@@ -34,10 +33,10 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 throw;
             }
-            
+
             return properties;
         }
 
@@ -53,36 +52,20 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
                 return "Anonymous user";
             }
 
-            if (identity == null)
-            {
-                return "Identity is null";
-            }
+            if (identity == null) return "Identity is null";
 
-            if (identity.Claims == null)
-            {
-                return "Identity claims are null";
-            }
+            if (identity.Claims == null) return "Identity claims are null";
 
             var roles = new List<Claim>();
 
             if (identity.Claims.Any() && identity.Claims.Count(x => x.Type == ClaimTypes.Role) > 0)
-            {
                 roles = identity.Claims.Where(x => x.Type == ClaimTypes.Role).ToList();
-            }
             else
-            {
                 return "No user role available";
-            }
 
-            if (roles.Any(x => x.Value == _roleSettings.T2Role))
-            {
-                return "T2User";
-            }
+            if (roles.Any(x => x.Value == _roleSettings.T2Role)) return "T2User";
 
-            if (roles.Any(x => x.Value == _roleSettings.ConsoleUserRole))
-            {
-                return "ConsoleUser";
-            }
+            if (roles.Any(x => x.Value == _roleSettings.ConsoleUserRole)) return "ConsoleUser";
 
             return string.Empty;
         }
@@ -100,23 +83,14 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             }
 
 
-            if (identity == null)
-            {
-                return "Identity is null";
-            }
+            if (identity == null) return "Identity is null";
 
-            if (identity.Claims == null)
-            {
-                return "Identity claims are null";
-            }
+            if (identity.Claims == null) return "Identity claims are null";
 
             if (identity.Claims.Any() && identity.Claims.Count(x => x.Type == ClaimTypes.Email) > 0)
-            {
                 return identity.Claims.Single(x => x.Type == ClaimTypes.Email).Value;
-            }
-            
+
             return "No user email available";
-            
         }
 
         private string GetVersion()

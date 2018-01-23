@@ -11,58 +11,36 @@ using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.Navigation;
 using SFA.DAS.Support.Shared.SiteConnection;
 
-
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
     public class ManifestRepository : IManifestRepository
     {
-        private readonly ISiteConnector _siteConnector;
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
         private readonly ISiteSettings _settings;
-        private List<SiteManifest> _manifests ;
-        private IDictionary<string, SiteResource> _resources;
-        private IDictionary<string, SiteChallenge> _challenges;
+        private readonly ISiteConnector _siteConnector;
+        private List<SiteManifest> _manifests;
 
-        public ManifestRepository(ISiteSettings settings, 
-            ISiteConnector siteConnector, 
-            IFormMapper formMapper, 
-            ILog log, 
-            List<SiteManifest> manifests,Dictionary<string, SiteResource> resources,
+        public ManifestRepository(ISiteSettings settings,
+            ISiteConnector siteConnector,
+            IFormMapper formMapper,
+            ILog log,
+            List<SiteManifest> manifests, Dictionary<string, SiteResource> resources,
             Dictionary<string, SiteChallenge> challenges
-            )
+        )
         {
             _siteConnector = siteConnector;
             _formMapper = formMapper;
             _log = log;
             _settings = settings;
             _manifests = manifests;
-            _resources = resources;
-            _challenges = challenges;
+            Resources = resources;
+            Challenges = challenges;
         }
 
-        private async Task PollSites()
-        {
-            if (_manifests.Any() && _resources.Any() && _challenges.Any()) return;
-            _manifests = await LoadManifest();
-            _resources = new Dictionary<string, SiteResource>();
-            _challenges = new Dictionary<string, SiteChallenge>();
-            foreach (var siteManifest in _manifests)
-            {
-                foreach (var item in siteManifest.Resources ?? new List<SiteResource>())
-                {
-                    _resources.Add(item.ResourceKey, item);
-                }
-                foreach (var item in siteManifest.Challenges ?? new List<SiteChallenge>())
-                {
-                    _challenges.Add(item.ChallengeKey, item);
-                }
-            }
-        }
+        private IDictionary<string, SiteResource> Resources { get; set; }
 
-        private IDictionary<string, SiteResource> Resources => _resources;
-
-        private IDictionary<string, SiteChallenge> Challenges => _challenges;
+        private IDictionary<string, SiteChallenge> Challenges { get; set; }
 
         public async Task<bool> ChallengeExists(string key)
         {
@@ -75,14 +53,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             await PollSites();
             var challenge = Challenges[FormatKey(key)];
             var site = _manifests.FirstOrDefault(x =>
-                    x.Challenges.Select(y => FormatKey(y.ChallengeKey))
+                x.Challenges.Select(y => FormatKey(y.ChallengeKey))
                     .Contains(key.ToLower()));
             if (site == null || site.BaseUrl == null)
-            {
                 throw new NullReferenceException(
                     $"The challenge {FormatKey(key)} could not be found in any manifest"
-                    );
-            }
+                );
 
             challenge.ChallengeUrlFormat = new Uri(new Uri(site.BaseUrl), challenge.ChallengeUrlFormat).ToString();
             return await Task.FromResult(challenge);
@@ -97,10 +73,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<object> GenerateHeader(string key, string id)
         {
             var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey))
-            {
-                return "";
-            }
+            if (!await ResourceExists(headerKey)) return "";
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);
@@ -122,10 +95,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var challengekey = "challengeKey";
             var key = formData[challengekey];
 
-            if (!await ChallengeExists(key))
-            {
-                throw new MissingMemberException();
-            }
+            if (!await ChallengeExists(key)) throw new MissingMemberException();
 
             var site = FindSiteForChallenge(key);
             var uri = new Uri(site, innerAction);
@@ -136,7 +106,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var html = await _siteConnector.Upload<string>(uri, formData);
 
             if (string.IsNullOrWhiteSpace(html))
-                return new ChallengeResult { RedirectUrl = redirect };
+                return new ChallengeResult {RedirectUrl = redirect};
 
             return new ChallengeResult
             {
@@ -150,30 +120,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return _manifests;
         }
 
-        private Uri FindSiteForChallenge(string key)
-        {
-            var lowerCasedKey = key.ToLower();
-
-            var siteManifest = _manifests
-                    .First(x => x.Challenges.Select(y => y.ChallengeKey.ToLower())
-                            .Contains(lowerCasedKey)
-                            );
-
-            // DEV NOTES:  ASCS-87 - The design requries that all challenge keys are unique across all sites.
-            // Its possible for two or more sites to have same challenge key by accident. 
-            // Then this may return wrong one.
-            return new Uri(siteManifest.BaseUrl);
-        }
-
         public async Task<SiteResource> GetResource(string key)
         {
             await PollSites();
             var resource = Resources[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x => x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
+            var site = _manifests.FirstOrDefault(x =>
+                x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
             if (site == null || site.BaseUrl == null)
-            {
                 throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
-            }
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
             return await Task.FromResult(resource);
         }
@@ -188,6 +142,43 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             return navViewModel;
+        }
+
+        public async Task<string> GetResourcePage(string key, string id)
+        {
+            var resource = await GetResource(key);
+            var url = string.Format(resource.ResourceUrlFormat, id);
+            return await GetPage(url);
+        }
+
+        private async Task PollSites()
+        {
+            if (_manifests.Any() && Resources.Any() && Challenges.Any()) return;
+            _manifests = await LoadManifest();
+            Resources = new Dictionary<string, SiteResource>();
+            Challenges = new Dictionary<string, SiteChallenge>();
+            foreach (var siteManifest in _manifests)
+            {
+                foreach (var item in siteManifest.Resources ?? new List<SiteResource>())
+                    Resources.Add(item.ResourceKey, item);
+                foreach (var item in siteManifest.Challenges ?? new List<SiteChallenge>())
+                    Challenges.Add(item.ChallengeKey, item);
+            }
+        }
+
+        private Uri FindSiteForChallenge(string key)
+        {
+            var lowerCasedKey = key.ToLower();
+
+            var siteManifest = _manifests
+                .First(x => x.Challenges.Select(y => y.ChallengeKey.ToLower())
+                    .Contains(lowerCasedKey)
+                );
+
+            // DEV NOTES:  ASCS-87 - The design requries that all challenge keys are unique across all sites.
+            // Its possible for two or more sites to have same challenge key by accident. 
+            // Then this may return wrong one.
+            return new Uri(siteManifest.BaseUrl);
         }
 
         private IEnumerable<NavItem> GetNavItems(string key, string id)
@@ -220,13 +211,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                     Key = x.Key,
                     Href = $"/resource?key={x.Key}&id={id}"
                 };
-        }
-
-        public async Task<string> GetResourcePage(string key, string id)
-        {
-            var resource = await GetResource(key);
-            var url = string.Format(resource.ResourceUrlFormat, id);
-            return await GetPage(url);
         }
 
         private async Task<string> GetPage(string url)
@@ -262,7 +246,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private async Task<List<SiteManifest>> LoadManifest()
         {
             var list = new Dictionary<string, SiteManifest>();
-            var sites = _settings.BaseUrls.Split( new []{','}, StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x));
+            var sites = _settings.BaseUrls.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => !string.IsNullOrWhiteSpace(x));
             foreach (var site in sites)
             {
                 var uri = new Uri(new Uri(site), "api/manifest");
@@ -274,10 +259,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 }
                 catch (Exception ex)
                 {
-                    _log.Error(ex, $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
+                    _log.Error(ex,
+                        $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
                 }
-
             }
+
             return list.Values.ToList();
         }
     }

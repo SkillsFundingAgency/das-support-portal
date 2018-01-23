@@ -29,7 +29,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             _mockLogger = new Mock<ILog>();
 
 
-            _sut = new AccountLevySubmissionsHandler(_mockAccountRepository.Object, _mockLevySubmissionsRepository.Object,
+            _sut = new AccountLevySubmissionsHandler(_mockAccountRepository.Object,
+                _mockLevySubmissionsRepository.Object,
                 _mockPayeSchemeObfuscator.Object, _mockLogger.Object);
         }
 
@@ -45,7 +46,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             const string id = "1";
             const string position = "4";
             var message = new AccountLevySubmissionsQuery(id, position);
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult((Account) null));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult((Account) null));
             var actual = _sut.Handle(message);
             actual.Result.StatusCode.Should().Be(AccountLevySubmissionsResponseCodes.AccountNotFound);
         }
@@ -68,7 +70,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
 
             var actual = _sut.Handle(message);
 
@@ -93,7 +96,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
 
             var actual = _sut.Handle(message);
 
@@ -114,13 +118,22 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 {
                     new PayeSchemeViewModel {Ref = "ref 0"},
                     new PayeSchemeViewModel {Ref = "ref 1"},
-                    new PayeSchemeViewModel {Ref = selectedPayeSchemeRef, AddedDate = new DateTime(2017, 01, 01), RemovedDate = null, Name = "name 2", DasAccountId = "12345"},
+                    new PayeSchemeViewModel
+                    {
+                        Ref = selectedPayeSchemeRef,
+                        AddedDate = new DateTime(2017, 01, 01),
+                        RemovedDate = null,
+                        Name = "name 2",
+                        DasAccountId = "12345"
+                    },
                     new PayeSchemeViewModel {Ref = "ref 3"}
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
-            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef)).Throws(new EntityNotFoundException("error message", selectedPayeSchemeRef, null));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
+            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef))
+                .Throws(new EntityNotFoundException("error message", selectedPayeSchemeRef, null));
             var actual = _sut.Handle(message);
 
             actual.Result.StatusCode.Should().Be(AccountLevySubmissionsResponseCodes.DeclarationsNotFound);
@@ -140,13 +153,22 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 {
                     new PayeSchemeViewModel {Ref = "ref 0"},
                     new PayeSchemeViewModel {Ref = "ref 1"},
-                    new PayeSchemeViewModel {Ref = selectedPayeSchemeRef, AddedDate = new DateTime(2017, 01, 01), RemovedDate = null, Name = "name 2", DasAccountId = "12345"},
+                    new PayeSchemeViewModel
+                    {
+                        Ref = selectedPayeSchemeRef,
+                        AddedDate = new DateTime(2017, 01, 01),
+                        RemovedDate = null,
+                        Name = "name 2",
+                        DasAccountId = "12345"
+                    },
                     new PayeSchemeViewModel {Ref = "ref 3"}
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
-            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef)).Returns(Task.FromResult(new LevyDeclarations()));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
+            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef))
+                .Returns(Task.FromResult(new LevyDeclarations()));
 
 
             var actual = _sut.Handle(message);
@@ -169,13 +191,22 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 {
                     new PayeSchemeViewModel {Ref = "ref 0"},
                     new PayeSchemeViewModel {Ref = "ref 1"},
-                    new PayeSchemeViewModel {Ref = selectedPayeSchemeRef, AddedDate = new DateTime(2017, 01, 01), RemovedDate = null, Name = "name 2", DasAccountId = "12345"},
+                    new PayeSchemeViewModel
+                    {
+                        Ref = selectedPayeSchemeRef,
+                        AddedDate = new DateTime(2017, 01, 01),
+                        RemovedDate = null,
+                        Name = "name 2",
+                        DasAccountId = "12345"
+                    },
                     new PayeSchemeViewModel {Ref = "ref 3"}
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
-            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef)).Returns(Task.FromResult((LevyDeclarations) null));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
+            _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef))
+                .Returns(Task.FromResult((LevyDeclarations) null));
             var actual = _sut.Handle(message);
 
             actual.Result.StatusCode.Should().Be(AccountLevySubmissionsResponseCodes.Success);
@@ -195,12 +226,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 {
                     new PayeSchemeViewModel {Ref = "ref 0"},
                     new PayeSchemeViewModel {Ref = "ref 1"},
-                    new PayeSchemeViewModel {Ref = selectedPayeSchemeRef, AddedDate = new DateTime(2017, 01, 01), RemovedDate = null, Name = "name 2", DasAccountId = "12345"},
+                    new PayeSchemeViewModel
+                    {
+                        Ref = selectedPayeSchemeRef,
+                        AddedDate = new DateTime(2017, 01, 01),
+                        RemovedDate = null,
+                        Name = "name 2",
+                        DasAccountId = "12345"
+                    },
                     new PayeSchemeViewModel {Ref = "ref 3"}
                 }
             };
 
-            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>())).Returns(Task.FromResult(account));
+            _mockAccountRepository.Setup(x => x.Get(id, It.IsAny<AccountFieldsSelection>()))
+                .Returns(Task.FromResult(account));
             _mockLevySubmissionsRepository.Setup(x => x.Get(selectedPayeSchemeRef)).Throws(new Exception());
 
             var actual = _sut.Handle(message);

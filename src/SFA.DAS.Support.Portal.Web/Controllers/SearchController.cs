@@ -1,14 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MediatR;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Portal.Web.ViewModels;
-using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Shared;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {

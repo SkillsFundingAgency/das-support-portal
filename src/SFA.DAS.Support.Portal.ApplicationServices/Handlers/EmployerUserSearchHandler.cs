@@ -9,9 +9,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
     public class EmployerUserSearchHandler : IAsyncRequestHandler<EmployerUserSearchQuery, EmployerUserSearchResponse>
     {
-        private readonly IEmployerUserRepository _repository;
-
         private readonly UserSummaryMapper _mapper;
+        private readonly IEmployerUserRepository _repository;
 
         public EmployerUserSearchHandler(IEmployerUserRepository repository)
         {
@@ -33,7 +32,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
             if (searchResults != null)
             {
-                response.StatusCode = searchResults.Results.Any() ? SearchResponseCodes.Success : SearchResponseCodes.NoSearchResultsFound;
+                response.StatusCode = searchResults.Results.Any()
+                    ? SearchResponseCodes.Success
+                    : SearchResponseCodes.NoSearchResultsFound;
                 response.Results = searchResults.Results.Select(x => _mapper.MapFromEmployerUserSummary(x));
                 response.LastPage = searchResults.LastPage;
 
@@ -43,8 +44,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             response.StatusCode = SearchResponseCodes.SearchFailed;
             return response;
         }
-
-
-        
     }
 }

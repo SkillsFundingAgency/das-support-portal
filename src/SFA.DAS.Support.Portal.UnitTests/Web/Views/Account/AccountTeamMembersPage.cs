@@ -50,16 +50,16 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views.Account
                     }
                 }
             };
-            
+
             var html = teamMembersPage.RenderAsHtml(model).ToAngleSharp();
 
-            this.GetPartial(html, "#teamMemberName").Should().Be("Test user 1");
-            this.GetPartial(html, "#teamMemberName", 2).Should().Be("Test user 2");
-            this.GetPartial(html, "#teamMemberName", 3).Should().Be("Test user 3");
+            GetPartial(html, "#teamMemberName").Should().Be("Test user 1");
+            GetPartial(html, "#teamMemberName", 2).Should().Be("Test user 2");
+            GetPartial(html, "#teamMemberName", 3).Should().Be("Test user 3");
 
-            this.GetPartial(html, "#teamMemberEmail").Should().Be("testUserEmail1");
-            this.GetPartial(html, "#teamMemberEmail", 2).Should().Contain("testUserEmail2");
-            this.GetPartial(html, "#teamMemberEmail", 3).Should().Contain("testUserEmail3");
+            GetPartial(html, "#teamMemberEmail").Should().Be("testUserEmail1");
+            GetPartial(html, "#teamMemberEmail", 2).Should().Contain("testUserEmail2");
+            GetPartial(html, "#teamMemberEmail", 3).Should().Contain("testUserEmail3");
         }
     }
 }

@@ -14,26 +14,28 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 {
     public class SiteConnectorTestBase
     {
-        protected MockHttpMessageHandler MockHttpMessageHandler;
-        protected HttpClient HttpClient;
-        protected Uri TestUri;
-        protected string ValidTestResponseData;
-        protected string EmptyJsonContent;
-        protected TestType TestType;
-        protected ISiteConnector Unit;
-        protected string TestUrlMatch;
         protected static string TestUrl = "http://localhost/api/user/1234";
-        protected Mock<IClientAuthenticator> MockClientAuthenticator;
-        protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
+        protected string EmptyJsonContent;
         protected List<IHttpStatusCodeStrategy> Handlers;
+        protected HttpClient HttpClient;
+        protected Mock<IClientAuthenticator> MockClientAuthenticator;
+        protected MockHttpMessageHandler MockHttpMessageHandler;
         protected Mock<ILog> MockLogger;
+        protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
+        protected TestType TestType;
+        protected Uri TestUri;
+        protected string TestUrlMatch;
+        protected ISiteConnector Unit;
+        protected string ValidTestResponseData;
+
         [SetUp]
         public void Setup()
         {
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
             MockLogger = new Mock<ILog>();
-            Handlers = new List<IHttpStatusCodeStrategy>() {
+            Handlers = new List<IHttpStatusCodeStrategy>
+            {
                 new StrategyForInformationStatusCode(MockLogger.Object),
                 new StrategyForSuccessStatusCode(MockLogger.Object),
                 new StrategyForRedirectionStatusCode(MockLogger.Object),
@@ -52,20 +54,18 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             TestUrl = "http://localhost/api/user/1234";
             TestUri = new Uri(TestUrl);
 
-            Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object, MockSiteConnectorSettings.Object, Handlers, MockLogger.Object);
+            Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object,
+                MockSiteConnectorSettings.Object, Handlers, MockLogger.Object);
 
 
             MockClientAuthenticator.Setup(x => x.Authenticate(It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => "mockToken_dndndndndndndndnd=");
-
         }
-        
+
         [TearDown]
         public void Teardown()
         {
-
         }
-        
     }
 }

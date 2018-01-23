@@ -8,7 +8,7 @@ namespace SFA.DAS.Support.Shared.Authentication
     [ExcludeFromCodeCoverage]
     public class ActiveDirectoryClientAuthenticator : IClientAuthenticator
     {
-        public async Task<string> Authenticate( string clientId, string appKey, string resourceId, string tenant)
+        public async Task<string> Authenticate(string clientId, string appKey, string resourceId, string tenant)
         {
             if (clientId == null) throw new ArgumentNullException(nameof(clientId));
             if (appKey == null) throw new ArgumentNullException(nameof(appKey));

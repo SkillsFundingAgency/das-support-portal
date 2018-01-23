@@ -1,54 +1,85 @@
-﻿@{var gtmTrackingId = System.Configuration.ConfigurationManager.AppSettings["ga.gtm.trackingid"];}
+﻿@using System.Configuration
+@using Microsoft.ApplicationInsights.Extensibility
+@{ var gtmTrackingId = ConfigurationManager.AppSettings["ga.gtm.trackingid"]; }
 @if (!string.IsNullOrEmpty(gtmTrackingId))
 {
     <!-- Google Tag Manager -->
     <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
-    {'gtm.start': new Date().getTime(),event:'gtm.js'}
-    );var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window, document, 'script', 'dataLayer', '@gtmTrackingId');</script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push(
+                { 'gtm.start': new Date().getTime(), event: 'gtm.js' }
+            );
+            const f = d.getElementsByTagName(s)[0];
+            const j = d.createElement(s);
+            const dl = l != 'dataLayer' ? `&l=${l}` : '';
+            j.async = true;
+            j.src =
+                `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '@gtmTrackingId');
+    </script>
     <!-- End Google Tag Manager -->
 }
-@{var aiInstrumentationKey = @Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey;}
+@{ var aiInstrumentationKey = TelemetryConfiguration.Active.InstrumentationKey; }
 @if (!string.IsNullOrEmpty(aiInstrumentationKey))
 {
     <script type="text/javascript">
-        var appInsights = window.appInsights || function(config) {
-            function r(config) {
-                t[config] = function() {
-                    var i = arguments;
-                    t.queue.push(function() { t[config].apply(t, i) })
+        var appInsights = window.appInsights ||
+            function(config) {
+                function r(config) {
+                    t[config] = function() {
+                        var i = arguments;
+                        t.queue.push(function() { t[config].apply(t, i) });
+                    };
                 }
-            }
 
-            var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f;
-            for (s.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;)r("track" + i.pop());
-            return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"), config.disableExceptionTracking || (i = "onerror", r("_" + i), f = e[i], e[i] = function(config, r, u, e, o) {
-                var s = f && f(config, r, u, e, o);
-                return s !== !0 && t["_" + i](config, r, u, e, o), s
-            }), t
-        }({
-            instrumentationKey: '@aiInstrumentationKey'
-        });
+                var t = { config: config };
+                const u = document;
+                const e = window;
+                const o = "script";
+                const s = u.createElement(o);
+                var i,
+                    f;
+                for (s.src =
+                        config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js",
+                    u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i =
+                        ["Event", "Exception", "Metric", "PageView", "Trace"];
+                    i.length;
+                ) r(`track${i.pop()}`);
+                return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"),
+                    config.disableExceptionTracking ||
+                    (i = "onerror", r(`_${i}`), f = e[i], e[i] = function(config, r, u, e, o) {
+                        const s = f && f(config, r, u, e, o);
+                        return s !== !0 && t[`_${i}`](config, r, u, e, o), s;
+                    }), t;
+            }({
+                instrumentationKey: '@aiInstrumentationKey'
+            });
 
         window.appInsights = appInsights;
         appInsights.trackPageView();
     </script>
 }
-@{var trackingId = System.Configuration.ConfigurationManager.AppSettings["ga.trackingid"];}
+@{ var trackingId = ConfigurationManager.AppSettings["ga.trackingid"]; }
 @if (!string.IsNullOrEmpty(trackingId))
 {
- <script>
-  (function(i, s, o, g, r, a, m){
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function(){
-            (i[r].q = i[r].q ||[]).push(arguments)},i[r].l = 1 * new Date(); a = s.createElement(o),
-  m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document,'script','//www.google-analytics.com/analytics.js','ga');
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] ||
+                function() {
+                    (i[r].q = i[r].q || []).push(arguments);
+                }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m);
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', '@trackingId', 'auto');
-    ga('require', 'linkid');
-    ga('send', 'pageview');
+        ga('create', '@trackingId', 'auto');
+        ga('require', 'linkid');
+        ga('send', 'pageview');
     </script>
 }

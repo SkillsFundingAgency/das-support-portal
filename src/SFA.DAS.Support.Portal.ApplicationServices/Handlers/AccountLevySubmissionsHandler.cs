@@ -12,14 +12,18 @@ using SFA.DAS.Support.Portal.Core.Helpers;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class AccountLevySubmissionsHandler : IAsyncRequestHandler<AccountLevySubmissionsQuery, AccountLevySubmissionsResponse>
+    public class
+        AccountLevySubmissionsHandler : IAsyncRequestHandler<AccountLevySubmissionsQuery, AccountLevySubmissionsResponse
+        >
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ILevySubmissionsRepository _levySubmissionsRepository;
-        private readonly IPayeSchemeObfuscator _payeSchemeObfuscator;
         private readonly ILog _logger;
+        private readonly IPayeSchemeObfuscator _payeSchemeObfuscator;
 
-        public AccountLevySubmissionsHandler(IAccountRepository accountRepository, ILevySubmissionsRepository levySubmissionsRepository, IPayeSchemeObfuscator payeSchemeObfuscator, ILog logger)
+        public AccountLevySubmissionsHandler(IAccountRepository accountRepository,
+            ILevySubmissionsRepository levySubmissionsRepository, IPayeSchemeObfuscator payeSchemeObfuscator,
+            ILog logger)
         {
             _accountRepository = accountRepository;
             _levySubmissionsRepository = levySubmissionsRepository;
@@ -32,12 +36,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             var account = await _accountRepository.Get(message.Id, AccountFieldsSelection.ChallengePayeSchemes);
 
             if (account == null)
-            {
                 return new AccountLevySubmissionsResponse
                 {
                     StatusCode = AccountLevySubmissionsResponseCodes.AccountNotFound
                 };
-            }
 
             var selectedPayeScheme = account.PayeSchemes.ToList()[int.Parse(message.Position)].Ref;
             account.PayeSchemes = ObscurePayeSchemes(account.PayeSchemes);

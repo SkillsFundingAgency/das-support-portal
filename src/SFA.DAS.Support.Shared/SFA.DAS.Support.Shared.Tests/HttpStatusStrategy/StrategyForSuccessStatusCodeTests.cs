@@ -6,9 +6,8 @@ using SFA.DAS.Support.Shared.SiteConnection;
 namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
 {
     [TestFixture]
-    public class StrategyForSuccessStatusCodeTests: StrategyTestBase<StrategyForSuccessStatusCode>
+    public class StrategyForSuccessStatusCodeTests : StrategyTestBase<StrategyForSuccessStatusCode>
     {
-       
         [TestCase(HttpStatusCode.OK)]
         [TestCase(HttpStatusCode.Created)]
         [TestCase(HttpStatusCode.Accepted)]
@@ -16,15 +15,12 @@ namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
         [TestCase(HttpStatusCode.NoContent)]
         [TestCase(HttpStatusCode.ResetContent)]
         [TestCase(HttpStatusCode.PartialContent)]
-
-
         public void ItShouldLogInfoAndDecideToReturnContinueWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            HttpStatusCodeDecision expected  = HttpStatusCodeDecision.Continue;
+            var expected = HttpStatusCodeDecision.Continue;
             Assert.AreEqual(expected, actual);
-            MockLogger.Verify(x=>x.Info(It.IsAny<string>()), Times.Once());
+            MockLogger.Verify(x => x.Info(It.IsAny<string>()), Times.Once());
         }
-
     }
 }

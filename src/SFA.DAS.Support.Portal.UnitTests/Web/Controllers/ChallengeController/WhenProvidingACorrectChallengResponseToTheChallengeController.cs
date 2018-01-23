@@ -38,19 +38,18 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ChallengeController
 
             MockContextBase.SetupGet(x => x.Request.CurrentExecutionFilePath).Returns("SomePathOrOther");
 
-            
+
             ActionResultResponse = Unit.Index(challengeEntry).Result;
 
             MockGranter.Verify(x => x.GivePermissions(MockResponse.Object, MockUser.Object, challengeEntry.Id)
                 , Times.Once);
-            
+
             Assert.IsInstanceOf<RedirectResult>(ActionResultResponse);
 
-            var url = ((RedirectResult)ActionResultResponse).Url;
+            var url = ((RedirectResult) ActionResultResponse).Url;
 
             Assert.AreEqual(challengeEntry.Url, url);
             Assert.IsFalse(url.Contains("hasError=true"));
-
         }
     }
 }

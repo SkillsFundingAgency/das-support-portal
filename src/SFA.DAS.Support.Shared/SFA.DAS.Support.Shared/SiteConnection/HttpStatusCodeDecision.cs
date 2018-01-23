@@ -6,5 +6,4 @@
         ReturnNull = 1,
         HandleException = 2
     }
-
 }
