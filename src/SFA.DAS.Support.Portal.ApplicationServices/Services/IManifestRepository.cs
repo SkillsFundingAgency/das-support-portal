@@ -12,9 +12,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         Task<SiteChallenge> GetChallenge(string key);
         Task<bool> ResourceExists(string key);
         Task<SiteResource> GetResource(string key);
-        Task<string> GetResourcePage(string key, string id);
+        Task<ResourceResultModel> GetResourcePage(string key, string id);
         Task<NavViewModel> GetNav(string key, string id);
-        Task<object> GenerateHeader(string key, string id);
+        Task<ResourceResultModel> GenerateHeader(string key, string id);
         Task<string> GetChallengeForm(string key, string id, string url);
         Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> pairs);
         Task<List<SiteManifest>> GetManifests();

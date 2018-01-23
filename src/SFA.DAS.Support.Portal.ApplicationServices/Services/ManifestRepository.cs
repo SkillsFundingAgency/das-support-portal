@@ -70,10 +70,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(Resources.ContainsKey(FormatKey(key)));
         }
 
-        public async Task<object> GenerateHeader(string key, string id)
+        public async Task<ResourceResultModel> GenerateHeader(string key, string id)
         {
             var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey)) return "";
+            if (!await ResourceExists(headerKey)) return new ResourceResultModel();
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);
@@ -85,7 +85,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var challenge = await GetChallenge(key);
             var challengeUrl = string.Format(challenge.ChallengeUrlFormat, id);
             var page = await GetPage(challengeUrl);
-            return _formMapper.UpdateForm(key, id, url, page);
+            return _formMapper.UpdateForm(key, id, url, page.Resource);
         }
 
         public async Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> formData)
@@ -106,7 +106,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var html = await _siteConnector.Upload<string>(uri, formData);
 
             if (string.IsNullOrWhiteSpace(html))
-                return new ChallengeResult {RedirectUrl = redirect};
+                return new ChallengeResult { RedirectUrl = redirect };
 
             return new ChallengeResult
             {
@@ -144,7 +144,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return navViewModel;
         }
 
-        public async Task<string> GetResourcePage(string key, string id)
+        public async Task<ResourceResultModel> GetResourcePage(string key, string id)
         {
             var resource = await GetResource(key);
             var url = string.Format(resource.ResourceUrlFormat, id);
@@ -213,20 +213,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 };
         }
 
-        private async Task<string> GetPage(string url)
+        private async Task<ResourceResultModel> GetPage(string url)
         {
-            try
-            {
-                var queryString = AddQueryString(url);
-                var result = await _siteConnector.Download(queryString);
-
-                return result;
-            }
-            catch
-            {
-                return @"<h3 style='color:red'>There was a problem downloading this asset</h3>
-<div style='display:none'>{url}</div>";
-            }
+            var result = new ResourceResultModel() { };
+            var queryString = AddQueryString(url);
+            result.Resource = await _siteConnector.Download(queryString);
+            result.StatusCode = _siteConnector.LastCode;
+            result.Exception = _siteConnector.LastException;
+            return result;
         }
 
         private string AddQueryString(string url)
@@ -246,7 +240,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private async Task<List<SiteManifest>> LoadManifest()
         {
             var list = new Dictionary<string, SiteManifest>();
-            var sites = _settings.BaseUrls.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+            var sites = _settings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(x => !string.IsNullOrWhiteSpace(x));
             foreach (var site in sites)
             {
@@ -263,7 +257,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                         $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
                 }
             }
-
             return list.Values.ToList();
         }
     }

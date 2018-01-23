@@ -48,9 +48,15 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _runtimer.Start();
             try
             {
-                var subSites = (_settings.BaseUrls ?? string.Empty)
-                    .Split(Convert.ToChar(","))?
-                    .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                var subSites = _settings.BaseUrls?
+                                        .Split(Convert.ToChar(","))?
+                                            .Where(x => !string.IsNullOrEmpty(x));
+
+                if(subSites == null)
+                {
+                   throw new Exception("Sub sites base Url not specified in config");
+                } 
 
                 foreach (var subSite in subSites)
                 {
@@ -120,6 +126,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         private async Task ProcessResource<T>(SiteResource resource, Uri uri) where T : class
         {
+            var indexedResorce = Enum.GetName(typeof(SearchCategory), resource.SearchCategory);
+
             try
             {
                 var newIndexName =

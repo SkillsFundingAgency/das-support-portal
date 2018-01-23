@@ -1,0 +1,47 @@
+﻿@using SFA.DAS.Support.Portal.ApplicationServices.Models
+@model  ResourceResultModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.SubHeader != null)
+{
+    <div class="secondary-header">
+        @if (Model.Exception != null)
+        {
+            <div style='color: red'>An error has occured</div>
+        }
+        else if (((ResourceResultModel)ViewBag.SubHeader).StatusCode == HttpStatusCode.NotFound)
+        {
+            <div style='color: red'>Information Not Found</div>
+        }
+        else if (((ResourceResultModel)ViewBag.SubHeader).Resource == null)
+        {
+            <h3 style='color: red'>Information Not Available</h3>
+        }
+        else
+        {
+            @Html.Raw(((ResourceResultModel)ViewBag.SubHeader)?.Resource ?? "")
+        }
+    </div>
+}
+<div class="grid-row">
+    <div class="column-one-third column__no-padding-right">
+
+        @if (ViewBag.SubNav != null && ViewBag.SubNav.Items != null && ViewBag.SubNav.Items.Length > 0)
+        {
+            <nav class="sub-nav">
+                <ul role="menu">
+                    @foreach (var item in ViewBag.SubNav.Items)
+                    {
+                        <li><a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a></li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+
+    <div class="column-two-thirds column__double-padding-left column__border-left">
+        @RenderBody()
+    </div>
+</div>

@@ -1,6 +1,25 @@
-﻿@model string
+﻿@model  SFA.DAS.Support.Portal.ApplicationServices.Models.ResourceResultModel
 @{
-    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_SubsiteLayout.cshtml";
 }
-
-@Html.Raw(Model)
+@if (Model.Exception != null)
+{
+    <h3 style='color:red'>An error has occured</h3>
+    <div>An internal error occured accessing this information. The problem has already been logged.</div>
+}
+else if (Model.StatusCode == HttpStatusCode.NotFound)
+{
+    <h3 style='color:red'>Information Not Found</h3>
+    <div style='display:none'>{url}</div>
+    <div>The information you requested was not found.</div>
+}
+else if (Model.Resource == null)
+{
+    <h3 style='color:red'>Information Not Available</h3>
+    <div style='display:none'>{url}</div>
+    <div>The information you requested was not provided.</div>
+}
+else
+{
+    <div>@Html.Raw(Model.Resource)</div>
+}

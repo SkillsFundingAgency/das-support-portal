@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Nest;
-using SFA.DAS.NLog.Logger;
+using System.Net;
+using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 {
@@ -15,8 +16,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         private readonly ILog _logger;
         private readonly ISearchSettings _settings;
 
-        public ElasticSearchIndexProvider(IElasticsearchCustomClient elasticsearchCustomClient, ILog logger,
-            ISearchSettings settings)
+        private const int _defautltIndexCopyCount = 3;
+
+        public ElasticSearchIndexProvider(IElasticsearchCustomClient elasticsearchCustomClient, ILog logger, ISearchSettings settings)
         {
             _client = elasticsearchCustomClient;
             _logger = logger;
@@ -28,40 +30,42 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             if (!_client.IndexExists(indexName, string.Empty).Exists)
             {
                 var response = _client.CreateIndex(
-                    indexName,
-                    i => i
-                        .Settings(settings =>
-                            settings
-                                .NumberOfShards(_settings.IndexShards)
-                                .NumberOfReplicas(_settings.IndexReplicas)
-                        )
-                        .Mappings(ms => ms
-                            .Map<T>(m => m
-                                .AutoMap()
-                                .Properties(p => p)))
-                    , string.Empty);
+                              indexName,
+                              i => i
+                                  .Settings(settings =>
+                                      settings
+                                      .NumberOfShards(_settings.IndexShards)
+                                      .NumberOfReplicas(_settings.IndexReplicas)
+                                      )
+                                  .Mappings(ms => ms
+                                      .Map<T>(m => m
+                                          .AutoMap()
+                                          .Properties(p => p)))
+                                  , string.Empty);
 
-                if (response.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
-                    throw new Exception(
-                        $"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
-                        response.OriginalException);
+                if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+                {
+                    throw new Exception($"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode??-1}\r\n{response.DebugInformation}", response.OriginalException );
+                }
             }
         }
 
         public void IndexDocuments<T>(string indexName, IEnumerable<T> documents) where T : class
         {
+
             try
             {
-                Console.WriteLine($"Indexed {documents?.Count()} Documents for type {typeof(T).Name}");
+                Console.WriteLine($"Indexed {documents?.Count()} Documents");
 
-                _client.BulkAll(documents, indexName, 1000);
+                _client.BulkAll<T>(documents, indexName, 1000);
+
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to index all documents for type {typeof(T).Name} Error: {e.Message}");
+                Console.WriteLine($"Failed to index all documents Error: {e.Message}");
             }
 
-            Console.WriteLine($"{documents?.Count()} Documents for type {typeof(T).Name} indexed sucessfully");
+            Console.WriteLine($"{documents?.Count()} Documents indexed sucessfully");
         }
 
         public void DeleteIndex(string indexName)
@@ -77,34 +81,33 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void DeleteIndexes(int indexToRetain, string indexPrefix)
         {
-            var indexNameDelimeter = new[] {'_'};
+            indexToRetain = (indexToRetain <= 0) ? _defautltIndexCopyCount : indexToRetain;
+
+            var indexNameDelimeter = new char[] {'_'};
 
             var indexToDeleteCount = _client
-                .IndicesStats(Indices.All)
-                .Indices
-                .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
+                                        .IndicesStats(Indices.All, null, string.Empty)
+                                        .Indices
+                                        .Count(x => x.Key.StartsWith(indexPrefix) && x.Key.Split(indexNameDelimeter).Count() == 2);
 
             if (indexToDeleteCount > indexToRetain)
             {
                 var indicesToBeDelete = _client
-                    .IndicesStats(Indices.All)
-                    .Indices
-                    .Where(x => x.Key.StartsWith(indexPrefix))
-                    .OrderByDescending(x => x.Key.Split(indexNameDelimeter).Last())
-                    .Skip(indexToRetain)
-                    .ToList();
+                                         .IndicesStats(Indices.All, null, string.Empty)
+                                         .Indices
+                                         .Where(x => x.Key.StartsWith(indexPrefix))
+                                         .OrderByDescending(x => x.Key.Split(indexNameDelimeter).Last())
+                                         .Skip(indexToRetain)
+                                         .ToList();
 
                 _logger.Debug($"Deleting {indicesToBeDelete.Count()} indexes...");
-                var indexList = string.Empty;
-                foreach (var keyValuePair in indicesToBeDelete) indexList += $"{keyValuePair.Key}";
-
-                _logger.Debug($"Deleting {indexList} indexes...");
 
                 foreach (var index in indicesToBeDelete)
                 {
                     _logger.Debug($"Deleting {index.Key}");
                     DeleteIndex(index.Key);
                 }
+
             }
 
             _logger.Debug("Deletion completed...");
@@ -132,18 +135,14 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         private void SwapAliasIndex(string aliasName, string newIndexName)
         {
             var existingIndexesOnAlias = _client.GetIndicesPointingToAlias(aliasName, string.Empty);
-            var aliasRequest = new BulkAliasRequest {Actions = new List<IAliasAction>()};
+            var aliasRequest = new BulkAliasRequest { Actions = new List<IAliasAction>() };
 
             foreach (var existingIndexOnAlias in existingIndexesOnAlias)
-                aliasRequest.Actions.Add(new AliasRemoveAction
-                {
-                    Remove = new AliasRemoveOperation {Alias = aliasName, Index = existingIndexOnAlias}
-                });
-
-            aliasRequest.Actions.Add(new AliasAddAction
             {
-                Add = new AliasAddOperation {Alias = aliasName, Index = newIndexName}
-            });
+                aliasRequest.Actions.Add(new AliasRemoveAction { Remove = new AliasRemoveOperation { Alias = aliasName, Index = existingIndexOnAlias } });
+            }
+
+            aliasRequest.Actions.Add(new AliasAddAction { Add = new AliasAddOperation { Alias = aliasName, Index = newIndexName } });
 
             _client.Alias(aliasRequest, string.Empty);
         }

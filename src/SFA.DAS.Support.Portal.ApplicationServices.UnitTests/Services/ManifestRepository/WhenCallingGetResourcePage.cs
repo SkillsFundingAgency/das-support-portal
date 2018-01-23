@@ -16,7 +16,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
                 .ThrowsAsync(new HttpException());
             var result = await Unit.GetResourcePage("resourcekey", "id");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
                 .ReturnsAsync(html);
             var result = await Unit.GetResourcePage("resourcekey", "id");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
         }
 
         [Test]

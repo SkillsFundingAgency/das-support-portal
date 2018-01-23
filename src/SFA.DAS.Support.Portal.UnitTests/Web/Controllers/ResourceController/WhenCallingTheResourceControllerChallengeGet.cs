@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
-                .Returns(Task.FromResult(new object()));
+                .Returns(Task.FromResult(new ResourceResultModel()));
             MockManifestRepository.Setup(x => x.GetChallengeForm(_key, _resourceId, _url)).Throws<Exception>();
 
 
@@ -57,7 +57,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
-                .Returns(Task.FromResult(new object()));
+                .Returns(Task.FromResult(new ResourceResultModel()));
             MockManifestRepository.Setup(x => x.GetChallengeForm(_key, _resourceId, _url))
                 .Returns(Task.FromResult("<div></div."));
 

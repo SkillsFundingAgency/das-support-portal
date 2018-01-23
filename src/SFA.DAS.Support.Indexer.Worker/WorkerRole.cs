@@ -29,6 +29,7 @@ namespace SFA.DAS.Support.Indexer.Worker
         private int _delayTime = 1800 * SecondsToMilliSeconds;
         private IIndexSearchItems _indexer;
         private ILog _logger;
+        private int _delayTimeInSeconds = 1800 * 1000;
         private ISearchSettings _searchSettings;
         private ISiteSettings _siteSettings;
 
@@ -60,6 +61,8 @@ namespace SFA.DAS.Support.Indexer.Worker
 
             if (int.TryParse(_siteSettings.DelayTimeInSeconds, out var configDelayTime))
                 _delayTime = configDelayTime * SecondsToMilliSeconds;
+
+            _logger.Info($"Support.Indexer.Worker delay time in seconds: {_delayTimeInSeconds}");
 
             var result = base.OnStart();
             _logger.Info("ESFA.DAS.Support.Indexer.Worker has been started");

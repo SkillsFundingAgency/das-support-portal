@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
 
@@ -33,7 +35,11 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             try
             {
                 var challengeForm = await _repository.GetChallengeForm(key, resourceId, url);
-                return View("Sub", (object) challengeForm);
+                return View("Sub", (object)new ResourceResultModel()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Resource = challengeForm
+                });
             }
             catch
             {
@@ -55,34 +61,33 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
-            return View("Sub", (object) result.Page);
+            return View("Sub", (object) new ResourceResultModel()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Resource = result.Page
+            });
         }
 
         [HttpGet]
         public async Task<ActionResult> Index(string key, string id)
         {
             if (!await _repository.ResourceExists(key))
-                return View("Sub", (object) "<h3>This resource isn't registered</h3>");
+                return View("Sub", (object)"<h3>This resource isn't registered</h3>");
 
             var resource = await _repository.GetResource(key);
 
             if (!string.IsNullOrEmpty(resource.Challenge))
                 if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))
                     return RedirectToAction("Challenge",
-                        new {key = resource.Challenge, resourceId = id, url = Request.RawUrl});
+                        new { key = resource.Challenge, resourceId = id, url = Request.RawUrl });
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            try
-            {
-                var masterName = await _repository.GetResourcePage(key, id);
-                return View("Sub", (object) masterName);
-            }
-            catch
-            {
-                return View("Missing");
-            }
+            var resourceResult = await _repository.GetResourcePage(key, id);
+
+            return View("Sub", (object)resourceResult);
+
         }
     }
 }

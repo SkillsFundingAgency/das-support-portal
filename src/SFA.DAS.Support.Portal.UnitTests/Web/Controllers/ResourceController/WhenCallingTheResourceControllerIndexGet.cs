@@ -53,7 +53,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
             MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
-                .Returns(Task.FromResult(new object()));
+                .Returns(Task.FromResult(new ResourceResultModel()));
             MockManifestRepository.Setup(x => x.GetResourcePage(_key, _id)).Throws<Exception>();
 
 
