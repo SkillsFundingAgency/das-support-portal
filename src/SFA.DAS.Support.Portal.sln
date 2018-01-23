@@ -51,11 +51,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Common.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Portal.Indexer.Worker.UnitTests", "SFA.DAS.Support.Portal.Indexer.Worker.UnitTests\SFA.DAS.Support.Portal.Indexer.Worker.UnitTests.csproj", "{D2A88196-DA7D-43B1-B0E9-3AA07659AB61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared", "SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj", "{369D5548-CF74-4E48-946B-0183587F52A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared", "SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj", "{369D5548-CF74-4E48-946B-0183587F52A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{A1872D18-C20C-4365-B94A-5DE83F811233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared.Tests", "SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.Tests\SFA.DAS.Support.Shared.Tests.csproj", "{DB114C77-4906-4F20-9824-C01BEEB26EDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared.Tests", "SFA.DAS.Support.Shared.Tests\SFA.DAS.Support.Shared.Tests.csproj", "{DB114C77-4906-4F20-9824-C01BEEB26EDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1EF32DE6-416E-40B7-934B-E92E8363B182}"
 EndProject

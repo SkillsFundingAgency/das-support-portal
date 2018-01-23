@@ -142,7 +142,7 @@
       <Project>{9CF7EBA9-983F-450D-8F90-D5CA64AF21B1}</Project>
       <Name>SFA.DAS.Support.Portal.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>

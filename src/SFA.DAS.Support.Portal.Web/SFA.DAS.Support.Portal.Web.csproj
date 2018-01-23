@@ -165,8 +165,8 @@
     <Reference Include="RazorGenerator.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorGenerator.Mvc.2.4.9\lib\net40\RazorGenerator.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Configuration, Version=1.0.0.49931, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Configuration.1.0.0.49931\lib\net45\SFA.DAS.Configuration.dll</HintPath>
+    <Reference Include="SFA.DAS.Configuration, Version=1.0.0.53229, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Configuration.1.0.0.53229\lib\net45\SFA.DAS.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Configuration.AzureTableStorage, Version=1.0.0.49931, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Configuration.AzureTableStorage.1.0.0.49931\lib\net45\SFA.DAS.Configuration.AzureTableStorage.dll</HintPath>
@@ -177,11 +177,11 @@
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.36226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.36226\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EmployerUsers.Api.Client, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Client.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.EmployerUsers.Api.Client, Version=1.0.0.52781, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Client.1.0.0.52781\lib\net45\SFA.DAS.EmployerUsers.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EmployerUsers.Api.Types, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Types.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.EmployerUsers.Api.Types, Version=1.0.0.52781, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Types.1.0.0.52781\lib\net45\SFA.DAS.EmployerUsers.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
@@ -635,11 +635,11 @@
     <Content Include="Content\src\styles\_tables.scss" />
     <Content Include="Content\src\styles\_typography.scss" />
     <Content Include="Content\src\styles\_variables.scss" />
+    <Content Include="Views\Shared\_SubsiteLayout.cshtml" />
+    <Content Include="Views\Shared\_PortalLayout.cshtml" />
     <None Include="packages.config" />
     <Content Include="scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\Shared\_SubsiteLayout.cshtml" />
-    <Content Include="Views\Shared\_PortalLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -671,7 +671,7 @@
       <Project>{4cc506ae-f6bc-46b2-910a-d6bf29da8d90}</Project>
       <Name>SFA.DAS.Support.Portal.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>

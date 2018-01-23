@@ -106,11 +106,11 @@
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.36226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.36226\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EmployerUsers.Api.Client, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Client.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.EmployerUsers.Api.Client, Version=1.0.0.52781, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Client.1.0.0.52781\lib\net45\SFA.DAS.EmployerUsers.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EmployerUsers.Api.Types, Version=1.0.0.35840, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Types.1.0.0.35840\lib\net45\SFA.DAS.EmployerUsers.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.EmployerUsers.Api.Types, Version=1.0.0.52781, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerUsers.Api.Types.1.0.0.52781\lib\net45\SFA.DAS.EmployerUsers.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.26805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.26805\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
@@ -219,7 +219,7 @@
       <Project>{5B06A69D-8660-4D15-B6B1-6A7DDBAA5CE5}</Project>
       <Name>SFA.DAS.Support.Portal.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
+    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
