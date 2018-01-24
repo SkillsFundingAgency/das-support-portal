@@ -58,11 +58,20 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<IIndexSearchItems>().Use<IndexerService>();
 
             For<IIndexNameCreator>().Use<IndexNameCreator>();
+
+            For<IIndexResourceProcessor>()
+                 .Use<CompositIndexResourceProcessor>()
+                 .EnumerableOf<IIndexResourceProcessor>()
+                 .Contains(x =>
+                 {
+                     x.Type<UserIndexResourceProcessor>();
+                     x.Type<AccountIndexResourceProcessor>();
+                 });
         }
 
         private IDictionary<string, object> GetProperties()
         {
-            var properties = new Dictionary<string, object> {{"Version", GetVersion()}};
+            var properties = new Dictionary<string, object> { { "Version", GetVersion() } };
             return properties;
         }
 

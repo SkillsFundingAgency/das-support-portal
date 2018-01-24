@@ -26,8 +26,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexNameCreator = indexNameCreator;
         }
 
-        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType,
-            int pageSize = 10, int pageNumber = 1)
+        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.User) return null;
 
@@ -38,28 +37,39 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Skip(pageSize * GetPage(pageNumber))
                 .Take(pageSize)
                 .Query(q => q
-                    .MultiMatch(mp => mp
-                        .Query(searchText)
-                        .Fields(f => f.Field(x => x.Name)))), string.Empty);
+                .Bool(b => b
+                .Must(m =>
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.Name))
+                ||
+                m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Name)))
+                ||
+                m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                )))
+                .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Name))
+               , string.Empty);
 
             var countResponse = _elasticSearchClient.Count<UserSearchModel>(c => c.Index(_indexAliasName)
                 .Type(Types.Type<UserSearchModel>())
-                .Query(q => q
-                    .MultiMatch(mp => mp
-                        .Query(searchText)
-                        .Fields(f => f.Field(x => x.Name)))), string.Empty);
+                 .Query(q => q
+                 .Bool(b => b
+                 .Must(m =>
+                         m.Match(mt => mt.Query(searchText).Field(fs => fs.Name))
+                        ||
+                        m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Name)))
+                        ||
+                        m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                )))
+                   , string.Empty);
 
-
-            if (response?.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK ||
-                countResponse?.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK ||
+                countResponse?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 throw new Exception(
                     $"Received non-200 response when trying to fetch the search items from elastic serach Index, Status Code:{response.ApiCall.HttpStatusCode}");
 
             return GetSearchResponse(pageSize, response, countResponse);
         }
 
-        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType,
-            int pageSize = 10, int pageNumber = 1)
+        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.Account) return null;
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
@@ -69,33 +79,47 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Skip(pageSize * GetPage(pageNumber))
                 .Take(pageSize)
                 .Query(q => q
-                    .MultiMatch(mp => mp
-                        .Query(searchText)
-                        .Fields(f => f
-                            .Field(x => x.Account)))), string.Empty);
+                .Bool(b => b
+                .Must(m =>
+                        m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
+                        ||
+                         m.Match(mt => mt.Query(searchText).Field(fs => fs.Account))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeId))
+                )))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Account))
+                   , string.Empty);
 
             var countResponse = _elasticSearchClient.Count<AccountSearchModel>(c => c.Index(_indexAliasName)
                 .Type(Types.Type<AccountSearchModel>())
                 .Query(q => q
-                    .MultiMatch(mp => mp
-                        .Query(searchText)
-                        .Fields(f => f
-                            .Field(x => x.Account)))), string.Empty);
+                .Bool(b => b
+                .Must(m =>
+                       m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
+                        ||
+                         m.Match(mt => mt.Query(searchText).Field(fs => fs.Account))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeId))
+                )))
+                , string.Empty);
 
 
-            if (response?.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK ||
-                countResponse?.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK ||
+                countResponse?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 throw new Exception(
                     $"Received non-200 response when trying to fetch the search items from elastic serach Index, Status Code:{response.ApiCall.HttpStatusCode}");
             return GetSearchResponse(pageSize, response, countResponse);
         }
 
-        private PagedSearchResponse<T> GetSearchResponse<T>(int pageSize, ISearchResponse<T> response,
-            ICountResponse countResponse) where T : class
+        private PagedSearchResponse<T> GetSearchResponse<T>(int pageSize, ISearchResponse<T> response, ICountResponse countResponse) where T : class
         {
             var totalcount = countResponse == null ? 0 : countResponse.Count;
             var responsePageSize = pageSize == 0 ? 1 : pageSize;
-            var lastPage = (int) (totalcount / responsePageSize);
+            var lastPage = (int)(totalcount / responsePageSize);
 
 
             return new PagedSearchResponse<T>

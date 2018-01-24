@@ -8,5 +8,7 @@ namespace SFA.DAS.Support.Shared.SearchIndexModel
         public string Account { get; set; }
 
         public string AccountID { get; set; }
+
+        public string PayeSchemeId { get; set; }
     }
 }
