@@ -49,12 +49,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
 
         [Test]
-        public void ItShouldThrowAnExceptionIfTheSiteIsNull()
+        public void ItShouldNotThrowAnExceptionIfTheSiteManifestNull()
         {
             MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(null as SiteManifest);
 
-            Assert.ThrowsAsync<NullReferenceException>(() =>
-                Unit.GetChallengeForm("challengekey", "id", "http://tempuri.org/callenge/form"));
+            Assert.DoesNotThrow(() =>
+            {
+                var response =  Unit.GetChallengeForm("challengekey", "id", "http://tempuri.org/callenge/form");
+            } );
         }
     }
 }

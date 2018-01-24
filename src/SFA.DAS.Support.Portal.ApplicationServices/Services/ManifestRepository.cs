@@ -250,7 +250,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 try
                 {
                     var manifest = await _siteConnector.Download<SiteManifest>(uri);
-                    list.Add(uri.ToString(), manifest);
+                    if (manifest != null )
+                    {
+                        list.Add(uri.ToString(), manifest);    
+                    }
+                    
                 }
                 catch (Exception ex)
                 {

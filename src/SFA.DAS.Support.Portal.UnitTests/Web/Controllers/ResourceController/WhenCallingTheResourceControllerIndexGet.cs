@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var viewResult = (ViewResult) ActionResultResponse;
 
             Assert.AreEqual("Sub", viewResult.ViewName);
-            Assert.IsInstanceOf<string>(viewResult.Model);
+            Assert.IsInstanceOf<ResourceResultModel>(viewResult.Model);
         }
 
         /// <summary>

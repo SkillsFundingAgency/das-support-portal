@@ -72,7 +72,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Index(string key, string id)
         {
             if (!await _repository.ResourceExists(key))
-                return View("Sub", (object)"<h3>This resource isn't registered</h3>");
+                return View("Sub", (object) new ResourceResultModel() { Resource = "<h3>This resource isn't registered</h3>", StatusCode = HttpStatusCode.OK, Exception = null});
 
             var resource = await _repository.GetResource(key);
 

@@ -13,6 +13,10 @@
     <summary>DAS Support shared classes</summary>
     <releaseNotes />
     <dependencies>
+      <dependency
+        id="Microsoft.IdentityModel.Clients.ActiveDirectory"
+        version="[3.13.8]"
+        ></dependency>
     </dependencies>
   </metadata>
   <files>
