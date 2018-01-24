@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
@@ -21,10 +19,10 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 throw;
             }
-            
+
             return properties;
         }
 

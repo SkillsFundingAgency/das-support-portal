@@ -13,9 +13,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
     [TestFixture]
     public class ChallengeRepositoryTests
     {
-        private Mock<IAccountRepository> _mockAccountRepository;
-        private ChallengeRepository _sut;
-
         [SetUp]
         public void Init()
         {
@@ -23,6 +20,9 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
 
             _sut = new ChallengeRepository(_mockAccountRepository.Object);
         }
+
+        private Mock<IAccountRepository> _mockAccountRepository;
+        private ChallengeRepository _sut;
 
         [TestCase("1", "3", "2", "4", "£0")]
         [TestCase("1", "3", "6", "4", "£0")]
@@ -32,7 +32,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         [TestCase("2", "4", "a", "5", "£0")]
         [TestCase("1", "5", "2", "6", "0")]
         [TestCase("1", "5", "2", "6", "0.0")]
-        public async Task ShouldReturnTrueIfDataIsCorrect(string firstPosition, string secondPosition, string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnTrueIfDataIsCorrect(string firstPosition, string secondPosition,
+            string challengeElement1, string challengeElement2, string balance)
         {
             _mockAccountRepository.Setup(x => x.GetAccountBalance(It.IsAny<string>()))
                 .Returns(Task.FromResult(0m));
@@ -77,12 +78,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         [TestCase("1", "3", "2", "4", "1")]
         [TestCase("1", "3", "2", "4", "0€")]
         [TestCase("1", "3", "2", "4", "€0")]
-        [TestCase("1", "3", "6", "B", "0")] 
+        [TestCase("1", "3", "6", "B", "0")]
         [TestCase("2", "4", "5", "4", "0")]
         [TestCase("2", "4", "5", "4", "0,0")]
         [TestCase("2", "4", "5", "4", "papaya")]
         [TestCase("2", "4", "5", "4", "")]
-        public async Task ShouldReturnFalseIfDataIsIncorrect(string firstPosition, string secondPosition, string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnFalseIfDataIsIncorrect(string firstPosition, string secondPosition,
+            string challengeElement1, string challengeElement2, string balance)
         {
             _mockAccountRepository.Setup(x => x.GetAccountBalance(It.IsAny<string>()))
                 .Returns(Task.FromResult(0m));
@@ -125,7 +127,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         }
 
         [TestCase("1", "5", "2", "7", "10.2575")]
-        public async Task ShouldTruncateBalance(string firstPosition, string secondPosition, string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldTruncateBalance(string firstPosition, string secondPosition, string challengeElement1,
+            string challengeElement2, string balance)
         {
             _mockAccountRepository.Setup(x => x.GetAccountBalance(It.IsAny<string>()))
                 .Returns(Task.FromResult(10m));
@@ -160,7 +163,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         }
 
         [TestCase("1", "5", "2", "7", "-10.2575")]
-        public async Task ShouldReturnTrueForNegativeBalance(string firstPosition, string secondPosition, string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnTrueForNegativeBalance(string firstPosition, string secondPosition,
+            string challengeElement1, string challengeElement2, string balance)
         {
             _mockAccountRepository.Setup(x => x.GetAccountBalance(It.IsAny<string>()))
                 .Returns(Task.FromResult(-10m));
@@ -195,7 +199,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
         }
 
         [TestCase("1", "5", "2", "7", "10.2575")]
-        public async Task ShouldReturnFalseIfBalanceDidNotMatch(string firstPosition, string secondPosition, string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnFalseIfBalanceDidNotMatch(string firstPosition, string secondPosition,
+            string challengeElement1, string challengeElement2, string balance)
         {
             _mockAccountRepository.Setup(x => x.GetAccountBalance(It.IsAny<string>()))
                 .Returns(Task.FromResult(-10.25m));
@@ -228,6 +233,5 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
 
             result.Should().BeFalse();
         }
-
     }
 }

@@ -8,14 +8,12 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.ProviderApprenticeshipsService.Web;
 
 namespace SFA.DAS.Support.Portal.Web
 {
     [ExcludeFromCodeCoverage]
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
-
         protected void Application_Start()
         {
             MvcHandler.DisableMvcResponseHeader = true;
@@ -36,14 +34,14 @@ namespace SFA.DAS.Support.Portal.Web
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            Exception ex = Server.GetLastError().GetBaseException();
+            var ex = Server.GetLastError().GetBaseException();
             var logger = DependencyResolver.Current.GetService<ILog>();
             logger.Error(ex, "App_Error");
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            var context = base.Context;
+            var context = Context;
             var application = sender as HttpApplication;
 
             application?.Context?.Response.Headers.Remove("Server");
@@ -60,7 +58,8 @@ namespace SFA.DAS.Support.Portal.Web
 
         private void SetupApplicationInsights()
         {
-            TelemetryConfiguration.Active.InstrumentationKey = WebConfigurationManager.AppSettings["InstrumentationKey"];
+            TelemetryConfiguration.Active.InstrumentationKey =
+                WebConfigurationManager.AppSettings["InstrumentationKey"];
 
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new ApplicationInsightsInitializer());
         }

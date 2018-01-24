@@ -6,9 +6,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
     [ExcludeFromCodeCoverage]
     public class CryptoSettings : ICryptoSettings
     {
-        [JsonRequired]
-        public string Salt { get; set; }
-        [JsonRequired]
-        public string Secret { get; set; }
+        [JsonRequired] public string Salt { get; set; }
+
+        [JsonRequired] public string Secret { get; set; }
     }
 }

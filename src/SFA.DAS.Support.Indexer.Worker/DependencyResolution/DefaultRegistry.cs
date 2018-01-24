@@ -5,6 +5,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.SiteConnection;
 using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
@@ -14,7 +15,8 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         private const string ServiceName = "SFA.DAS.Support.Portal.Indexer.Worker";
         private const string Version = "1.0";
-          public DefaultRegistry()
+
+        public DefaultRegistry()
         {
             For<IRequestContext>().Use<FakeRequestContext>();
 
@@ -24,20 +26,23 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
-            WebConfiguration configuration = GetConfiguration();
+
+            var configuration = GetConfiguration();
             For<IWebConfiguration>().Use(configuration);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);
+            For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
         }
 
         private WebConfiguration GetConfiguration()
         {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? 
-                                "LOCAL";
-            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
-                                "UseDevelopmentStorage=true;";
+            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? "LOCAL";
 
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); 
+            var storageConnectionString =
+                CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
+                "UseDevelopmentStorage=true;";
+
+            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
 
             var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
 

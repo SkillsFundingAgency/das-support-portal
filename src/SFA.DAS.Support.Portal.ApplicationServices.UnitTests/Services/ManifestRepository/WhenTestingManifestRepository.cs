@@ -6,12 +6,17 @@ using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
     public class WhenTestingManifestRepository
     {
+        private Dictionary<string, SiteChallenge> _siteChallenges = new Dictionary<string, SiteChallenge>();
+        private List<SiteManifest> _siteManifests = new List<SiteManifest>();
+        private Dictionary<string, SiteResource> _siteResources = new Dictionary<string, SiteResource>();
         protected string HttpsTestsite;
         protected Mock<IFormMapper> MockFormMapper;
         protected Mock<ILog> MockLogger;
@@ -20,9 +25,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
         protected SiteManifest TestSiteManifest;
         protected string TestSites;
-       
-        protected IManifestRepository Unit;
         protected Uri TestSiteUri;
+
+        protected IManifestRepository Unit;
 
 
         [SetUp]
@@ -33,11 +38,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockFormMapper = new Mock<IFormMapper>();
             MockLogger = new Mock<ILog>();
 
+            _siteChallenges = new Dictionary<string, SiteChallenge>();
+            _siteResources = new Dictionary<string, SiteResource>();
+            _siteManifests = new List<SiteManifest>();
             Unit = new ApplicationServices.Services.ManifestRepository(
                 MockSiteSettings.Object,
                 MockSiteConnector.Object,
                 MockFormMapper.Object,
-                MockLogger.Object);
+                MockLogger.Object, _siteManifests, _siteResources, _siteChallenges);
 
 
             HttpsTestsite = "https://testsite";
@@ -80,7 +88,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockSiteSettings.SetupGet(x => x.BaseUrls)
                 .Returns(TestSites);
 
-            TestSiteUri = TestSites.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).Where(x=>!string.IsNullOrWhiteSpace(x)).Select(x=> new Uri(x)).First();
+            TestSiteUri = TestSites.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Uri(x)).First();
             TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
 
             MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);

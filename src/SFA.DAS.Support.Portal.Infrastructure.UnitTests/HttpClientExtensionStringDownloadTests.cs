@@ -9,12 +9,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
     [TestFixture]
     public class HttpClientExtensionStringDownloadTests
     {
-        private MockHttpMessageHandler _mockHttpMessageHandler;
-        private HttpClient _httpClient;
-        private Uri _testUri = new Uri("http://localost/api/user/1234");
-        private string _validTestResponseData;
-        private string _emptyJsonContent;
-
         [SetUp]
         public void Setup()
         {
@@ -24,9 +18,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 
             _mockHttpMessageHandler = new MockHttpMessageHandler();
             _httpClient = new HttpClient(_mockHttpMessageHandler);
-            
-
         }
+
+        private MockHttpMessageHandler _mockHttpMessageHandler;
+        private HttpClient _httpClient;
+        private Uri _testUri = new Uri("http://localost/api/user/1234");
+        private string _validTestResponseData;
+        private string _emptyJsonContent;
 
         [Test]
         public void ItShoudMockAGetOperation()
@@ -38,8 +36,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             Assert.AreEqual(_emptyJsonContent, result.Content.ReadAsStringAsync().Result);
-
         }
-
     }
 }

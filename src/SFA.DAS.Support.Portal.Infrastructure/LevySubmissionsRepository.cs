@@ -24,7 +24,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure
         }
 
         /// <summary>
-        /// Get levy declarations
+        ///     Get levy declarations
         /// </summary>
         /// <param name="payeScheme"></param>
         /// <returns></returns>
@@ -39,16 +39,16 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                 var response = await _levyApiClient.GetEmployerLevyDeclarations(payeScheme);
                 var filteredDeclarations = GetFilteredDeclarations(response.Declarations);
 
-                response.Declarations = filteredDeclarations.OrderByDescending(x => x.SubmissionTime).ThenByDescending(x => x.Id).ToList();
+                response.Declarations = filteredDeclarations.OrderByDescending(x => x.SubmissionTime)
+                    .ThenByDescending(x => x.Id).ToList();
 
                 return response;
             }
             catch (ApiHttpException ex)
             {
                 if (ex.HttpCode == (int) HttpStatusCode.NotFound)
-                {
-                    throw new EntityNotFoundException($"IApprenticeshipLevyApiClient.GetEmployerLevyDeclarations(\"{payeScheme}\");", payeScheme, ex);
-                }
+                    throw new EntityNotFoundException(
+                        $"IApprenticeshipLevyApiClient.GetEmployerLevyDeclarations(\"{payeScheme}\");", payeScheme, ex);
 
                 var properties = new Dictionary<string, object>
                 {

@@ -10,8 +10,6 @@ using HMRC.ESFA.Levy.Api.Types.Exceptions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
-using HMRC.ESFA.Levy.Api.Types.Exceptions;
-using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Support.Portal.Core.Domain.Exceptions;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
@@ -19,12 +17,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
     [TestFixture]
     public class LevySubmissionsRepositoryTests
     {
-        private Mock<ILog> _mockLogger;
-        private LevySubmissionsRepository _sut;
-
-        private Mock<IApprenticeshipLevyApiClient> _mockApprenticeshipLevyApliClient;
-        private LevyDeclarations _levyDeclarations;
-
         [SetUp]
         public void Init()
         {
@@ -40,12 +32,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
                 EmpRef = "12345",
                 Declarations = new List<Declaration>
                 {
-                   new Declaration
+                    new Declaration
                     {
                         SubmissionTime = DateTime.Now.AddDays(2),
                         Id = "5"
                     },
-                   new Declaration
+                    new Declaration
                     {
                         SubmissionTime = DateTime.Now.AddDays(2),
                         Id = "6"
@@ -74,6 +66,32 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             };
         }
 
+        private Mock<ILog> _mockLogger;
+        private LevySubmissionsRepository _sut;
+
+        private Mock<IApprenticeshipLevyApiClient> _mockApprenticeshipLevyApliClient;
+        private LevyDeclarations _levyDeclarations;
+
+        [Test]
+        public async Task ItShouldThrowAnApiHttpExceptionWhenApiClientThrowsApiHttpExceptionWhenNotNotFoundStatus()
+        {
+            _mockApprenticeshipLevyApliClient
+                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null))
+                .ThrowsAsync(new ApiHttpException((int) HttpStatusCode.BadRequest, "", "/api/whatever", "body", null));
+
+            Assert.ThrowsAsync<ApiHttpException>(() => _sut.Get("123/4567"));
+        }
+
+        [Test]
+        public async Task ItShouldThrowAnEntityNotFoundExceptionWhenApiClientThrowsApiHttpExceptionWithNotFoundStatus()
+        {
+            _mockApprenticeshipLevyApliClient
+                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null))
+                .ThrowsAsync(new ApiHttpException((int) HttpStatusCode.NotFound, "", "/api/whatever", "body", null));
+
+            Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.Get("123/4567"));
+        }
+
         [Test]
         public async Task ShouldReturnFilteredLevyDeclarations()
         {
@@ -88,30 +106,5 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests.Repository
             result.EmpRef.Should().Be("12345");
             result.Declarations.First().Id.Should().Be("6");
         }
-
-        [Test]
-        public async Task ItShouldThrowAnEntityNotFoundExceptionWhenApiClientThrowsApiHttpExceptionWithNotFoundStatus()
-        {
-            _mockApprenticeshipLevyApliClient
-                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null) )
-                .ThrowsAsync(new ApiHttpException((int)HttpStatusCode.NotFound, "", "/api/whatever", "body", null) { });
-
-            Assert.ThrowsAsync<EntityNotFoundException>(()=> _sut.Get("123/4567"));
-
-
-        }
-
-        [Test]
-        public async Task ItShouldThrowAnApiHttpExceptionWhenApiClientThrowsApiHttpExceptionWhenNotNotFoundStatus()
-        {
-            _mockApprenticeshipLevyApliClient
-                .Setup(x => x.GetEmployerLevyDeclarations(It.IsAny<string>(), null, null))
-                .ThrowsAsync(new ApiHttpException((int)HttpStatusCode.BadRequest, "", "/api/whatever", "body", null) { });
-
-            Assert.ThrowsAsync<ApiHttpException>(() => _sut.Get("123/4567"));
-
-
-        }
-
     }
 }

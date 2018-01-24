@@ -6,9 +6,5 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     [ExcludeFromCodeCoverage]
     public class ApplicationRegistry : Registry
     {
-        public ApplicationRegistry()
-        {
-           
-        }
     }
 }

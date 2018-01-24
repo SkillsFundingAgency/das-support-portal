@@ -6,7 +6,8 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class AccountDetailOrganisationsHandler : IAsyncRequestHandler<AccountDetailOrganisationsQuery, AccountDetailOrganisationsResponse>
+    public class AccountDetailOrganisationsHandler : IAsyncRequestHandler<AccountDetailOrganisationsQuery,
+        AccountDetailOrganisationsResponse>
     {
         private readonly IAccountRepository _accountRepository;
 
@@ -17,13 +18,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
         public async Task<AccountDetailOrganisationsResponse> Handle(AccountDetailOrganisationsQuery message)
         {
-             var response = new AccountDetailOrganisationsResponse
+            var response = new AccountDetailOrganisationsResponse
             {
                 StatusCode = SearchResponseCodes.NoSearchResultsFound
             };
 
             var record = await _accountRepository.Get(message.Id.ToUpper(), AccountFieldsSelection.Organisations);
-            
+
             if (record != null)
             {
                 response.StatusCode = SearchResponseCodes.Success;

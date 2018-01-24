@@ -6,7 +6,9 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class AccountDetailTeamMembersHandler : IAsyncRequestHandler<AccountTeamMembersQuery, AccountDetailTeamMembersResponse>
+    public class
+        AccountDetailTeamMembersHandler : IAsyncRequestHandler<AccountTeamMembersQuery, AccountDetailTeamMembersResponse
+        >
     {
         private readonly IAccountRepository _accountRepository;
 
@@ -23,7 +25,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             };
 
             var record = await _accountRepository.Get(message.Id, AccountFieldsSelection.TeamMembers);
-            
+
             if (record != null)
             {
                 response.StatusCode = SearchResponseCodes.Success;

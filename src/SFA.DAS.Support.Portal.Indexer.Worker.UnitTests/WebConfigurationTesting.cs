@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema.Generation;
 using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
 {
     [TestFixture]
     public class WebConfigurationTesting
     {
-        private const string  SiteConfigFileName = "SFA.DAS.Support.Portal.Indexer.Worker";
         [SetUp]
         public void Setup()
         {
             _unit = new WebConfiguration
             {
-               
                 ElasticSearch = new ElasticSearchSettings
                 {
                     IndexName = "--- configuration value goes here ---",
@@ -30,27 +29,35 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
                     IndexShards = 1,
                     IndexReplicas = 0
                 },
-               
-                Site = new SiteSettings()
+
+                Site = new SiteSettings
                 {
-                    BaseUrls ="https://127.0.0.1:51274,https://127.0.0.1:19722", 
-                    EnvironmentName = "LOCAL"
+                    BaseUrls = "https://127.0.0.1:51274,https://127.0.0.1:19722",
+                    EnvironmentName = "LOCAL",
+                    DelayTimeInSeconds = "1800"
+                },
+                SiteConnector = new SiteConnectorSettings
+                {
+                    ApiBaseUrl = "--- configuration value goes here ---",
+                    ClientId = "--- configuration value goes here ---",
+                    ClientSecret = "--- configuration value goes here ---",
+                    IdentifierUri = "--- configuration value goes here ---",
+                    Tenant = "--- configuration value goes here ---"
                 }
-                
             };
         }
+
+        private const string SiteConfigFileName = "SFA.DAS.Support.Portal.Indexer.Worker";
 
         private WebConfiguration _unit;
 
         [Test]
-        public void ItShouldSerialize()
+        public void ItShouldDeserialiseFaithfuly()
         {
             var json = JsonConvert.SerializeObject(_unit);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(json));
-
-
-            System.IO.File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.json", json);
-
+            Assert.IsNotNull(json);
+            var actual = JsonConvert.DeserializeObject<WebConfiguration>(json);
+            Assert.AreEqual(json, JsonConvert.SerializeObject(actual));
         }
 
         [Test]
@@ -62,35 +69,35 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
             Assert.IsNotNull(actual);
         }
 
-        [Test]
-        public void ItShouldDeserialiseFaithfuly()
-        {
-            var json = JsonConvert.SerializeObject(_unit);
-            Assert.IsNotNull(json);
-            var actual = JsonConvert.DeserializeObject<WebConfiguration>(json);
-            Assert.AreEqual(json, JsonConvert.SerializeObject(actual));
-        }
-
 
         [Test]
         public void ItShouldGenerateASchema()
         {
-
             var provider = new FormatSchemaProvider();
             var jSchemaGenerator = new JSchemaGenerator();
             jSchemaGenerator.GenerationProviders.Clear();
             jSchemaGenerator.GenerationProviders.Add(provider);
             var actual = jSchemaGenerator.Generate(typeof(WebConfiguration));
 
-            
+
             Assert.IsNotNull(actual);
             // hack to leverage format as 'environmentVariable'
             var schemaString = actual.ToString().Replace($"\"format\":", "\"environmentVariable\":");
 
-           
-            
+
             Assert.IsNotNull(schemaString);
-            System.IO.File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.schema.json", schemaString);
+            File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.schema.json",
+                schemaString);
+        }
+
+        [Test]
+        public void ItShouldSerialize()
+        {
+            var json = JsonConvert.SerializeObject(_unit);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(json));
+
+
+            File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.json", json);
         }
     }
 }

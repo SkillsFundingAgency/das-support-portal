@@ -5,13 +5,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
     public class AccountLevySubmissionsQuery : IAsyncRequest<AccountLevySubmissionsResponse>
     {
-        public string Id { get; private set; }
-        public string Position { get; private set; }
-        
         public AccountLevySubmissionsQuery(string id, string position)
         {
             Id = id;
             Position = position;
         }
+
+        public string Id { get; }
+        public string Position { get; }
     }
 }

@@ -28,7 +28,7 @@
                     <td id="teamMemberName">
                         @if (!string.IsNullOrEmpty(item.UserRef))
                         {
-                            @Html.ActionLink(item.Name, "Detail", "Search", new { id = item.UserRef }, null)
+                            @Html.ActionLink(item.Name, "Detail", "Search", new {id = item.UserRef}, null)
                         }
                         else
                         {

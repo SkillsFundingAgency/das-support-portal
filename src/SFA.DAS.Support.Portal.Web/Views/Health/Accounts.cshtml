@@ -7,27 +7,27 @@
     <style>
         body {
             background-color: whitesmoke;
-            font-family: Georgia,Cambria,"Times New Roman",Times,serif;
             color: rgb(0, 0, 0);
             color: rgba(0, 0, 0, .8);
+            font-family: Georgia, Cambria, "Times New Roman", Times, serif;
         }
 
         .container {
-            width: 1000px;
+            background-color: white;
             margin: 50px auto;
             padding: 5px 10px;
-            background-color: white;
+            width: 1000px;
         }
 
         .container h2 {
-            color: rgb(0,0,0);
-            color: rgba(0,0,0,.8);
+            color: rgb(0, 0, 0);
+            color: rgba(0, 0, 0, .8);
             padding: 10px;
         }
 
         .container .status {
-            padding: 20px;
             min-height: 10px;
+            padding: 20px;
         }
 
         .container .status > div {
@@ -36,24 +36,24 @@
         }
 
         .container .elasticsearch {
-            padding: 20px;
             min-height: 10px;
+            padding: 20px;
         }
 
         dl.table-display {
             background-color: white;
             display: table;
-            width: 60%;
             margin-bottom: 30px;
+            width: 60%;
         }
 
         dl.table-display dt {
             clear: left;
             float: left;
-            width: 220px;
+            font-weight: bold;
             margin: 0;
             padding: 5px;
-            font-weight: bold;
+            width: 220px;
         }
 
         dl.table-display dd {
@@ -61,38 +61,26 @@
             padding: 5px;
         }
 
-        dl.table-display dd.first {
-            border-top: 1px solid #999;
-        }
+        dl.table-display dd.first { border-top: 1px solid #999; }
 
-        .services {
-            padding: 20px;
-        }
+        .services { padding: 20px; }
 
-        .services > div {
-            padding: 1px;
-        }
+        .services > div { padding: 1px; }
 
-        .status-lbl.red {
-            border-bottom: 5px solid red;
-        }
+        .status-lbl.red { border-bottom: 5px solid red; }
 
-        .status-lbl.green {
-            border-bottom: 5px solid green;
-        }
+        .status-lbl.green { border-bottom: 5px solid green; }
     </style>
 </head>
 
-    <body>
-        <div class="container">
-            <div class="status">
-                <h2>Support Console accounts status</h2>
-            </div>
-            <p>
-                Api Status: <span class="status-lbl @Model.ApiStatus.ToString().ToLower()">@Model.ApiStatus</span>
-            </p>
-        </div>
-    </body>
+<body>
+<div class="container">
+    <div class="status">
+        <h2>Support Console accounts status</h2>
+    </div>
+    <p>
+        Api Status: <span class="status-lbl @Model.ApiStatus.ToString().ToLower()">@Model.ApiStatus</span>
+    </p>
+</div>
+</body>
 </html>
-
-

@@ -1,19 +1,19 @@
-﻿@{ 
+﻿@{
     ViewBag.currentSection = "search";
     ViewBag.currentPage = "users";
 }
 
 <h1 class="heading-xlarge">Search for a user</h1>
-@using (Html.BeginForm("Index", "Search", FormMethod.Get, new { @class = "search-field" }))
+@using (Html.BeginForm("Index", "Search", FormMethod.Get, new {@class = "search-field"}))
 {
     <div class="search-input">
         <label for="search-main">
-                    
+
         </label>
-        @Html.TextBox("SearchTerm", string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required="required", maxlength="100" })
-        <input type="hidden" name="Page" value="1" />
+        @Html.TextBox("SearchTerm", string.Empty, new {id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100"})
+        <input type="hidden" name="Page" value="1"/>
         <div class="search-submit">
             <button type="submit" class="">Search</button>
         </div>
     </div>
-}      
+}

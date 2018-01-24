@@ -31,11 +31,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         [TestCase("a", "b", "0.0£")]
         [TestCase("a", "b", "5")]
         [TestCase("a", "b", "5.64")]
-        public async Task ShouldReturnTrueIfEntryIsValid(string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnTrueIfEntryIsValid(string challengeElement1, string challengeElement2,
+            string balance)
         {
-            _mockAccountRepository.Setup(x => x.Get(It.IsAny<string>(), AccountFieldsSelection.ChallengePayeSchemes)).Returns(Task.FromResult(new Account()));
+            _mockAccountRepository.Setup(x => x.Get(It.IsAny<string>(), AccountFieldsSelection.ChallengePayeSchemes))
+                .Returns(Task.FromResult(new Account()));
 
-            _mockChallengeRepository.Setup(x => x.CheckData(It.IsAny<Account>(), It.IsAny<ChallengePermissionQuery>())).Returns(Task.FromResult(true));
+            _mockChallengeRepository.Setup(x => x.CheckData(It.IsAny<Account>(), It.IsAny<ChallengePermissionQuery>()))
+                .Returns(Task.FromResult(true));
 
             //Arrange
             var challengeEntry = new ChallengeEntry
@@ -64,11 +67,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         [TestCase("a", "", "0")]
         [TestCase("ab", "b", "1")]
         [TestCase("a", "ba", "1")]
-        public async Task ShouldReturnFalseIfEntryIsInvalid(string challengeElement1, string challengeElement2, string balance)
+        public async Task ShouldReturnFalseIfEntryIsInvalid(string challengeElement1, string challengeElement2,
+            string balance)
         {
-            _mockAccountRepository.Setup(x => x.Get(It.IsAny<string>(), AccountFieldsSelection.ChallengePayeSchemes)).Returns(Task.FromResult(new Account()));
+            _mockAccountRepository.Setup(x => x.Get(It.IsAny<string>(), AccountFieldsSelection.ChallengePayeSchemes))
+                .Returns(Task.FromResult(new Account()));
 
-            _mockChallengeRepository.Setup(x => x.CheckData(It.IsAny<Account>(), It.IsAny<ChallengePermissionQuery>())).Returns(Task.FromResult(true));
+            _mockChallengeRepository.Setup(x => x.CheckData(It.IsAny<Account>(), It.IsAny<ChallengePermissionQuery>()))
+                .Returns(Task.FromResult(true));
 
             //Arrange
             var challengeEntry = new ChallengeEntry

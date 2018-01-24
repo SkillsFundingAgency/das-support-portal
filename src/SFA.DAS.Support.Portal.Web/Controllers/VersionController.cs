@@ -11,17 +11,18 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
 using SFA.DAS.Support.Portal.Web.Models;
-using SFA.DAS.Support.Shared;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public sealed class VersionController : ApiController
     {
-        private readonly IManifestRepository _repository;
         private readonly ILog _log;
         private readonly IWindowsLogonIdentityProvider _logonIdentityProvider;
+        private readonly IManifestRepository _repository;
 
-        public VersionController(IManifestRepository repository, ILog log, IWindowsLogonIdentityProvider logonIdentityProvider)
+        public VersionController(IManifestRepository repository, ILog log,
+            IWindowsLogonIdentityProvider logonIdentityProvider)
         {
             _repository = repository;
             _log = log;
@@ -33,9 +34,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public VersionInformation Get()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string assemblyInformationalVersion = fileVersionInfo.ProductVersion;
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            var assemblyInformationalVersion = fileVersionInfo.ProductVersion;
             return new VersionInformation
             {
                 Version = assemblyInformationalVersion,
@@ -51,7 +52,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             try
             {
                 var result = await _repository.GetManifests();
-                
+
                 return result;
             }
             catch (Exception ex)
@@ -67,7 +68,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public IEnumerable<string[]> GetGroups()
         {
             return from @group in _logonIdentityProvider.GetIdentity()?.Groups ?? new IdentityReferenceCollection()
-                   select new string[] { @group.Value, @group.Translate(typeof(NTAccount)).ToString() };
+                select new[] {@group.Value, @group.Translate(typeof(NTAccount)).ToString()};
         }
 
         [Route("api/claims")]

@@ -10,7 +10,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
         [Test]
         public void ItShouldReturnTheListOfUserClaims()
         {
-           
             var actual = Unit.GetClaims();
             Assert.IsInstanceOf<IEnumerable<Claim>>(actual);
             Assert.AreEqual(0, actual.Count());

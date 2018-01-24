@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 {
@@ -9,12 +8,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 
         void DeleteIndex(string name);
 
-         void DeleteIndexes(int indexToRetain, string indexPrefix);
+        void DeleteIndexes(int indexToRetain, string indexPrefix);
 
         void IndexDocuments<T>(string name, IEnumerable<T> documents) where T : class;
 
         bool IndexExists(string indexName);
 
-         void CreateIndexAlias(string newIndexName, string aliasName);
+        void CreateIndexAlias(string newIndexName, string aliasName);
     }
 }

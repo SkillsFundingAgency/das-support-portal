@@ -30,20 +30,13 @@ namespace SFA.DAS.Support.Portal.Web.Helpers
         public static string GetLevyDeclarationDescription(Declaration levyDeclaration)
         {
             if (levyDeclaration.DateCeased.HasValue && levyDeclaration.DateCeased.Value != DateTime.MinValue)
-            {
                 return $"Ceased {ConvertDateTimeToDdmmyyyyFormat(levyDeclaration.DateCeased)}";
-            }
 
-            if (levyDeclaration.NoPaymentForPeriod)
-            {
-                return "No payment";
-            }
+            if (levyDeclaration.NoPaymentForPeriod) return "No payment";
 
             if (levyDeclaration.InactiveFrom.HasValue && levyDeclaration.InactiveFrom.Value != DateTime.MinValue)
-            {
                 return $"Inactive {ConvertDateTimeToDdmmyyyyFormat(levyDeclaration.InactiveFrom)} "
-                    + $"to {ConvertDateTimeToDdmmyyyyFormat(levyDeclaration.InactiveTo)}";
-            }
+                       + $"to {ConvertDateTimeToDdmmyyyyFormat(levyDeclaration.InactiveTo)}";
 
             return string.Empty;
         }
@@ -55,28 +48,20 @@ namespace SFA.DAS.Support.Portal.Web.Helpers
 
         public static string GetYearToDateAmount(Declaration levyDeclaration)
         {
-            if (levyDeclaration.NoPaymentForPeriod || 
-                (levyDeclaration.DateCeased.HasValue && levyDeclaration.DateCeased != DateTime.MinValue) ||
-                (levyDeclaration.InactiveFrom.HasValue && levyDeclaration.InactiveFrom.Value != DateTime.MinValue))
-            {
+            if (levyDeclaration.NoPaymentForPeriod ||
+                levyDeclaration.DateCeased.HasValue && levyDeclaration.DateCeased != DateTime.MinValue ||
+                levyDeclaration.InactiveFrom.HasValue && levyDeclaration.InactiveFrom.Value != DateTime.MinValue)
                 return string.Empty;
-            }
             return $"£{levyDeclaration.LevyDueYearToDate.ToString("#,##0.00")}";
         }
 
         public static string GetPayrollDate(PayrollPeriod payrollPeriod)
         {
-            if (payrollPeriod == null)
-            {
-                return string.Empty;
-            }
+            if (payrollPeriod == null) return string.Empty;
 
             var month = payrollPeriod.Month + 3;
 
-            if (month > 12)
-            {
-                month = month - 12;
-            }
+            if (month > 12) month = month - 12;
 
             var monthName = new DateTime(2010, month, 1)
                 .ToString("MMM", CultureInfo.InvariantCulture);

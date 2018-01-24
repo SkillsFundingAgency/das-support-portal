@@ -1,19 +1,16 @@
-﻿using System.Diagnostics;
-using SFA.DAS.Support.Indexer.ApplicationServices.Services;
-using SFA.DAS.Support.Indexer.Core.Services;
-using SFA.DAS.Support.Indexer.Infrastructure.AzureQueues;
-using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
-using StructureMap.Configuration.DSL;
-using SFA.DAS.Support.Common.Infrastucture.Indexer;
-using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
-using SFA.DAS.NLog.Logger;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
-using System;
-using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
+using SFA.DAS.Support.Common.Infrastucture.Indexer;
+using SFA.DAS.Support.Indexer.ApplicationServices.Services;
+using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
+using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
+using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
@@ -22,30 +19,50 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
+            For<List<SiteManifest>>()
+                .Singleton()
+                .Use(x => WorkerRole.SiteManifests);
+            For<Dictionary<string, SiteChallenge>>()
+                .Singleton()
+                .Use(x => WorkerRole.SiteChallenges);
+            For<Dictionary<string, SiteResource>>()
+                .Singleton()
+                .Use(x => WorkerRole.SiteResources);
 
-            For<HttpClient>().AlwaysUnique().Use(new HttpClient());
+            For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForSuccessStatusCode>();
+            For<IHttpStatusCodeStrategy>().Use<StrategyForInformationStatusCode>();
+
+
+            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+
+            For<HttpClient>().Use(c => new HttpClient());
+
 
             For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
 
             For<IGetSiteManifest>().Use<ManifestProvider>();
-           
+
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
 
             For<IElasticsearchCustomClient>().Use<ElasticsearchCustomClient>();
 
             For<IIndexProvider>().Use<ElasticSearchIndexProvider>();
 
-          
+            For<ISiteConnector>().Use<SiteConnector>();
 
-            For<ITrigger>().Use<StorageQueueService>();
+            For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
+
             For<IIndexSearchItems>().Use<IndexerService>();
+
             For<IIndexNameCreator>().Use<IndexNameCreator>();
         }
 
         private IDictionary<string, object> GetProperties()
         {
-            var properties = new Dictionary<string, object>();
-            properties.Add("Version", GetVersion());
+            var properties = new Dictionary<string, object> {{"Version", GetVersion()}};
             return properties;
         }
 
@@ -55,8 +72,5 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fileVersionInfo.ProductVersion;
         }
-
-
-
     }
 }

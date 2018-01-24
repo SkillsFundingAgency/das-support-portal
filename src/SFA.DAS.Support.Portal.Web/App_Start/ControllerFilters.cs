@@ -1,7 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 using Microsoft.Azure;
 using SFA.DAS.Support.Portal.Core.Services;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Portal.Web
 {
@@ -13,10 +14,8 @@ namespace SFA.DAS.Support.Portal.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             var roleSettings = DependencyResolver.Current.GetService<IRoleSettings>();
-            if (!System.Diagnostics.Debugger.IsAttached && !string.IsNullOrWhiteSpace(AdfsMetadata))
-            {
-                filters.Add(new AuthorizeAttribute { Roles = roleSettings.ConsoleUserRole });
-            }
+            if (!Debugger.IsAttached && !string.IsNullOrWhiteSpace(AdfsMetadata))
+                filters.Add(new AuthorizeAttribute {Roles = roleSettings.ConsoleUserRole});
         }
     }
 }

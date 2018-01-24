@@ -84,6 +84,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             Assert.AreEqual(mappedFormHtml, result.Page);
         }
 
+        [Test]
+        public async Task ItShouldReceiveJustARedirectOnSuccess()
+        {
+            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
+                .ReturnsAsync(string.Empty);
+
+            var result = await Unit.SubmitChallenge(_id, _submittedFormData);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.HasRedirect);
+            Assert.AreEqual(_redirectUrl, result.RedirectUrl);
+            Assert.IsNull(result.Page);
+        }
+
 
         [Test]
         public void ItShouldThrowAnExceptionIfTheFormChallengeKeyIsInvalid()
@@ -98,21 +112,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 {"Key2", "Value2"}
             };
 
-           Assert.ThrowsAsync<MissingMemberException>(()=>  Unit.SubmitChallenge(_id, _submittedFormData));
-
-        }
-        [Test]
-        public async Task ItShouldReceiveJustARedirectOnSuccess()
-        {
-            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
-                .ReturnsAsync(string.Empty);
-
-            var result = await Unit.SubmitChallenge(_id, _submittedFormData);
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.HasRedirect);
-            Assert.AreEqual(_redirectUrl, result.RedirectUrl);
-            Assert.IsNull(result.Page);
+            Assert.ThrowsAsync<MissingMemberException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
         }
 
         /// <summary>

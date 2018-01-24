@@ -34,25 +34,26 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         {
             //Arrange
 
-            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(new EmployerUserSearchResults
-            {
-                SearchTerm = "Luke",
-                Page = 1,
-                LastPage = 1,
-                Results = new[]
+            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(
+                new EmployerUserSearchResults
                 {
-                    new EmployerUserSummary
+                    SearchTerm = "Luke",
+                    Page = 1,
+                    LastPage = 1,
+                    Results = new[]
                     {
-                        Id = "2",
-                        Href = "/user/2",
-                        Email = "test@blog.co.uk",
-                        FirstName = "Luke",
-                        LastName = "Rayner",
-                        IsActive = true,
-                        IsLocked = true
+                        new EmployerUserSummary
+                        {
+                            Id = "2",
+                            Href = "/user/2",
+                            Email = "test@blog.co.uk",
+                            FirstName = "Luke",
+                            LastName = "Rayner",
+                            IsActive = true,
+                            IsLocked = true
+                        }
                     }
-                }
-            }));
+                }));
 
             //Act
             var result = await _sut.Handle(_arg);
@@ -66,25 +67,26 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         {
             //Arrange
 
-            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(new EmployerUserSearchResults
-            {
-                SearchTerm = "Luke",
-                Page = 1,
-                LastPage = 1,
-                Results = new[]
+            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(
+                new EmployerUserSearchResults
                 {
-                    new EmployerUserSummary
+                    SearchTerm = "Luke",
+                    Page = 1,
+                    LastPage = 1,
+                    Results = new[]
                     {
-                        Id = "2",
-                        Href = "/user/2",
-                        Email = "test@blog.co.uk",
-                        FirstName = "Luke",
-                        LastName = "Rayner",
-                        IsActive = true,
-                        IsLocked = false
+                        new EmployerUserSummary
+                        {
+                            Id = "2",
+                            Href = "/user/2",
+                            Email = "test@blog.co.uk",
+                            FirstName = "Luke",
+                            LastName = "Rayner",
+                            IsActive = true,
+                            IsLocked = false
+                        }
                     }
-                }
-            }));
+                }));
 
             //Act
             var result = await _sut.Handle(_arg);
@@ -98,25 +100,26 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         {
             //Arrange
 
-            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(new EmployerUserSearchResults
-            {
-                SearchTerm = "Luke",
-                Page = 1,
-                LastPage = 1,
-                Results = new[]
+            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(
+                new EmployerUserSearchResults
                 {
-                    new EmployerUserSummary
+                    SearchTerm = "Luke",
+                    Page = 1,
+                    LastPage = 1,
+                    Results = new[]
                     {
-                        Id = "2",
-                        Href = "/user/2",
-                        Email = "test@blog.co.uk",
-                        FirstName = "Luke",
-                        LastName = "Rayner",
-                        IsActive = false,
-                        IsLocked = false
+                        new EmployerUserSummary
+                        {
+                            Id = "2",
+                            Href = "/user/2",
+                            Email = "test@blog.co.uk",
+                            FirstName = "Luke",
+                            LastName = "Rayner",
+                            IsActive = false,
+                            IsLocked = false
+                        }
                     }
-                }
-            }));
+                }));
 
             //Act
             var result = await _sut.Handle(_arg);
@@ -125,41 +128,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             Assert.AreEqual(result.Results.First().Status, UserStatus.Unverified);
         }
 
-
-        [Test]
-        [TestCaseSource(typeof(UserStatusTestDataClass), "UserStatusTestCases")]
-        public async Task<UserStatus> UserStatusTest(bool active, bool locked)
-        {
-            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(new EmployerUserSearchResults
-            {
-                SearchTerm = "Luke",
-                Page = 1,
-                LastPage = 1,
-                Results = new[]
-                {
-                    new EmployerUserSummary
-                    {
-                        Id = "2",
-                        Href = "/user/2",
-                        Email = "test@blog.co.uk",
-                        FirstName = "Luke",
-                        LastName = "Rayner",
-                        IsActive = active,
-                        IsLocked = locked
-                    }
-                }
-            }));
-
-            //Act
-            var result = await _sut.Handle(_arg);
-
-            return result.Results.First().Status;
-        }
-
         [Test]
         public async Task ItShouldReturnAResponseIfTheSearchReturnsNull()
         {
-
             _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page))
                 .ReturnsAsync(null as EmployerUserSearchResults);
 
@@ -168,7 +139,38 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             Assert.AreEqual(SearchResponseCodes.SearchFailed, result.StatusCode);
             Assert.AreEqual(_arg.SearchTerm, result.SearchTerm);
             Assert.AreEqual(_arg.Page, result.Page);
+        }
 
+
+        [Test]
+        [TestCaseSource(typeof(UserStatusTestDataClass), "UserStatusTestCases")]
+        public async Task<UserStatus> UserStatusTest(bool active, bool locked)
+        {
+            _mockSearchRepository.Setup(x => x.Search(_arg.SearchTerm, _arg.Page)).Returns(Task.FromResult(
+                new EmployerUserSearchResults
+                {
+                    SearchTerm = "Luke",
+                    Page = 1,
+                    LastPage = 1,
+                    Results = new[]
+                    {
+                        new EmployerUserSummary
+                        {
+                            Id = "2",
+                            Href = "/user/2",
+                            Email = "test@blog.co.uk",
+                            FirstName = "Luke",
+                            LastName = "Rayner",
+                            IsActive = active,
+                            IsLocked = locked
+                        }
+                    }
+                }));
+
+            //Act
+            var result = await _sut.Handle(_arg);
+
+            return result.Results.First().Status;
         }
     }
 }

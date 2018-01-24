@@ -13,18 +13,17 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.Infrastructure
 {
-
     /// <summary>
-    /// TODO: Rationalise by way of; 
-    /// Injecting a Mapper. 
-    /// Convert logger strings to use nameof()
-    /// Configure/Inject the PageSize so as to open out for user ux based preferences
+    ///     TODO: Rationalise by way of;
+    ///     Injecting a Mapper.
+    ///     Convert logger strings to use nameof()
+    ///     Configure/Inject the PageSize so as to open out for user ux based preferences
     /// </summary>
     public sealed class EmployerUserRepository : IEmployerUserRepository
     {
         private const int PageSize = 10;
-        private readonly IEmployerUsersApiClient _client;
         private readonly IAccountApiClient _accountApiClient;
+        private readonly IEmployerUsersApiClient _client;
         private readonly ILog _logger;
 
         public EmployerUserRepository(ILog logger, IEmployerUsersApiClient client, IAccountApiClient accountApiClient)
@@ -36,7 +35,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
         public async Task<EmployerUserSearchResults> Search(string searchTerm, int page)
         {
-            _logger.Debug($"{nameof(IEmployerUsersApiClient)}.{nameof(IEmployerUsersApiClient.SearchEmployerUsers)}(\"{searchTerm}\",{page},{PageSize});");
+            _logger.Debug(
+                $"{nameof(IEmployerUsersApiClient)}.{nameof(IEmployerUsersApiClient.SearchEmployerUsers)}(\"{searchTerm}\",{page},{PageSize});");
 
             var response = await _client.SearchEmployerUsers(searchTerm, page, PageSize);
 
@@ -44,7 +44,10 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
             foreach (var employerUserSummary in results)
             {
-                _logger.Debug($@"{nameof(IAccountApiClient)}.{nameof(IAccountApiClient.GetUserAccounts)}({employerUserSummary.Id});");
+                _logger.Debug(
+                    $@"{nameof(IAccountApiClient)}.{nameof(IAccountApiClient.GetUserAccounts)}({
+                            employerUserSummary.Id
+                        });");
 
                 var accounts = await _accountApiClient.GetUserAccounts(employerUserSummary.Id);
 
@@ -63,7 +66,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
         {
             try
             {
-                _logger.Debug($"{nameof(IEmployerUsersApiClient)}.{nameof(IEmployerUsersApiClient.GetResource)}<{nameof(UserViewModel)}>(\"/api/users/{id}\");");
+                _logger.Debug(
+                    $"{nameof(IEmployerUsersApiClient)}.{nameof(IEmployerUsersApiClient.GetResource)}<{nameof(UserViewModel)}>(\"/api/users/{id}\");");
                 var response = await _client.GetResource<UserViewModel>($"/api/users/{id}");
 
                 return MapToEmployerUser(response);
@@ -79,7 +83,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure
         private IEnumerable<EmployerUserSummary> MapToEmployerUserSummary(List<UserSummaryViewModel> data)
         {
             foreach (var userSummaryViewModel in data)
-            {
                 yield return new EmployerUserSummary
                 {
                     Id = userSummaryViewModel.Id,
@@ -91,9 +94,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                     Href = userSummaryViewModel.Href,
                     Accounts = new List<AccountDetailViewModel>()
                 };
-            }
         }
-        
+
         private EmployerUser MapToEmployerUser(UserViewModel data)
         {
             return new EmployerUser
@@ -106,7 +108,6 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                 FailedLoginAttempts = data.FailedLoginAttempts,
                 IsLocked = data.IsLocked
             };
-
         }
     }
 }

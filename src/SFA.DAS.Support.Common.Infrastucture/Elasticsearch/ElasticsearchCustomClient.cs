@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
@@ -22,7 +23,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _logger = logger;
         }
 
-        public ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, ISearchRequest> selector, [CallerMemberName] string callerName = "")
+        public ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, ISearchRequest> selector,
+            [CallerMemberName] string callerName = "")
             where T : class
         {
             var timer = Stopwatch.StartNew();
@@ -32,8 +34,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector, [CallerMemberName] string callerName = "")
-           where T : class
+        public ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
+            [CallerMemberName] string callerName = "")
+            where T : class
         {
             var timer = Stopwatch.StartNew();
             var result = _client.Count(selector);
@@ -54,6 +57,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             {
                 _logger.Debug($"IndexExists: {e.Message}");
             }
+
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Index Exists {index.Name}");
             return result;
         }
@@ -65,7 +69,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Delete Index {index.Name}");
             return result;
         }
-        public IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null, [CallerMemberName] string callerName = "")
+
+        public IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
+            [CallerMemberName] string callerName = "")
             where T : class
         {
             var timer = Stopwatch.StartNew();
@@ -82,7 +88,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public IRefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null, string callerName = "")
+        public IRefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
+            string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             var result = _client.Refresh(indices);
@@ -90,7 +97,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public IExistsResponse AliasExists(Func<AliasExistsDescriptor, IAliasExistsRequest> selector, string callerName = "")
+        public IExistsResponse AliasExists(Func<AliasExistsDescriptor, IAliasExistsRequest> selector,
+            string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             var result = _client.AliasExists(selector);
@@ -100,7 +108,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public IBulkAliasResponse Alias(string aliasName, string indexName, string callerName = "")
         {
-            Func<BulkAliasDescriptor, IBulkAliasRequest> selector = a => a.Add(add => add.Index(indexName).Alias(aliasName));
+            Func<BulkAliasDescriptor, IBulkAliasRequest> selector = a =>
+                a.Add(add => add.Index(indexName).Alias(aliasName));
             var timer = Stopwatch.StartNew();
             var result = _client.Alias(selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias {aliasName} > {indexName}");
@@ -115,7 +124,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public IIndicesStatsResponse IndicesStats(Indices indices, Func<IndicesStatsDescriptor, IIndicesStatsRequest> selector = null, string callerName = "")
+        public IIndicesStatsResponse IndicesStats(Indices indices,
+            Func<IndicesStatsDescriptor, IIndicesStatsRequest> selector = null, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             var result = _client.IndicesStats(indices, selector);
@@ -131,7 +141,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result.ToList();
         }
 
-        public ICreateIndexResponse CreateIndex(IndexName index, Func<CreateIndexDescriptor, ICreateIndexRequest> selector = null, string callerName = "")
+        public ICreateIndexResponse CreateIndex(IndexName index,
+            Func<CreateIndexDescriptor, ICreateIndexRequest> selector = null, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             var result = _client.CreateIndex(index, selector);
@@ -154,7 +165,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var waitHandle = new CountdownEvent(1);
 
-            var bulkAll = _client.BulkAll<T>(documents, b => b
+            var bulkAll = _client.BulkAll(documents, b => b
                 .Index(indexName)
                 .BackOffRetries(15)
                 .BackOffTime(TimeSpan.FromSeconds(30))
@@ -162,27 +173,21 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .MaxDegreeOfParallelism(4)
                 .Size(batchSize));
 
-            bulkAll.Subscribe(observer: new BulkAllObserver(
-                onNext: (b) =>
+            bulkAll.Subscribe(new BulkAllObserver(
+                b =>
                 {
                     count = count + batchSize;
 
-                    if (count > elementCount)
-                    {
-                        count = elementCount;
-                    }
+                    if (count > elementCount) count = elementCount;
 
                     _logger.Debug($"Indexed group of Document: {count} of {elementCount}");
                 },
-                onError: (e) =>
+                e =>
                 {
                     _logger.Error(e, e.Message);
                     throw e;
                 },
-                onCompleted: () =>
-                {
-                    waitHandle.Signal();
-                }));
+                () => { waitHandle.Signal(); }));
             waitHandle.Wait();
 
             SendLog(null, null, timer.ElapsedMilliseconds, "Bulk completed for Document");
@@ -190,11 +195,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         private void SendLog(IApiCallDetails apiCallDetails, long? took, double networkTime, string identifier)
         {
-            string body = string.Empty;
+            var body = string.Empty;
             if (apiCallDetails?.RequestBodyInBytes != null)
-            {
-                body = System.Text.Encoding.Default.GetString(apiCallDetails.RequestBodyInBytes);
-            }
+                body = Encoding.Default.GetString(apiCallDetails.RequestBodyInBytes);
 
             var properties = new Dictionary<string, object>
             {

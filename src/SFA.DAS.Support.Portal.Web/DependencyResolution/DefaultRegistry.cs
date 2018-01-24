@@ -19,6 +19,7 @@ using System;
 using SFA.DAS.EmployerUsers.Api.Client;
 using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.Support.Portal.Web.Settings;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
@@ -31,6 +32,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using SFA.DAS.Support.Portal.ApplicationServices.Settings;
     using SFA.DAS.Support.Portal.Core.Services;
     using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
+    using SFA.DAS.Support.Shared;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
@@ -72,6 +74,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IRoleSettings>().Use(configuration.Roles);
             For<IAuthSettings>().Use(configuration.Authentication);
             For<ICryptoSettings>().Use(configuration.Crypto);
+
+
+            For<IADFSConfiguration>().Use<ADFSConfiguration>();
+
+
         }
 
         private WebConfiguration GetConfiguration()

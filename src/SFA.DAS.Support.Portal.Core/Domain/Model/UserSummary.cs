@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.EAS.Account.Api.Types;
 using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Support.Portal.Core.Domain.Model
 {

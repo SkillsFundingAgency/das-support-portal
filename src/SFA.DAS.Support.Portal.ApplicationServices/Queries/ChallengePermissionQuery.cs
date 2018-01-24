@@ -6,7 +6,18 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
     public class ChallengePermissionQuery : IAsyncRequest<ChallengePermissionResponse>
     {
-        public string Id { get; private set; }
+        public ChallengePermissionQuery(ChallengeEntry challengeEntry)
+        {
+            Id = challengeEntry.Id;
+            Url = challengeEntry.Url;
+            ChallengeElement1 = challengeEntry.Challenge1;
+            ChallengeElement2 = challengeEntry.Challenge2;
+            Balance = challengeEntry.Balance;
+            FirstCharacterPosition = challengeEntry.FirstCharacterPosition;
+            SecondCharacterPosition = challengeEntry.SecondCharacterPosition;
+        }
+
+        public string Id { get; }
 
         public string Url { get; set; }
 
@@ -19,16 +30,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
         public string FirstCharacterPosition { get; set; }
 
         public string SecondCharacterPosition { get; set; }
-
-        public ChallengePermissionQuery(ChallengeEntry challengeEntry)
-        {
-            Id = challengeEntry.Id;
-            Url = challengeEntry.Url;
-            ChallengeElement1 = challengeEntry.Challenge1;
-            ChallengeElement2 = challengeEntry.Challenge2;
-            Balance = challengeEntry.Balance;
-            FirstCharacterPosition = challengeEntry.FirstCharacterPosition;
-            SecondCharacterPosition = challengeEntry.SecondCharacterPosition;
-        }
     }
 }

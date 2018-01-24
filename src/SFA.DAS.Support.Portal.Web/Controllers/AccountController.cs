@@ -12,8 +12,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IMediator _mediator;
         private readonly ICheckPermissions _checker;
+        private readonly IMediator _mediator;
 
         public AccountController(
             IMediator mediator,
@@ -33,7 +33,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             var vm = new AccountDetailViewModel
             {
                 Account = response.Account,
-                SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+                SearchUrl = Url.Action("Index", "Search", new {SearchTerm = searchTerm})
             };
 
             return View(vm);
@@ -49,7 +49,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 var vm = new AccountDetailViewModel
                 {
                     Account = response.Account,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+                    SearchUrl = Url.Action("Index", "Search", new {SearchTerm = searchTerm})
                 };
 
                 return View(vm);
@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 var vm = new AccountDetailViewModel
                 {
                     Account = response.Account,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+                    SearchUrl = Url.Action("Index", "Search", new {SearchTerm = searchTerm})
                 };
 
                 return View(vm);
@@ -81,9 +81,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Finance(string id, string searchTerm)
         {
             if (!_checker.HasPermissions(Request, Response, User, id))
-            {
-                return RedirectToAction("", "Challenge", new { url = Request.Url?.PathAndQuery, id });
-            }
+                return RedirectToAction("", "Challenge", new {url = Request.Url?.PathAndQuery, id});
 
             var response = await _mediator.SendAsync(new AccountFinanceQuery(id));
 
@@ -93,7 +91,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 {
                     Account = response.Account,
                     Balance = response.Balance,
-                    SearchUrl = Url.Action("Index", "Search", new { SearchTerm = searchTerm })
+                    SearchUrl = Url.Action("Index", "Search", new {SearchTerm = searchTerm})
                 };
 
                 return View(vm);
@@ -106,9 +104,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> PayeSchemeLevySubmissions(string accountId, string payePosition)
         {
             if (!_checker.HasPermissions(Request, Response, User, accountId))
-            {
-                return RedirectToAction("", "Challenge", new { url = Request.Url?.PathAndQuery, accountId });
-            }
+                return RedirectToAction("", "Challenge", new {url = Request.Url?.PathAndQuery, accountId});
 
             var response = await _mediator.SendAsync(new AccountLevySubmissionsQuery(accountId, payePosition));
 

@@ -14,6 +14,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views.Account
     [TestFixture]
     public class PayeSchemePage : ViewTestBase
     {
+        private static IEnumerable<IEnumerable<PayeSchemeViewModel>> GetEmptyPayeSchemes()
+        {
+            yield return null;
+            yield return new List<PayeSchemeViewModel>();
+        }
+
         [Test]
         [TestCaseSource(nameof(GetEmptyPayeSchemes))]
         public void ShouldNotShowPayeSchemesTable(IEnumerable<PayeSchemeViewModel> payeSchemes)
@@ -22,46 +28,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views.Account
 
             var model = new AccountDetailViewModel
             {
-                Account = new Core.Domain.Model.Account { PayeSchemes = payeSchemes}
+                Account = new Core.Domain.Model.Account {PayeSchemes = payeSchemes}
             };
 
             var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
 
             GetPartial(html, "#no-paye-schemes-found").Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void ShouldShowPayeRef()
-        {
-            var payeSchemePage = new _Views_Account_PayeSchemes_cshtml();
-
-            var payeRef = "TEST";
-
-            var model = new AccountDetailViewModel
-            {
-                Account = new Core.Domain.Model.Account { PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {Ref = payeRef} } }
-            };
-
-            var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
-
-            GetPartial(html, "#paye-ref").Should().Contain(payeRef);
-        }
-
-        [Test]
-        public void ShouldShowPayeName()
-        {
-            var payeSchemePage = new _Views_Account_PayeSchemes_cshtml();
-
-            var name = "TEST";
-
-            var model = new AccountDetailViewModel
-            {
-                Account = new Core.Domain.Model.Account { PayeSchemes = new List<PayeSchemeViewModel> { new PayeSchemeViewModel { Name = name } } }
-            };
-
-            var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
-
-            GetPartial(html, "#paye-scheme-name").Should().Contain(name);
         }
 
         [Test]
@@ -88,19 +60,56 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Views.Account
 
             var model = new AccountDetailViewModel
             {
-                Account = new Core.Domain.Model.Account { PayeSchemes = new List<PayeSchemeViewModel> { new PayeSchemeViewModel { AddedDate = addedDate } } }
+                Account = new Core.Domain.Model.Account
+                {
+                    PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {AddedDate = addedDate}}
+                }
             };
 
             var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
 
-            GetPartial(html, "#paye-scheme-added-date").Should().Contain(AccountHelper.ConvertDateTimeToDdmmyyyyFormat(addedDate));
+            GetPartial(html, "#paye-scheme-added-date").Should()
+                .Contain(AccountHelper.ConvertDateTimeToDdmmyyyyFormat(addedDate));
         }
 
-
-        private static IEnumerable<IEnumerable<PayeSchemeViewModel>> GetEmptyPayeSchemes()
+        [Test]
+        public void ShouldShowPayeName()
         {
-            yield return null;
-            yield return new List<PayeSchemeViewModel>();
+            var payeSchemePage = new _Views_Account_PayeSchemes_cshtml();
+
+            var name = "TEST";
+
+            var model = new AccountDetailViewModel
+            {
+                Account = new Core.Domain.Model.Account
+                {
+                    PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {Name = name}}
+                }
+            };
+
+            var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
+
+            GetPartial(html, "#paye-scheme-name").Should().Contain(name);
+        }
+
+        [Test]
+        public void ShouldShowPayeRef()
+        {
+            var payeSchemePage = new _Views_Account_PayeSchemes_cshtml();
+
+            var payeRef = "TEST";
+
+            var model = new AccountDetailViewModel
+            {
+                Account = new Core.Domain.Model.Account
+                {
+                    PayeSchemes = new List<PayeSchemeViewModel> {new PayeSchemeViewModel {Ref = payeRef}}
+                }
+            };
+
+            var html = payeSchemePage.RenderAsHtml(model).ToAngleSharp();
+
+            GetPartial(html, "#paye-ref").Should().Contain(payeRef);
         }
     }
 }

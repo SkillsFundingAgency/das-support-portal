@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
+using System.Web;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.Services
 {
@@ -8,7 +9,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
     {
         public WindowsIdentity GetIdentity()
         {
-            return System.Web.HttpContext.Current?.Request?.LogonUserIdentity?? WindowsIdentity.GetCurrent();
+            return HttpContext.Current?.Request?.LogonUserIdentity ?? WindowsIdentity.GetCurrent();
         }
     }
 }

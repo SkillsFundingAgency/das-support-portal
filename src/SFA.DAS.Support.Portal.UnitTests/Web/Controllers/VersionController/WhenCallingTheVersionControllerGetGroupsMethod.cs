@@ -8,7 +8,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.VersionController
         [Test]
         public void ItShouldReturnThelistOfGroups()
         {
-           
             var result = Unit.GetGroups();
             Assert.IsInstanceOf<IEnumerable<string[]>>(result);
             CollectionAssert.IsEmpty(result);

@@ -9,9 +9,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Crytpo
     [TestFixture]
     public class CryptoFailureTests
     {
-        private ICrypto _unit;
-        private Mock<ICryptoSettings> _mockSettings;
-
         [SetUp]
         public void Setup()
         {
@@ -21,15 +18,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Crytpo
             _mockSettings.SetupGet(x => x.Secret).Returns(null as string);
 
             _unit = new Crypto(_mockSettings.Object);
-
         }
 
+        private ICrypto _unit;
+        private Mock<ICryptoSettings> _mockSettings;
 
-        [Test]
-        public void ItShouldThrowAnExceptionOnEncryptionWithANullSecret()
-        {
-            Assert.Throws<ArgumentNullException>(() => _unit.EncryptStringAES("13123123"));
-        }
         [Test]
         public void ItShouldThrowAnDecryptionOnEncryptionWithANullSecret()
         {
@@ -48,17 +41,24 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Crytpo
             Assert.Throws<ArgumentNullException>(() => _unit.EncryptStringAES(null));
         }
 
+        [Test]
+        public void ItShouldThrowAnExceptionIfWithDecryptTheTextIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _unit.DecryptStringAES(null));
+        }
+
+
+        [Test]
+        public void ItShouldThrowAnExceptionOnEncryptionWithANullSecret()
+        {
+            Assert.Throws<ArgumentNullException>(() => _unit.EncryptStringAES("13123123"));
+        }
+
 
         [Test]
         public void ItShouldThrowAnExceptionWithDecryptIfTheTextIsEmpty()
         {
             Assert.Throws<ArgumentNullException>(() => _unit.DecryptStringAES(string.Empty));
-        }
-
-        [Test]
-        public void ItShouldThrowAnExceptionIfWithDecryptTheTextIsNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => _unit.DecryptStringAES(null));
         }
     }
 }

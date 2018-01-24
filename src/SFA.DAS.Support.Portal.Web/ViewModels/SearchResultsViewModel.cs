@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Support.Portal.Core.Domain.Model;
-using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Portal.Web.ViewModels

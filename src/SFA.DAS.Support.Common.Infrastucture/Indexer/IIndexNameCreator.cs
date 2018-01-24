@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Support.Shared.SearchIndexModel;
+
 namespace SFA.DAS.Support.Common.Infrastucture.Indexer
 {
     public interface IIndexNameCreator
@@ -8,4 +9,3 @@ namespace SFA.DAS.Support.Common.Infrastucture.Indexer
         string CreateNewIndexName(string indexName, SearchCategory searchCategory);
     }
 }
-   

@@ -5,14 +5,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.Settings
 {
     public interface ISearchSettings
     {
-
         string IndexName { get; set; }
 
-        IEnumerable<Uri> ElasticServerUrls { get;  }
+        IEnumerable<Uri> ElasticServerUrls { get; }
 
         /// <summary>
-        /// A comma separated list of server Url's 
-        /// e.g. 'https://localhost:43311,https://localhost:43312'
+        ///     A comma separated list of server Url's
+        ///     e.g. 'https://localhost:43311,https://localhost:43312'
         /// </summary>
         string ServerUrls { get; set; }
 
@@ -29,7 +28,5 @@ namespace SFA.DAS.Support.Common.Infrastucture.Settings
         int IndexReplicas { get; set; }
 
         int IndexCopyCount { get; set; }
-
-
     }
 }

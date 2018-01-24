@@ -26,15 +26,13 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
             decimal messageBalance;
 
-            if (!decimal.TryParse(message.Balance.Replace("£", string.Empty), out messageBalance))
-            {
-                return false;
-            }
+            if (!decimal.TryParse(message.Balance.Replace("£", string.Empty), out messageBalance)) return false;
 
             return Math.Truncate(balance) == Math.Truncate(Convert.ToDecimal(messageBalance)) && validPayeSchemesData;
         }
 
-        private bool CheckPayeSchemesData(IEnumerable<PayeSchemeViewModel> recordPayeSchemes, ChallengePermissionQuery message)
+        private bool CheckPayeSchemesData(IEnumerable<PayeSchemeViewModel> recordPayeSchemes,
+            ChallengePermissionQuery message)
         {
             var challengeInput = new List<string>
             {
@@ -42,7 +40,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                 message.ChallengeElement2.ToLower()
             };
 
-            return recordPayeSchemes.Select(payeSchemeViewModel => payeSchemeViewModel.Ref.Replace("/", string.Empty)).Any(payeSchemaRef => payeSchemaRef[int.Parse(message.FirstCharacterPosition)].ToString().ToLower() == challengeInput[0] && payeSchemaRef[int.Parse(message.SecondCharacterPosition)].ToString().ToLower() == challengeInput[1]);
+            return recordPayeSchemes.Select(payeSchemeViewModel => payeSchemeViewModel.Ref.Replace("/", string.Empty))
+                .Any(payeSchemaRef =>
+                    payeSchemaRef[int.Parse(message.FirstCharacterPosition)].ToString().ToLower() ==
+                    challengeInput[0] &&
+                    payeSchemaRef[int.Parse(message.SecondCharacterPosition)].ToString().ToLower() ==
+                    challengeInput[1]);
         }
     }
 }

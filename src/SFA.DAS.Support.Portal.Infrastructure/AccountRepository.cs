@@ -15,11 +15,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure
     public sealed class AccountRepository : IAccountRepository
     {
         private readonly IAccountApiClient _accountApiClient;
-        private readonly IPayeSchemeObfuscator _payeSchemeObfuscator;
         private readonly IDatetimeService _datetimeService;
         private readonly ILog _logger;
+        private readonly IPayeSchemeObfuscator _payeSchemeObfuscator;
 
-        public AccountRepository(ILog logger, IAccountApiClient accountApiClient, IPayeSchemeObfuscator payeSchemeObfuscator, IDatetimeService datetimeService)
+        public AccountRepository(ILog logger, IAccountApiClient accountApiClient,
+            IPayeSchemeObfuscator payeSchemeObfuscator, IDatetimeService datetimeService)
         {
             _logger = logger;
             _accountApiClient = accountApiClient;
@@ -49,7 +50,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
             {
                 var response = await _accountApiClient.GetResource<AccountWithBalanceViewModel>($"/api/accounts/{id}");
 
-                _logger.Debug($"IAccountApiClient.GetResource<AccountWithBalanceViewModel>(\"/api/accounts/{id}\"); {response.Balance}");
+                _logger.Debug(
+                    $"IAccountApiClient.GetResource<AccountWithBalanceViewModel>(\"/api/accounts/{id}\"); {response.Balance}");
 
                 return response.Balance;
             }
@@ -60,7 +62,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
             }
         }
 
-        private async Task<Account> GetAdditionalFields(AccountDetailViewModel response, AccountFieldsSelection selection)
+        private async Task<Account> GetAdditionalFields(AccountDetailViewModel response,
+            AccountFieldsSelection selection)
         {
             var result = MapToAccount(response);
 
@@ -103,7 +106,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
             while (financialYearIterator <= endDate)
             {
-                var transactions = await _accountApiClient.GetTransactions(accountId, financialYearIterator.Year, financialYearIterator.Month);
+                var transactions = await _accountApiClient.GetTransactions(accountId, financialYearIterator.Year,
+                    financialYearIterator.Month);
 
                 response.AddRange(transactions);
                 financialYearIterator = financialYearIterator.AddMonths(1);
@@ -114,7 +118,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
         private List<TransactionViewModel> GetFilteredTransactions(IEnumerable<TransactionViewModel> response)
         {
-            return response.Where(x => x.Description != null && x.Amount != 0).OrderByDescending(x => x.DateCreated).ToList();
+            return response.Where(x => x.Description != null && x.Amount != 0).OrderByDescending(x => x.DateCreated)
+                .ToList();
         }
 
         private async Task<IEnumerable<PayeSchemeViewModel>> GetPayeSchemes(AccountDetailViewModel response)
@@ -124,7 +129,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
             {
                 var obscured = _payeSchemeObfuscator.ObscurePayeScheme(payeScheme.Id).Replace("/", "%252f");
                 var paye = payeScheme.Id.Replace("/", "%252f");
-                _logger.Debug($"IAccountApiClient.GetResource<PayeSchemeViewModel>(\"{payeScheme.Href.Replace(paye, obscured)}\");");
+                _logger.Debug(
+                    $"IAccountApiClient.GetResource<PayeSchemeViewModel>(\"{payeScheme.Href.Replace(paye, obscured)}\");");
                 var payeSchemeViewModel = await _accountApiClient.GetResource<PayeSchemeViewModel>(payeScheme.Href);
 
                 if (IsValidPayeScheme(payeSchemeViewModel))
@@ -161,7 +167,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure
 
         private bool IsValidPayeScheme(PayeSchemeViewModel result)
         {
-            return result.AddedDate <= DateTime.UtcNow && (result.RemovedDate == null || result.RemovedDate > DateTime.UtcNow);
+            return result.AddedDate <= DateTime.UtcNow &&
+                   (result.RemovedDate == null || result.RemovedDate > DateTime.UtcNow);
         }
 
         private async Task<ICollection<TeamMemberViewModel>> GetAccountTeamMembers(string resultHashedAccountId)
@@ -189,13 +196,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                 _logger.Debug($"IAccountApiClient.GetResource<LegalEntityViewModel>(\"{legalEntity.Href}\");");
                 var legalResponse = await _accountApiClient.GetResource<LegalEntityViewModel>(legalEntity.Href);
 
-                if (legalResponse.AgreementStatus == EmployerAgreementStatus.Signed || 
+                if (legalResponse.AgreementStatus == EmployerAgreementStatus.Signed ||
                     legalResponse.AgreementStatus == EmployerAgreementStatus.Pending ||
                     legalResponse.AgreementStatus == EmployerAgreementStatus.Superseded)
-                {
                     legalEntitiesList.Add(legalResponse);
-                }
             }
+
             return legalEntitiesList;
         }
 
@@ -207,7 +213,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure
                 DasAccountName = accountDetailViewModel.DasAccountName,
                 HashedAccountId = accountDetailViewModel.HashedAccountId,
                 DateRegistered = accountDetailViewModel.DateRegistered,
-                OwnerEmail = accountDetailViewModel.OwnerEmail,
+                OwnerEmail = accountDetailViewModel.OwnerEmail
             };
         }
     }
