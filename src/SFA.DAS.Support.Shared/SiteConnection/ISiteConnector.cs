@@ -7,6 +7,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 {
     public interface ISiteConnector
     {
+        string LastContent { get; set; }
         Exception LastException { get; set; }
         HttpStatusCode LastCode { get; set; }
         HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }

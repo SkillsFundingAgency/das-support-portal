@@ -20,8 +20,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         public HttpStatusCodeDecision Handle(HttpClient client, HttpStatusCode status)
         {
             _logger.Info($"Http Status Code ({(int) status}) {status} returned from Site Connector Request");
-
-            return HttpStatusCodeDecision.ReturnNull;
+            return HttpStatusCodeDecision.HandleException;
         }
     }
 }

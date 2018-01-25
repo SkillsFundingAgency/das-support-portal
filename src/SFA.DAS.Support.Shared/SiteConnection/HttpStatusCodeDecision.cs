@@ -4,6 +4,7 @@
     {
         Continue = 0,
         ReturnNull = 1,
-        HandleException = 2
+        HandleException = 2,
+        RethrowException = 3,
     }
 }
