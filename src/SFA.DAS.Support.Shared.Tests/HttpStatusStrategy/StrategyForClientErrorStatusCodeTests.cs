@@ -28,7 +28,7 @@ namespace SFA.DAS.Support.Shared.Tests.HttpStatusStrategy
         public void ItShouldLogErrorThenDecideToReturnNullWithCode(HttpStatusCode code)
         {
             var actual = Unit.Handle(_httpClient, code);
-            var expected = HttpStatusCodeDecision.ReturnNull;
+            var expected = HttpStatusCodeDecision.HandleException;
             Assert.AreEqual(expected, actual);
             MockLogger.Verify(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once());
             Assert.IsNotNull(_httpClient.DefaultRequestHeaders.Authorization);

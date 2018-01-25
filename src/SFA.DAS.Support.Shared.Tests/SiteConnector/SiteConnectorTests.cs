@@ -10,8 +10,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
     [TestFixture]
     public class SiteConnectorTests : SiteConnectorTestBase
     {
-        [TestCase(HttpStatusCode.Ambiguous)] // 300
-        [TestCase(HttpStatusCode.BadRequest)] // 400
+         [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Conflict)] // 409
         [TestCase(HttpStatusCode.ExpectationFailed)] // 417
         [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
@@ -28,7 +27,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Assert.IsNotNull(Unit.LastContent);
 
             Assert.AreEqual(code, Unit.LastCode);
-            Assert.AreEqual(HttpStatusCodeDecision.ReturnNull, Unit.HttpStatusCodeDecision);
+            Assert.AreEqual(HttpStatusCodeDecision.HandleException, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNull(actual);
         }
