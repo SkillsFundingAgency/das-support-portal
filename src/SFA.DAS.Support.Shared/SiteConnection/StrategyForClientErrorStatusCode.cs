@@ -34,9 +34,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                     _logger.Warn($"Http Status Code ({(int) status}) {status} returned from Site Connector Request");
                     return HttpStatusCodeDecision.ReturnNull;
                 default:
-                    _logger.Error(new Exception("Enforced Exeption after invalid Site Response"),
+                    _logger.Error(new Exception("Forcing Exception after invalid Site Response"),
                         $"Http Status Code ({(int) status}) {status} returned from Site Connector Request");
-                    return HttpStatusCodeDecision.ReturnNull;
+                    return HttpStatusCodeDecision.HandleException;
             }
         }
     }

@@ -10,8 +10,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
     [TestFixture]
     public class SiteConnectorTests : SiteConnectorTestBase
     {
-        [TestCase(HttpStatusCode.Ambiguous)] // 300
-        [TestCase(HttpStatusCode.BadRequest)] // 400
+         [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Conflict)] // 409
         [TestCase(HttpStatusCode.ExpectationFailed)] // 417
         [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
@@ -25,8 +24,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             var actual = await Unit.Download<TestType>(TestUri);
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
+
             Assert.AreEqual(code, Unit.LastCode);
-            Assert.AreEqual(HttpStatusCodeDecision.ReturnNull, Unit.HttpStatusCodeDecision);
+            Assert.AreEqual(HttpStatusCodeDecision.HandleException, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
             Assert.IsNull(actual);
         }
@@ -41,6 +42,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             var actual = await Unit.Download(TestUrlMatch);
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(code, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.ReturnNull, Unit.HttpStatusCodeDecision);
             Assert.IsNull(HttpClient.DefaultRequestHeaders.Authorization);
@@ -57,6 +59,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             var actual = await Unit.Download(TestUrl);
 
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
@@ -75,6 +78,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
 
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
@@ -92,6 +96,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             var actual = await Unit.Download<TestType>(TestUrl);
 
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
@@ -111,6 +116,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
 
             Assert.IsNull(Unit.LastException);
+            Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(HttpStatusCode.OK, Unit.LastCode);
             Assert.AreEqual(HttpStatusCodeDecision.Continue, Unit.HttpStatusCodeDecision);
             Assert.IsNotNull(HttpClient.DefaultRequestHeaders.Authorization);
