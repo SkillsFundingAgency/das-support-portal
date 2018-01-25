@@ -86,23 +86,31 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
             var response = await _client.GetAsync(uri);
 
+            LastContent = await response.Content.ReadAsStringAsync();
+
             HttpStatusCodeDecision = ExamineResponse(response);
 
             switch (HttpStatusCodeDecision)
             {
+                case HttpStatusCodeDecision.RethrowException:
+                    var exception = LastException ??
+                                             new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
+                    _logger.Error(exception, $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
+                    throw exception;
+
                 case HttpStatusCodeDecision.HandleException:
                     var generatedException = LastException ??
-                          new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
-                    _logger.Error(generatedException, $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
-                    throw generatedException;
+                          new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
+                    _logger.Error(generatedException, $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
+                    return null;
 
                 case HttpStatusCodeDecision.ReturnNull:
-                    _logger.Debug($"Forced to Ignore Return value from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
+                    _logger.Debug($"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
                     return null;
 
 
                 default:
-                    _logger.Info($"Successfull cal to site from {nameof(SiteConnector)} recieving {LastCode}");
+                    _logger.Info($"Successful call to site from {nameof(SiteConnector)} recieving {LastCode}");
                     var content = await response.Content.ReadAsStringAsync();
                     if (typeof(T) == typeof(string)) return content as T;
                     return JsonConvert.DeserializeObject<T>(content);
