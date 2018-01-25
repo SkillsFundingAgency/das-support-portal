@@ -38,11 +38,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                       .Map<UserSearchModel>(m => m
                                           .Properties(p => p
                                            .Text(k => k.Name(n => n.Id))
-                                           .Keyword(k => k.Name(n => n.Email))
                                            .Text(k => k.Name(n => n.Status))
+                                           .Keyword(k => k.Name(n => n.Email))
                                            .Keyword(k => k.Name(n => n.FirstName))
                                            .Keyword(k => k.Name(n => n.LastName))
-                                           .Keyword(k => k.Name(n => n.Name))
+                                           .Text(k => k.Name(n => n.Name).Analyzer("not_analyzed"))
                                           )))
                                   , string.Empty);
 

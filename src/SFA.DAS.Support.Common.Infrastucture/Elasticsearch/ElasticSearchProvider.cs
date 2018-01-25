@@ -39,13 +39,15 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Query(q => q
                 .Bool(b => b
                 .Must(m =>
-                        m.Match(mt => mt.Query(searchText).Field(fs => fs.Name))
-                ||
-                m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Name)))
-                ||
-                m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                     ||
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                     ||
+                    m.QueryString(qs => qs.Query(searchText).Fields(f => f.Field(fs => fs.Name)))
+                    ||
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
                 )))
-                .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Name))
+                .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
                , string.Empty);
 
             var countResponse = _elasticSearchClient.Count<UserSearchModel>(c => c.Index(_indexAliasName)
@@ -53,11 +55,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                  .Query(q => q
                  .Bool(b => b
                  .Must(m =>
-                         m.Match(mt => mt.Query(searchText).Field(fs => fs.Name))
-                        ||
-                        m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Name)))
-                        ||
-                        m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                     ||
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                     ||
+                    m.QueryString(qs => qs.Query(searchText).Fields(f => f.Field(fs => fs.Name)))
+                    ||
+                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
                 )))
                    , string.Empty);
 
@@ -83,7 +87,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Must(m =>
                         m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
                         ||
-                         m.Match(mt => mt.Query(searchText).Field(fs => fs.Account))
+                         m.QueryString(qs => qs.Query(searchText).Fields(f => f.Field(fs => fs.Account)))
                         ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
                         ||
