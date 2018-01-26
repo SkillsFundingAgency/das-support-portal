@@ -50,16 +50,17 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                   .Mappings(ms => ms
                                       .Map<AccountSearchModel>(m => m
                                           .Properties(p => p
-                                          .Keyword(k => k.Name(n => n.Account))
+                                          .Text(k => k
+                                                 .Name(n => n.Account)
+                                                 .Fielddata(true)
+                                                 .Fields(kf => kf
+                                                 .Keyword(kfk => kfk.Name(kfkn => kfkn.Account))))
                                           .Keyword(k => k.Name(n => n.AccountID))
                                           .Keyword(k => k.Name(n => n.PayeSchemeId))
                                           )))
                                   , string.Empty);
 
-                if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
-                {
-                    throw new Exception($"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}", response.OriginalException);
-                }
+                ValidateResponse(indexName, response);
             }
         }
     }

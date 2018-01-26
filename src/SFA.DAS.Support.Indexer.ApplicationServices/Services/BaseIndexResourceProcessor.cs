@@ -6,6 +6,7 @@ using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
@@ -90,6 +91,15 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 {
                     _logger.Error(ex, $"Exception while Indexing {typeof(T).Name}");
                 }
+        }
+
+
+        protected void ValidateResponse(string indexName, Nest.ICreateIndexResponse response)
+        {
+            if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+            {
+                throw new Exception($"Call to ElasticSearch client Received non-200 response when trying to create the Index {indexName}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}", response.OriginalException);
+            }
         }
     }
 }
