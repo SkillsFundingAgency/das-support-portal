@@ -42,7 +42,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                            .Keyword(k => k.Name(n => n.Email))
                                            .Keyword(k => k.Name(n => n.FirstName))
                                            .Keyword(k => k.Name(n => n.LastName))
-                                           .Text(k => k.Name(n => n.Name).Analyzer("not_analyzed"))
+                                           .Text(k => k.Name(n => n.Name))
                                           )))
                                   , string.Empty);
 
