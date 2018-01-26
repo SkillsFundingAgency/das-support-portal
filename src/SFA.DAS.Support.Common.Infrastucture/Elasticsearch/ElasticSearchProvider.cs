@@ -106,7 +106,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         private int GetPage(int pageNumber)
         {
-            return pageNumber <= 1 ? 0 : pageNumber;
+            return pageNumber < 0 ? 0 : pageNumber;
         }
     }
 }
