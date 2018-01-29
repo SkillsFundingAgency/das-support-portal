@@ -54,7 +54,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
             if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
             {
-                throw new ElasticSearchInvalidResponseException(response?.ApiCall.HttpStatusCode);
+                throw new ElasticSearchInvalidResponseException(response.ApiCall.HttpStatusCode, response.ServerError?.Error?.Reason, response.OriginalException);
             }
 
 
@@ -84,7 +84,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
             if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
             {
-                throw new ElasticSearchInvalidResponseException(response?.ApiCall.HttpStatusCode);
+                throw new ElasticSearchInvalidResponseException(response.ApiCall.HttpStatusCode, response.ServerError.Error.Reason, response.OriginalException);
             }
               
             return GetSearchResponse(pageSize, response);
