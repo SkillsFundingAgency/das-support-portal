@@ -82,7 +82,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert
             result.Should().NotBeNull();
-            result.TotalCount.Should().Be(documents.Count);
+            result.Results.Count.Should().Be(documents.Count);
             result.Results.Should().AllBeOfType<AccountSearchModel>();
         }
 
@@ -109,7 +109,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert
             result.Should().NotBeNull();
-            result.TotalCount.Should().Be(documents.Count);
+            result.Results.Count.Should().Be(documents.Count);
             result.Results.Should().AllBeOfType<UserSearchModel>();
         }
     }
