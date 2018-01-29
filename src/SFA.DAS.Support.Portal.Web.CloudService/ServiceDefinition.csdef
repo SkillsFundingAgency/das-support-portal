@@ -18,7 +18,7 @@
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="SimpleEndpoint" protocol="http" port="80" />
-      <InputEndpoint name="HttpsEndpoint" protocol="https" port="8080" certificate="WebSslCert" />
+      <InputEndpoint name="HttpsEndpoint" protocol="https" port="44347" certificate="WebSslCert" />
     </Endpoints>
     <Certificates>
       <Certificate name="WebSslCert" storeLocation="LocalMachine" storeName="My" />
