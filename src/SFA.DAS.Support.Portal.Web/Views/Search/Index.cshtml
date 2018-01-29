@@ -19,7 +19,7 @@
                         <h1 class="heading-large">Search</h1>
                         @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" })
 
-                        @Html.HiddenFor(m => m.Page)
+                        <input type="hidden" name="Page" value="0" />
                     </fieldset>
 
                     <fieldset class="search-submit">
@@ -162,9 +162,10 @@
 
 
 
-                    @if (Model.Page > 1)
+                    @if (Model.Page > 0)
                     {
-                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
+                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" 
+                           style="visibility: visible" class="page-navigation__btn prev">
                             <i class="arrow-button fa fa-angle-left"></i>
                             <span class="description">Previous <span class="hide-mob">page</span></span>
                             <span class="counter">@Model.Page of @Model.LastPage</span>
@@ -175,7 +176,8 @@
 
                     @if (Model.Page != Model.LastPage)
                     {
-                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn next">
+                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })" 
+                           style="visibility: visible" class="page-navigation__btn next">
                             <i class="arrow-button fa fa-angle-right"></i>
                             <span class="description">Next <span class="hide-mob">page</span></span>
                             <span class="counter">@Model.Page of @Model.LastPage</span>

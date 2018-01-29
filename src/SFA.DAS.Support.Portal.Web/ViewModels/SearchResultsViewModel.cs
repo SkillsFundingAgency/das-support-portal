@@ -9,7 +9,7 @@ namespace SFA.DAS.Support.Portal.Web.ViewModels
     {
         public SearchResultsViewModel()
         {
-            Page = 1;
+            Page = 0;
         }
 
         public string SearchTerm { get; set; }

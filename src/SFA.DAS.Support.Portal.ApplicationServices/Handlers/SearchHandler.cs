@@ -28,8 +28,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, _pageSize, query.Page);
             searchResponse.UserSearchResult = userResponse;
 
-            var accountResponse =
-                _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
+            var accountResponse =_searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
             searchResponse.AccountSearchResult = accountResponse;
 
             return await Task.FromResult(searchResponse);
