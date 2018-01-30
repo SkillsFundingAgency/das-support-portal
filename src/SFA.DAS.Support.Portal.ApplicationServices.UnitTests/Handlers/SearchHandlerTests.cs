@@ -9,6 +9,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Handlers;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Shared.SearchIndexModel;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 {
@@ -52,7 +53,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
                 });
 
 
-            _unit = new SearchHandler(_mockSearchProvider.Object);
+            _unit = new SearchHandler(_mockSearchProvider.Object, Mock.Of<ILog>());
             _actual = await _unit.Handle(searchQuery);
 
             CollectionAssert.IsNotEmpty(_actual.AccountSearchResult.Results);

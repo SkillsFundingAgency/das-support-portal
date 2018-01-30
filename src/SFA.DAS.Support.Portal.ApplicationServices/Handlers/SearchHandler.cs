@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Common.Infrastucture.Elasticsearch.Exceptions;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
@@ -10,10 +13,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
     {
         private const int _pageSize = 10;
         private readonly ISearchProvider _searchProvider;
+        private readonly ILog _log;
 
-        public SearchHandler(ISearchProvider searchProvider)
+        public SearchHandler(ISearchProvider searchProvider, ILog log)
         {
             _searchProvider = searchProvider;
+            _log = log;
         }
 
         public async Task<SearchResponse> Handle(SearchQuery query)
@@ -25,11 +30,21 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
                 SearchType = query.SearchType
             };
 
-            var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, _pageSize, query.Page);
-            searchResponse.UserSearchResult = userResponse;
+            try
+            {
+                //TODO configure ES analyser
+                query.SearchTerm = query.SearchTerm.ToLower();
 
-            var accountResponse =_searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
-            searchResponse.AccountSearchResult = accountResponse;
+                var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, _pageSize, query.Page);
+                searchResponse.UserSearchResult = userResponse;
+
+                var accountResponse = _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
+                searchResponse.AccountSearchResult = accountResponse;
+            }
+            catch (ElasticSearchInvalidResponseException ex)
+            {
+                _log.Error(ex, $"Error while searching for { query.SearchTerm} search type {query.SearchType} on Page {query.Page}");
+            }
 
             return await Task.FromResult(searchResponse);
         }

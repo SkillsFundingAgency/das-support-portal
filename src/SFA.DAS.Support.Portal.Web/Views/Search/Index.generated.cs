@@ -83,14 +83,14 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6980), Tuple.Create("\"", 7087)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6974), Tuple.Create("\"", 7081)
 
 #line 167 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6987), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 6981), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6987), false)
+, 6981), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " \r\n                           style=\"visibility: visible\"");
@@ -158,14 +158,14 @@ WriteLiteralTo(__razor_helper_writer, "\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7616), Tuple.Create("\"", 7724)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7610), Tuple.Create("\"", 7718)
 
 #line 179 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 7623), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 7617), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 7623), false)
+, 7617), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " \r\n                           style=\"visibility: visible\"");
@@ -442,7 +442,7 @@ WriteLiteral(" class=\"grid-row\"");
 
 WriteLiteral(">\r\n                        <div");
 
-WriteLiteral(" class=\"column-two-thirds\"");
+WriteLiteral(" class=\"column-full\"");
 
 WriteLiteral(">\r\n                            <table");
 
