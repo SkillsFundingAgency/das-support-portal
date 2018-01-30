@@ -3,7 +3,6 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Portal.Web.Settings;
 
 namespace SFA.DAS.Support.Portal.Web
 {
@@ -11,7 +10,7 @@ namespace SFA.DAS.Support.Portal.Web
     {
         public void ConfigureAuth(IAppBuilder app)
         {
-            DependencyResolver.Current.GetService<ILog>().Debug("Configuring Authentication");
+           DependencyResolver.Current.GetService<ILog>().Debug("Configuring Authentication");
             
             var adfsConfiguration = DependencyResolver.Current.GetService<IADFSConfiguration>();
             
