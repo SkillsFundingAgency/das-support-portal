@@ -11,7 +11,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
     public class SearchHandler : IAsyncRequestHandler<SearchQuery, SearchResponse>
     {
-        private const int _pageSize = 10;
+       
         private readonly ISearchProvider _searchProvider;
         private readonly ILog _log;
 
@@ -32,13 +32,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
             try
             {
-                //TODO configure ES analyser
                 query.SearchTerm = query.SearchTerm.ToLower();
 
-                var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, _pageSize, query.Page);
+                var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
                 searchResponse.UserSearchResult = userResponse;
 
-                var accountResponse = _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, _pageSize, query.Page);
+                var accountResponse = _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
                 searchResponse.AccountSearchResult = accountResponse;
             }
             catch (ElasticSearchInvalidResponseException ex)
