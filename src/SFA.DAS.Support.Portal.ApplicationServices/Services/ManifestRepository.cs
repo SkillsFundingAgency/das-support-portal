@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
 using SFA.DAS.NLog.Logger;
@@ -21,6 +22,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private readonly ISiteSettings _settings;
         private readonly ISiteConnector _siteConnector;
         private List<SiteManifest> _manifests;
+        private List<Uri> _sites;
 
         public ManifestRepository(ISiteSettings settings,
             ISiteConnector siteConnector,
@@ -37,6 +39,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _manifests = manifests;
             Resources = resources;
             Challenges = challenges;
+           
+            _sites = (_settings.BaseUrls??string.Empty)
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x=>new Uri(x)).ToList();
         }
 
         private IDictionary<string, SiteResource> Resources { get; set; }
@@ -154,8 +160,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private async Task PollSites()
         {
-            if (_manifests.Any() && Resources.Any() && Challenges.Any()) return;
-            _manifests = await LoadManifest();
+            if ((!_manifests.Any())
+                ||
+                (_manifests.Count < _sites.Count))
+            {
+                _manifests = await LoadManifest();
+            }
+            ProcessManifests();
+        }
+
+        private void ProcessManifests()
+        {
             Resources = new Dictionary<string, SiteResource>();
             Challenges = new Dictionary<string, SiteChallenge>();
             foreach (var siteManifest in _manifests)
@@ -241,11 +256,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private async Task<List<SiteManifest>> LoadManifest()
         {
             var list = new Dictionary<string, SiteManifest>();
-            var sites = _settings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x));
-            foreach (var site in sites)
+            foreach (var site in _sites)
             {
-                var uri = new Uri(new Uri(site), "api/manifest");
+                var uri = new Uri(site, "api/manifest");
                 _log.Debug($"Downloading '{uri}'");
                 try
                 {
