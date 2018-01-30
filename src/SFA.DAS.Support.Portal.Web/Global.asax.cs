@@ -18,7 +18,7 @@ namespace SFA.DAS.Support.Portal.Web
     {
         protected void Application_Start()
         {
-            MvcHandler.DisableMvcResponseHeader = true;
+           MvcHandler.DisableMvcResponseHeader = true;
             var logger = DependencyResolver.Current.GetService<ILog>();
 
             logger.Info("Starting Web Role");
@@ -35,6 +35,7 @@ namespace SFA.DAS.Support.Portal.Web
         }
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
         {
+            if (HttpContext.Current == null) return;
             new HttpContextPolicyProvider(
                 new List<IHttpContextPolicy>()
                 {
@@ -45,8 +46,39 @@ namespace SFA.DAS.Support.Portal.Web
         protected void Application_Error(object sender, EventArgs e)
         {
             var ex = Server.GetLastError().GetBaseException();
+            BuildAndLogExceptionReport(ex);
+        }
+
+        private void BuildAndLogExceptionReport(Exception ex)
+        {
+
             var logger = DependencyResolver.Current.GetService<ILog>();
-            logger.Error(ex, "App_Error");
+
+            var exceptionReport = $"An Unhandled exception was caught by {nameof(Application_Error)}\r\n";
+            exceptionReport += TryAddUserContext();
+            exceptionReport += TryAddHttpRequestContext();
+            exceptionReport += "\r\nException Stack Trace follows:\r\n\r\n";
+            logger.Error(ex, exceptionReport);
+
+        }
+
+        private string TryAddHttpRequestContext()
+        {
+            try
+            {
+                return
+                    $"Host Address: {HttpContext.Current?.Request?.UserHostAddress ?? "Unknown"}\r\nHttp Method: {HttpContext.Current?.Request?.HttpMethod ?? "Unknown"}\r\nRawUrl: {HttpContext.Current?.Request?.RawUrl ?? "Unknown"}";
+            }
+            catch (Exception e)
+            {
+                return "The HttpRequest is not available in this context.";
+            }
+        }
+
+
+        private string TryAddUserContext()
+        {
+            return $"User Name: {HttpContext.Current?.User?.Identity?.Name ?? "Unknown"}\r\n";
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

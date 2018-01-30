@@ -59,6 +59,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1EF32DE6-416E-40B7-934B-E92E8363B182}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificates", "{C3F493EF-0902-404A-A2FA-63E2CFB57629}"
+	ProjectSection(SolutionItems) = preProject
+		Certificates\localhost.pfx = Certificates\localhost.pfx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
