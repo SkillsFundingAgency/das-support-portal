@@ -93,7 +93,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
             return new PagedSearchResponse<T>
             {
-                LastPage = lastPage <= 0 ? 1 : lastPage,
+                LastPage = lastPage < 0 ? 0 : lastPage,
                 TotalCount = response.Total,
                 Results = response?.Documents?.Select(d => d).ToList()
             };
