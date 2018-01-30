@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Support.Shared.SearchIndexModel
 {
@@ -9,6 +10,6 @@ namespace SFA.DAS.Support.Shared.SearchIndexModel
 
         public string AccountID { get; set; }
 
-        public string PayeSchemeId { get; set; }
+        public List<string> PayeSchemeIds { get; set; }
     }
 }
