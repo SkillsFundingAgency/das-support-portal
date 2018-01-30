@@ -56,7 +56,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                                  .Fields(kf => kf
                                                  .Keyword(kfk => kfk.Name(kfkn => kfkn.Account))))
                                           .Keyword(k => k.Name(n => n.AccountID))
-                                          .Keyword(k => k.Name(n => n.PayeSchemeId))
+                                          .Text(k => k.Name(n => n.PayeSchemeIds))
                                           )))
                                   , string.Empty);
 

@@ -52,11 +52,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                , string.Empty);
 
 
-            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
-            {
-                throw new ElasticSearchInvalidResponseException(response.ApiCall.HttpStatusCode, response.ServerError?.Error?.Reason, response.OriginalException);
-            }
-
+            ValidateResponse(response);
 
             return GetSearchResponse(pageSize, response);
         }
@@ -65,6 +61,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         {
             if (searchType != SearchCategory.Account) return null;
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
+
+             searchText = searchText.Replace("/", "\\/");
 
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
                 .Type(Types.Type<AccountSearchModel>())
@@ -77,16 +75,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                         ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
                         ||
-                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeId))
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIds))
                 )))
                  .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Account))
                    , string.Empty);
 
-            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
-            {
-                throw new ElasticSearchInvalidResponseException(response.ApiCall.HttpStatusCode, response.ServerError.Error.Reason, response.OriginalException);
-            }
-              
+            ValidateResponse(response);
+
             return GetSearchResponse(pageSize, response);
         }
 
@@ -108,5 +103,20 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         {
             return pageNumber < 0 ? 0 : pageNumber;
         }
+
+        private void ValidateResponse<T>(ISearchResponse<T> response) where T : class
+        {
+            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+            {
+
+                var errorMsg = $"Received non-200 response Status Code:{response.ApiCall.HttpStatusCode.GetValueOrDefault()} \r\n" +
+                                $"Reasons:{ string.Join("\r\n", response.ServerError?.Error?.RootCause)}";
+
+                throw new ElasticSearchInvalidResponseException(errorMsg, response.OriginalException);
+            }
+
+        }
+
+
     }
 }
