@@ -31,8 +31,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
         {
             var searchQuery = new SearchQuery
             {
-                SearchTerm = "NHS",
-                SearchType = SearchCategory.Account
+                SearchTerm = "nhs",
+                SearchType = SearchCategory.Account,
+                Page = 1
             };
 
             var ecpectedResult = new List<AccountSearchModel>
@@ -45,8 +46,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             };
 
             _mockSearchProvider
-                .Setup(x => x.FindAccounts(searchQuery.SearchTerm, searchQuery.SearchType, It.IsAny<int>(),
-                    It.IsAny<int>()))
+                .Setup(x => x.FindAccounts(searchQuery.SearchTerm, searchQuery.SearchType, searchQuery.PageSize, searchQuery.Page))
                 .Returns(new PagedSearchResponse<AccountSearchModel>
                 {
                     Results = ecpectedResult
