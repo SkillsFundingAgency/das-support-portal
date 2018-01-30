@@ -41,12 +41,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             _siteChallenges = new Dictionary<string, SiteChallenge>();
             _siteResources = new Dictionary<string, SiteResource>();
             _siteManifests = new List<SiteManifest>();
-            Unit = new ApplicationServices.Services.ManifestRepository(
-                MockSiteSettings.Object,
-                MockSiteConnector.Object,
-                MockFormMapper.Object,
-                MockLogger.Object, _siteManifests, _siteResources, _siteChallenges);
-
+      
 
             HttpsTestsite = "https://testsite";
 
@@ -93,6 +88,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
 
             MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);
+           
+            Unit = new ApplicationServices.Services.ManifestRepository(
+                MockSiteSettings.Object,
+                MockSiteConnector.Object,
+                MockFormMapper.Object,
+                MockLogger.Object, _siteManifests, _siteResources, _siteChallenges);
+
+
         }
     }
 }
