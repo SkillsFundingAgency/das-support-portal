@@ -8,14 +8,12 @@ namespace SFA.DAS.Support.Portal.Web.Settings
     public interface IWebConfiguration
     {
         AuthSettings Authentication { get; set; }
-        RoleSettings Roles { get; set; }
+        CryptoSettings Crypto { get; set; }
         ChallengeSettings Challenge { get; set; }
-        SiteConnectorSettings SiteConnector { get; set; }
-        SiteSettings Site { get; set; }
         ElasticSearchSettings ElasticSearch { get; set; }
-        HmrcClientConfiguration HmrcClient { get; set; }
-        AccountsApiConfiguration AccountsApi { get; set; }
-        EmployerUsersApiConfiguration EmployerUsersApi { get; set; }
-        LevySubmissionsApiConfiguration LevySubmissionsApi { get; set; }
+        RoleSettings Roles { get; set; }
+        SiteSettings Site { get; set; }
+        SiteConnectorSettings SiteConnector { get; set; }
+        SiteValidatorSettings SiteValidator { get; set; }
     }
 }

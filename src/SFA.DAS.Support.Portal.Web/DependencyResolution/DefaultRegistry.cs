@@ -63,18 +63,13 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             WebConfiguration configuration = GetConfiguration();
 
             For<IWebConfiguration>().Use(configuration);
+            For<IAuthSettings>().Use(configuration.Authentication);
             For<IChallengeSettings>().Use(configuration.Challenge);
+            For<ICryptoSettings>().Use(configuration.Crypto);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
-            For<IHmrcClientConfiguration>().Use(configuration.HmrcClient);
-            For<IAccountApiConfiguration>().Use(configuration.AccountsApi);
-            For<IEmployerUsersApiConfiguration>().Use(configuration.EmployerUsersApi);
-            For<ILevySubmissionsApiConfiguration>().Use(configuration.LevySubmissionsApi);
             For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
             For<ISiteSettings>().Use(configuration.Site);
             For<IRoleSettings>().Use(configuration.Roles);
-            For<IAuthSettings>().Use(configuration.Authentication);
-            For<ICryptoSettings>().Use(configuration.Crypto);
-
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 

@@ -441,14 +441,11 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ChallengeController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\VersionInformation.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyScope.cs" />
     <Compile Include="Models\ChallengeForm.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\HealthController.cs" />
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\ChallengeHelper.cs" />
@@ -466,8 +463,6 @@
     <Compile Include="Settings\IChallengeSettings.cs" />
     <Compile Include="Settings\WebConfiguration.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
@@ -489,51 +484,15 @@
     <Compile Include="ViewModels\ResultCell.cs" />
     <Compile Include="ViewModels\ResultRow.cs" />
     <Compile Include="ViewModels\SearchResultsViewModel.cs" />
-    <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ChallengeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Account\PayeSchemeLevySubmissions.generated.cs">
-      <DependentUpon>PayeSchemeLevySubmissions.cshtml</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Views\Account\Finance.generated.cs">
-      <DependentUpon>Finance.cshtml</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Views\Account\Index.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Account\PayeSchemes.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PayeSchemes.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Account\TeamMembers.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TeamMembers.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Challenge\Index.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Search\Index.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\User\index.generated.cs">
-      <DependentUpon>index.cshtml</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -544,7 +503,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\SignOutCallback.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="StartUp\IIS.bat">
@@ -559,35 +517,6 @@
     <Content Include="Views\Error\Error400.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Error\Error500.cshtml" />
-    <Content Include="Views\Account\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\TeamMembers.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>TeamMembers.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\PayeSchemes.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>PayeSchemes.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\Finance.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Finance.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Health\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-    </Content>
-    <Content Include="Views\Health\EmployerUser.cshtml" />
-    <Content Include="Views\Health\Accounts.cshtml" />
-    <Content Include="Views\Challenge\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\PayeSchemeLevySubmissions.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>PayeSchemeLevySubmissions.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Shared\Missing.cshtml" />
     <Content Include="Views\Shared\Sub.cshtml" />
     <Content Include="ApplicationInsights.config">
@@ -598,10 +527,6 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Index.generated.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\User\index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>index.generated.cs</LastGenOutput>
     </Content>
     <Content Include="assets\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <Content Include="assets\stylesheets\fonts\GDSTransportTabular-Light.eot" />
