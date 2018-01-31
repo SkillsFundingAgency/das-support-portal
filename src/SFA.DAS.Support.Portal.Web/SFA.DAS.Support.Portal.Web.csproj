@@ -475,11 +475,6 @@
     <Compile Include="Logging\RequestContext.cs" />
     <Compile Include="Services\IMappingService.cs" />
     <Compile Include="Services\MappingService.cs" />
-    <Compile Include="ViewModels\PayeSchemeLevySubmissionsViewModel.cs" />
-    <Compile Include="ViewModels\PayeSchemeLevySubmissionViewModel.cs" />
-    <Compile Include="ViewModels\FinanceViewModel.cs" />
-    <Compile Include="ViewModels\AccountDetailViewModel.cs" />
-    <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\ResultCell.cs" />
     <Compile Include="ViewModels\ResultRow.cs" />

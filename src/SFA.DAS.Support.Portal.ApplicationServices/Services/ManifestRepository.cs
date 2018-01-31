@@ -59,15 +59,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             await PollSites();
             var challenge = Challenges[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x =>
-                x.Challenges.Select(y => FormatKey(y.ChallengeKey))
+            var siteOfChallenge = _manifests.FirstOrDefault(x =>
+                x.Challenges != null &&
+                x.Challenges
+                    .Select(y => FormatKey(y.ChallengeKey))
                     .Contains(key.ToLower()));
-            if (site == null || site.BaseUrl == null)
+            if (siteOfChallenge?.BaseUrl == null)
                 throw new NullReferenceException(
                     $"The challenge {FormatKey(key)} could not be found in any manifest"
                 );
 
-            challenge.ChallengeUrlFormat = new Uri(new Uri(site.BaseUrl), challenge.ChallengeUrlFormat).ToString();
+            challenge.ChallengeUrlFormat = new Uri(new Uri(siteOfChallenge.BaseUrl), challenge.ChallengeUrlFormat).ToString();
             return await Task.FromResult(challenge);
         }
 
@@ -131,7 +133,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             await PollSites();
             var resource = Resources[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x =>
+            var site = _manifests.FirstOrDefault(x => x.Resources != null &&
                 x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
             if (site == null || site.BaseUrl == null)
                 throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
@@ -187,7 +189,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var lowerCasedKey = key.ToLower();
 
             var siteManifest = _manifests
-                .First(x => x.Challenges.Select(y => y.ChallengeKey.ToLower())
+                .First(x => x.Challenges != null &&
+                            x.Challenges.Select(y => y.ChallengeKey.ToLower())
                     .Contains(lowerCasedKey)
                 );
 
