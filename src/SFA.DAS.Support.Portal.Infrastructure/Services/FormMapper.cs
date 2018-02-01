@@ -17,7 +17,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
             form.AppendChild(document.CreateHidden("innerAction", innerAction));
             form.AppendChild(document.CreateHidden("redirect", url));
 
-            return document.DocumentElement.OuterHtml;
+            return document
+                    .DocumentElement
+                        .InnerHtml
+                                .Replace("<head>","").Replace("</head>","")
+                                .Replace("<body>","").Replace("</body>","")
+                                ;
         }
     }
 }

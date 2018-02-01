@@ -39,10 +39,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _manifests = manifests;
             Resources = resources;
             Challenges = challenges;
-           
-            _sites = (_settings.BaseUrls??string.Empty)
+
+            _sites = (_settings.BaseUrls ?? string.Empty)
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x=>new Uri(x)).ToList();
+                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Uri(x)).ToList();
         }
 
         private IDictionary<string, SiteResource> Resources { get; set; }
@@ -82,7 +82,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GenerateHeader(string key, string id)
         {
             var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey)) return new ResourceResultModel(){ StatusCode = HttpStatusCode.NotFound};
+            if (!await ResourceExists(headerKey)) return new ResourceResultModel() { StatusCode = HttpStatusCode.NotFound };
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);
@@ -112,15 +112,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             formData.Remove("innerAction");
             formData.Remove(challengekey);
 
+            // ReSharper disable once RedundantAssignment
             var html = await _siteConnector.Upload<string>(uri, formData);
 
-            if (string.IsNullOrWhiteSpace(html))
-                return new ChallengeResult { RedirectUrl = redirect };
-
-            return new ChallengeResult
+            // ReSharper disable once InvertIf
+            if (_siteConnector.LastCode == HttpStatusCode.Forbidden)
             {
-                Page = _formMapper.UpdateForm(key, id, redirect, html)
-            };
+                html = _siteConnector.LastContent;
+                return new ChallengeResult
+                {
+                    Page = _formMapper.UpdateForm(key, id, redirect, html)
+                };
+            }
+
+            return new ChallengeResult { RedirectUrl = redirect };
         }
 
         public async Task<List<SiteManifest>> GetManifests()
@@ -266,11 +271,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 try
                 {
                     var manifest = await _siteConnector.Download<SiteManifest>(uri);
-                    if (manifest != null )
+                    if (manifest != null)
                     {
-                        list.Add(uri.ToString(), manifest);    
+                        list.Add(uri.ToString(), manifest);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
