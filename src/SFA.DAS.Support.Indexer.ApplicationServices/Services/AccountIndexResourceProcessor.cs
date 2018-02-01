@@ -39,6 +39,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         {
             if (!_elasticClient.IndexExists(indexName, string.Empty).Exists)
             {
+
                 var response = _elasticClient.CreateIndex(
                               indexName,
                               i => i
@@ -55,7 +56,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                                  .Fielddata(true)
                                                  .Fields(kf => kf
                                                  .Keyword(kfk => kfk.Name(kfkn => kfkn.Account))))
-                                          .Keyword(k => k.Name(n => n.AccountID))
+                                          .Text(k => k.Name(n => n.AccountID))
                                           .Text(k => k.Name(n => n.PayeSchemeIds))
                                           )))
                                   , string.Empty);
