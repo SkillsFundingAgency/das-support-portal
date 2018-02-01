@@ -62,8 +62,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             if (searchType != SearchCategory.Account) return null;
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
-             searchText = searchText.Replace("/", "\\/");
-
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
                 .Type(Types.Type<AccountSearchModel>())
                 .Skip(pageSize * GetPage(pageNumber))
