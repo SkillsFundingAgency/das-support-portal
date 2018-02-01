@@ -112,11 +112,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             formData.Remove("innerAction");
             formData.Remove(challengekey);
 
-            // ReSharper disable once RedundantAssignment
             var html = await _siteConnector.Upload<string>(uri, formData);
 
-            // ReSharper disable once InvertIf
-            if (_siteConnector.LastCode == HttpStatusCode.Forbidden)
+            return AcceptTheHtmlOrTheForbiddenStatusCode(html, key, id, redirect);
+
+        }
+
+        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, string key, string id, string redirect)
+        {
+            if (string.IsNullOrWhiteSpace(html) &&
+                 _siteConnector.LastCode == HttpStatusCode.Forbidden)
             {
                 html = _siteConnector.LastContent;
                 return new ChallengeResult
@@ -124,7 +129,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                     Page = _formMapper.UpdateForm(key, id, redirect, html)
                 };
             }
-
             return new ChallengeResult { RedirectUrl = redirect };
         }
 
