@@ -19,17 +19,20 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
         {
             _unit = new WebConfiguration
             {
-                AccountsApi = new AccountsApiConfiguration
+                Authentication = new AuthSettings
                 {
-                    ApiBaseUrl = "--- configuration value goes here ---",
-                    ClientId = "00000000-0000-0000-0000-000000000000",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---"
+                    Realm = "--- configuration value goes here ---",
+                    AdfsMetadata = "--- configuration value goes here ---"
                 },
                 Challenge = new ChallengeSettings
                 {
                     ChallengeTimeoutMinutes = 3
+                }
+                ,
+                Crypto = new CryptoSettings
+                {
+                    Secret = "--- configuration value goes here ---",
+                    Salt = "--- configuration value goes here ---"
                 },
                 ElasticSearch = new ElasticSearchSettings
                 {
@@ -42,27 +45,13 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     IndexShards = 1,
                     IndexReplicas = 0
                 },
-                EmployerUsersApi = new EmployerUsersApiConfiguration
+                Roles = new RoleSettings
                 {
-                    ApiBaseUrl = "--- configuration value goes here ---",
-                    ClientId = "12312313-d123-1231-1231-123131231653",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---",
-                    ClientCertificateThumbprint = "--- configuration value goes here ---"
-                },
-                HmrcClient = new HmrcClientConfiguration
-                {
-                    HttpClientBaseUrl = "--- configuration value goes here ---"
-                },
-                LevySubmissionsApi = new LevySubmissionsApiConfiguration
-                {
-                    ApiBaseUrl = "--- configuration value goes here ---",
-                    ClientId = "d7957772-af61-4ff1-931a-612312312310",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---",
-                    LevyTokenCertificatethumprint = "--- configuration value goes here ---"
+                    ConsoleUserRole = "--- configuration value goes here ---",
+                    ForceT2UserLocally = true,
+                    GroupClaim = "--- configuration value goes here ---",
+                    T2Role = "--- configuration value goes here ---",
+                    Tier2Claim = "--- configuration value goes here ---"
                 },
                 Site = new SiteSettings
                 {
@@ -81,24 +70,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     Audience = "--- configuration value goes here ---",
                     Scope = "--- configuration value goes here ---",
                     Tenant = "--- configuration value goes here ---"
-                },
-                Roles = new RoleSettings
-                {
-                    ConsoleUserRole = "--- configuration value goes here ---",
-                    ForceT2UserLocally = true,
-                    GroupClaim = "--- configuration value goes here ---",
-                    T2Role = "--- configuration value goes here ---",
-                    Tier2Claim = "--- configuration value goes here ---"
-                },
-                Authentication = new AuthSettings
-                {
-                    Realm = "--- configuration value goes here ---",
-                    AdfsMetadata = "--- configuration value goes here ---"
-                },
-                Crypto = new CryptoSettings
-                {
-                    Secret = "--- configuration value goes here ---",
-                    Salt = "--- configuration value goes here ---"
                 }
             };
         }

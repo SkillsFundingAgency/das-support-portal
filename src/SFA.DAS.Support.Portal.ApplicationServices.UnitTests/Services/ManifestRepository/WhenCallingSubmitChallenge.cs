@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using Moq;
@@ -34,7 +35,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             foreach (var item in _submittedFormData)
             {
-                if (new[] {"redirect", "innerAction", "challengeKey"}.Contains(item.Key)) continue;
+                if (new[] { "redirect", "innerAction", "challengeKey" }.Contains(item.Key)) continue;
                 _postedFormData.Add(item.Key, item.Value);
             }
         }
@@ -57,14 +58,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReceiveAFormResponseOnFail()
         {
-            var downloadedFormHtml = "<html><form action='' method='post' /></html>";
 
-
-            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
-                .ReturnsAsync(downloadedFormHtml);
-
-
-            var mappedFormHtml = "<html><form action='/api/challenge/id'  method='post' /></html>";
+            var mappedFormHtml = "<form action='/api/challenge/id'  method='post' />";
 
 
             MockFormMapper.Setup(x => x.UpdateForm(
@@ -75,6 +70,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 ))
                 .Returns(mappedFormHtml);
 
+
+            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
+                .ReturnsAsync(null as string);
+
+            MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.Forbidden);
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
 

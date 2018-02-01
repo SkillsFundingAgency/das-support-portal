@@ -37,10 +37,5 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             return View(new SearchResultsViewModel());
         }
-
-        public ActionResult Detail(string id)
-        {
-            return View();
-        }
     }
 }

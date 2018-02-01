@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
 using SFA.DAS.NLog.Logger;
@@ -39,10 +38,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _manifests = manifests;
             Resources = resources;
             Challenges = challenges;
-           
-            _sites = (_settings.BaseUrls??string.Empty)
+
+            _sites = (_settings.BaseUrls ?? string.Empty)
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x=>new Uri(x)).ToList();
+                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Uri(x)).ToList();
         }
 
         private IDictionary<string, SiteResource> Resources { get; set; }
@@ -59,15 +58,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             await PollSites();
             var challenge = Challenges[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x =>
-                x.Challenges.Select(y => FormatKey(y.ChallengeKey))
+            var siteOfChallenge = _manifests.FirstOrDefault(x =>
+                x.Challenges != null &&
+                x.Challenges
+                    .Select(y => FormatKey(y.ChallengeKey))
                     .Contains(key.ToLower()));
-            if (site == null || site.BaseUrl == null)
+            if (siteOfChallenge?.BaseUrl == null)
                 throw new NullReferenceException(
                     $"The challenge {FormatKey(key)} could not be found in any manifest"
                 );
 
-            challenge.ChallengeUrlFormat = new Uri(new Uri(site.BaseUrl), challenge.ChallengeUrlFormat).ToString();
+            challenge.ChallengeUrlFormat = new Uri(new Uri(siteOfChallenge.BaseUrl), challenge.ChallengeUrlFormat).ToString();
             return await Task.FromResult(challenge);
         }
 
@@ -80,7 +81,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GenerateHeader(string key, string id)
         {
             var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey)) return new ResourceResultModel(){ StatusCode = HttpStatusCode.NotFound};
+            if (!await ResourceExists(headerKey)) return new ResourceResultModel() { StatusCode = HttpStatusCode.NotFound };
 
             var resource = await GetResource(headerKey);
             var url = string.Format(resource.ResourceUrlFormat, id);
@@ -112,13 +113,22 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var html = await _siteConnector.Upload<string>(uri, formData);
 
-            if (string.IsNullOrWhiteSpace(html))
-                return new ChallengeResult { RedirectUrl = redirect };
+            return AcceptTheHtmlOrTheForbiddenStatusCode(html, key, id, redirect);
 
-            return new ChallengeResult
+        }
+
+        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, string key, string id, string redirect)
+        {
+            if (string.IsNullOrWhiteSpace(html) &&
+                 _siteConnector.LastCode == HttpStatusCode.Forbidden)
             {
-                Page = _formMapper.UpdateForm(key, id, redirect, html)
-            };
+                html = _siteConnector.LastContent;
+                return new ChallengeResult
+                {
+                    Page = _formMapper.UpdateForm(key, id, redirect, html)
+                };
+            }
+            return new ChallengeResult { RedirectUrl = redirect };
         }
 
         public async Task<List<SiteManifest>> GetManifests()
@@ -131,7 +141,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             await PollSites();
             var resource = Resources[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x =>
+            var site = _manifests.FirstOrDefault(x => x.Resources != null &&
                 x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
             if (site == null || site.BaseUrl == null)
                 throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
@@ -187,7 +197,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var lowerCasedKey = key.ToLower();
 
             var siteManifest = _manifests
-                .First(x => x.Challenges.Select(y => y.ChallengeKey.ToLower())
+                .First(x => x.Challenges != null &&
+                            x.Challenges.Select(y => y.ChallengeKey.ToLower())
                     .Contains(lowerCasedKey)
                 );
 
@@ -263,11 +274,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 try
                 {
                     var manifest = await _siteConnector.Download<SiteManifest>(uri);
-                    if (manifest != null )
+                    if (manifest != null)
                     {
-                        list.Add(uri.ToString(), manifest);    
+                        list.Add(uri.ToString(), manifest);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {

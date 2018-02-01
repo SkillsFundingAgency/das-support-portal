@@ -6,14 +6,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     public class SharedController : Controller
     {
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult Header()
         {
             var viewModel = new HeaderViewModel
             {
                 Username = Thread.CurrentPrincipal.Identity.Name
             };
-
             return PartialView("_Header", viewModel);
         }
     }
