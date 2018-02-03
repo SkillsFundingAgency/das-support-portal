@@ -10,34 +10,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingGetManifests : WhenTestingManifestRepository
     {
-        [TearDown]
-        public void Teardown()
-        {
-            MockLogger.Verify(x => x.Debug($"Downloading '{TestSiteUri}'"), Times.Once);
-        }
-
-        [Test]
-        public async Task ItShouldLogTheExceptionOnError()
-        {
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(It.IsAny<Uri>()))
-                .ThrowsAsync(new HttpException());
-
-            var result = await Unit.GetManifests();
-
-            MockLogger.Verify(x => x.Error(It.IsAny<HttpException>(), It.IsAny<string>()), Times.Once);
-            CollectionAssert.IsEmpty(result);
-        }
-
-        [Test]
-        public async Task ItShouldReturnAnEmptyListOnError()
-        {
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(It.IsAny<Uri>()))
-                .ThrowsAsync(new HttpException());
-            var result = await Unit.GetManifests();
-
-            CollectionAssert.IsEmpty(result);
-        }
-
+       
         [Test]
         public async Task ItShouldReturnTheListOfManifestObjects()
         {

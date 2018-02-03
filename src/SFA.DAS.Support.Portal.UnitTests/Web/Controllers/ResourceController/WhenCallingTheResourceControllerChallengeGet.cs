@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.Navigation;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
@@ -16,13 +17,13 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             base.Setup();
             _id = "id";
             _resourceId = "resourceId";
-            _key = "key";
+            _key = SupportServiceResourceKey.EmployerUserHeader;
             _url = "";
         }
 
         private string _id;
         private string _resourceId;
-        private string _key;
+        private SupportServiceResourceKey _key;
         private string _url;
 
 
@@ -30,7 +31,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         public async Task ItShouldProvideTheChallengeMissingViewIfGetChallengeFormThrowsAnyException()
         {
             var navResponse =
-                new NavViewModel {Current = "", Items = new[] {new NavItem {Href = "", Key = "", Title = ""}}};
+                new NavViewModel
+                {
+                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Items = new[]
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                };
             MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
@@ -53,7 +59,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         public async Task ItShouldProvideTheChallengeSubView()
         {
             var navResponse =
-                new NavViewModel {Current = "", Items = new[] {new NavItem {Href = "", Key = "", Title = ""}}};
+                new NavViewModel
+                {
+                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Items = new[]
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                };
             MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))

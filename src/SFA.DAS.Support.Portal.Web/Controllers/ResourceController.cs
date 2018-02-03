@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
@@ -25,8 +27,22 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Challenge(string id, string resourceId, string key, string url)
+        public async Task<ActionResult> Challenge(string id, string resourceId, SupportServiceResourceKey key,
+            string url)
         {
+
+            //var keyValue = Enum.Parse(typeof(SupportServiceResourceKey ), resourceKey) ;
+
+            //if (keyValue == null)
+            //{
+            //    throw new ArgumentException(nameof(resourceKey));
+            //}
+
+
+            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
+            //{
+            //    throw new ArgumentException(nameof(resourceKey));
+            //}
             if (!await _repository.ChallengeExists(key)) return HttpNotFound();
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
@@ -35,7 +51,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             try
             {
                 var challengeForm = await _repository.GetChallengeForm(key, resourceId, url);
-                return View("Sub", (object)new ResourceResultModel()
+                return View("Sub", new ResourceResultModel
                 {
                     StatusCode = HttpStatusCode.OK,
                     Resource = challengeForm
@@ -48,8 +64,14 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Challenge(string id, string resourceId, string key, FormCollection formData)
+        public async Task<ActionResult> Challenge(string id, string resourceId,  SupportServiceResourceKey key,
+            FormCollection formData)
         {
+            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
+            //{
+            //    throw new ArgumentException(nameof(resourceKey));
+            //}
+
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
             var result = await _repository.SubmitChallenge(resourceId, pairs);
 
@@ -61,7 +83,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, resourceId);
-            return View("Sub", (object) new ResourceResultModel()
+            return View("Sub", new ResourceResultModel
             {
                 StatusCode = HttpStatusCode.OK,
                 Resource = result.Page
@@ -69,25 +91,36 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(string key, string id)
+        public async Task<ActionResult> Index( SupportServiceResourceKey key, string id)
         {
+            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
+            //{
+            //    throw new ArgumentException(nameof(resourceKey));
+            //}
+
+
             if (!await _repository.ResourceExists(key))
-                return View("Sub", (object) new ResourceResultModel() { Resource = "<h3>This resource isn't registered</h3>", StatusCode = HttpStatusCode.OK, Exception = null});
+                return View("Sub",
+                    new ResourceResultModel
+                    {
+                        Resource = "<h3>This resource isn't registered</h3>",
+                        StatusCode = HttpStatusCode.OK,
+                        Exception = null
+                    });
 
             var resource = await _repository.GetResource(key);
 
             if (!string.IsNullOrEmpty(resource.Challenge))
                 if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))
                     return RedirectToAction("Challenge",
-                        new { key = resource.Challenge, resourceId = id, url = Request.RawUrl });
+                        new {key = resource.Challenge, resourceId = id, url = Request.RawUrl});
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
             var resourceResult = await _repository.GetResourcePage(key, id);
 
-            return View("Sub", (object)resourceResult);
-
+            return View("Sub", resourceResult);
         }
     }
 }

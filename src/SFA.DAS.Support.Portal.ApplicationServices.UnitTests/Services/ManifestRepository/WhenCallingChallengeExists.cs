@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
@@ -10,13 +11,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [TearDown]
         public void Teardown()
         {
-            MockLogger.Verify(x => x.Debug($"Downloading '{TestSiteUri}'"), Times.Once);
+           
         }
 
         [Test]
         public async Task ItShouldReturnFalseIfTheChallengedoesNotExist()
         {
-            var result = await Unit.ChallengeExists("key");
+            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccount);
 
             Assert.IsFalse(result);
         }
@@ -24,7 +25,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnTrueIfTheChallengeExists()
         {
-            var result = await Unit.ChallengeExists("ChallengeKey");
+            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccountFinance);
 
             Assert.IsTrue(result);
         }

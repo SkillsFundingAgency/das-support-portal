@@ -6,7 +6,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
     public class SearchQuery : IAsyncRequest<SearchResponse>
     {
-
         public SearchQuery()
         {
             PageSize = 10;

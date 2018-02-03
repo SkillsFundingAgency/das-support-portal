@@ -9,10 +9,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingGetChallengeForm : WhenTestingManifestRepository
     {
-        [TearDown]
-        public void Teardown()
+       
+        [Test]
+        public void ItShouldNotThrowAnExceptionIfTheSiteManifestNull()
         {
-            MockLogger.Verify(x => x.Debug($"Downloading '{TestSiteUri}'"), Times.Once);
+            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(null as SiteManifest);
+
+            Assert.DoesNotThrow(() =>
+            {
+                var response = Unit.GetChallengeForm(SupportServiceResourceKey.EmployerUserAccountTeam, "id",
+                    "http://tempuri.org/callenge/form");
+            });
         }
 
         [Test]
@@ -25,14 +32,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 .ReturnsAsync(downloadedFormHtml);
 
             MockFormMapper.Setup(x => x.UpdateForm(
-                    It.IsAny<string>(),
+                    It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>()
                 ))
                 .Returns(mappedFormHtml);
 
-            var actual = await Unit.GetChallengeForm("challengekey", "id", "http://tempuri.org/callenge/form");
+            var actual = await Unit.GetChallengeForm(SupportServiceResourceKey.EmployerAccountFinance, "id",
+                "http://tempuri.org/challenge/form");
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(actual));
 
@@ -40,23 +48,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             Assert.IsTrue(actual.Contains("<form"));
         }
 
-        [Test]
-        public void ItShouldThrowAnExceptionIfTheSiteBaseUrlIsNull()
-        {
-            TestSiteManifest.BaseUrl = null;
-            Assert.ThrowsAsync<NullReferenceException>(() =>
-                Unit.GetChallengeForm("challengekey", "id", "http://tempuri.org/callenge/form"));
-        }
-
-        [Test]
-        public void ItShouldNotThrowAnExceptionIfTheSiteManifestNull()
-        {
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(null as SiteManifest);
-
-            Assert.DoesNotThrow(() =>
-            {
-                var response =  Unit.GetChallengeForm("challengekey", "id", "http://tempuri.org/callenge/form");
-            } );
-        }
+       
     }
 }

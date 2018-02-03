@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
@@ -18,7 +19,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             base.Setup();
             _id = "123";
             _uriString = "https://tempuri.org";
-            _challengekey = "challengekey";
+            _challengekey =  SupportServiceResourceKey.EmployerAccountFinance.ToString();
             _innerAction = $"/api/challenge/{_id}";
             _redirectUrl = $"{_uriString}/redirect/{_id}";
 
@@ -35,17 +36,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             foreach (var item in _submittedFormData)
             {
-                if (new[] { "redirect", "innerAction", "challengeKey" }.Contains(item.Key)) continue;
+                if (new[] {"redirect", "innerAction", "challengeKey"}.Contains(item.Key)) continue;
                 _postedFormData.Add(item.Key, item.Value);
             }
         }
 
 
-        [TearDown]
-        public void Teardown()
-        {
-            MockLogger.Verify(x => x.Debug($"Downloading '{TestSiteUri}'"), Times.Once);
-        }
 
         private string _id;
         private Dictionary<string, string> _submittedFormData;
@@ -58,12 +54,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReceiveAFormResponseOnFail()
         {
-
             var mappedFormHtml = "<form action='/api/challenge/id'  method='post' />";
 
 
             MockFormMapper.Setup(x => x.UpdateForm(
-                    It.IsAny<string>(),
+                    It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>()
@@ -112,7 +107,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 {"Key2", "Value2"}
             };
 
-            Assert.ThrowsAsync<MissingMemberException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
+            Assert.ThrowsAsync<ArgumentException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
         }
 
         /// <summary>

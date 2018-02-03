@@ -6,7 +6,6 @@ using System.Reflection;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
-using SFA.DAS.Support.Indexer.Infrastructure.Manifest;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
@@ -19,16 +18,7 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
-            For<List<SiteManifest>>()
-                .Singleton()
-                .Use(x => WorkerRole.SiteManifests);
-            For<Dictionary<string, SiteChallenge>>()
-                .Singleton()
-                .Use(x => WorkerRole.SiteChallenges);
-            For<Dictionary<string, SiteResource>>()
-                .Singleton()
-                .Use(x => WorkerRole.SiteResources);
-
+           
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();
@@ -40,10 +30,6 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 
             For<HttpClient>().Use(c => new HttpClient());
 
-
-            For<IGetSearchItemsFromASite>().Use<ManifestProvider>();
-
-            For<IGetSiteManifest>().Use<ManifestProvider>();
 
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
 
@@ -60,18 +46,18 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<IIndexNameCreator>().Use<IndexNameCreator>();
 
             For<IIndexResourceProcessor>()
-                 .Use<CompositIndexResourceProcessor>()
-                 .EnumerableOf<IIndexResourceProcessor>()
-                 .Contains(x =>
-                 {
-                     x.Type<UserIndexResourceProcessor>();
-                     x.Type<AccountIndexResourceProcessor>();
-                 });
+                .Use<CompositIndexResourceProcessor>()
+                .EnumerableOf<IIndexResourceProcessor>()
+                .Contains(x =>
+                {
+                    x.Type<UserIndexResourceProcessor>();
+                    x.Type<AccountIndexResourceProcessor>();
+                });
         }
 
         private IDictionary<string, object> GetProperties()
         {
-            var properties = new Dictionary<string, object> { { "Version", GetVersion() } };
+            var properties = new Dictionary<string, object> {{"Version", GetVersion()}};
             return properties;
         }
 

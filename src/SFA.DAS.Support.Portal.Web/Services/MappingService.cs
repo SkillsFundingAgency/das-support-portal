@@ -53,10 +53,10 @@ namespace SFA.DAS.Support.Portal.Web.Services
             cfg.CreateMap<SearchResponse, SearchResultsViewModel>()
                 .ForMember(x => x.ErrorMessage, y => y.Ignore())
                 .ForMember(x => x.AccountSearchResults, o => o.MapFrom(x =>
-                           x.AccountSearchResult == null ? new List<AccountSearchModel>() : x.AccountSearchResult.Results))
+                    x.AccountSearchResult == null ? new List<AccountSearchModel>() : x.AccountSearchResult.Results))
                 .ForMember(x => x.TotalAccountSearchItems, o => o.MapFrom(x => x.AccountSearchResult.TotalCount))
                 .ForMember(x => x.UserSearchResults, o => o.MapFrom(x =>
-                           x.UserSearchResult == null ? new List<UserSearchModel>() : x.UserSearchResult.Results))
+                    x.UserSearchResult == null ? new List<UserSearchModel>() : x.UserSearchResult.Results))
                 .ForMember(x => x.TotalUserSearchItems, o => o.MapFrom(x => x.UserSearchResult.TotalCount))
                 .ForMember(x => x.LastPage, o => o.MapFrom(x => GetLastPage(x)));
         }
@@ -71,10 +71,7 @@ namespace SFA.DAS.Support.Portal.Web.Services
 
         private MapperConfiguration Config()
         {
-            return new MapperConfiguration(cfg =>
-            {
-                CreateSearchTableResultsMappings(cfg);
-            });
+            return new MapperConfiguration(cfg => { CreateSearchTableResultsMappings(cfg); });
         }
     }
 }

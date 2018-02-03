@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Web;
 using SFA.DAS.NLog.Logger;
@@ -7,7 +6,6 @@ using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Logging;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Authentication;
-using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 using StructureMap.Configuration.DSL;
 
@@ -18,19 +16,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     {
         public WebRegistry()
         {
-            For<List<SiteManifest>>()
-                .Singleton()
-                .Use(x => Startup.SiteManifests);
-            For<Dictionary<string, SiteChallenge>>()
-                .Singleton()
-                .Use(x => Startup.SiteChallenges);
-            For<Dictionary<string, SiteResource>>()
-                .Singleton()
-                .Use(x => Startup.SiteResources);
-
-
-
-
+           
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();

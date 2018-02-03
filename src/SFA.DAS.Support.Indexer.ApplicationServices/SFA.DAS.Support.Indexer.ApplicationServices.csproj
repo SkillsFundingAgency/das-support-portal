@@ -61,7 +61,6 @@
     <Compile Include="Services\BaseIndexResourceProcessor.cs" />
     <Compile Include="Services\CompositIndexResourceProcessor.cs" />
     <Compile Include="Services\IGetSearchItemsFromASite.cs" />
-    <Compile Include="Services\IGetSiteManifest.cs" />
     <Compile Include="Services\IIndexResourceProcessor.cs" />
     <Compile Include="Services\IIndexSearchItems.cs" />
     <Compile Include="Services\IndexerService.cs" />

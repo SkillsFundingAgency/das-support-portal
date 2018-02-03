@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -7,7 +6,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Shared.Discovery;
-using SFA.DAS.Support.Shared.Navigation;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {
@@ -20,16 +18,16 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             base.Setup();
             _id = "id";
             _resourceId = "resourceId";
-            _key = "key";
+            _key = SupportServiceResourceKey.EmployerUserAccountTeam;
             _url = "";
         }
 
         private string _id;
         private string _resourceId;
-        private string _key;
+        private SupportServiceResourceKey _key;
         private string _url;
 
-     
+
         /// <summary>
         ///     See <see cref="WhenTestingTheResourceController" /> for details of mocking HttpContext
         ///     Where hard coupling to [Http]Request is taken care of.
@@ -43,7 +41,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var siteResource = new SiteResource {Challenge = "Some challenge"};
             MockManifestRepository.Setup(x => x.GetResource(_key)).Returns(Task.FromResult(siteResource));
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
-                    It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_key}/{_id}"))
+                    It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_key.ToString()}/{_id}"))
                 .Returns(false);
 
             ActionResultResponse = await Unit.Index(_key, _id);

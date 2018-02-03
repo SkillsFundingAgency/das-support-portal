@@ -72,7 +72,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                     return null;
 
                 default:
-                    
+
 
                     if (typeof(T) == typeof(string)) return LastContent as T;
 
@@ -94,18 +94,23 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             {
                 case HttpStatusCodeDecision.RethrowException:
                     var exception = LastException ??
-                                             new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
-                    _logger.Error(exception, $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
+                                    new Exception(
+                                        $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
+                    _logger.Error(exception,
+                        $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
                     throw exception;
 
                 case HttpStatusCodeDecision.HandleException:
                     var generatedException = LastException ??
-                          new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
-                    _logger.Error(generatedException, $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
+                                             new Exception(
+                                                 $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
+                    _logger.Error(generatedException,
+                        $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
                     return null;
 
                 case HttpStatusCodeDecision.ReturnNull:
-                    _logger.Debug($"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
+                    _logger.Debug(
+                        $"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
                     return null;
 
 

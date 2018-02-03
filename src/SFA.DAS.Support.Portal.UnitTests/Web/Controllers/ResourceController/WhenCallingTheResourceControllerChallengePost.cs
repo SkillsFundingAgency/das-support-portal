@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.Navigation;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
@@ -20,7 +21,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             base.Setup();
             _id = "id";
             _resourceId = "resourceId";
-            _key = "key";
+            _key = SupportServiceResourceKey.EmployerUserAccountTeam;
             _url = "";
             _formCollection = new FormCollection();
             _formCollection.Add("TestKey", "TestValue");
@@ -28,7 +29,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
         private string _id;
         private string _resourceId;
-        private string _key;
+        private SupportServiceResourceKey _key;
         private string _url;
         private FormCollection _formCollection;
 
@@ -56,7 +57,12 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             var challengeResult = new ChallengeResult {Page = "<html><div>Challenge</div></<html>", RedirectUrl = null};
             var navResponse =
-                new NavViewModel {Current = "", Items = new[] {new NavItem {Href = "", Key = "", Title = ""}}};
+                new NavViewModel
+                {
+                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Items = new[]
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                };
 
             MockManifestRepository.Setup(x => x.SubmitChallenge(_resourceId, It.IsAny<Dictionary<string, string>>()))
                 .Returns(Task.FromResult(challengeResult));
@@ -77,7 +83,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Assert.IsInstanceOf<object>(viewResult.ViewBag.SubHeader);
             Assert.AreEqual("Sub", viewResult.ViewName);
             Assert.IsInstanceOf<ResourceResultModel>(viewResult.Model);
-            Assert.AreEqual(challengeResult.Page, ((ResourceResultModel)viewResult.Model).Resource);
+            Assert.AreEqual(challengeResult.Page, ((ResourceResultModel) viewResult.Model).Resource);
         }
     }
 }

@@ -22,6 +22,5 @@ namespace SFA.DAS.Support.Portal.Infrastructure.DependencyResolution
             For<IFormMapper>().Use<FormMapper>();
             For<IWindowsLogonIdentityProvider>().Use<WindowsLogonIdentityProvider>();
         }
-        
     }
 }

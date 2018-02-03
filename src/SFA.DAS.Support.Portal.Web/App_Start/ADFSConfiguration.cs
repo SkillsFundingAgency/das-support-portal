@@ -16,21 +16,21 @@ namespace SFA.DAS.Support.Portal.Web
 {
     public class ADFSConfiguration : IADFSConfiguration
     {
-        private readonly ILog _logger;
         private readonly IAuthSettings _authSettings;
+        private readonly ILog _logger;
         private readonly IRoleSettings _rolesSettings;
 
-        public ADFSConfiguration(ILog logger,IAuthSettings authSettings, IRoleSettings rolesSettings)
+        public ADFSConfiguration(ILog logger, IAuthSettings authSettings, IRoleSettings rolesSettings)
         {
             _authSettings = authSettings;
             _rolesSettings = rolesSettings;
             _logger = logger;
         }
 
-       
+
         public WsFederationAuthenticationOptions GetADFSOptions()
         {
-             return new WsFederationAuthenticationOptions
+            return new WsFederationAuthenticationOptions
             {
                 Wtrealm = _authSettings.Realm,
                 MetadataAddress = _authSettings.AdfsMetadata,
@@ -74,7 +74,8 @@ namespace SFA.DAS.Support.Portal.Web
             return Task.FromResult(0);
         }
 
-        private Task OnSecurityTokenValidated(SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
+        private Task OnSecurityTokenValidated(
+            SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
         {
             _logger.Debug("SecurityTokenValidated");
             try

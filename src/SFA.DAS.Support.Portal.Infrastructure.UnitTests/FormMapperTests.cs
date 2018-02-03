@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.Support.Portal.Infrastructure.Services;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
 {
@@ -13,11 +14,12 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
         }
 
         private FormMapper _unit;
+
         [Test]
-        public void ItShouldStripTheUniqueHtmlTagsFromTheFormHtml()
+        public void ItShouldMapTheForm()
         {
             var id = "123";
-            var key = "123123";
+            var key = SupportServiceResourceKey.EmployerUserAccountTeam;
             var url = $"/api/challenge/response/{id}";
             var html = "<html><head></head><body><form action='' method='post'></form></body></html>";
 
@@ -34,10 +36,10 @@ namespace SFA.DAS.Support.Portal.Infrastructure.UnitTests
         }
 
         [Test]
-        public void ItShouldMapTheForm()
+        public void ItShouldStripTheUniqueHtmlTagsFromTheFormHtml()
         {
             var id = "123";
-            var key = "123123";
+            var key = SupportServiceResourceKey.EmployerUserAccountTeam;
             var url = $"/api/challenge/response/{id}";
             var html = "<html><head></head><body><form action='' method='post'></form></body></html>";
 

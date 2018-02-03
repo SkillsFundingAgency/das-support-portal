@@ -18,7 +18,7 @@ namespace SFA.DAS.Support.Portal.Web
     {
         protected void Application_Start()
         {
-           MvcHandler.DisableMvcResponseHeader = true;
+            MvcHandler.DisableMvcResponseHeader = true;
             var logger = DependencyResolver.Current.GetService<ILog>();
 
             logger.Info("Starting Web Role");
@@ -33,16 +33,18 @@ namespace SFA.DAS.Support.Portal.Web
 
             logger.Info("Web Role started");
         }
+
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
         {
             if (HttpContext.Current == null) return;
             new HttpContextPolicyProvider(
-                new List<IHttpContextPolicy>()
+                new List<IHttpContextPolicy>
                 {
                     new ResponseHeaderRestrictionPolicy()
                 }
             ).Apply(new HttpContextWrapper(HttpContext.Current), PolicyConcern.HttpResponse);
         }
+
         protected void Application_Error(object sender, EventArgs e)
         {
             var ex = Server.GetLastError().GetBaseException();
@@ -51,7 +53,6 @@ namespace SFA.DAS.Support.Portal.Web
 
         private void BuildAndLogExceptionReport(Exception ex)
         {
-
             var logger = DependencyResolver.Current.GetService<ILog>();
 
             var exceptionReport = $"An Unhandled exception was caught by {nameof(Application_Error)}\r\n";
@@ -59,7 +60,6 @@ namespace SFA.DAS.Support.Portal.Web
             exceptionReport += TryAddHttpRequestContext();
             exceptionReport += "\r\nException Stack Trace follows:\r\n\r\n";
             logger.Error(ex, exceptionReport);
-
         }
 
         private string TryAddHttpRequestContext()

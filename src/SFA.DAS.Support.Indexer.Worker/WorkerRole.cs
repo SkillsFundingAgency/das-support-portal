@@ -27,9 +27,9 @@ namespace SFA.DAS.Support.Indexer.Worker
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
         private int _delayTime = 1800 * SecondsToMilliSeconds;
+        private readonly int _delayTimeInSeconds = 1800 * 1000;
         private IIndexSearchItems _indexer;
         private ILog _logger;
-        private int _delayTimeInSeconds = 1800 * 1000;
         private ISearchSettings _searchSettings;
         private ISiteSettings _siteSettings;
 

@@ -10,7 +10,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
     [TestFixture]
     public class SiteConnectorTests : SiteConnectorTestBase
     {
-         [TestCase(HttpStatusCode.BadRequest)] // 400
+        [TestCase(HttpStatusCode.BadRequest)] // 400
         [TestCase(HttpStatusCode.Conflict)] // 409
         [TestCase(HttpStatusCode.ExpectationFailed)] // 417
         [TestCase(HttpStatusCode.RequestedRangeNotSatisfiable)] // 416
