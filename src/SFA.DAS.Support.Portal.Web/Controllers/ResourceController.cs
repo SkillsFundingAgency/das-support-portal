@@ -30,19 +30,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Challenge(string id, string resourceId, SupportServiceResourceKey key,
             string url)
         {
-
-            //var keyValue = Enum.Parse(typeof(SupportServiceResourceKey ), resourceKey) ;
-
-            //if (keyValue == null)
-            //{
-            //    throw new ArgumentException(nameof(resourceKey));
-            //}
-
-
-            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
-            //{
-            //    throw new ArgumentException(nameof(resourceKey));
-            //}
             if (!await _repository.ChallengeExists(key)) return HttpNotFound();
 
             ViewBag.SubNav = await _repository.GetNav(key, resourceId);
@@ -67,11 +54,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Challenge(string id, string resourceId,  SupportServiceResourceKey key,
             FormCollection formData)
         {
-            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
-            //{
-            //    throw new ArgumentException(nameof(resourceKey));
-            //}
-
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
             var result = await _repository.SubmitChallenge(resourceId, pairs);
 
@@ -93,12 +75,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index( SupportServiceResourceKey key, string id)
         {
-            //if (!Enum.TryParse<SupportServiceResourceKey>( resourceKey, true, out SupportServiceResourceKey key))
-            //{
-            //    throw new ArgumentException(nameof(resourceKey));
-            //}
-
-
+            
             if (!await _repository.ResourceExists(key))
                 return View("Sub",
                     new ResourceResultModel
