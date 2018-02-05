@@ -34,22 +34,21 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<UserSearchModel>(s => s.Index(_indexAliasName)
-                .Type(Types.Type<UserSearchModel>())
-                .Skip(pageSize * GetPage(pageNumber))
-                .Take(pageSize)
-                .Query(q => q
-                .Bool(b => b
-                .Must(m =>
-                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
-                     ||
-                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
-                     ||
-                    m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
-                )
-                .Should(sh => sh.QueryString(qs => qs.Query(searchText).Fields(f => f.Field(fs => fs.Name))))
-                ))
-                .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
-               , string.Empty);
+                 .Type(Types.Type<UserSearchModel>())
+                 .Skip(pageSize * GetPage(pageNumber))
+                 .Take(pageSize)
+                 .Query(q => q
+                 .Bool(b => b
+                 .Should(m =>
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                 )
+                 ))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
+                , string.Empty);
 
 
             ValidateResponse(response);

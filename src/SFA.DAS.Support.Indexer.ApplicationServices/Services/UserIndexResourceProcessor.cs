@@ -39,9 +39,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                           .Properties(p => p
                                            .Text(k => k.Name(n => n.Id))
                                            .Text(k => k.Name(n => n.Status))
-                                           .Keyword(k => k.Name(n => n.Email))
-                                           .Keyword(k => k.Name(n => n.FirstName))
-                                           .Keyword(k => k.Name(n => n.LastName))
+                                           .Text(k => k.Name(n => n.Email))
+                                           .Text(k => k
+                                                 .Name(n => n.FirstName)
+                                                 .Fielddata(true)
+                                                 .Fields(kf => kf
+                                                 .Keyword(kfk => kfk.Name(kfkn => kfkn.FirstName))))
+                                           .Text(k => k.Name(n => n.LastName))
                                            .Text(k => k.Name(n => n.Name))
                                           )))
                                   , string.Empty);
