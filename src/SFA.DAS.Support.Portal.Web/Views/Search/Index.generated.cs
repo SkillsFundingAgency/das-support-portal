@@ -83,17 +83,17 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6974), Tuple.Create("\"", 7081)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6988), Tuple.Create("\"", 7095)
 
 #line 167 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6981), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 6995), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6981), false)
+, 6995), false)
 );
 
-WriteLiteralTo(__razor_helper_writer, " \r\n                           style=\"visibility: visible\"");
+WriteLiteralTo(__razor_helper_writer, "\r\n                           style=\"visibility: visible\"");
 
 WriteLiteralTo(__razor_helper_writer, " class=\"page-navigation__btn prev\"");
 
@@ -158,17 +158,17 @@ WriteLiteralTo(__razor_helper_writer, "\r\n\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                        <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7610), Tuple.Create("\"", 7718)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7623), Tuple.Create("\"", 7731)
 
 #line 179 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 7617), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
+, Tuple.Create(Tuple.Create("", 7630), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 7617), false)
+, 7630), false)
 );
 
-WriteLiteralTo(__razor_helper_writer, " \r\n                           style=\"visibility: visible\"");
+WriteLiteralTo(__razor_helper_writer, "\r\n                           style=\"visibility: visible\"");
 
 WriteLiteralTo(__razor_helper_writer, " class=\"page-navigation__btn next\"");
 
@@ -267,7 +267,7 @@ WriteLiteral(">\r\n\r\n\r\n");
             #line hidden
             
             #line 15 "..\..\Views\Search\Index.cshtml"
-             using (Html.BeginForm("Index", "Search", FormMethod.Get, new { accept_charset = "utf-8", @class = "search-header search-header-2", role = "search" }))
+             using (Html.BeginForm("Index", "Search", FormMethod.Get, new { accept_charset = "utf-8", @class = "search-header search-header-2", role = "search", id = "searchForm" }))
             {
 
             
@@ -291,7 +291,7 @@ WriteLiteral("                        ");
 
             
             #line 20 "..\..\Views\Search\Index.cshtml"
-                   Write(Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Enter a name or email address", required = "required", maxlength = "100" }));
+                   Write(Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Search", required = "required", maxlength = "100" }));
 
             
             #line default
@@ -310,7 +310,9 @@ WriteLiteral(" class=\"search-submit\"");
 
 WriteLiteral(">\r\n                        <button");
 
-WriteLiteral(" type=\"submit\"");
+WriteLiteral(" type=\"button\"");
+
+WriteLiteral(" id=\"searchButton\"");
 
 WriteLiteral(" class=\"button\"");
 
@@ -750,7 +752,29 @@ WriteLiteral("                                </tbody>\r\n                      
             #line hidden
 WriteLiteral("        </div>\r\n    </div>\r\n</section>\r\n\r\n\r\n\r\n");
 
-WriteLiteral("\r\n\r\n");
+WriteLiteral("\r\n\r\n\r\n\r\n");
+
+DefineSection("script", () => {
+
+WriteLiteral(@"
+
+    <script>
+
+        $(""#searchButton"").click(function () {
+            if ($(""#search-main"").val().trim().length>= 2) {
+                $(""#searchForm"").submit();
+            } else {
+                $(""#search-main"").val("""");
+            }
+        });
+
+    </script>
+
+");
+
+});
+
+WriteLiteral("\r\n\r\n\r\n");
 
         }
     }
