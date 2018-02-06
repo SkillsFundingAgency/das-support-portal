@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Shared.Discovery;
@@ -18,7 +19,14 @@ namespace SFA.DAS.Support.Indexer.Infrastructure.Manifest
 
         public async Task<IEnumerable<T>> GetSearchItems<T>(Uri collectionUri)
         {
-            return await _siteConnector.Download<IEnumerable<T>>(collectionUri);
+            var response =  await _siteConnector.Download<IEnumerable<T>>(collectionUri);
+
+            if (_siteConnector.LastCode != HttpStatusCode.OK)
+            {
+                throw _siteConnector.LastException ?? new Exception($"Error while loading Search Items invalid status code {_siteConnector.LastCode}");
+            }
+
+            return response;
         }
 
         public async Task<SiteManifest> GetSiteManifest(Uri siteUri)
