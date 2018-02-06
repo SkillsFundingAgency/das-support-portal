@@ -21,7 +21,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             base.Setup();
             _id = "id";
             _resourceId = "resourceId";
-            _key = SupportServiceResourceKey.EmployerUserAccountTeam;
+            _challengeKey = SupportServiceResourceKey.EmployerAccountFinance;
+            _resourceKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge;
             _url = "";
             _formCollection = new FormCollection();
             _formCollection.Add("TestKey", "TestValue");
@@ -29,20 +30,21 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
         private string _id;
         private string _resourceId;
-        private SupportServiceResourceKey _key;
+        private SupportServiceResourceKey _challengeKey;
+        private SupportServiceResourceKey _resourceKey;
         private string _url;
         private FormCollection _formCollection;
 
         [Test]
         public async Task ItShouldRedirectIfTheSubmittedChallengeHasARedirect()
         {
-            var challengeResult = new ChallengeResult {Page = "1", RedirectUrl = "http://tempuri.org"};
+            var challengeResult = new ChallengeResult { Page = "1", RedirectUrl = "http://tempuri.org" };
 
             MockManifestRepository
                 .Setup(x => x.SubmitChallenge(_resourceId, It.IsAny<Dictionary<string, string>>()))
                 .Returns(Task.FromResult(challengeResult));
 
-            ActionResultResponse = await Unit.Challenge(_id, _resourceId, _key, _formCollection);
+            ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _formCollection);
 
             MockPermissionsGranter
                 .Verify(
@@ -55,7 +57,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnAnUnRedirectedSubViewofTheChallengePage()
         {
-            var challengeResult = new ChallengeResult {Page = "<html><div>Challenge</div></<html>", RedirectUrl = null};
+            var challengeResult = new ChallengeResult { Page = "<html><div>Challenge</div></<html>", RedirectUrl = null };
             var navResponse =
                 new NavViewModel
                 {
@@ -68,22 +70,22 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
                 .Returns(Task.FromResult(challengeResult));
 
 
-            MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
-            MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
+            MockManifestRepository.Setup(x => x.GetNav(_resourceKey, _resourceId)).Returns(Task.FromResult(navResponse));
+            MockManifestRepository.Setup(x => x.GenerateHeader(_resourceKey, _resourceId))
                 .Returns(Task.FromResult(new ResourceResultModel()));
 
 
-            ActionResultResponse = await Unit.Challenge(_id, _resourceId, _key, _formCollection);
+            ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _formCollection);
 
 
             Assert.IsInstanceOf<ViewResult>(ActionResultResponse);
-            var viewResult = (ViewResult) ActionResultResponse;
+            var viewResult = (ViewResult)ActionResultResponse;
 
             Assert.IsInstanceOf<NavViewModel>(viewResult.ViewBag.SubNav);
             Assert.IsInstanceOf<object>(viewResult.ViewBag.SubHeader);
             Assert.AreEqual("Sub", viewResult.ViewName);
             Assert.IsInstanceOf<ResourceResultModel>(viewResult.Model);
-            Assert.AreEqual(challengeResult.Page, ((ResourceResultModel) viewResult.Model).Resource);
+            Assert.AreEqual(challengeResult.Page, ((ResourceResultModel)viewResult.Model).Resource);
         }
     }
 }

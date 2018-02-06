@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                                 ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
                                 ResourceUrlFormat = "/account/finance/{0}",
                                 ResourceTitle = "Finance",
-                                Challenge = "account/finance",
+                                Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge,
                                 HeaderKey = SupportServiceResourceKey.EmployerAccountHeader
                             }
                         },
@@ -76,7 +76,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                         {
                             new SiteChallenge
                             {
-                                ChallengeKey = SupportServiceResourceKey.EmployerAccountFinance,
+                                ChallengeKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge,
                                 ChallengeUrlFormat = "/challenge/{0}"
                             }
                         }

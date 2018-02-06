@@ -4,13 +4,14 @@ using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SearchIndexModel;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public class UserIndexResourceProcessor : BaseIndexResourceProcessor<UserSearchModel>
     {
         public UserIndexResourceProcessor(ISiteSettings settings,
-            IGetSearchItemsFromASite downloader,
+            ISiteConnector downloader,
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
             ILog logger,

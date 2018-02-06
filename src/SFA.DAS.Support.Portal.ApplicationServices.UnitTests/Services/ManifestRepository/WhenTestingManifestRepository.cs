@@ -74,14 +74,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                         ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
                         ResourceUrlFormat = "/account/finance/{0}",
                         ResourceTitle = "Finance",
-                        Challenge = "account/finance"
+                        Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge
                     }
                 },
                 Challenges = new List<SiteChallenge>
                 {
                     new SiteChallenge
                     {
-                        ChallengeKey = SupportServiceResourceKey.EmployerAccountFinance,
+                        ChallengeKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge,
                         ChallengeUrlFormat = "/challenge/{0}"
                     }
                 }

@@ -19,7 +19,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             base.Setup();
             _id = "123";
             _uriString = "https://tempuri.org";
-            _challengekey =  SupportServiceResourceKey.EmployerAccountFinance.ToString();
+            _resourceKey =  SupportServiceResourceKey.EmployerAccountFinance.ToString();
+            _challengekey =  SupportServiceResourceKey.EmployerAccountFinanceChallenge.ToString();
             _innerAction = $"/api/challenge/{_id}";
             _redirectUrl = $"{_uriString}/redirect/{_id}";
 
@@ -27,6 +28,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             {
                 {"redirect", _redirectUrl},
                 {"innerAction", _innerAction},
+                {"resourceKey", _resourceKey},
                 {"challengeKey", _challengekey},
                 {"Key1", "Value1"},
                 {"Key2", "Value2"}
@@ -50,6 +52,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         private string _innerAction;
         private string _challengekey;
         private IDictionary<string, string> _postedFormData;
+        private string _resourceKey;
 
         [Test]
         public async Task ItShouldReceiveAFormResponseOnFail()
@@ -58,6 +61,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
 
             MockFormMapper.Setup(x => x.UpdateForm(
+                    It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -102,6 +106,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             {
                 {"redirect", _redirectUrl},
                 {"innerAction", _innerAction},
+                {"resourceKey", _resourceKey.ToString()},
                 {"challengeKey", "BadChallengKey"},
                 {"Key1", "Value1"},
                 {"Key2", "Value2"}
@@ -118,8 +123,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public void ItShouldThrownAnExceptionIfTheSubmissionErrors()
         {
+            var httpException = new HttpException();
             MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
-                .ThrowsAsync(new HttpException());
+                .ThrowsAsync(httpException);
+
+            MockSiteConnector.SetupGet(x => x.LastCode ).Returns(HttpStatusCode.InternalServerError);
+            MockSiteConnector.SetupGet(x => x.LastException ).Returns(httpException);
+            
 
             Assert.ThrowsAsync<HttpException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
         }

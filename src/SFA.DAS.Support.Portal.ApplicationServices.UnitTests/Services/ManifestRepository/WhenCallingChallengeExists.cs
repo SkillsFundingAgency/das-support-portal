@@ -17,7 +17,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnFalseIfTheChallengedoesNotExist()
         {
-            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccount);
+            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccountFinance);
 
             Assert.IsFalse(result);
         }
@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnTrueIfTheChallengeExists()
         {
-            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccountFinance);
+            var result = await Unit.ChallengeExists(SupportServiceResourceKey.EmployerAccountFinanceChallenge);
 
             Assert.IsTrue(result);
         }

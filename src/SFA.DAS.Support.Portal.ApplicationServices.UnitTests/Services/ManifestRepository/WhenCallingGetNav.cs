@@ -11,8 +11,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldNotReturnTheNavObjectIfTheResourceTitleIsMissing()
         {
-            TestSiteManifest.Resources.First().ResourceTitle = null;
-            var result = await Unit.GetNav(TestSiteManifest.Resources.First().ResourceKey, "id");
+            TestSiteManifest.Resources.First(x=>x.ResourceTitle == null).ResourceTitle = null;
+            var result = await Unit.GetNav(TestSiteManifest.Resources.First(x=>x.ResourceTitle == null).ResourceKey, "id");
             Assert.IsNotNull(result);
             CollectionAssert.IsEmpty(result.Items);
         }
@@ -20,7 +20,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnTheNavObject()
         {
-            var result = await Unit.GetNav(TestSiteManifest.Resources.First().ResourceKey, "id");
+            var result = await Unit.GetNav(TestSiteManifest.Resources.First(x=>x.ResourceTitle != null).ResourceKey, "id");
             Assert.IsNotNull(result);
             CollectionAssert.IsNotEmpty(result.Items);
         }
@@ -30,7 +30,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         public void ItShouldThrowAnExceptionIfTheIdParameterIsNull()
         {
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                Unit.GetNav(TestSiteManifest.Resources.First().ResourceKey, null));
+                Unit.GetNav(TestSiteManifest.Resources.First(x=>x.ResourceTitle != null).ResourceKey, null));
         }
     }
 }

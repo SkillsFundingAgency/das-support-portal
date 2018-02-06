@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Shared.Discovery;
@@ -17,7 +16,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             Assert.DoesNotThrow(() =>
             {
-                var response = Unit.GetChallengeForm(SupportServiceResourceKey.EmployerUserAccountTeam, "id",
+                var response = Unit.GetChallengeForm(SupportServiceResourceKey.EmployerAccountFinance, SupportServiceResourceKey.EmployerAccountFinanceChallenge, "id",
                     "http://tempuri.org/callenge/form");
             });
         }
@@ -28,10 +27,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var downloadedFormHtml = "<html><form action='' method='post' /></html>";
             var mappedFormHtml = "<html><form action='/api/challenge/id'  method='post' /></html>";
 
+
             MockSiteConnector.Setup(c => c.Download(It.IsAny<string>()))
                 .ReturnsAsync(downloadedFormHtml);
 
             MockFormMapper.Setup(x => x.UpdateForm(
+                    It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -39,11 +40,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 ))
                 .Returns(mappedFormHtml);
 
-            var actual = await Unit.GetChallengeForm(SupportServiceResourceKey.EmployerAccountFinance, "id",
+            var actual = await Unit.GetChallengeForm(
+                SupportServiceResourceKey.EmployerAccountFinance,
+                SupportServiceResourceKey.EmployerAccountFinanceChallenge, 
+                "id",
                 "http://tempuri.org/challenge/form");
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(actual));
-
             Assert.IsTrue(actual.Contains("<html"));
             Assert.IsTrue(actual.Contains("<form"));
         }

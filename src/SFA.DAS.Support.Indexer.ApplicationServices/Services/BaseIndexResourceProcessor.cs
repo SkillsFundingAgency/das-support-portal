@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SearchIndexModel;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
@@ -16,7 +18,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
     {
         private const int _indexToRetain = 5;
 
-        protected readonly IGetSearchItemsFromASite _dataSource;
+        protected readonly ISiteConnector _dataSource;
         protected readonly IElasticsearchCustomClient _elasticClient;
         protected readonly IIndexNameCreator _indexNameCreator;
         protected readonly IIndexProvider _indexProvider;
@@ -27,9 +29,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         protected readonly Stopwatch _runtimer = new Stopwatch();
         protected readonly ISearchSettings _searchSettings;
         protected readonly ISiteSettings _settings;
-        
+
         public BaseIndexResourceProcessor(ISiteSettings settings,
-            IGetSearchItemsFromASite dataSource,
+            ISiteConnector dataSource,
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
             ILog logger,
@@ -49,8 +51,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         {
             if (!ContinueProcessing(searchCategory)) return;
 
-            var indexedResorce = Enum.GetName(typeof(SearchCategory), searchCategory);
-
             try
             {
                 var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, searchCategory);
@@ -58,7 +58,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
                 _queryTimer.Start();
                 _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
-                var searchItems = await _dataSource.GetSearchItems<T>(uri);
+                var searchItems = await _dataSource.Download<IEnumerable<T>>(uri);
+                if (_dataSource.LastCode != HttpStatusCode.OK)
+                {
+                    throw _dataSource.LastException ??
+                          throw new InvalidOperationException("The requested data was not recieved");
+                }
+
                 _queryTimer.Stop();
 
                 _indexTimer.Start();
@@ -93,7 +99,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected void ValidateResponse(string indexName, ICreateIndexResponse response)
         {
-            if (response.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+            if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 throw new Exception(
                     $"Call to ElasticSearch client Received non-200 response when trying to create the Index {indexName}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
                     response.OriginalException);

@@ -14,7 +14,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnAChallengeObject()
         {
-            var result = await Unit.GetChallenge(SupportServiceResourceKey.EmployerAccountFinance);
+            var result = await Unit.GetChallenge(SupportServiceResourceKey.EmployerAccountFinanceChallenge);
             Assert.IsNotNull(result);
         }
 

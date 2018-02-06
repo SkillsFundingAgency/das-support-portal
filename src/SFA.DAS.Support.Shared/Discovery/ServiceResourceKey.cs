@@ -10,6 +10,7 @@
         EmployerUserAccountTeam,
         EmployerAccount,
         EmployerAccountHeader,
-        EmployerAccountFinance
+        EmployerAccountFinance,
+        EmployerAccountFinanceChallenge
     }
 }

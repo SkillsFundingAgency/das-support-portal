@@ -15,15 +15,15 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         public override void Setup()
         {
             base.Setup();
-            _id = "id";
             _resourceId = "resourceId";
-            _key = SupportServiceResourceKey.EmployerUserHeader;
+            _challengeKey = SupportServiceResourceKey.EmployerAccountFinance;
+            _resourceKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge;
             _url = "";
         }
 
-        private string _id;
         private string _resourceId;
-        private SupportServiceResourceKey _key;
+        private SupportServiceResourceKey _challengeKey;
+        private SupportServiceResourceKey _resourceKey;
         private string _url;
 
 
@@ -37,17 +37,17 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
                     Items = new[]
                         {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
                 };
-            MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
-            MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
-            MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
+            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(true));
+            MockManifestRepository.Setup(x => x.GetNav(_resourceKey, _resourceId)).Returns(Task.FromResult(navResponse));
+            MockManifestRepository.Setup(x => x.GenerateHeader(_resourceKey, _resourceId))
                 .Returns(Task.FromResult(new ResourceResultModel()));
-            MockManifestRepository.Setup(x => x.GetChallengeForm(_key, _resourceId, _url)).Throws<Exception>();
+            MockManifestRepository.Setup(x => x.GetChallengeForm(_resourceKey, _challengeKey, _resourceId, _url)).Throws<Exception>();
 
 
-            ActionResultResponse = await Unit.Challenge(_id, _resourceId, _key, _url);
+            ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _url);
 
             Assert.IsInstanceOf<ViewResult>(ActionResultResponse);
-            var viewResult = (ViewResult) ActionResultResponse;
+            var viewResult = (ViewResult)ActionResultResponse;
 
             Assert.IsInstanceOf<NavViewModel>(viewResult.ViewBag.SubNav);
             Assert.IsInstanceOf<object>(viewResult.ViewBag.SubHeader);
@@ -65,17 +65,17 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
                     Items = new[]
                         {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
                 };
-            MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(true));
-            MockManifestRepository.Setup(x => x.GetNav(_key, _resourceId)).Returns(Task.FromResult(navResponse));
-            MockManifestRepository.Setup(x => x.GenerateHeader(_key, _resourceId))
+            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(true));
+            MockManifestRepository.Setup(x => x.GetNav(_resourceKey, _resourceId)).Returns(Task.FromResult(navResponse));
+            MockManifestRepository.Setup(x => x.GenerateHeader(_resourceKey, _resourceId))
                 .Returns(Task.FromResult(new ResourceResultModel()));
-            MockManifestRepository.Setup(x => x.GetChallengeForm(_key, _resourceId, _url))
+            MockManifestRepository.Setup(x => x.GetChallengeForm(_resourceKey, _challengeKey, _resourceId, _url))
                 .Returns(Task.FromResult("<div></div."));
 
-            ActionResultResponse = await Unit.Challenge(_id, _resourceId, _key, _url);
+            ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _url);
 
             Assert.IsInstanceOf<ViewResult>(ActionResultResponse);
-            var viewResult = (ViewResult) ActionResultResponse;
+            var viewResult = (ViewResult)ActionResultResponse;
 
             Assert.IsInstanceOf<NavViewModel>(viewResult.ViewBag.SubNav);
             Assert.IsInstanceOf<object>(viewResult.ViewBag.SubHeader);
@@ -86,9 +86,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnHttpNotFoundIfTheChallengeDoesNotExist()
         {
-            MockManifestRepository.Setup(x => x.ChallengeExists(_key)).Returns(Task.FromResult(false));
+            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(false));
 
-            ActionResultResponse = await Unit.Challenge(_id, _resourceId, _key, _url);
+            ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _url);
 
             Assert.IsInstanceOf<HttpNotFoundResult>(ActionResultResponse);
         }

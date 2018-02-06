@@ -66,6 +66,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<SiteChallenge> GetChallenge(SupportServiceResourceKey key)
         {
+
+
+
             var challenge = Challenges[key];
 
             var manifestOfChallenge = _manifests.FirstOrDefault(x =>
@@ -77,11 +80,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             if (siteOfChallenge.Value == null)
             {
-                throw new NullReferenceException(
-                    $"The challenge {FormatKey(key)} could not be found in any manifest"
-                );
+                var e = new NullReferenceException($"The challenge {FormatKey(key)} could not be found in any manifest");
+
+                _log.Error(e, $"the Manifest data is misconfigured, please review teh Manifest configuration and update it accordingly.");
+                throw e;
+
             }
-                
+
 
             challenge.ChallengeUrlFormat =
                 new Uri(siteOfChallenge.Value, challenge.ChallengeUrlFormat).ToString();
@@ -95,46 +100,42 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
-
             if (!await ResourceExists(key)) return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
             var resource = await GetResource(key);
-            
             var headerKey = resource.HeaderKey ?? key;
-
-
             var headerResource = await GetResource(headerKey);
             var url = string.Format(headerResource.ResourceUrlFormat, id);
             return await GetPage(url);
         }
 
-       
 
-        public async Task<string> GetChallengeForm(SupportServiceResourceKey key, string id, string url)
+
+        public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url)
         {
-            var challenge = await GetChallenge(key);
+            var challenge = await GetChallenge(challengeKey);
             var challengeUrl = string.Format(challenge.ChallengeUrlFormat, id);
             var page = await GetPage(challengeUrl);
-            return _formMapper.UpdateForm(key, id, url, page.Resource);
+            return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
         public async Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> formData)
         {
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
-            var challengekey = "challengeKey";
-            var key = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData[challengekey]);
 
-            if (!await ChallengeExists(key)) throw new MissingMemberException();
+            var challengeKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+            var resourceKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            var site = FindSiteForChallenge(key);
+            if (!await ChallengeExists(challengeKey)) throw new MissingMemberException();
+
+            var site = FindSiteForChallenge(challengeKey);
             var uri = new Uri(site, innerAction);
             formData.Remove("redirect");
             formData.Remove("innerAction");
-            formData.Remove(challengekey);
+            formData.Remove("resourceKey");
 
             var html = await _siteConnector.Upload<string>(uri, formData);
-
-            return AcceptTheHtmlOrTheForbiddenStatusCode(html, key, id, redirect);
+            return AcceptTheHtmlOrTheForbiddenStatusCode(html, resourceKey, challengeKey, id, redirect);
         }
 
         public async Task<SiteResource> GetResource(SupportServiceResourceKey key)
@@ -170,7 +171,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await GetPage(url);
         }
 
-        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, SupportServiceResourceKey key,
+        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
             string id, string redirect)
         {
             if (string.IsNullOrWhiteSpace(html) &&
@@ -179,10 +180,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 html = _siteConnector.LastContent;
                 return new ChallengeResult
                 {
-                    Page = _formMapper.UpdateForm(key, id, redirect, html)
+                    Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
                 };
             }
-
+            else
+            {
+                if (_siteConnector.LastException != null)
+                {
+                    throw _siteConnector.LastException;
+                }
+            }
             return new ChallengeResult { RedirectUrl = redirect };
         }
 
@@ -217,7 +224,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private static Func<KeyValuePair<SupportServiceResourceKey, SiteResource>, bool>
             TheResourceKeyStartsWithElementOf(SupportServiceResourceKey key)
         {
-            return x => x.Key == key;
+            return x => x.Key.ToString().StartsWith(key.ToString());
         }
 
         private static Func<KeyValuePair<SupportServiceResourceKey, SiteResource>, NavItem> ANewNavItemFor(string id)

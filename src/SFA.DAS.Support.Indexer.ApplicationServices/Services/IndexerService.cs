@@ -9,13 +9,14 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public class IndexerService : IIndexSearchItems
     {
         private const int _indexToRetain = 5;
-        private readonly IGetSearchItemsFromASite _dataSource;
+        private readonly ISiteConnector _dataSource;
         private readonly IIndexNameCreator _indexNameCreator;
         private readonly IIndexProvider _indexProvider;
         private readonly IIndexResourceProcessor _indexResourceProcessor;
@@ -28,7 +29,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         private readonly ISiteSettings _siteSettings;
         private readonly SupportServiceManifests _manifests;
         public IndexerService(ISiteSettings settings,
-            IGetSearchItemsFromASite downloader,
+            ISiteConnector downloader,
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
             ILog logger,
@@ -53,11 +54,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
                 Dictionary<SupportServiceIdentity,string> subSites = new Dictionary<SupportServiceIdentity, string>();
 
-                foreach (var subSite in _siteSettings.BaseUrls.Split(',').ToList())
+                foreach (var subSite in _siteSettings.BaseUrls.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries).ToList())
                 {
-                    if (string.IsNullOrWhiteSpace(subSite[0].ToString())) continue;
-                    if (string.IsNullOrWhiteSpace(subSite[1].ToString())) continue;
-                    subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), subSite[0].ToString()), subSite[1].ToString());
+                    var siteElements = subSite.Split(new []{'|'}, StringSplitOptions.RemoveEmptyEntries);
+                    if (siteElements.Length != 2) continue;
+                    if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
+                    if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
+                    subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), siteElements[1]);
                 }
                 
 
