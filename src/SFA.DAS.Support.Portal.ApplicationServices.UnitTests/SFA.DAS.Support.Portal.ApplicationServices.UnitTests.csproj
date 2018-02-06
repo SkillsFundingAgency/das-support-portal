@@ -174,7 +174,6 @@
     <Compile Include="Services\ManifestRepository\WhenCallingGenerateHeader.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetChallenge.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetChallengeForm.cs" />
-    <Compile Include="Services\ManifestRepository\WhenCallingGetManifests.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetNav.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetResource.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetResourcePage.cs" />

@@ -33,7 +33,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             ISearchSettings searchSettings,
             ILog logger,
             IIndexNameCreator indexNameCreator,
-            IIndexResourceProcessor indexResourceProcessor,SupportServiceManifests manifests)
+            IIndexResourceProcessor indexResourceProcessor, SupportServiceManifests manifests)
         {
             _siteSettings = settings;
             _dataSource = downloader;

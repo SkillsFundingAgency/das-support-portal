@@ -55,17 +55,5 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                 });
         }
 
-        private IDictionary<string, object> GetProperties()
-        {
-            var properties = new Dictionary<string, object> {{"Version", GetVersion()}};
-            return properties;
-        }
-
-        private string GetVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fileVersionInfo.ProductVersion;
-        }
     }
 }

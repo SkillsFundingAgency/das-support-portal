@@ -18,9 +18,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     {
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
-        private readonly ISiteSettings _settings;
         private readonly ISiteConnector _siteConnector;
-        private SupportServiceManifests _manifests;
+        private readonly SupportServiceManifests _manifests;
         private readonly Dictionary<SupportServiceIdentity, Uri> _sites;
 
         public ManifestRepository(ISiteSettings settings,
@@ -33,7 +32,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             _siteConnector = siteConnector;
             _formMapper = formMapper;
             _log = log;
-            _settings = settings;
             _manifests = manifests;
             Resources = new Dictionary<SupportServiceResourceKey, SiteResource>();
             Challenges = new Dictionary<SupportServiceResourceKey, SiteChallenge>();
@@ -47,12 +45,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             _sites = new Dictionary<SupportServiceIdentity, Uri>();
 
-            foreach (var item in (_settings.BaseUrls ?? string.Empty).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                var subItems = item.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                var subItems = item.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 var key = (SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
-                var value =   new Uri(subItems[1]);
-                _sites.Add(key,value);
+                var value = new Uri(subItems[1]);
+                _sites.Add(key, value);
 
             }
         }
@@ -78,9 +76,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
 
             if (siteOfChallenge.Value == null)
+            {
                 throw new NullReferenceException(
                     $"The challenge {FormatKey(key)} could not be found in any manifest"
                 );
+            }
+                
 
             challenge.ChallengeUrlFormat =
                 new Uri(siteOfChallenge.Value, challenge.ChallengeUrlFormat).ToString();
@@ -94,13 +95,19 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
-            var headerKey = key;
-            if (!await ResourceExists(headerKey)) return new ResourceResultModel {StatusCode = HttpStatusCode.NotFound};
 
-            var resource = await GetResource(headerKey);
-            var url = string.Format(resource.ResourceUrlFormat, id);
+            if (!await ResourceExists(key)) return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
+            var resource = await GetResource(key);
+            
+            var headerKey = resource.HeaderKey ?? key;
+
+
+            var headerResource = await GetResource(headerKey);
+            var url = string.Format(headerResource.ResourceUrlFormat, id);
             return await GetPage(url);
         }
+
+       
 
         public async Task<string> GetChallengeForm(SupportServiceResourceKey key, string id, string url)
         {
@@ -115,7 +122,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
             var challengekey = "challengeKey";
-            var key = (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData[challengekey]);
+            var key = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData[challengekey]);
 
             if (!await ChallengeExists(key)) throw new MissingMemberException();
 
@@ -130,21 +137,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return AcceptTheHtmlOrTheForbiddenStatusCode(html, key, id, redirect);
         }
 
-        public async Task<SupportServiceManifests> GetManifests()
-        {
-          
-            return _manifests;
-        }
-
         public async Task<SiteResource> GetResource(SupportServiceResourceKey key)
         {
-         
+
             var resource = Resources[key];
             var manifest = _manifests.FirstOrDefault(x => x.Value.Resources != null &&
                                                       x.Value.Resources.Select(y => FormatKey(y.ResourceKey))
                                                           .Contains(FormatKey(key)));
 
-            var site = _sites.FirstOrDefault(x=>x.Key == manifest.Key);
+            var site = _sites.FirstOrDefault(x => x.Key == manifest.Key);
 
             if (site.Value == null || site.Value == null)
                 throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
@@ -154,14 +155,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {
-            
             var navViewModel = new NavViewModel
             {
                 Current = key,
                 Items = GetNavItems(key, id).ToArray()
             };
-
-            return navViewModel;
+            return await Task.FromResult(navViewModel);
         }
 
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id)
@@ -184,7 +183,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 };
             }
 
-            return new ChallengeResult {RedirectUrl = redirect};
+            return new ChallengeResult { RedirectUrl = redirect };
         }
 
         private Uri FindSiteForChallenge(SupportServiceResourceKey key)
@@ -202,7 +201,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private IEnumerable<NavItem> GetNavItems(SupportServiceResourceKey key, string id)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             return Resources
@@ -255,28 +253,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private string FormatKey(SupportServiceResourceKey key)
         {
             return key.ToString();
-        }
-
-        private async Task<List<SiteManifest>> LoadManifest()
-        {
-            var list = new Dictionary<string, SiteManifest>();
-            foreach (var site in _sites)
-            {
-                var uri = new Uri(site.Value, "api/manifest");
-                _log.Debug($"Downloading '{uri}'");
-                try
-                {
-                    var manifest = await _siteConnector.Download<SiteManifest>(uri);
-                    if (manifest != null) list.Add(uri.ToString(), manifest);
-                }
-                catch (Exception ex)
-                {
-                    _log.Error(ex,
-                        $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
-                }
-            }
-
-            return list.Values.ToList();
         }
     }
 }

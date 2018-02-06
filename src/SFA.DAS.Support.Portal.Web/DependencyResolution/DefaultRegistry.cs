@@ -37,8 +37,6 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     [ExcludeFromCodeCoverage]
     public class DefaultRegistry : Registry
     {
-        private static ServiceConfiguration _supportServiceConfiguration;
-        private const string SupportServiceManifestsName = "SFA.DAS.Support.ServiceManifests";
         private const string ServiceName = "SFA.DAS.Support.Portal";
         private const string Version = "1.0";
 
@@ -74,8 +72,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
-           
-            For<ServiceConfiguration>().Use<ServiceConfiguration>().Singleton();
+
+            For<SupportServiceManifests>().Use(new ServiceConfiguration().ServiceManifests);
 
         }
 

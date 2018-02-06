@@ -15,5 +15,6 @@ namespace SFA.DAS.Support.Shared.Discovery
         public string ResourceTitle { get; set; }
         public string Challenge { get; set; }
         public SearchCategory SearchCategory { get; set; }
+        public SupportServiceResourceKey? HeaderKey { get; set; }
     }
 }

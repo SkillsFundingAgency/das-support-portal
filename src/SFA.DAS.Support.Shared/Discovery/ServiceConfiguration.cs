@@ -6,11 +6,11 @@ namespace SFA.DAS.Support.Shared.Discovery
 {
     public class ServiceConfiguration
     {
-        public Dictionary<SupportServiceIdentity, SiteManifest> ServiceManifests { get; set; }
+        public SupportServiceManifests ServiceManifests { get; set; }
 
         public ServiceConfiguration()
         {
-            ServiceManifests = new Dictionary<SupportServiceIdentity, SiteManifest>
+            ServiceManifests = new SupportServiceManifests
             {
                 {
                     SupportServiceIdentity.SupportEmployerUser, new SiteManifest
@@ -24,8 +24,9 @@ namespace SFA.DAS.Support.Shared.Discovery
                                 ResourceTitle = "Overview",
 
                                 ResourceUrlFormat = "/user/index/{0}",
-                                SearchItemsUrl = "/api/manifest/search",
-                                SearchCategory = SearchCategory.User
+                                SearchItemsUrl = "/api/search/users",
+                                SearchCategory = SearchCategory.User,
+                                HeaderKey = SupportServiceResourceKey.EmployerUserHeader
                             },
                             new SiteResource
                             {
@@ -36,7 +37,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                             {
                                 ResourceKey = SupportServiceResourceKey.EmployerUserAccountTeam,
                                 ResourceUrlFormat = "/account/team/{0}",
-                                ResourceTitle = "Team members"
+                                ResourceTitle = "Team members",
+                                HeaderKey = SupportServiceResourceKey.EmployerUserHeader
                             }
                         }
                     }
@@ -52,8 +54,9 @@ namespace SFA.DAS.Support.Shared.Discovery
                                 ResourceKey = SupportServiceResourceKey.EmployerAccount,
                                 ResourceUrlFormat = "/account/{0}",
                                 ResourceTitle = "Organisations",
-                                SearchItemsUrl = "/api/manifest/account",
-                                SearchCategory = SearchCategory.Account
+                                SearchItemsUrl = "/api/search/organisations",
+                                SearchCategory = SearchCategory.Account,
+                                HeaderKey = SupportServiceResourceKey.EmployerAccountHeader
                             },
                             new SiteResource
                             {
@@ -65,7 +68,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                                 ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
                                 ResourceUrlFormat = "/account/finance/{0}",
                                 ResourceTitle = "Finance",
-                                Challenge = "account/finance"
+                                Challenge = "account/finance",
+                                HeaderKey = SupportServiceResourceKey.EmployerAccountHeader
                             }
                         },
                         Challenges = new List<SiteChallenge>

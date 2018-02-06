@@ -17,6 +17,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id);
         Task<string> GetChallengeForm(SupportServiceResourceKey key, string id, string url);
         Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> pairs);
-        Task<SupportServiceManifests> GetManifests();
     }
 }
