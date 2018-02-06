@@ -37,7 +37,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     [ExcludeFromCodeCoverage]
     public class DefaultRegistry : Registry
     {
-        private static SupportServiceManifests _supportServiceManifests;
+        private static ServiceConfiguration _supportServiceConfiguration;
         private const string SupportServiceManifestsName = "SFA.DAS.Support.ServiceManifests";
         private const string ServiceName = "SFA.DAS.Support.Portal";
         private const string Version = "1.0";
@@ -74,34 +74,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
-            _supportServiceManifests = GetManifests();
-            For<SupportServiceManifests>().Use(_supportServiceManifests).Singleton();
+           
+            For<ServiceConfiguration>().Use<ServiceConfiguration>().Singleton();
 
         }
 
-        private SupportServiceManifests GetManifests()
-        {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName");
-
-            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString");
-
-            if (environment == null) throw new ArgumentNullException(nameof(environment));
-
-            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
-
-
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
-
-            var configurationOptions = new ConfigurationOptions(SupportServiceManifestsName, environment, Version);
-
-            var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
-
-            var configuration = configurationService.Get<SupportServiceManifests>();
-
-            if (configuration == null) throw new ArgumentOutOfRangeException($"The requried {nameof(SupportServiceManifests)} configuration settings were not retrieved from {SupportServiceManifestsName}, please check the environmentName case, and the configuration connection string is correct.");
-
-            return configuration;
-        }
 
         private WebConfiguration GetConfiguration()
         {
