@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(SearchQuery query)
         {
-            if (!string.IsNullOrEmpty(query.SearchTerm))
+            if (query.SearchTerm?.Trim().Length >= 2)
             {
                 query.SearchTerm = query.SearchTerm.Trim();
 
