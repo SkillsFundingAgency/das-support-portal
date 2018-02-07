@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using Nest;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch.Exceptions;
@@ -26,36 +27,27 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexNameCreator = indexNameCreator;
         }
 
-        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType,
-            int pageSize = 10, int pageNumber = 1)
+        public PagedSearchResponse<UserSearchModel> FindUsers(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.User) return null;
 
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<UserSearchModel>(s => s.Index(_indexAliasName)
-                    .Type(Types.Type<UserSearchModel>())
-                    .Skip(pageSize * GetPage(pageNumber))
-                    .Take(pageSize)
-                    .Query(q => q
-                        .Bool(b => b
-                            .Must(m =>
-                                m.QueryString(qs =>
-                                    qs.Query($"*{searchText}*").AnalyzeWildcard(true)
-                                        .Fields(f => f.Field(fs => fs.FirstName)))
-                                ||
-                                m.QueryString(qs =>
-                                    qs.Query($"*{searchText}*").AnalyzeWildcard(true)
-                                        .Fields(f => f.Field(fs => fs.LastName)))
-                                ||
-                                m.QueryString(qs =>
-                                    qs.Query($"*{searchText}*").AnalyzeWildcard(true)
-                                        .Fields(f => f.Field(fs => fs.Email)))
-                            )
-                            .Should(sh =>
-                                sh.QueryString(qs => qs.Query(searchText).Fields(f => f.Field(fs => fs.Name))))
-                        ))
-                    .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
+                 .Type(Types.Type<UserSearchModel>())
+                 .Skip(pageSize * GetPage(pageNumber))
+                 .Take(pageSize)
+                 .Query(q => q
+                 .Bool(b => b
+                 .Should(m =>
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                 )
+                 ))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
                 , string.Empty);
 
 
@@ -64,29 +56,26 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return GetSearchResponse(pageSize, response);
         }
 
-        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType,
-            int pageSize = 10, int pageNumber = 1)
+        public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
             if (searchType != SearchCategory.Account) return null;
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
-                    .Type(Types.Type<AccountSearchModel>())
-                    .Skip(pageSize * GetPage(pageNumber))
-                    .Take(pageSize)
-                    .Query(q => q
-                        .Bool(b => b
-                            .Must(m =>
-                                m.QueryString(qs =>
-                                    qs.Query($"*{searchText}*").AnalyzeWildcard(true)
-                                        .Fields(f => f.Field(fs => fs.Account)))
-                                ||
-                                m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
-                                ||
-                                m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIds))
-                            )))
-                    .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Account))
-                , string.Empty);
+                .Type(Types.Type<AccountSearchModel>())
+                .Skip(pageSize * GetPage(pageNumber))
+                .Take(pageSize)
+                .Query(q => q
+                .Bool(b => b
+                .Must(m =>
+                        m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
+                        ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIds))
+                )))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Account))
+                   , string.Empty);
 
             ValidateResponse(response);
 
@@ -95,8 +84,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         private PagedSearchResponse<T> GetSearchResponse<T>(int pageSize, ISearchResponse<T> response) where T : class
         {
+
             var responsePageSize = pageSize == 0 ? 1 : pageSize;
-            var lastPage = (int) (response.Total / responsePageSize);
+            var lastPage = (int)(response.Total / responsePageSize);
 
             return new PagedSearchResponse<T>
             {
@@ -113,14 +103,17 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         private void ValidateResponse<T>(ISearchResponse<T> response) where T : class
         {
-            if (response?.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+            if (response?.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
             {
-                var errorMsg =
-                    $"Received non-200 response Status Code:{response.ApiCall.HttpStatusCode.GetValueOrDefault()} \r\n" +
-                    $"Reasons:{string.Join("\r\n", response.ServerError?.Error?.RootCause)}";
+
+                var errorMsg = $"Received non-200 response Status Code:{response.ApiCall.HttpStatusCode.GetValueOrDefault()} \r\n" +
+                                $"Reasons:{ string.Join("\r\n", response.ServerError?.Error?.RootCause)}";
 
                 throw new ElasticSearchInvalidResponseException(errorMsg, response.OriginalException);
             }
+
         }
+
+
     }
 }
