@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.Support.Portal.ApplicationServices.Models
-@model  ResourceResultModel
+@model  SFA.DAS.Support.Portal.ApplicationServices.Models.ResourceResultModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,17 +11,17 @@
         {
             <div style='color: red'>An error has occured</div>
         }
-        else if (((ResourceResultModel)ViewBag.SubHeader).StatusCode == HttpStatusCode.NotFound)
+        else if (((ResourceResultModel) ViewBag.SubHeader).StatusCode == HttpStatusCode.NotFound)
         {
             <div style='color: red'>Information Not Found</div>
         }
-        else if (((ResourceResultModel)ViewBag.SubHeader).Resource == null)
+        else if (((ResourceResultModel) ViewBag.SubHeader).Resource == null)
         {
             <h3 style='color: red'>Information Not Available</h3>
         }
         else
         {
-            @Html.Raw(((ResourceResultModel)ViewBag.SubHeader)?.Resource ?? "")
+            @Html.Raw(((ResourceResultModel) ViewBag.SubHeader)?.Resource ?? "")
         }
     </div>
 }
@@ -34,7 +34,9 @@
                 <ul role="menu">
                     @foreach (var item in ViewBag.SubNav.Items)
                     {
-                        <li><a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a></li>
+                        <li>
+                            <a href="@item.Href" class="@(ViewBag.SubNav.Current == item.Key ? "selected" : "")">@item.Title</a>
+                        </li>
                     }
                 </ul>
             </nav>

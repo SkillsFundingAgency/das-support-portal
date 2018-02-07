@@ -1,10 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure;
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 using StructureMap.Configuration.DSL;
 
@@ -32,6 +34,13 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);
             For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
+            For<IServiceConfiguration>().Singleton().Use(new ServiceConfiguration
+                {
+                    new EmployerAccountSiteManifest(),
+                    new EmployerUserSiteManifest()
+                }
+            );
+
         }
 
         private WebConfiguration GetConfiguration()

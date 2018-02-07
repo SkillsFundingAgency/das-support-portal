@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Handlers;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Shared.SearchIndexModel;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 {
@@ -46,7 +46,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             };
 
             _mockSearchProvider
-                .Setup(x => x.FindAccounts(searchQuery.SearchTerm, searchQuery.SearchType, searchQuery.PageSize, searchQuery.Page))
+                .Setup(x => x.FindAccounts(searchQuery.SearchTerm, searchQuery.SearchType, searchQuery.PageSize,
+                    searchQuery.Page))
                 .Returns(new PagedSearchResponse<AccountSearchModel>
                 {
                     Results = ecpectedResult

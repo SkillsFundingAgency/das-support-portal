@@ -1,39 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
     [TestFixture]
     public class WhenCallingGetResourcePage : WhenTestingManifestRepository
     {
-       
-
         [Test]
         public async Task ItShouldReturnTheHtmlPage()
         {
             var html = "<html>Some page</html>";
             MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
                 .ReturnsAsync(html);
-            var result = await Unit.GetResourcePage("resourcekey", "id");
+            var result = await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountFinance, "id");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
         }
 
         [Test]
-        public void ItShouldThrowAnExceptionIfTheKeyIsNotFound()
+        public async Task ItShouldThrowAnExceptionIfTheKeyIsNotFound()
         {
-            Assert.ThrowsAsync<KeyNotFoundException>(() => Unit.GetResourcePage("key", "id"));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await Unit.GetResourcePage(SupportServiceResourceKey.None, "id"));
         }
 
-        [Test]
-        public void ItShouldThrowAnExceptionIfTheSiteBaseUrlIsNull()
-        {
-            TestSiteManifest.BaseUrl = null;
-            Assert.ThrowsAsync<NullReferenceException>(() =>
-                Unit.GetResourcePage("resourcekey", "id"));
-        }
+
     }
 }

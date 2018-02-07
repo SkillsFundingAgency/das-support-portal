@@ -16,8 +16,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using SFA.DAS.EmployerUsers.Api.Client;
-using SFA.DAS.Support.Portal.Infrastructure.Settings;
 using SFA.DAS.Support.Portal.Web.Settings;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -26,13 +24,12 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using Microsoft.Azure;
     using SFA.DAS.Configuration;
     using SFA.DAS.Configuration.AzureTableStorage;
-    using SFA.DAS.EAS.Account.Api.Client;
     using SFA.DAS.NLog.Logger;
     using SFA.DAS.Support.Common.Infrastucture.Settings;
     using SFA.DAS.Support.Portal.ApplicationServices.Settings;
     using SFA.DAS.Support.Portal.Core.Services;
     using SFA.DAS.Support.Portal.Infrastructure.DependencyResolution;
-    using SFA.DAS.Support.Shared;
+    using SFA.DAS.Support.Shared.Discovery;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
@@ -60,6 +57,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
+
+
             WebConfiguration configuration = GetConfiguration();
 
             For<IWebConfiguration>().Use(configuration);
@@ -73,8 +72,15 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
+            For<IServiceConfiguration>().Singleton().Use(new ServiceConfiguration
+                                                                       {
+                                                                           new EmployerAccountSiteManifest(),
+                                                                           new EmployerUserSiteManifest()
+                                                                       }
+                                                                   );
 
         }
+
 
         private WebConfiguration GetConfiguration()
         {

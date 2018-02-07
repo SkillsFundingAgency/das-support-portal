@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Shared.Navigation
 {
@@ -7,6 +8,6 @@ namespace SFA.DAS.Support.Shared.Navigation
     {
         public string Title { get; set; }
         public string Href { get; set; }
-        public string Key { get; set; }
+        public SupportServiceResourceKey Key { get; set; }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -14,9 +12,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 {
     public class WhenTestingManifestRepository
     {
-        private Dictionary<string, SiteChallenge> _siteChallenges = new Dictionary<string, SiteChallenge>();
-        private List<SiteManifest> _siteManifests = new List<SiteManifest>();
-        private Dictionary<string, SiteResource> _siteResources = new Dictionary<string, SiteResource>();
+       
+        private ServiceConfiguration _siteManifests = new ServiceConfiguration();
+
+
         protected string HttpsTestsite;
         protected Mock<IFormMapper> MockFormMapper;
         protected Mock<ILog> MockLogger;
@@ -38,45 +37,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockFormMapper = new Mock<IFormMapper>();
             MockLogger = new Mock<ILog>();
 
-            _siteChallenges = new Dictionary<string, SiteChallenge>();
-            _siteResources = new Dictionary<string, SiteResource>();
-            _siteManifests = new List<SiteManifest>();
-      
+            _siteManifests = new ServiceConfiguration();
 
-            HttpsTestsite = "https://testsite";
 
-            TestSiteManifest = new SiteManifest
-            {
-                BaseUrl = HttpsTestsite,
-                Challenges = new List<SiteChallenge>
-                {
-                    new SiteChallenge
-                    {
-                        ChallengeKey = "challengekey",
-                        ChallengeUrlFormat = "/challenge/me/{0}"
-                    }
-                },
-                Resources = new List<SiteResource>
-                {
-                    new SiteResource
-                    {
-                        Challenge = "Tell me a secret",
-                        ResourceKey = "resourcekey",
-                        ResourceTitle = "Resource Title",
-                        ResourceUrlFormat = "/resource/{0}",
-                        SearchItemsUrl = "https://testsite/search"
-                    },
-                    new SiteResource
-                    {
-                        Challenge = "Heads Up",
-                        ResourceKey = "key/header",
-                        ResourceTitle = "Resource Title",
-                        ResourceUrlFormat = "/resource/{0}",
-                        SearchItemsUrl = "https://testsite/search"
-                    }
-                },
-                Version = "1.0.0.0"
-            };
+            HttpsTestsite = $"{SupportServiceIdentity.SupportEmployerAccount}|https://testsite/";
+
+            TestSiteManifest = new EmployerAccountSiteManifest();
+
+            _siteManifests.Add( TestSiteManifest);
+
 
             TestSites = HttpsTestsite;
 
@@ -84,18 +53,19 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 .Returns(TestSites);
 
             TestSiteUri = TestSites.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Uri(x)).First();
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x=>x.Split(new []{'|'},StringSplitOptions.RemoveEmptyEntries ))
+                .Select(x => new Uri(x[1])).First();
+
             TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
 
             MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);
-           
+
             Unit = new ApplicationServices.Services.ManifestRepository(
                 MockSiteSettings.Object,
                 MockSiteConnector.Object,
                 MockFormMapper.Object,
-                MockLogger.Object, _siteManifests, _siteResources, _siteChallenges);
-
-
+                MockLogger.Object, _siteManifests);
         }
     }
 }

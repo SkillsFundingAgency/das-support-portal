@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.Support.Shared.SearchIndexModel
+﻿@using SFA.DAS.Support.Shared.Discovery
+@using SFA.DAS.Support.Shared.SearchIndexModel
 @model SFA.DAS.Support.Portal.Web.ViewModels.SearchResultsViewModel
 @{
     Layout = "~/Views/Shared/_PortalLayout.cshtml";
@@ -19,7 +20,7 @@
                         <h1 class="heading-large">Search</h1>
                         @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Search", required = "required", maxlength = "100" })
 
-                        <input type="hidden" name="Page" value="0" />
+                        <input type="hidden" name="Page" value="0"/>
                     </fieldset>
 
                     <fieldset class="search-submit">
@@ -31,11 +32,11 @@
                     <fieldset class="inline">
 
                         <div class="multiple-choice">
-                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new { id = "UserSearchType", @checked = "" })
+                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new {id = "UserSearchType", @checked = ""})
                             <label for="UserSearchType">Users</label>
                         </div>
                         <div class="multiple-choice">
-                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new { id = "AccountSearchType" })
+                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new {id = "AccountSearchType"})
                             <label for="AccountSearchType">Accounts</label>
                         </div>
 
@@ -54,7 +55,7 @@
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
-                        <p>  @Model.TotalAccountSearchItems accounts found</p>
+                        <p> @Model.TotalAccountSearchItems accounts found</p>
                     </div>
                 </div>
 
@@ -65,27 +66,27 @@
                         <div class="column-full">
                             <table class="responsive">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">Account</th>
-                                        <th scope="col">Account ID</th>
-                                        <th scope="col"></th>
-                                    </tr>
+                                <tr>
+                                    <th scope="col">Account</th>
+                                    <th scope="col">Account ID</th>
+                                    <th scope="col"></th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var account in Model.AccountSearchResults)
-                                    {
-                                        <tr>
-                                            <td data-label="Account">
-                                                @account.Account
-                                            </td>
-                                            <td data-label="Account ID">
-                                                @account.AccountID
-                                            </td>
-                                            <td data-label="">
-                                                @Html.ActionLink("view", "Index", "Resource", new { key = "account", id = account.AccountID }, null)
-                                            </td>
-                                        </tr>
-                                    }
+                                @foreach (var account in Model.AccountSearchResults)
+                                {
+                                    <tr>
+                                        <td data-label="Account">
+                                            @account.Account
+                                        </td>
+                                        <td data-label="Account ID">
+                                            @account.AccountID
+                                        </td>
+                                        <td data-label="">
+                                            @Html.ActionLink("view", "Index", "Resource", new {key = SupportServiceResourceKey.EmployerAccount, id = account.AccountID}, null)
+                                        </td>
+                                    </tr>
+                                }
                                 </tbody>
                             </table>
                         </div>
@@ -93,18 +94,13 @@
 
                     @Pager()
                 }
-
-
             }
             else if (Model.UserSearchResults != null && Model.SearchType == SearchCategory.User)
             {
-
-
-
                 <div class="grid-row">
                     <div class="column-full">
                         <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
-                        <p>  @Model.TotalUserSearchItems users found</p>
+                        <p> @Model.TotalUserSearchItems users found</p>
                     </div>
                 </div>
 
@@ -114,38 +110,37 @@
                         <div class="column-full">
                             <table class="responsive">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col"></th>
-                                    </tr>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col"></th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var user in Model.UserSearchResults)
-                                    {
-                                        <tr>
-                                            <td data-label="Name">
-                                                @user.Name
-                                            </td>
-                                            <td data-label="Email">
-                                                @user.Email
-                                            </td>
-                                            <td data-label="Status">
-                                                @user.Status
-                                            </td>
-                                            <td data-label="">
-                                                @Html.ActionLink("view", "Index", "Resource", new { key = "user", id = user.Id }, null)
-                                            </td>
-                                        </tr>
-                                    }
+                                @foreach (var user in Model.UserSearchResults)
+                                {
+                                    <tr>
+                                        <td data-label="Name">
+                                            @user.Name
+                                        </td>
+                                        <td data-label="Email">
+                                            @user.Email
+                                        </td>
+                                        <td data-label="Status">
+                                            @user.Status
+                                        </td>
+                                        <td data-label="">
+                                            @Html.ActionLink("view", "Index", "Resource", new {key = SupportServiceResourceKey.EmployerUser, id = user.Id}, null)
+                                        </td>
+                                    </tr>
+                                }
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     @Pager()
-
                 }
             }
         </div>
@@ -153,12 +148,11 @@
 </section>
 
 
-
 @helper Pager()
-    {
-        <div class="grid-row">
-            <div class="column-full">
-                <div class="page-navigation">
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <div class="page-navigation">
 
 
 
@@ -184,7 +178,7 @@
                         </a>
                     }
 
-                </div>
+            </div>
 
             </div>
         </div>

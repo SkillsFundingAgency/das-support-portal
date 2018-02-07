@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch.Exceptions;
@@ -11,9 +10,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
     public class SearchHandler : IAsyncRequestHandler<SearchQuery, SearchResponse>
     {
-       
-        private readonly ISearchProvider _searchProvider;
         private readonly ILog _log;
+
+        private readonly ISearchProvider _searchProvider;
 
         public SearchHandler(ISearchProvider searchProvider, ILog log)
         {
@@ -34,15 +33,18 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             {
                 query.SearchTerm = query.SearchTerm.ToLower();
 
-                var userResponse = _searchProvider.FindUsers(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
+                var userResponse =
+                    _searchProvider.FindUsers(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
                 searchResponse.UserSearchResult = userResponse;
 
-                var accountResponse = _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
+                var accountResponse =
+                    _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
                 searchResponse.AccountSearchResult = accountResponse;
             }
             catch (ElasticSearchInvalidResponseException ex)
             {
-                _log.Error(ex, $"Error while searching for { query.SearchTerm} search type {query.SearchType} on Page {query.Page}");
+                _log.Error(ex,
+                    $"Error while searching for {query.SearchTerm} search type {query.SearchType} on Page {query.Page}");
             }
 
             return await Task.FromResult(searchResponse);

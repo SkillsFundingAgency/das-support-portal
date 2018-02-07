@@ -7,9 +7,7 @@ using System.Web;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
-using SFA.DAS.Support.Shared.Navigation;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
@@ -18,231 +16,164 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     {
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
-        private readonly ISiteSettings _settings;
+        private readonly IServiceConfiguration _serviceConfiguration;
         private readonly ISiteConnector _siteConnector;
-        private List<SiteManifest> _manifests;
-        private List<Uri> _sites;
+        private readonly Dictionary<SupportServiceIdentity, Uri> _sites;
 
         public ManifestRepository(ISiteSettings settings,
             ISiteConnector siteConnector,
             IFormMapper formMapper,
             ILog log,
-            List<SiteManifest> manifests, Dictionary<string, SiteResource> resources,
-            Dictionary<string, SiteChallenge> challenges
+            IServiceConfiguration serviceConfiguration
         )
         {
             _siteConnector = siteConnector;
             _formMapper = formMapper;
             _log = log;
-            _settings = settings;
-            _manifests = manifests;
-            Resources = resources;
-            Challenges = challenges;
+            _serviceConfiguration = serviceConfiguration;
 
-            _sites = (_settings.BaseUrls ?? string.Empty)
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Uri(x)).ToList();
+            _sites = new Dictionary<SupportServiceIdentity, Uri>();
+
+            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] {','},
+                StringSplitOptions.RemoveEmptyEntries))
+            {
+                var subItems = item.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                var key = (SupportServiceIdentity) Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
+                var value = new Uri(subItems[1]);
+                _sites.Add(key, value);
+            }
         }
 
-        private IDictionary<string, SiteResource> Resources { get; set; }
 
-        private IDictionary<string, SiteChallenge> Challenges { get; set; }
-
-        public async Task<bool> ChallengeExists(string key)
+        public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
-            await PollSites();
-            return await Task.FromResult(Challenges.ContainsKey(FormatKey(key)));
-        }
+            if (! _serviceConfiguration.ResourceExists(key))
+                return new ResourceResultModel {StatusCode = HttpStatusCode.NotFound};
+            var resource =  _serviceConfiguration.GetResource(key);
+            var headerKey = resource.HeaderKey ?? key;
 
-        public async Task<SiteChallenge> GetChallenge(string key)
-        {
-            await PollSites();
-            var challenge = Challenges[FormatKey(key)];
-            var siteOfChallenge = _manifests.FirstOrDefault(x =>
-                x.Challenges != null &&
-                x.Challenges
-                    .Select(y => FormatKey(y.ChallengeKey))
-                    .Contains(key.ToLower()));
-            if (siteOfChallenge?.BaseUrl == null)
-                throw new NullReferenceException(
-                    $"The challenge {FormatKey(key)} could not be found in any manifest"
-                );
+            var headerResource = _serviceConfiguration.GetResource(headerKey);
 
-            challenge.ChallengeUrlFormat = new Uri(new Uri(siteOfChallenge.BaseUrl), challenge.ChallengeUrlFormat).ToString();
-            return await Task.FromResult(challenge);
-        }
+            var uri = new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, headerKey), 
+                                headerResource.ResourceUrlFormat);
 
-        public async Task<bool> ResourceExists(string key)
-        {
-            await PollSites();
-            return await Task.FromResult(Resources.ContainsKey(FormatKey(key)));
-        }
-
-        public async Task<ResourceResultModel> GenerateHeader(string key, string id)
-        {
-            var headerKey = key.ToLower().Split('/')[0] + "/header";
-            if (!await ResourceExists(headerKey)) return new ResourceResultModel() { StatusCode = HttpStatusCode.NotFound };
-
-            var resource = await GetResource(headerKey);
-            var url = string.Format(resource.ResourceUrlFormat, id);
+            var url = string.Format(uri.ToString(), id);
             return await GetPage(url);
         }
 
-        public async Task<string> GetChallengeForm(string key, string id, string url)
+
+        public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey,
+            SupportServiceResourceKey challengeKey, string id, string url)
         {
-            var challenge = await GetChallenge(key);
-            var challengeUrl = string.Format(challenge.ChallengeUrlFormat, id);
+            var challenge =  _serviceConfiguration.GetChallenge(challengeKey);
+            if (challenge == null)
+            {
+                var e = new NullReferenceException($"The challenge {challengeKey} could not be found in any manifest");
+                _log.Error(e,
+                    $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+
+            var challengeUrl =
+                string.Format(
+                    new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey), challenge.ChallengeUrlFormat).ToString(), id);
             var page = await GetPage(challengeUrl);
-            return _formMapper.UpdateForm(key, id, url, page.Resource);
+            return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
         public async Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> formData)
         {
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
-            var challengekey = "challengeKey";
-            var key = formData[challengekey];
 
-            if (!await ChallengeExists(key)) throw new MissingMemberException();
+            var challengeKey =
+                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+            var resourceKey =
+                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            var site = FindSiteForChallenge(key);
-            var uri = new Uri(site, innerAction);
+            if (! _serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
+
+            var siteUri = _serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey);
+            var uri = new Uri(siteUri, innerAction);
             formData.Remove("redirect");
             formData.Remove("innerAction");
-            formData.Remove(challengekey);
+            formData.Remove("resourceKey");
 
             var html = await _siteConnector.Upload<string>(uri, formData);
-
-            return AcceptTheHtmlOrTheForbiddenStatusCode(html, key, id, redirect);
-
+            return AcceptTheHtmlOrTheForbiddenStatusCode(html, resourceKey, challengeKey, id, redirect);
         }
 
-        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, string key, string id, string redirect)
-        {
-            if (string.IsNullOrWhiteSpace(html) &&
-                 _siteConnector.LastCode == HttpStatusCode.Forbidden)
-            {
-                html = _siteConnector.LastContent;
-                return new ChallengeResult
-                {
-                    Page = _formMapper.UpdateForm(key, id, redirect, html)
-                };
-            }
-            return new ChallengeResult { RedirectUrl = redirect };
-        }
 
-        public async Task<List<SiteManifest>> GetManifests()
+        public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {
-            await PollSites();
-            return _manifests;
-        }
-
-        public async Task<SiteResource> GetResource(string key)
-        {
-            await PollSites();
-            var resource = Resources[FormatKey(key)];
-            var site = _manifests.FirstOrDefault(x => x.Resources != null &&
-                x.Resources.Select(y => FormatKey(y.ResourceKey)).Contains(FormatKey(key)));
-            if (site == null || site.BaseUrl == null)
-                throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
-            resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
-            return await Task.FromResult(resource);
-        }
-
-        public async Task<NavViewModel> GetNav(string key, string id)
-        {
-            await PollSites();
             var navViewModel = new NavViewModel
             {
                 Current = key,
-                Items = GetNavItems(key, id).ToArray()
+                Items = _serviceConfiguration.GetNavItems(key, id).ToArray()
             };
-
-            return navViewModel;
+            return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(string key, string id)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id)
         {
-            var resource = await GetResource(key);
+            var resource =  _serviceConfiguration.GetResource(key);
+            if (resource == null)
+            {
+                var e = new NullReferenceException($"The requested resource {key} was not found");
+                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            var manifest = _serviceConfiguration.ManifestFromResource(resource);
+            if (manifest == null)
+            {
+                var e = new NullReferenceException($"The manifest that defines {key} could not be found");
+                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+
+            if (!_sites.ContainsKey(manifest.ServiceIdentity))
+                throw new NullReferenceException(
+                    $"The site {manifest.ServiceIdentity} could not be found in any of the site configurations");
+            var site = _sites.First(x => x.Key == manifest.ServiceIdentity);
+
+            if (site.Value == null)
+                throw new NullReferenceException(
+                    $"The site {manifest.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+
+
+            resource.ResourceUrlFormat = new Uri(site.Value, resource.ResourceUrlFormat).ToString();
+
+
             var url = string.Format(resource.ResourceUrlFormat, id);
             return await GetPage(url);
         }
 
-        private async Task PollSites()
+
+
+        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html,
+            SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
+            string id, string redirect)
         {
-            if ((!_manifests.Any())
-                ||
-                (_manifests.Count < _sites.Count))
+            if (string.IsNullOrWhiteSpace(html) &&
+                _siteConnector.LastCode == HttpStatusCode.Forbidden)
             {
-                _manifests = await LoadManifest();
-            }
-            ProcessManifests();
-        }
-
-        private void ProcessManifests()
-        {
-            Resources = new Dictionary<string, SiteResource>();
-            Challenges = new Dictionary<string, SiteChallenge>();
-            foreach (var siteManifest in _manifests)
-            {
-                foreach (var item in siteManifest.Resources ?? new List<SiteResource>())
-                    Resources.Add(item.ResourceKey, item);
-                foreach (var item in siteManifest.Challenges ?? new List<SiteChallenge>())
-                    Challenges.Add(item.ChallengeKey, item);
-            }
-        }
-
-        private Uri FindSiteForChallenge(string key)
-        {
-            var lowerCasedKey = key.ToLower();
-
-            var siteManifest = _manifests
-                .First(x => x.Challenges != null &&
-                            x.Challenges.Select(y => y.ChallengeKey.ToLower())
-                    .Contains(lowerCasedKey)
-                );
-
-            // DEV NOTES:  ASCS-87 - The design requries that all challenge keys are unique across all sites.
-            // Its possible for two or more sites to have same challenge key by accident. 
-            // Then this may return wrong one.
-            return new Uri(siteManifest.BaseUrl);
-        }
-
-        private IEnumerable<NavItem> GetNavItems(string key, string id)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (id == null) throw new ArgumentNullException(nameof(id));
-
-            return Resources
-                .Where(TheResourceKeyStartsWithElementOf(key))
-                .Where(ThereIsAResourceTitle())
-                .Select(ANewNavItemFor(id));
-        }
-
-        private static Func<KeyValuePair<string, SiteResource>, bool> ThereIsAResourceTitle()
-        {
-            return x => !string.IsNullOrEmpty(x.Value.ResourceTitle);
-        }
-
-        private static Func<KeyValuePair<string, SiteResource>, bool> TheResourceKeyStartsWithElementOf(string key)
-        {
-            return x => x.Key.StartsWith(key.Split('/').FirstOrDefault() ?? "");
-        }
-
-        private static Func<KeyValuePair<string, SiteResource>, NavItem> ANewNavItemFor(string id)
-        {
-            return x =>
-                new NavItem
+                html = _siteConnector.LastContent;
+                return new ChallengeResult
                 {
-                    Title = x.Value.ResourceTitle,
-                    Key = x.Key,
-                    Href = $"/resource?key={x.Key}&id={id}"
+                    Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
                 };
+            }
+
+            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+            return new ChallengeResult {RedirectUrl = redirect};
         }
+
 
         private async Task<ResourceResultModel> GetPage(string url)
         {
-            var result = new ResourceResultModel() { };
+            var result = new ResourceResultModel();
             var queryString = AddQueryString(url);
             result.Resource = await _siteConnector.Download(queryString);
             result.StatusCode = _siteConnector.LastCode;
@@ -257,36 +188,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             query["parent"] = string.Empty;
             uriBuilder.Query = query.ToString();
             return uriBuilder.ToString();
-        }
-
-        private string FormatKey(string key)
-        {
-            return key?.ToLower();
-        }
-
-        private async Task<List<SiteManifest>> LoadManifest()
-        {
-            var list = new Dictionary<string, SiteManifest>();
-            foreach (var site in _sites)
-            {
-                var uri = new Uri(site, "api/manifest");
-                _log.Debug($"Downloading '{uri}'");
-                try
-                {
-                    var manifest = await _siteConnector.Download<SiteManifest>(uri);
-                    if (manifest != null)
-                    {
-                        list.Add(uri.ToString(), manifest);
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    _log.Error(ex,
-                        $"Exception occured calling {nameof(ISiteConnector)}.{nameof(ISiteConnector.Download)}<{nameof(SiteManifest)}>('{uri}'");
-                }
-            }
-            return list.Values.ToList();
         }
     }
 }

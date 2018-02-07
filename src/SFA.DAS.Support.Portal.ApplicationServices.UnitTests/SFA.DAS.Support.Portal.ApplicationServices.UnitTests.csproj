@@ -170,13 +170,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChallengeServiceTests.cs" />
     <Compile Include="Services\DatetimeServiceTests.cs" />
-    <Compile Include="Services\ManifestRepository\WhenCallingChallengeExists.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGenerateHeader.cs" />
-    <Compile Include="Services\ManifestRepository\WhenCallingGetChallenge.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetChallengeForm.cs" />
-    <Compile Include="Services\ManifestRepository\WhenCallingGetManifests.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetNav.cs" />
-    <Compile Include="Services\ManifestRepository\WhenCallingGetResource.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetResourcePage.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingSubmitChallenge.cs" />
     <Compile Include="Services\ManifestRepository\WhenTestingManifestRepository.cs" />
