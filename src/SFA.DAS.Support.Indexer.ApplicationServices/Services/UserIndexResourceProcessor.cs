@@ -6,19 +6,20 @@ using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using System;
 using System.Net;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public class UserIndexResourceProcessor : BaseIndexResourceProcessor<UserSearchModel>
     {
         public UserIndexResourceProcessor(ISiteSettings settings,
-            IGetSiteManifest siteService,
-            IGetSearchItemsFromASite downloader,
+            ISiteConnector downloader,
+            
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
             ILog logger,
             IIndexNameCreator indexNameCreator,
-            IElasticsearchCustomClient elasticClient) : base(settings, siteService, downloader, indexProvider, searchSettings, logger, indexNameCreator, elasticClient)
+            IElasticsearchCustomClient elasticClient) : base(settings, downloader, indexProvider, searchSettings, logger, indexNameCreator, elasticClient)
         {
         }
 
