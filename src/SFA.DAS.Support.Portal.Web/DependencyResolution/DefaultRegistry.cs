@@ -72,8 +72,12 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
-
-            For<SupportServiceManifests>().Use(new ServiceConfiguration().ServiceManifests);
+            For<IServiceConfiguration>().Singleton().Use(new ServiceConfiguration
+                                                                       {
+                                                                           new EmployerAccountSiteManifest(),
+                                                                           new EmployerUserSiteManifest()
+                                                                       }
+                                                                   );
 
         }
 

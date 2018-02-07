@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
-using SFA.DAS.Support.Shared.SearchIndexModel;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
 {
     public class WhenTestingManifestRepository
     {
-        private Dictionary<SupportServiceResourceKey, SiteChallenge> _siteChallenges =
-            new Dictionary<SupportServiceResourceKey, SiteChallenge>();
+       
+        private ServiceConfiguration _siteManifests = new ServiceConfiguration();
 
-        private SupportServiceManifests _siteManifests = new SupportServiceManifests();
-
-        private Dictionary<SupportServiceResourceKey, SiteResource> _siteResources =
-            new Dictionary<SupportServiceResourceKey, SiteResource>();
 
         protected string HttpsTestsite;
         protected Mock<IFormMapper> MockFormMapper;
@@ -44,50 +37,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockFormMapper = new Mock<IFormMapper>();
             MockLogger = new Mock<ILog>();
 
-            _siteChallenges = new Dictionary<SupportServiceResourceKey, SiteChallenge>();
-            _siteResources = new Dictionary<SupportServiceResourceKey, SiteResource>();
-            _siteManifests = new SupportServiceManifests();
+            _siteManifests = new ServiceConfiguration();
 
 
             HttpsTestsite = $"{SupportServiceIdentity.SupportEmployerAccount}|https://testsite/";
 
-            TestSiteManifest = new SiteManifest
-            {
-                ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
-                Resources = new[]
-                {
-                    new SiteResource
-                    {
-                        ResourceKey = SupportServiceResourceKey.EmployerAccount,
-                        ResourceUrlFormat = "/account/{0}",
-                        ResourceTitle = "Organisations",
-                        SearchItemsUrl = "/api/manifest/account",
-                        SearchCategory = SearchCategory.Account
-                    },
-                    new SiteResource
-                    {
-                        ResourceKey = SupportServiceResourceKey.EmployerAccountHeader,
-                        ResourceUrlFormat = "/account/header/{0}"
-                    },
-                    new SiteResource
-                    {
-                        ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
-                        ResourceUrlFormat = "/account/finance/{0}",
-                        ResourceTitle = "Finance",
-                        Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge
-                    }
-                },
-                Challenges = new List<SiteChallenge>
-                {
-                    new SiteChallenge
-                    {
-                        ChallengeKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge,
-                        ChallengeUrlFormat = "/challenge/{0}"
-                    }
-                }
-            };
+            TestSiteManifest = new EmployerAccountSiteManifest();
 
-            _siteManifests.Add(SupportServiceIdentity.SupportEmployerAccount, TestSiteManifest);
+            _siteManifests.Add( TestSiteManifest);
 
 
             TestSites = HttpsTestsite;

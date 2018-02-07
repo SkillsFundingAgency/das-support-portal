@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 {
@@ -16,11 +17,15 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         protected Mock<IManifestRepository> MockManifestRepository;
         protected Mock<ICheckPermissions> MockPermissionsChecker;
         protected Mock<IGrantPermissions> MockPermissionsGranter;
+
+        protected IServiceConfiguration ServiceConfiguration;
         protected ControllerContext UnitControllerContext;
 
         [SetUp]
         public override void Setup()
         {
+            ServiceConfiguration = new ServiceConfiguration {new EmployerAccountSiteManifest()};
+
             MockManifestRepository = new Mock<IManifestRepository>();
             MockPermissionsChecker = new Mock<ICheckPermissions>();
             MockPermissionsGranter = new Mock<IGrantPermissions>();
@@ -28,7 +33,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Unit = new Portal.Web.Controllers.ResourceController(
                 MockManifestRepository.Object,
                 MockPermissionsChecker.Object,
-                MockPermissionsGranter.Object);
+                MockPermissionsGranter.Object,
+                ServiceConfiguration);
 
             MockContextBase = new Mock<HttpContextBase>();
 
@@ -39,11 +45,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             UnitControllerContext = new ControllerContext(MockContextBase.Object, new RouteData(), Unit);
 
             Unit.ControllerContext = UnitControllerContext;
-
-            //HttpContext.Current = new HttpContext(
-            //    new HttpRequest("", "http://tempuri.org", ""),
-            //    new HttpResponse(new StringWriter())
-            //);
         }
     }
 }

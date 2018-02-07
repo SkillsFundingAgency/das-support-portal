@@ -61,9 +61,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var navResponse =
                 new NavViewModel
                 {
-                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Current = SupportServiceResourceKey.EmployerAccountTeam,
                     Items = new[]
-                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerAccountTeam, Title = ""}}
                 };
 
             MockManifestRepository.Setup(x => x.SubmitChallenge(_resourceId, It.IsAny<Dictionary<string, string>>()))

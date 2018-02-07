@@ -5,11 +5,13 @@
     /// </summary>
     public enum SupportServiceResourceKey
     {
-        EmployerUser,
+        None,
         EmployerUserHeader,
-        EmployerUserAccountTeam,
+        EmployerUserAccounts,
+
         EmployerAccount,
         EmployerAccountHeader,
+        EmployerAccountTeam,
         EmployerAccountFinance,
         EmployerAccountFinanceChallenge
     }

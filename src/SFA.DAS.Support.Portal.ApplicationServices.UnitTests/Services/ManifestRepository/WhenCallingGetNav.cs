@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -11,8 +12,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldNotReturnTheNavObjectIfTheResourceTitleIsMissing()
         {
-            TestSiteManifest.Resources.First(x=>x.ResourceTitle == null).ResourceTitle = null;
-            var result = await Unit.GetNav(TestSiteManifest.Resources.First(x=>x.ResourceTitle == null).ResourceKey, "id");
+            foreach (var siteResource in TestSiteManifest.Resources.Where(x=>x.IsNavigationItem))
+            {
+                siteResource.IsNavigationItem = false;
+            }
+            
+            var result = await Unit.GetNav(TestSiteManifest.Resources.First().ResourceKey, "id");
             Assert.IsNotNull(result);
             CollectionAssert.IsEmpty(result.Items);
         }

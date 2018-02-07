@@ -91,10 +91,12 @@
     <Compile Include="Authentication\TokenValidationHandler.cs" />
     <Compile Include="Authentication\TokenValidationFilter.cs" />
     <Compile Include="Authentication\IClientAuthenticator.cs" />
+    <Compile Include="Discovery\EmployerAccountSiteManifest.cs" />
+    <Compile Include="Discovery\EmployerUserSiteManifest.cs" />
+    <Compile Include="Discovery\IServiceConfiguration.cs" />
     <Compile Include="Discovery\ServiceConfiguration.cs" />
     <Compile Include="Discovery\ServiceResourceKey.cs" />
     <Compile Include="Discovery\SupportServiceIdentity.cs" />
-    <Compile Include="Discovery\SupportServiceManifests.cs" />
     <Compile Include="SiteConnection\StrategyForClientErrorStatusCode.cs" />
     <Compile Include="SiteConnection\StrategyForRedirectionStatusCode.cs" />
     <Compile Include="SiteConnection\HttpStatusCodeDecision.cs" />

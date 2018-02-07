@@ -37,9 +37,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
 
-            MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
+           // MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
             var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,  Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge};
-            MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
+           // MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
                     It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_resourceKey.ToString()}/{_id}"))
                 .Returns(false);
@@ -59,7 +59,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnABasicWarningViewIfResourceDoesnotExist()
         {
-            MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(false));
+           // MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(false));
+
+            _resourceKey = SupportServiceResourceKey.None;
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id);
 
@@ -79,9 +81,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
 
-            MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
+            //MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
             var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,  Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge};
-            MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
+            //MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
                     It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_resourceKey}/{_id}"))
                 .Returns(true);
@@ -101,14 +103,11 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnTheSubviewIfTheResourcedoesNotDefineAChallenge()
         {
+
+            _resourceKey = SupportServiceResourceKey.None;
+
             MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
 
-            MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
-
-            var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerUser,  Challenge = null};
-           
-            MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
-          
             ActionResultResponse = await Unit.Index(_resourceKey, _id);
 
             Assert.IsInstanceOf<ViewResult>(ActionResultResponse);

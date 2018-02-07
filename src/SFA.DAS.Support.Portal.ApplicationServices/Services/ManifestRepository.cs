@@ -7,9 +7,7 @@ using System.Web;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
-using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
-using SFA.DAS.Support.Shared.Navigation;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
@@ -18,102 +16,67 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     {
         private readonly IFormMapper _formMapper;
         private readonly ILog _log;
+        private readonly IServiceConfiguration _serviceConfiguration;
         private readonly ISiteConnector _siteConnector;
-        private readonly SupportServiceManifests _manifests;
         private readonly Dictionary<SupportServiceIdentity, Uri> _sites;
 
         public ManifestRepository(ISiteSettings settings,
             ISiteConnector siteConnector,
             IFormMapper formMapper,
             ILog log,
-           SupportServiceManifests manifests
+            IServiceConfiguration serviceConfiguration
         )
         {
             _siteConnector = siteConnector;
             _formMapper = formMapper;
             _log = log;
-            _manifests = manifests;
-            Resources = new Dictionary<SupportServiceResourceKey, SiteResource>();
-            Challenges = new Dictionary<SupportServiceResourceKey, SiteChallenge>();
-            foreach (var siteManifest in _manifests)
-            {
-                foreach (var item in siteManifest.Value.Resources ?? new List<SiteResource>())
-                    Resources.Add(item.ResourceKey, item);
-                foreach (var item in siteManifest.Value.Challenges ?? new List<SiteChallenge>())
-                    Challenges.Add(item.ChallengeKey, item);
-            }
+            _serviceConfiguration = serviceConfiguration;
 
             _sites = new Dictionary<SupportServiceIdentity, Uri>();
 
-            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] {','},
+                StringSplitOptions.RemoveEmptyEntries))
             {
-                var subItems = item.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                var key = (SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
+                var subItems = item.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                var key = (SupportServiceIdentity) Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
                 var value = new Uri(subItems[1]);
                 _sites.Add(key, value);
-
             }
         }
 
-        private IDictionary<SupportServiceResourceKey, SiteResource> Resources { get; set; }
-
-        private IDictionary<SupportServiceResourceKey, SiteChallenge> Challenges { get; set; }
-
-        public async Task<bool> ChallengeExists(SupportServiceResourceKey key)
-        {
-            return await Task.FromResult(Challenges.Keys.Contains(key));
-        }
-
-        public async Task<SiteChallenge> GetChallenge(SupportServiceResourceKey key)
-        {
-
-
-
-            var challenge = Challenges[key];
-
-            var manifestOfChallenge = _manifests.FirstOrDefault(x =>
-                x.Value.Challenges != null &&
-                x.Value.Challenges.Select(y => y.ChallengeKey).Contains(key));
-
-            var siteOfChallenge = _sites.FirstOrDefault(x => x.Key == manifestOfChallenge.Key);
-
-
-            if (siteOfChallenge.Value == null)
-            {
-                var e = new NullReferenceException($"The challenge {FormatKey(key)} could not be found in any manifest");
-
-                _log.Error(e, $"the Manifest data is misconfigured, please review teh Manifest configuration and update it accordingly.");
-                throw e;
-
-            }
-
-
-            challenge.ChallengeUrlFormat =
-                new Uri(siteOfChallenge.Value, challenge.ChallengeUrlFormat).ToString();
-            return await Task.FromResult(challenge);
-        }
-
-        public async Task<bool> ResourceExists(SupportServiceResourceKey key)
-        {
-            return await Task.FromResult(Resources.Keys.Contains(key));
-        }
 
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
-            if (!await ResourceExists(key)) return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
-            var resource = await GetResource(key);
+            if (! _serviceConfiguration.ResourceExists(key))
+                return new ResourceResultModel {StatusCode = HttpStatusCode.NotFound};
+            var resource =  _serviceConfiguration.GetResource(key);
             var headerKey = resource.HeaderKey ?? key;
-            var headerResource = await GetResource(headerKey);
-            var url = string.Format(headerResource.ResourceUrlFormat, id);
+
+            var headerResource = _serviceConfiguration.GetResource(headerKey);
+
+            var uri = new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, headerKey), 
+                                headerResource.ResourceUrlFormat);
+
+            var url = string.Format(uri.ToString(), id);
             return await GetPage(url);
         }
 
 
-
-        public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url)
+        public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey,
+            SupportServiceResourceKey challengeKey, string id, string url)
         {
-            var challenge = await GetChallenge(challengeKey);
-            var challengeUrl = string.Format(challenge.ChallengeUrlFormat, id);
+            var challenge =  _serviceConfiguration.GetChallenge(challengeKey);
+            if (challenge == null)
+            {
+                var e = new NullReferenceException($"The challenge {challengeKey} could not be found in any manifest");
+                _log.Error(e,
+                    $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+
+            var challengeUrl =
+                string.Format(
+                    new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey), challenge.ChallengeUrlFormat).ToString(), id);
             var page = await GetPage(challengeUrl);
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
@@ -123,13 +86,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
 
-            var challengeKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
-            var resourceKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
+            var challengeKey =
+                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+            var resourceKey =
+                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            if (!await ChallengeExists(challengeKey)) throw new MissingMemberException();
+            if (! _serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
 
-            var site = FindSiteForChallenge(challengeKey);
-            var uri = new Uri(site, innerAction);
+            var siteUri = _serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey);
+            var uri = new Uri(siteUri, innerAction);
             formData.Remove("redirect");
             formData.Remove("innerAction");
             formData.Remove("resourceKey");
@@ -138,40 +103,57 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return AcceptTheHtmlOrTheForbiddenStatusCode(html, resourceKey, challengeKey, id, redirect);
         }
 
-        public async Task<SiteResource> GetResource(SupportServiceResourceKey key)
-        {
-
-            var resource = Resources[key];
-            var manifest = _manifests.FirstOrDefault(x => x.Value.Resources != null &&
-                                                      x.Value.Resources.Select(y => FormatKey(y.ResourceKey))
-                                                          .Contains(FormatKey(key)));
-
-            var site = _sites.FirstOrDefault(x => x.Key == manifest.Key);
-
-            if (site.Value == null || site.Value == null)
-                throw new NullReferenceException($"The resource {FormatKey(key)} could not be found in any manifest");
-            resource.ResourceUrlFormat = new Uri(site.Value, resource.ResourceUrlFormat).ToString();
-            return await Task.FromResult(resource);
-        }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {
             var navViewModel = new NavViewModel
             {
                 Current = key,
-                Items = GetNavItems(key, id).ToArray()
+                Items = _serviceConfiguration.GetNavItems(key, id).ToArray()
             };
             return await Task.FromResult(navViewModel);
         }
 
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id)
         {
-            var resource = await GetResource(key);
+            var resource =  _serviceConfiguration.GetResource(key);
+            if (resource == null)
+            {
+                var e = new NullReferenceException($"The requested resource {key} was not found");
+                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            var manifest = _serviceConfiguration.ManifestFromResource(resource);
+            if (manifest == null)
+            {
+                var e = new NullReferenceException($"The manifest that defines {key} could not be found");
+                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+
+            if (!_sites.ContainsKey(manifest.ServiceIdentity))
+                throw new NullReferenceException(
+                    $"The site {manifest.ServiceIdentity} could not be found in any of the site configurations");
+            var site = _sites.First(x => x.Key == manifest.ServiceIdentity);
+
+            if (site.Value == null)
+                throw new NullReferenceException(
+                    $"The site {manifest.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+
+
+            resource.ResourceUrlFormat = new Uri(site.Value, resource.ResourceUrlFormat).ToString();
+
+
             var url = string.Format(resource.ResourceUrlFormat, id);
             return await GetPage(url);
         }
 
-        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html, SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
+
+
+        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html,
+            SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
             string id, string redirect)
         {
             if (string.IsNullOrWhiteSpace(html) &&
@@ -183,60 +165,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                     Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
                 };
             }
-            else
-            {
-                if (_siteConnector.LastException != null)
-                {
-                    throw _siteConnector.LastException;
-                }
-            }
-            return new ChallengeResult { RedirectUrl = redirect };
+
+            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+            return new ChallengeResult {RedirectUrl = redirect};
         }
 
-        private Uri FindSiteForChallenge(SupportServiceResourceKey key)
-        {
-            var siteManifest = _manifests
-                .First(x => x.Value.Challenges != null &&
-                            x.Value.Challenges.Select(y => y.ChallengeKey)
-                                .Contains(key)
-                );
-
-            var site = _sites.FirstOrDefault(x => x.Key == siteManifest.Key);
-
-            return site.Value;
-        }
-
-        private IEnumerable<NavItem> GetNavItems(SupportServiceResourceKey key, string id)
-        {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-
-            return Resources
-                .Where(TheResourceKeyStartsWithElementOf(key))
-                .Where(ThereIsAResourceTitle())
-                .Select(ANewNavItemFor(id));
-        }
-
-        private static Func<KeyValuePair<SupportServiceResourceKey, SiteResource>, bool> ThereIsAResourceTitle()
-        {
-            return x => !string.IsNullOrEmpty(x.Value.ResourceTitle);
-        }
-
-        private static Func<KeyValuePair<SupportServiceResourceKey, SiteResource>, bool>
-            TheResourceKeyStartsWithElementOf(SupportServiceResourceKey key)
-        {
-            return x => x.Key.ToString().StartsWith(key.ToString());
-        }
-
-        private static Func<KeyValuePair<SupportServiceResourceKey, SiteResource>, NavItem> ANewNavItemFor(string id)
-        {
-            return x =>
-                new NavItem
-                {
-                    Title = x.Value.ResourceTitle,
-                    Key = x.Key,
-                    Href = $"/resource?key={x.Key}&id={id}"
-                };
-        }
 
         private async Task<ResourceResultModel> GetPage(string url)
         {
@@ -255,11 +188,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             query["parent"] = string.Empty;
             uriBuilder.Query = query.ToString();
             return uriBuilder.ToString();
-        }
-
-        private string FormatKey(SupportServiceResourceKey key)
-        {
-            return key.ToString();
         }
     }
 }

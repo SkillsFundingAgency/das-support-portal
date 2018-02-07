@@ -21,12 +21,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
 
         [Test]
-        public void ItShouldThrowAnExceptionIfTheKeyIsNotFound()
+        public async Task ItShouldThrowAnExceptionIfTheKeyIsNotFound()
         {
-            Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                Unit.GetResourcePage(SupportServiceResourceKey.EmployerUserAccountTeam, "id"));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await Unit.GetResourcePage(SupportServiceResourceKey.None, "id"));
         }
 
-       
+
     }
 }

@@ -14,21 +14,22 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly ICheckPermissions _checker;
         private readonly IGrantPermissions _granter;
         private readonly IManifestRepository _repository;
-
+        private readonly IServiceConfiguration _serviceConfiguration;
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
-            IGrantPermissions granter)
+            IGrantPermissions granter, IServiceConfiguration serviceConfiguration)
         {
             _repository = repository;
             _checker = checker;
             _granter = granter;
+            _serviceConfiguration = serviceConfiguration;
         }
 
         [HttpGet]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, string url)
         {
-            if (!await _repository.ChallengeExists(challengeKey)) return HttpNotFound();
+            if (!_serviceConfiguration.ChallengeExists(challengeKey)) return HttpNotFound();
 
             ViewBag.SubNav = await _repository.GetNav(resourceKey, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(resourceKey, resourceId);
@@ -73,7 +74,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id)
         {
 
-            if (!await _repository.ResourceExists(key))
+            if (! _serviceConfiguration.ResourceExists(key))
                 return View("Sub",
                     new ResourceResultModel
                     {
@@ -82,7 +83,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                         Exception = null
                     });
 
-            var resource = await _repository.GetResource(key);
+            var resource =  _serviceConfiguration.GetResource(key);
 
             if (resource.Challenge.HasValue)
                 if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))

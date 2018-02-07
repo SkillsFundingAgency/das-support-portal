@@ -73,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Discovery\SupportServiceManifestsTests.cs" />
+    <Compile Include="Discovery\WhenCallingGetChallenge.cs" />
+    <Compile Include="Discovery\WhenCallingGetResource.cs" />
+    <Compile Include="Discovery\WhenCallingServiceConfigurationChallengeExists.cs" />
     <Compile Include="SiteConnector\SiteConnectorConstructorTests.cs" />
     <Compile Include="SiteConnector\SiteConnectorTestBase.cs" />
     <Compile Include="HttpStatusStrategy\StrategyForClientErrorStatusCodeTests.cs" />

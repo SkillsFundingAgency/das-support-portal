@@ -16,8 +16,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             base.Setup();
             _resourceId = "resourceId";
-            _challengeKey = SupportServiceResourceKey.EmployerAccountFinance;
-            _resourceKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge;
+            _challengeKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge;
+            _resourceKey = SupportServiceResourceKey.EmployerAccountFinance;
             _url = "";
         }
 
@@ -30,14 +30,15 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldProvideTheChallengeMissingViewIfGetChallengeFormThrowsAnyException()
         {
+
+
             var navResponse =
                 new NavViewModel
                 {
-                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Current = SupportServiceResourceKey.EmployerAccountFinance,
                     Items = new[]
-                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerAccountTeam, Title = ""}}
                 };
-            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_resourceKey, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_resourceKey, _resourceId))
                 .Returns(Task.FromResult(new ResourceResultModel()));
@@ -61,11 +62,11 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var navResponse =
                 new NavViewModel
                 {
-                    Current = SupportServiceResourceKey.EmployerUserAccountTeam,
+                    Current = SupportServiceResourceKey.EmployerAccountTeam,
                     Items = new[]
-                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerUserAccountTeam, Title = ""}}
+                        {new NavItem {Href = "", Key = SupportServiceResourceKey.EmployerAccountTeam, Title = ""}}
                 };
-            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(true));
+            //MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(true));
             MockManifestRepository.Setup(x => x.GetNav(_resourceKey, _resourceId)).Returns(Task.FromResult(navResponse));
             MockManifestRepository.Setup(x => x.GenerateHeader(_resourceKey, _resourceId))
                 .Returns(Task.FromResult(new ResourceResultModel()));
@@ -86,7 +87,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnHttpNotFoundIfTheChallengeDoesNotExist()
         {
-            MockManifestRepository.Setup(x => x.ChallengeExists(_challengeKey)).Returns(Task.FromResult(false));
+            
+            _resourceKey = SupportServiceResourceKey.EmployerAccountFinance;
+            _challengeKey = SupportServiceResourceKey.EmployerAccountFinance;
 
             ActionResultResponse = await Unit.Challenge(_resourceKey, _challengeKey, _resourceId, _url);
 

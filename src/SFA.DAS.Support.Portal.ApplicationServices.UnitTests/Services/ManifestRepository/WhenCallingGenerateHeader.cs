@@ -13,14 +13,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReturnANotFoundStatusIfTheResourceDoesNotExist()
         {
-            var result = await Unit.GenerateHeader(SupportServiceResourceKey.EmployerUserAccountTeam, "id");
+            var result = await Unit.GenerateHeader(SupportServiceResourceKey.EmployerUserAccounts, "id");
             Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
         }
 
         [Test]
         public async Task ItShouldReturnANullResourceIfTheResourceDoesNotExist()
         {
-            var result = await Unit.GenerateHeader(SupportServiceResourceKey.EmployerUserAccountTeam, "id");
+            var result = await Unit.GenerateHeader(SupportServiceResourceKey.None, "id");
             Assert.IsNull(result.Resource);
         }
 

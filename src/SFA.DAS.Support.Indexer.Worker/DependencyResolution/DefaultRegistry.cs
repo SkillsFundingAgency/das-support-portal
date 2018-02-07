@@ -34,7 +34,12 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);
             For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
-            For<SupportServiceManifests>().Use( new ServiceConfiguration().ServiceManifests);
+            For<IServiceConfiguration>().Singleton().Use(new ServiceConfiguration
+                {
+                    new EmployerAccountSiteManifest(),
+                    new EmployerUserSiteManifest()
+                }
+            );
 
         }
 
