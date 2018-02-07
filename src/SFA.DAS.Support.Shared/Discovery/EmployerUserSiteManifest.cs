@@ -11,7 +11,7 @@ namespace SFA.DAS.Support.Shared.Discovery
             {
                 new SiteResource
                 {
-                    ResourceKey = SupportServiceResourceKey.None,
+                    ResourceKey = SupportServiceResourceKey.EmployerUser,
                     ResourceTitle = "Overview",
 
                     ResourceUrlFormat = "/user/index/{0}",

@@ -6,6 +6,7 @@
     public enum SupportServiceResourceKey
     {
         None,
+        EmployerUser,
         EmployerUserHeader,
         EmployerUserAccounts,
 
