@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}"
 EndProject
@@ -30,8 +30,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.ApplicationServices", "SFA.DAS.Support.Indexer.ApplicationServices\SFA.DAS.Support.Indexer.ApplicationServices.csproj", "{D0FD8153-1944-43B9-B255-135EE775699B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Core", "SFA.DAS.Support.Indexer.Core\SFA.DAS.Support.Indexer.Core.csproj", "{5C3439D0-F4ED-4071-8A39-650DC231EF84}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Infrastructure", "SFA.DAS.Support.Indexer.Infrastructure\SFA.DAS.Support.Indexer.Infrastructure.csproj", "{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Worker", "SFA.DAS.Support.Indexer.Worker\SFA.DAS.Support.Indexer.Worker.csproj", "{127E0CB4-7B8C-490E-8A38-233C21EB03BE}"
 EndProject
@@ -63,8 +61,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificate
 	ProjectSection(SolutionItems) = preProject
 		Certificates\localhost.pfx = Certificates\localhost.pfx
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Infrastructure.UnitTests", "SFA.DAS.Support.Indexer.Infrastructure.UnitTests\SFA.DAS.Support.Indexer.Infrastructure.UnitTests.csproj", "{CF51B816-67DC-4540-AA94-5829025A8ED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,10 +108,6 @@ Global
 		{5C3439D0-F4ED-4071-8A39-650DC231EF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C3439D0-F4ED-4071-8A39-650DC231EF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C3439D0-F4ED-4071-8A39-650DC231EF84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -148,10 +140,6 @@ Global
 		{DB114C77-4906-4F20-9824-C01BEEB26EDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB114C77-4906-4F20-9824-C01BEEB26EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB114C77-4906-4F20-9824-C01BEEB26EDC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF51B816-67DC-4540-AA94-5829025A8ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF51B816-67DC-4540-AA94-5829025A8ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF51B816-67DC-4540-AA94-5829025A8ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF51B816-67DC-4540-AA94-5829025A8ED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,7 +156,6 @@ Global
 		{1E211E27-E55C-41C8-B7B8-3C91109CB3E7} = {F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}
 		{D0FD8153-1944-43B9-B255-135EE775699B} = {646D8258-CD8E-475E-9F33-36E554693651}
 		{5C3439D0-F4ED-4071-8A39-650DC231EF84} = {646D8258-CD8E-475E-9F33-36E554693651}
-		{DCF11D5A-4E9E-4902-BEFE-11D6DE23ECC4} = {646D8258-CD8E-475E-9F33-36E554693651}
 		{127E0CB4-7B8C-490E-8A38-233C21EB03BE} = {646D8258-CD8E-475E-9F33-36E554693651}
 		{114C3D2F-1E05-45ED-ACF6-161F534475C6} = {0C47B3E5-26FC-4ACF-BA9E-BF8D68F14794}
 		{39C55247-F5FE-42CB-9488-EFB6C88B3D6C} = {646D8258-CD8E-475E-9F33-36E554693651}
@@ -180,7 +167,6 @@ Global
 		{369D5548-CF74-4E48-946B-0183587F52A8} = {A1872D18-C20C-4365-B94A-5DE83F811233}
 		{DB114C77-4906-4F20-9824-C01BEEB26EDC} = {1EF32DE6-416E-40B7-934B-E92E8363B182}
 		{1EF32DE6-416E-40B7-934B-E92E8363B182} = {A1872D18-C20C-4365-B94A-5DE83F811233}
-		{CF51B816-67DC-4540-AA94-5829025A8ED9} = {39C55247-F5FE-42CB-9488-EFB6C88B3D6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C00C456E-E88C-482E-992F-78AC6252AC20}
