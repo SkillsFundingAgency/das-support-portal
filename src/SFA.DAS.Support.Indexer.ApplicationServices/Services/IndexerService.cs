@@ -42,7 +42,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger = logger;
             _indexNameCreator = indexNameCreator;
             _indexResourceProcessor = indexResourceProcessor;
-            _manifests = manifests;
+            _manifests = (ServiceConfiguration)manifests;
         }
 
         public async Task Run()
