@@ -40,7 +40,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,
                     ResourceUrlFormat = "/account/team/{0}",
                     ResourceTitle = "Team members",
-                    HeaderKey = SupportServiceResourceKey.EmployerUserHeader,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
                 }
             };
