@@ -71,7 +71,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(SupportServiceResourceKey key, string id)
+        public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
 
             if (! _serviceConfiguration.ResourceExists(key))
@@ -93,7 +93,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            var resourceResult = await _repository.GetResourcePage(key, id);
+            var resourceResult = await _repository.GetResourcePage(key, id, childId);
 
             return View("Sub", resourceResult);
         }

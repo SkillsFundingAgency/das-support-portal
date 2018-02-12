@@ -35,6 +35,13 @@ namespace SFA.DAS.Support.Shared.Discovery
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
                 },
+                  new SiteResource
+                {
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountPayeSchemeLevys,
+                    ResourceUrlFormat = "account/levysubmissions/{0}/{1}",
+                    ResourceTitle = "Paye Scheme",
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                },
                 new SiteResource
                 {
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,

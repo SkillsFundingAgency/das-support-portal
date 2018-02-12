@@ -114,7 +114,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
         {
             var resource =  _serviceConfiguration.GetResource(key);
             if (resource == null)
@@ -146,11 +146,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             resource.ResourceUrlFormat = new Uri(site.Value, resource.ResourceUrlFormat).ToString();
 
 
-            var url = string.Format(resource.ResourceUrlFormat, id);
+            var url = string.Format(resource.ResourceUrlFormat, id, childId);
             return await GetPage(url);
         }
-
-
 
         private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html,
             SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
