@@ -14,6 +14,7 @@
         EmployerAccountHeader,
         EmployerAccountTeam,
         EmployerAccountFinance,
+        EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge
     }
 }
