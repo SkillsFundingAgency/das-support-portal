@@ -16,14 +16,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var html = "<html>Some page</html>";
             MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
                 .ReturnsAsync(html);
-            var result = await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountFinance, "id", "chidItemId");
+            var result = await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountFinance, "id", "childItemId");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
         }
 
         [Test]
         public async Task ItShouldThrowAnExceptionIfTheKeyIsNotFound()
         {
-            Assert.ThrowsAsync<NullReferenceException>(async () => await Unit.GetResourcePage(SupportServiceResourceKey.None, "id", "chidItemId"));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await Unit.GetResourcePage(SupportServiceResourceKey.None, "id", "childItemId"));
         }
 
 
