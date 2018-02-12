@@ -18,12 +18,7 @@ namespace SFA.DAS.Support.Indexer.Worker
     public class WorkerRole : RoleEntryPoint
     {
         private const int SecondsToMilliSeconds = 1000;
-        public static readonly List<SiteManifest> SiteManifests = new List<SiteManifest>();
-        public static readonly Dictionary<string, SiteResource> SiteResources = new Dictionary<string, SiteResource>();
-
-        public static readonly Dictionary<string, SiteChallenge> SiteChallenges =
-            new Dictionary<string, SiteChallenge>();
-
+       
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
         private int _delayTime = 1800 * SecondsToMilliSeconds;
