@@ -57,7 +57,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                 },
                 SiteConnector = new SiteConnectorSettings
                 {
-                    ApiBaseUrl = "--- configuration value goes here ---",
                     ClientId = "--- configuration value goes here ---",
                     ClientSecret = "--- configuration value goes here ---",
                     IdentifierUri = "--- configuration value goes here ---",
