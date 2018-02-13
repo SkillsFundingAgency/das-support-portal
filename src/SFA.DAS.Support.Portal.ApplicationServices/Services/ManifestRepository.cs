@@ -163,7 +163,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                     Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
                 };
             }
-
             if (_siteConnector.LastException != null) throw _siteConnector.LastException;
             return new ChallengeResult {RedirectUrl = redirect};
         }
