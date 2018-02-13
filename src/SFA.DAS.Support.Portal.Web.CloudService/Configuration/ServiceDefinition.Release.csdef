@@ -22,8 +22,8 @@
       <Setting name="InstrumentationKey"/>
     </ConfigurationSettings>
     <Endpoints>
-      <InputEndpoint name="Endpoint1" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-cnsl-ilb" />
-      <InputEndpoint name="Endpoint2" protocol="http" port="80" loadBalancer="das-cnsl-ilb" />
+      <InputEndpoint name="Endpoint1" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-sprtl-ilb" />
+      <InputEndpoint name="Endpoint2" protocol="http" port="80" loadBalancer="das-sprtl-ilb" />
     </Endpoints>
     <Certificates>
       <Certificate name="WebSslCert" storeLocation="LocalMachine" storeName="My" />

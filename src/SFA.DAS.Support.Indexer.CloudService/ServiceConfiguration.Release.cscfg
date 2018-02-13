@@ -10,14 +10,4 @@
       <Setting name="InstrumentationKey" value="__InstrumentationKey__"/>
     </ConfigurationSettings>
   </Role>
-  <NetworkConfiguration>
-    <VirtualNetworkSite name="__vnet__" />
-    <AddressAssignments>
-      <InstanceAddress roleName="SFA.DAS.Support.Indexer.Worker">
-        <Subnets>
-          <Subnet name="__subnet__" />
-        </Subnets>
-      </InstanceAddress>
-    </AddressAssignments>
-  </NetworkConfiguration>
 </ServiceConfiguration>
