@@ -1,23 +1,88 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using SFA.DAS.Support.Portal.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
     [System.Web.Mvc.RoutePrefix("api/status")]
     public class StatusController : ApiController
     {
-        // GET: Status
+        private ISiteConnector _siteConnector;
+        private readonly ISiteSettings _siteSettings;
+
+        public StatusController(ISiteConnector siteConnector, ISiteSettings siteSettings)
+        {
+            _siteConnector = siteConnector;
+            _siteSettings = siteSettings;
+        }
         [System.Web.Mvc.AllowAnonymous]
         public async Task<IHttpActionResult> Get()
         {
-            return Ok(new
+            // Get the status of each site
+            // add it to this one and output the results
+
+            var localResult = new
             {
                 ServiceName = AddServiceName(),
                 ServiceTime = AddServerTime(),
-                Request = AddRequestContext()
-            });
+                Request = AddRequestContext(),
+                SubSites = new Dictionary<SupportServiceIdentity, dynamic>()
+
+            };
+
+            try
+            {
+                var subSites = new Dictionary<SupportServiceIdentity, Uri>();
+                foreach (var subSite in _siteSettings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList())
+                {
+                    var siteElements = subSite.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (siteElements.Length != 2) continue;
+                    if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
+                    if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
+
+                    subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), new Uri(siteElements[1]));
+                }
+
+                foreach (var subSite in subSites)
+                {
+                    var uri = new Uri(subSite.Value, "api/status");
+                    try
+                    {
+                        await _siteConnector.Download<dynamic>(uri);
+
+                        localResult.SubSites.Add(subSite.Key, new
+                        {
+                            Result = _siteConnector.HttpStatusCodeDecision,
+                            HttpStatusCode = _siteConnector.LastCode,
+                            Exception = _siteConnector.LastException,
+                            Content = _siteConnector.LastContent,
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        localResult.SubSites.Add(subSite.Key, new
+                        {
+                            Result = _siteConnector.HttpStatusCodeDecision,
+                            HttpStatusCode = _siteConnector.LastCode,
+                            Exception = e,
+                            Content = _siteConnector.LastContent,
+                        });
+                    }
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+
+            return Ok(localResult);
         }
 
         private string AddRequestContext()
