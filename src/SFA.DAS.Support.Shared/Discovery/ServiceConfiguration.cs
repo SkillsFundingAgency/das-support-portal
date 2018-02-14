@@ -62,7 +62,6 @@ namespace SFA.DAS.Support.Shared.Discovery
                     }
                 }
             }
-
             return challenge;
         }
         public  SiteChallenge GetChallenge(SupportServiceResourceKey key)

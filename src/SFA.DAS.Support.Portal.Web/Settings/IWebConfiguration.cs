@@ -13,6 +13,5 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         RoleSettings Roles { get; set; }
         SiteSettings Site { get; set; }
         SiteConnectorSettings SiteConnector { get; set; }
-        SiteValidatorSettings SiteValidator { get; set; }
     }
 }

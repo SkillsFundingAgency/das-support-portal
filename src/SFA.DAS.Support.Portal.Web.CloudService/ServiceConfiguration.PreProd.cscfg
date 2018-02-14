@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="SFA.DAS.Support.Portal.Web.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="5" osVersion="*" schemaVersion="2015-04.2.6">
   <Role name="SFA.DAS.Support.Portal.Web">
-    <Instances count="2" />
+    <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="__StorageConnectionString__" />
       <Setting name="ConfigurationStorageConnectionString" value="__ConfigurationStorageConnectionString__" />
@@ -10,10 +10,16 @@
       <Setting name="InstrumentationKey" value="__InstrumentationKey__" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="WebSslCert" thumbprint="A2FEC613BC54AEFFA6202869DBC9D0170EF25947" thumbprintAlgorithm="sha1" />
+      <Certificate name="WebSslCert" thumbprint="A3A90122047BB7BCB65774BB35AD67A28BF95B82" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
   <NetworkConfiguration>
+    <Dns>
+      <DnsServers>
+        <DnsServer name="Primary" IPAddress="__PrimaryDnsIP__" />
+        <DnsServer name="Secondary" IPAddress="__SecondaryDnsIP__" />
+      </DnsServers>
+    </Dns>
     <VirtualNetworkSite name="__vnet__" />
     <AddressAssignments>
       <InstanceAddress roleName="SFA.DAS.Support.Portal.Web">
@@ -24,7 +30,7 @@
     </AddressAssignments>
     <LoadBalancers>
       <LoadBalancer name="__ilbname__">
-        <FrontendIPConfiguration type="private" subnet="__subnet__" staticVirtualNetworkIPAddress="10.78.124.126" />
+        <FrontendIPConfiguration type="private" subnet="__subnet__" staticVirtualNetworkIPAddress="10.78.124.244" />
       </LoadBalancer>
     </LoadBalancers>
   </NetworkConfiguration>

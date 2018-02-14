@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
@@ -9,8 +8,6 @@ using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
-using SFA.DAS.Support.Shared.Authentication;
-using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Indexer.Worker
 {
