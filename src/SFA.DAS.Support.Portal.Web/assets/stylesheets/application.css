@@ -252,7 +252,7 @@ body {
   background-position: -86px -2px;
 }
 
-/* .column-three-quarters {
+ .column-three-quarters {
   padding: 0 15px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -264,7 +264,7 @@ body {
       float: left;
       width: 75%;
   }
-} */
+} 
 
 .column__no-padding-right {
   padding-right: 0;
