@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -30,6 +32,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             var localResult = new
             {
                 ServiceName = AddServiceName(),
+                ServiceVersion = AddServiceVersion(),
                 ServiceTime = AddServerTime(),
                 Request = AddRequestContext(),
                 SubSites = new Dictionary<SupportServiceIdentity, dynamic>()
@@ -85,6 +88,18 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return Ok(localResult);
         }
 
+        private string AddServiceVersion()
+        {
+            try
+            {
+                return Assembly.GetExecutingAssembly().Version();
+            }
+            catch (Exception e)
+            {
+                return "Unknown";
+            }
+        }
+
         private string AddRequestContext()
         {
             try
@@ -106,7 +121,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             try
             {
-                return "SFA DAS Support Portal Site";
+                return Assembly.GetExecutingAssembly().Title();
             }
             catch
             {

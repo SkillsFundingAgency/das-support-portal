@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -86,10 +87,15 @@ namespace SFA.DAS.Support.Shared
 
         public static string Version(this Assembly source)
         {
-            var attribute = (AssemblyVersionAttribute) source
-                .GetCustomAttributes(typeof(AssemblyVersionAttribute), true)
-                .SingleOrDefault();
-            return attribute == null ? string.Empty : attribute.Version;
+
+            
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(source.Location);
+            return fvi.FileVersion;
+
+            //var attribute = (AssemblyVersionAttribute) source
+            //    .GetCustomAttributes(typeof(AssemblyVersionAttribute), true)
+            //    .SingleOrDefault();
+            //return attribute == null ? string.Empty : attribute.Version;
         }
 
         public static string Company(this Assembly source)
