@@ -523,7 +523,6 @@
     <Content Include="assets\stylesheets\fonts\GDSTransportTabular-Light.eot" />
     <Content Include="assets\stylesheets\fonts\GDSTransportWebsite-Bold.eot" />
     <Content Include="assets\stylesheets\fonts\GDSTransportWebsite.eot" />
-    <Content Include="Views\Shared\_LayoutNew.cshtml" />
     <Content Include="assets\fontawesome-5.0.2\README.md" />
     <Content Include="assets\fontawesome-5.0.2\web-fonts-with-css\webfonts\fa-brands-400.eot" />
     <Content Include="assets\fontawesome-5.0.2\web-fonts-with-css\webfonts\fa-brands-400.ttf" />
