@@ -91,6 +91,7 @@
     <Compile Include="Authentication\TokenValidationHandler.cs" />
     <Compile Include="Authentication\TokenValidationFilter.cs" />
     <Compile Include="Authentication\IClientAuthenticator.cs" />
+    <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="Discovery\EmployerAccountSiteManifest.cs" />
     <Compile Include="Discovery\EmployerUserSiteManifest.cs" />
     <Compile Include="Discovery\IServiceConfiguration.cs" />
