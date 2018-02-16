@@ -40,11 +40,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                  .Query(q => q
                  .Bool(b => b
                  .Should(m =>
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstNameSearchKeyWord)))
                       ||
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastNameSearchKeyWord)))
                       ||
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.EmailSearchKeyWord)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastNameSearchKeyWord)))
                  )
                  ))
                  .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))

@@ -31,15 +31,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
             try
             {
-                query.SearchTerm = query.SearchTerm.ToLower();
+                query.SearchTerm = query.SearchTerm.Replace("/", string.Empty).Replace("*", string.Empty).ToLower();
 
-                var userResponse =
-                    _searchProvider.FindUsers(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
-                searchResponse.UserSearchResult = userResponse;
+                if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+                {
 
-                var accountResponse =
-                    _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
-                searchResponse.AccountSearchResult = accountResponse;
+                    var userResponse =
+                        _searchProvider.FindUsers(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
+                    searchResponse.UserSearchResult = userResponse;
+
+                    var accountResponse =
+                        _searchProvider.FindAccounts(query.SearchTerm, query.SearchType, query.PageSize, query.Page);
+                    searchResponse.AccountSearchResult = accountResponse;
+                }
+
             }
             catch (ElasticSearchInvalidResponseException ex)
             {
@@ -49,5 +54,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 
             return await Task.FromResult(searchResponse);
         }
+
     }
 }

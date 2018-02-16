@@ -13,5 +13,10 @@ namespace SFA.DAS.Support.Shared.SearchIndexModel
         public string Status { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string EmailSearchKeyWord { get => Email.ToLower(); }
+        public string FirstNameSearchKeyWord { get => FirstName.ToLower(); }
+        public string LastNameSearchKeyWord { get => LastName.ToLower(); }
+        public string NameSearchKeyWord { get => Name.ToLower(); }
     }
 }
