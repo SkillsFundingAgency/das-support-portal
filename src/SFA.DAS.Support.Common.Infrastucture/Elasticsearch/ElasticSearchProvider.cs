@@ -40,14 +40,16 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                  .Query(q => q
                  .Bool(b => b
                  .Should(m =>
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstName)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.FirstNameSearchKeyWord)))
                       ||
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastName)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastNameSearchKeyWord)))
                       ||
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Email)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.EmailSearchKeyWord)))
+                      ||
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastNameSearchKeyWord)))
                  )
                  ))
-                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstName))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstNameSearchKeyWord))
                 , string.Empty);
 
 
@@ -68,13 +70,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Query(q => q
                 .Bool(b => b
                 .Must(m =>
-                        m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
+                        m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.AccountSearchKeyWord)))
                         ||
-                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountID))
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountIDSearchKeyWord))
                         ||
-                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIds))
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIdSearchKeyWords))
                 )))
-                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.Account))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.AccountSearchKeyWord))
                    , string.Empty);
 
             ValidateResponse(response);
