@@ -47,13 +47,12 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                         .Mappings(ms => ms
                             .Map<AccountSearchModel>(m => m
                                 .Properties(p => p
-                                    .Text(k => k
-                                        .Name(n => n.Account)
-                                        .Fielddata(true)
-                                        .Fields(kf => kf
-                                            .Keyword(kfk => kfk.Name(kfkn => kfkn.Account))))
-                                    .Text(k => k.Name(n => n.AccountID))
-                                    .Text(k => k.Name(n => n.PayeSchemeIds))
+                                    .Keyword(k => k.Name(n => n.Account))
+                                    .Keyword(k => k.Name(n => n.AccountID))
+
+                                    .Keyword(k => k.Name(n => n.AccountSearchKeyWord))
+                                    .Keyword(k => k.Name(n => n.AccountIDSearchKeyWord))
+                                    .Keyword(k => k.Name(n => n.PayeSchemeIdSearchKeyWords))
                                 )))
                     , string.Empty);
 

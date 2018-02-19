@@ -38,8 +38,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                                   .Mappings(ms => ms
                                       .Map<UserSearchModel>(m => m
                                           .Properties(p => p
-                                           .Text(k => k.Name(n => n.Id))
-                                           .Text(k => k.Name(n => n.Status))
+                                           .Keyword(k => k.Name(n => n.Id))
+                                           .Keyword(k => k.Name(n => n.Status))
 
                                            .Keyword(k => k.Name(n => n.Email))
                                            .Keyword(k => k.Name(n => n.FirstName))
