@@ -20,7 +20,7 @@
                         <h1 class="heading-large">Search</h1>
                         @Html.TextBoxFor(m => m.SearchTerm, string.Empty, new { id = "search-main", type = "search", @class = "form-control", placeholder = "Search", required = "required", maxlength = "100" })
 
-                        <input type="hidden" name="Page" value="0"/>
+                        <input type="hidden" name="Page" value="0" />
                     </fieldset>
 
                     <fieldset class="search-submit">
@@ -32,11 +32,11 @@
                     <fieldset class="inline">
 
                         <div class="multiple-choice">
-                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new {id = "UserSearchType", @checked = ""})
+                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.User, new { id = "UserSearchType", @checked = "" })
                             <label for="UserSearchType">Users</label>
                         </div>
                         <div class="multiple-choice">
-                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new {id = "AccountSearchType"})
+                            @Html.RadioButtonFor(m => m.SearchType, SearchCategory.Account, new { id = "AccountSearchType" })
                             <label for="AccountSearchType">Accounts</label>
                         </div>
 
@@ -50,15 +50,12 @@
     <div class="grid-row">
         <div class="column-full">
 
+
+
             @if (Model.AccountSearchResults != null && Model.SearchType == SearchCategory.Account)
             {
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
-                        <p> @Model.TotalAccountSearchItems accounts found</p>
-                    </div>
-                </div>
 
+                @ResultSummary(Model.TotalAccountSearchItems, "accounts")
 
                 if (Model.AccountSearchResults.Any())
                 {
@@ -66,27 +63,27 @@
                         <div class="column-full">
                             <table class="responsive">
                                 <thead>
-                                <tr>
-                                    <th scope="col">Account</th>
-                                    <th scope="col">Account ID</th>
-                                    <th scope="col"></th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">Account</th>
+                                        <th scope="col">Account ID</th>
+                                        <th scope="col"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var account in Model.AccountSearchResults)
-                                {
-                                    <tr>
-                                        <td data-label="Account">
-                                            @account.Account
-                                        </td>
-                                        <td data-label="Account ID">
-                                            @account.AccountID
-                                        </td>
-                                        <td data-label="">
-                                            @Html.ActionLink("view", "Index", "Resource", new {key = SupportServiceResourceKey.EmployerAccount, id = account.AccountID}, null)
-                                        </td>
-                                    </tr>
-                                }
+                                    @foreach (var account in Model.AccountSearchResults)
+                                    {
+                                        <tr>
+                                            <td data-label="Account">
+                                                @account.Account
+                                            </td>
+                                            <td data-label="Account ID">
+                                                @account.AccountID
+                                            </td>
+                                            <td data-label="">
+                                                @Html.ActionLink("view", "Index", "Resource", new { key = SupportServiceResourceKey.EmployerAccount, id = account.AccountID }, null)
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -97,12 +94,9 @@
             }
             else if (Model.UserSearchResults != null && Model.SearchType == SearchCategory.User)
             {
-                <div class="grid-row">
-                    <div class="column-full">
-                        <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
-                        <p> @Model.TotalUserSearchItems users found</p>
-                    </div>
-                </div>
+
+                @ResultSummary(Model.TotalUserSearchItems, "users")
+
 
                 if (Model.UserSearchResults.Any())
                 {
@@ -110,31 +104,31 @@
                         <div class="column-full">
                             <table class="responsive">
                                 <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col"></th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var user in Model.UserSearchResults)
-                                {
-                                    <tr>
-                                        <td data-label="Name">
-                                            @user.Name
-                                        </td>
-                                        <td data-label="Email">
-                                            @user.Email
-                                        </td>
-                                        <td data-label="Status">
-                                            @user.Status
-                                        </td>
-                                        <td data-label="">
-                                            @Html.ActionLink("view", "Index", "Resource", new {key = SupportServiceResourceKey.EmployerUser, id = user.Id}, null)
-                                        </td>
-                                    </tr>
-                                }
+                                    @foreach (var user in Model.UserSearchResults)
+                                    {
+                                        <tr>
+                                            <td data-label="Name">
+                                                @user.Name
+                                            </td>
+                                            <td data-label="Email">
+                                                @user.Email
+                                            </td>
+                                            <td data-label="Status">
+                                                @user.Status
+                                            </td>
+                                            <td data-label="">
+                                                @Html.ActionLink("view", "Index", "Resource", new { key = SupportServiceResourceKey.EmployerUser, id = user.Id }, null)
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -149,10 +143,10 @@
 
 
 @helper Pager()
-{
-    <div class="grid-row">
-        <div class="column-full">
-            <div class="page-navigation">
+    {
+        <div class="grid-row">
+            <div class="column-full">
+                <div class="page-navigation">
 
 
 
@@ -178,13 +172,31 @@
                         </a>
                     }
 
-            </div>
+                </div>
 
             </div>
         </div>
 }
 
+@helper ResultSummary(int totalSearchItems, string searchType)
+    {
 
+        <div class="grid-row">
+            <div class="column-two-thirds">
+
+                <h4 class="heading-small heading-medium__no-top-margin">
+                    <a href="/">  Clear Search </a>
+                </h4>
+                <br />
+
+                <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
+                <p> @totalSearchItems @searchType found</p>
+
+
+            </div>
+        </div>
+
+}
 
 
 @section script
@@ -193,7 +205,7 @@
     <script>
 
         $("#searchButton").click(function () {
-            if ($("#search-main").val().trim().length>= 2) {
+            if ($("#search-main").val().trim().length >= 2) {
                 $("#searchForm").submit();
             } else {
                 $("#search-main").val("");
