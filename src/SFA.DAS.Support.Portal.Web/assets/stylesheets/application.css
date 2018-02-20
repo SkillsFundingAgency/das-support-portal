@@ -24,7 +24,6 @@ body {
   float: left;
   position: relative;
   top: -1px;
-  /* height: 30px; */
   overflow: visible;
   vertical-align: baseline;
   color: white;
@@ -45,6 +44,8 @@ body {
 
 #global-header .header-wrapper {
   max-width: 1230px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 #global-header-bar,
