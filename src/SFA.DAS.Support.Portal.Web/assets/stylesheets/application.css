@@ -465,7 +465,6 @@ table.responsive tr td {
   box-sizing: border-box;
   border-bottom: 1px dotted #bfc1c3;
   font-size: 14px;
-  word-break: break-all;
 }
 table.responsive tr td:before {
   content: attr(data-label);
