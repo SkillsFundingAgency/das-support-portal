@@ -2,11 +2,29 @@ body {
   min-width: 190px;
 }
 
+@media (min-width: 769px){
+
+  #global-header.with-proposition .header-wrapper .header-global {
+      float: left;
+      width: 66.66%;
+  }
+
+  #global-header.with-proposition .header-wrapper .header-global .header-logo,
+  #global-header.with-proposition .header-wrapper .header-global .site-search {
+      width: 100%;
+  }
+
+  .pull-right {
+    float: right;
+  }
+
+}
+
 #global-header #no-logo {
   float: left;
   position: relative;
   top: -1px;
-  height: 30px;
+  /* height: 30px; */
   overflow: visible;
   vertical-align: baseline;
   color: white;
@@ -15,9 +33,12 @@ body {
   line-height: 1em;
   text-decoration: none;
   text-rendering: optimizeLegibility;
-  margin-bottom: -3px;
-  padding-top: 2px;
   border-bottom: 1px solid transparent;
+}
+
+.login-details {
+  margin: 0 15px;
+  color: white;
 }
 
 /* Widening the layout */

@@ -5,12 +5,11 @@
         <div class="header-global">
             <div class="header-logo">
                 <a href="/" title="Go to the apprenticeship service support portal homepage" id="no-logo" class="content">
-                    ESFA
+                    Apprenticeship Service Support
                 </a>
             </div>
-
         </div>
-        <div class="header-proposition">
+        <!-- <div class="header-proposition">
             <div class="content">
                 <nav id="proposition-menu">
                     <a href="/" id="proposition-name">Apprenticeship Service Support</a>
@@ -19,9 +18,10 @@
                     </p>
                 </nav>
             </div>
-        </div>
-        <div class="pull-right">
-            @Model.Username
+        </div> -->
+        <div class="pull-right login-details">
+            <!-- @Model.Username -->
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </header>
