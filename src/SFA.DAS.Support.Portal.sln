@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}"
 EndProject
@@ -58,6 +58,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificates", "{C3F493EF-0902-404A-A2FA-63E2CFB57629}"
 	ProjectSection(SolutionItems) = preProject
 		Certificates\localhost.pfx = Certificates\localhost.pfx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{641521CC-76F2-4B35-8455-B763B83B232E}"
+	ProjectSection(SolutionItems) = preProject
+		Build.fsx = Build.fsx
+		CustomTargets.fsx = CustomTargets.fsx
+		DefaultTargets.fsx = DefaultTargets.fsx
+		RunBuild.bat = RunBuild.bat
 	EndProjectSection
 EndProject
 Global
