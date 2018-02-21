@@ -60,9 +60,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificate
 		Certificates\localhost.pfx = Certificates\localhost.pfx
 	EndProjectSection
 EndProject
-<<<<<<< HEAD
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.ApplicationServices.UnitTests", "SFA.DAS.Support.Indexer.ApplicationServices.UnitTests\SFA.DAS.Support.Indexer.ApplicationServices.UnitTests.csproj", "{8D0A47FE-236C-4FC0-9BFA-55B6868D8CFF}"
-=======
+EndProject
+
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{641521CC-76F2-4B35-8455-B763B83B232E}"
 	ProjectSection(SolutionItems) = preProject
 		Build.fsx = Build.fsx
@@ -70,7 +71,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		DefaultTargets.fsx = DefaultTargets.fsx
 		RunBuild.bat = RunBuild.bat
 	EndProjectSection
->>>>>>> master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
