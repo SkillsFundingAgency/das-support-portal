@@ -19,20 +19,16 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         public override void Setup()
         {
             base.Setup();
-            _id = "id";
             _resourceId = "resourceId";
             _challengeKey = SupportServiceResourceKey.EmployerAccountFinance;
             _resourceKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge;
-            _url = "";
             _formCollection = new FormCollection();
             _formCollection.Add("TestKey", "TestValue");
         }
 
-        private string _id;
         private string _resourceId;
         private SupportServiceResourceKey _challengeKey;
         private SupportServiceResourceKey _resourceKey;
-        private string _url;
         private FormCollection _formCollection;
 
         [Test]

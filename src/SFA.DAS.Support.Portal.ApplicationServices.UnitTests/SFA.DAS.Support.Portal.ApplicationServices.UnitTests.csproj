@@ -198,10 +198,6 @@
       <Project>{324a9892-d5e5-4b63-9a43-9c9fd3f80b45}</Project>
       <Name>SFA.DAS.Support.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
-      <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
-      <Name>SFA.DAS.Support.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
