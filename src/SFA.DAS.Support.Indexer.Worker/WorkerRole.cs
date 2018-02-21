@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker.DependencyResolution;
@@ -22,7 +21,6 @@ namespace SFA.DAS.Support.Indexer.Worker
         private readonly int _delayTimeInSeconds = 1800 * 1000;
         private IIndexSearchItems _indexer;
         private ILog _logger;
-        private ISearchSettings _searchSettings;
         private ISiteSettings _siteSettings;
 
 
