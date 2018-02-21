@@ -69,7 +69,7 @@ namespace SFA.DAS.Support.Portal.Web
                 return
                     $"Host Address: {HttpContext.Current?.Request?.UserHostAddress ?? "Unknown"}\r\nHttp Method: {HttpContext.Current?.Request?.HttpMethod ?? "Unknown"}\r\nRawUrl: {HttpContext.Current?.Request?.RawUrl ?? "Unknown"}";
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return "The HttpRequest is not available in this context.";
             }

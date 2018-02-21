@@ -94,7 +94,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             {
                 return Assembly.GetExecutingAssembly().Version();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return "Unknown";
             }
