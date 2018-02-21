@@ -258,15 +258,15 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n            <div");
 
 WriteLiteralTo(__razor_helper_writer, " class=\"column-two-thirds\"");
 
-WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n                <h4");
+WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n                <p");
 
-WriteLiteralTo(__razor_helper_writer, " class=\"heading-small heading-medium__no-top-margin\"");
+WriteLiteralTo(__razor_helper_writer, " class=\"font-xsmall\"");
 
 WriteLiteralTo(__razor_helper_writer, ">\r\n                    <a");
 
 WriteLiteralTo(__razor_helper_writer, " href=\"/\"");
 
-WriteLiteralTo(__razor_helper_writer, ">  Clear Search </a>\r\n                </h4>\r\n                <br />\r\n\r\n          " +
+WriteLiteralTo(__razor_helper_writer, "> Clear Search </a>\r\n                </p>\r\n\r\n                <br />\r\n\r\n          " +
 "      <h2");
 
 WriteLiteralTo(__razor_helper_writer, " class=\"heading-medium heading-medium__no-top-margin\"");
@@ -274,7 +274,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"heading-medium heading-medium__n
 WriteLiteralTo(__razor_helper_writer, ">Results</h2>\r\n                <p> ");
 
 
-#line 193 "..\..\Views\Search\Index.cshtml"
+#line 194 "..\..\Views\Search\Index.cshtml"
 WriteTo(__razor_helper_writer, totalSearchItems);
 
 
@@ -283,16 +283,16 @@ WriteTo(__razor_helper_writer, totalSearchItems);
 WriteLiteralTo(__razor_helper_writer, " ");
 
 
-#line 193 "..\..\Views\Search\Index.cshtml"
+#line 194 "..\..\Views\Search\Index.cshtml"
         WriteTo(__razor_helper_writer, searchType);
 
 
 #line default
 #line hidden
-WriteLiteralTo(__razor_helper_writer, " found</p>\r\n\r\n\r\n            </div>\r\n        </div>\r\n");
+WriteLiteralTo(__razor_helper_writer, " found</p>\r\n            </div>\r\n        </div>\r\n");
 
 
-#line 198 "..\..\Views\Search\Index.cshtml"
+#line 197 "..\..\Views\Search\Index.cshtml"
 
 
 
@@ -300,7 +300,7 @@ WriteLiteralTo(__razor_helper_writer, " found</p>\r\n\r\n\r\n            </div>\
 #line hidden
 });
 
-#line 199 "..\..\Views\Search\Index.cshtml"
+#line 198 "..\..\Views\Search\Index.cshtml"
 }
 #line default
 #line hidden
