@@ -28,27 +28,26 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             // Get the status of each site
             // add it to this one and output the results
-
+            var sites = _siteSettings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             var localResult = new
             {
                 ServiceName = AddServiceName(),
                 ServiceVersion = AddServiceVersion(),
                 ServiceTime = AddServerTime(),
                 Request = AddRequestContext(),
-                SubSites = new Dictionary<SupportServiceIdentity, dynamic>()
-
+                SubSites = new Dictionary<SupportServiceIdentity, dynamic>(),
+                Sites = sites
             };
 
             try
             {
                 var subSites = new Dictionary<SupportServiceIdentity, Uri>();
-                foreach (var subSite in _siteSettings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList())
+                foreach (var subSite in sites)
                 {
                     var siteElements = subSite.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     if (siteElements.Length != 2) continue;
                     if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
                     if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
-
                     subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), new Uri(siteElements[1]));
                 }
 
@@ -58,7 +57,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                     try
                     {
                         await _siteConnector.Download<dynamic>(uri);
-
                         localResult.SubSites.Add(subSite.Key, new
                         {
                             Result = _siteConnector.HttpStatusCodeDecision,
