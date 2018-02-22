@@ -46,7 +46,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                       ||
                      m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.EmailSearchKeyWord)))
                       ||
-                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.LastNameSearchKeyWord)))
+                     m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.NameSearchKeyWord)))
                  )
                  ))
                  .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstNameSearchKeyWord))
@@ -69,8 +69,10 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Take(pageSize)
                 .Query(q => q
                 .Bool(b => b
-                .Must(m =>
+                .Should(m =>
                         m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.AccountSearchKeyWord)))
+                         ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountSearchKeyWord))
                         ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountIDSearchKeyWord))
                         ||
