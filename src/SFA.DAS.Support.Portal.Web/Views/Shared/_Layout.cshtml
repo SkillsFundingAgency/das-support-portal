@@ -1,4 +1,6 @@
 ﻿@using System.Globalization
+@using System.Reflection
+@using SFA.DAS.Support.Shared
 @{
     if (ViewBag.dateRegistered != null)
     {
@@ -79,6 +81,9 @@
             </div>
             <div class="copyright">
                 <a href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+            </div>
+            <div class="font-xsmall">
+                Version: @ViewContext.Controller.GetType().Assembly.GetName().Version
             </div>
         </div>
     </div>
