@@ -61,13 +61,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 var searchItems = await _dataSource.Download<IEnumerable<T>>(uri);
                 if (_dataSource.LastCode != HttpStatusCode.OK)
                 {
-                    throw _dataSource.LastException ??
-                          throw new InvalidOperationException("The requested data was not recieved");
+                    _indexProvider.DeleteIndex(newIndexName);
+                    throw _dataSource.LastException ?? throw new InvalidOperationException("The requested data was not recieved");
                 }
 
                 _queryTimer.Stop();
 
                 _indexTimer.Start();
+
                 _logger.Info($" Indexing Documents for type {typeof(T).Name}...");
                 _indexProvider.IndexDocuments(newIndexName, searchItems);
                 _indexTimer.Stop();
