@@ -14,27 +14,57 @@ using System;
 using System.Collections.Generic;
 using Nest;
 using System.Net;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 {
     public class IndexResourceProcessorBase
     {
 
-        protected  Mock<ISiteConnector> _downloader;
-        protected  Mock<IIndexProvider> _indexProvider;
-        protected  Mock<ISearchSettings> _searchSettings;
-        protected  Mock<ILog> _logger;
-        protected  Mock<IIndexNameCreator> _indexNameCreator;
-        protected  Mock<IElasticsearchCustomClient> _elasticClient;
+        protected Mock<ISiteConnector> _downloader;
+        protected Mock<IIndexProvider> _indexProvider;
+        protected Mock<ISearchSettings> _searchSettings;
+        protected Mock<ILog> _logger;
+        protected Mock<IIndexNameCreator> _indexNameCreator;
+        protected Mock<IElasticsearchCustomClient> _elasticClient;
         protected Mock<ISiteSettings> _siteSettings;
 
         protected const string _indexName = "new_index_name";
         protected Uri _baseUrl;
         protected const int _indexToRetain = 5;
         protected IEnumerable<AccountSearchModel> _accountModels;
+        protected SiteResource _accountSiteResource;
+        protected SiteResource _userSiteResource;
 
-        protected void Initialise ()
+
+        protected void Initialise()
         {
+            _baseUrl = new Uri("http://localhost");
+
+            _accountModels = new List<AccountSearchModel>
+            {
+                new AccountSearchModel
+                {
+                    Account = "Valtech"
+                }
+            };
+
+
+            _accountSiteResource = new SiteResource
+            {
+                SearchCategory = SearchCategory.Account,
+                SearchTotalItemsUrl = "localhost",
+                SearchItemsUrl = "localhost",
+            };
+
+            _userSiteResource = new SiteResource
+            {
+                SearchCategory = SearchCategory.User,
+                SearchTotalItemsUrl = "localhost",
+                SearchItemsUrl = "localhost",
+            };
+
+
             _downloader = new Mock<ISiteConnector>();
             _indexProvider = new Mock<IIndexProvider>();
 
@@ -79,6 +109,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Returns(Task.FromResult(_accountModels));
 
             _downloader
+               .Setup(o => o.Download(It.IsAny<Uri>()))
+               .Returns(Task.FromResult("50"));
+
+            _downloader
                 .Setup(o => o.LastCode)
                 .Returns(HttpStatusCode.OK);
 
@@ -91,16 +125,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
             _indexProvider
               .Setup(o => o.DeleteIndexes(_indexToRetain, It.IsAny<string>()));
 
-            _baseUrl = new Uri("http://localhost");
-
-            _accountModels = new List<AccountSearchModel>
-            {
-                new AccountSearchModel
-                {
-                    Account = "Valtech"
-                }
-            };
+           
         }
+
+
 
 
     }

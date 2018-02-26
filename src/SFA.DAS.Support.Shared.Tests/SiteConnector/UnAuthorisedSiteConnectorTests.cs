@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
@@ -17,7 +18,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(code, "application/json", ValidTestResponseData);
 
             HttpClient.DefaultRequestHeaders.Authorization = null;
-            var response = await Unit.Download(TestUrl);
+            var response = await Unit.Download(new Uri(TestUrl));
 
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<string>(response);

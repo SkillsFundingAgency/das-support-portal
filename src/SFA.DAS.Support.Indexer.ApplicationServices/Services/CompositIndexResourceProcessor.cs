@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
@@ -14,10 +15,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 indexResourceProcessors ?? throw new ArgumentNullException("IndexResourceProcessors");
         }
 
-        public async Task ProcessResource(Uri uri, SearchCategory searchCategory)
-        {
+        public async Task ProcessResource(Uri basUri, SiteResource siteResource)
+        { 
             foreach (var indexResourceProcessor in _indexResourceProcessors)
-                await indexResourceProcessor.ProcessResource(uri, searchCategory);
+            {
+                await indexResourceProcessor.ProcessResource(basUri, siteResource);
+            }
+                
         }
     }
 }
