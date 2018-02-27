@@ -1,10 +1,9 @@
 /* START - Flexbox sticky footer */
 
-html, body {
+/* html, body {
   height: 100%;
 }
 
-/* This breaks the global-header-bar */
 body {
   display: flex;
   flex-direction: column;
@@ -13,12 +12,6 @@ body {
 
 #content {
   flex: 1 0 auto;
-
-  /* This vertically center aligns the search box */
-  /* It will affect content on  other pages so is just for demo purposes */
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center; */
 }
 
 #global-header-bar, #footer {
@@ -29,7 +22,7 @@ body {
   #content, #global-header-bar {
     width: 100%;
   }
-}
+} */
 
 /* END - Flexbox sticky footer */
 
