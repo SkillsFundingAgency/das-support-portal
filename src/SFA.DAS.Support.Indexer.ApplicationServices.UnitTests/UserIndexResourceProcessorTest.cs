@@ -41,7 +41,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                                                         _indexNameCreator.Object,
                                                         _elasticClient.Object);
 
-            await _sut.ProcessResource(new System.Uri("http://localhost"), SearchCategory.Account);
+            await _sut.ProcessResource(new System.Uri("http://localhost"), _accountSiteResource);
 
             _indexNameCreator
                 .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Never);

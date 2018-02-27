@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Shared.Discovery;
@@ -28,7 +29,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var mappedFormHtml = "<html><form action='/api/challenge/id'  method='post' /></html>";
 
 
-            MockSiteConnector.Setup(c => c.Download(It.IsAny<string>()))
+            MockSiteConnector.Setup(c => c.Download(It.IsAny<Uri>()))
                 .ReturnsAsync(downloadedFormHtml);
 
             MockFormMapper.Setup(x => x.UpdateForm(

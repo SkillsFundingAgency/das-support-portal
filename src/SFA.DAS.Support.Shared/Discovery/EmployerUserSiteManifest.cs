@@ -15,7 +15,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceTitle = "Overview",
 
                     ResourceUrlFormat = "/user/index/{0}",
-                    SearchItemsUrl = "/api/search/users",
+                    SearchItemsUrl = "/api/search/users/{0}/{1}",
+                    SearchTotalItemsUrl = "/api/search/users/totalCount/{0}",
                     SearchCategory = SearchCategory.User,
                     HeaderKey = SupportServiceResourceKey.EmployerUserHeader,
                     IsNavigationItem = true

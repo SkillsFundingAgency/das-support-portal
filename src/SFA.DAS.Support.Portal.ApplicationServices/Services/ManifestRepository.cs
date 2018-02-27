@@ -172,7 +172,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         {
             var result = new ResourceResultModel();
             var queryString = AddQueryString(url);
-            result.Resource = await _siteConnector.Download(queryString);
+            result.Resource = await _siteConnector.Download(new Uri(queryString));
             result.StatusCode = _siteConnector.LastCode;
             result.Exception = _siteConnector.LastException;
             return result;

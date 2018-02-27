@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Moq;
@@ -30,7 +31,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         {
             var html = "<html>This is a page</html>";
 
-            MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
+            MockSiteConnector.Setup(x => x.Download(It.IsAny<Uri> ()))
                 .ReturnsAsync(html);
 
             var result = await Unit.GenerateHeader(SupportServiceResourceKey.EmployerAccountFinance, "id");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -40,7 +41,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Respond(code, "application/json", "{}")
                 ;
 
-            var actual = await Unit.Download(TestUrlMatch);
+            var actual = await Unit.Download(new Uri(TestUrlMatch));
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(code, Unit.LastCode);
@@ -56,7 +57,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .When(TestUrl)
                 .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
 
-            var actual = await Unit.Download(TestUrl);
+            var actual = await Unit.Download(new Uri(TestUrl));
 
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);

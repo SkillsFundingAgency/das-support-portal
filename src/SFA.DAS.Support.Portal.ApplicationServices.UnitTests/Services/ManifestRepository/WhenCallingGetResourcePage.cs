@@ -14,7 +14,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         public async Task ItShouldReturnTheHtmlPage()
         {
             var html = "<html>Some page</html>";
-            MockSiteConnector.Setup(x => x.Download(It.IsAny<string>()))
+            MockSiteConnector.Setup(x => x.Download(It.IsAny<Uri>()))
                 .ReturnsAsync(html);
             var result = await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountFinance, "id", "childItemId");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));

@@ -27,6 +27,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         private readonly ISearchSettings _searchSettings;
         private readonly ISiteSettings _siteSettings;
         private readonly ServiceConfiguration _manifests;
+
+      
+
         public IndexerService(ISiteSettings settings,
             ISiteConnector downloader,
             IIndexProvider indexProvider,
@@ -42,7 +45,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger = logger;
             _indexNameCreator = indexNameCreator;
             _indexResourceProcessor = indexResourceProcessor;
-            _manifests = (ServiceConfiguration)manifests;
+            _manifests = manifests;
         }
 
         public async Task Run()
@@ -50,23 +53,12 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _runtimer.Start();
             try
             {
-
-                Dictionary<SupportServiceIdentity,string> subSites = new Dictionary<SupportServiceIdentity, string>();
-
-                foreach (var subSite in _siteSettings.BaseUrls.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries).ToList())
-                {
-                    var siteElements = subSite.Split(new []{'|'}, StringSplitOptions.RemoveEmptyEntries);
-                    if (siteElements.Length != 2) continue;
-                    if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
-                    if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
-                    subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), siteElements[1]);
-                }
-                
+               var subSites =  GetSubsites();
 
                 foreach (var subSite in subSites)
                 {
                     var siteUri = new Uri(subSite.Value);
-                    var siteManifest = _manifests.FirstOrDefault(x=>x.ServiceIdentity == subSite.Key);
+                    var siteManifest = _manifests.FirstOrDefault(x => x.ServiceIdentity == subSite.Key);
 
 
                     _queryTimer.Stop();
@@ -89,14 +81,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
                     foreach (var resource in resourcesToIndex)
                     {
-                        if (resource.SearchItemsUrl == null) continue;
-                        _logger.Info(
-                            $"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
+                        _logger.Info($"Processing Resource: Key: {resource.ResourceKey} Title: {resource.ResourceTitle} SearchUri: {resource.SearchItemsUrl ?? "not set"}");
 
                         var baseUri = new Uri(subSite.Value);
-                        var uri = new Uri(baseUri, resource.SearchItemsUrl);
 
-                        await _indexResourceProcessor.ProcessResource(uri, resource.SearchCategory);
+                        await _indexResourceProcessor.ProcessResource(baseUri, resource);
                     }
                 }
             }
@@ -109,6 +98,22 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 _runtimer.Stop();
                 _logger.Info($"Indexer Run: Elapsed Time {_runtimer.Elapsed}");
             }
+        }
+
+        private Dictionary<SupportServiceIdentity, string> GetSubsites()
+        {
+            var subSites = new Dictionary<SupportServiceIdentity, string>();
+
+            foreach (var subSite in _siteSettings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList())
+            {
+                var siteElements = subSite.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                if (siteElements.Length != 2) continue;
+                if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
+                if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
+                subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), siteElements[1]);
+            }
+
+            return subSites;
         }
     }
 }

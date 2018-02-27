@@ -46,9 +46,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             return await Download<T>(new Uri(url));
         }
 
-        public async Task<string> Download(string url)
+        public async Task<string> Download(Uri url)
         {
-            return await Download<string>(new Uri(url));
+            return await Download<string>(url);
         }
 
         public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class

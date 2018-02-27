@@ -7,17 +7,20 @@ using Nest;
 using System.Collections.Generic;
 using System.Net;
 using System;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 {
     [TestFixture]
     public class AccountIndexResourceProcessorTest : IndexResourceProcessorBase
     {
-      
+       
+
         [SetUp]
         public void Setup()
         {
-            Initialise();
+            base.Initialise();
+
         }
 
         [Test]
@@ -28,8 +31,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.User))
                 .Returns(_indexName);
 
+          
 
-            var _sut = new AccountIndexResourceProcessor(_siteSettings.Object,
+            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
                                                         _downloader.Object,
                                                         _indexProvider.Object,
                                                         _searchSettings.Object,
@@ -37,7 +41,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                                                         _indexNameCreator.Object,
                                                         _elasticClient.Object);
 
-            await _sut.ProcessResource(_baseUrl, SearchCategory.User);
+
+
+
+            await sut.ProcessResource(_baseUrl, _userSiteResource);
 
             _indexNameCreator
                 .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.User), Times.Never);
@@ -48,7 +55,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
         [Test]
         public async Task ShouldProcessAccountModel()
         {
-            var _sut = new AccountIndexResourceProcessor(_siteSettings.Object,
+            
+
+            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
                                                         _downloader.Object,
                                                         _indexProvider.Object,
                                                         _searchSettings.Object,
@@ -56,7 +65,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                                                         _indexNameCreator.Object,
                                                         _elasticClient.Object);
 
-            await _sut.ProcessResource(_baseUrl, SearchCategory.Account);
+            await sut.ProcessResource(_baseUrl, _accountSiteResource);
 
             _indexNameCreator
                 .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Once);
@@ -68,7 +77,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
 
             _downloader
-                .Verify(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl), Times.Once);
+                .Verify(o => o.Download<IEnumerable<AccountSearchModel>>(It.IsAny<Uri>()), Times.AtLeastOnce);
 
             _indexProvider
                 .Verify(o => o.DeleteIndex(_indexName), Times.Never);
@@ -96,7 +105,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                .Setup(o => o.LastCode)
                .Returns(HttpStatusCode.InternalServerError);
 
-            var _sut = new AccountIndexResourceProcessor(_siteSettings.Object,
+            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
                                                         _downloader.Object,
                                                         _indexProvider.Object,
                                                         _searchSettings.Object,
@@ -104,7 +113,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                                                         _indexNameCreator.Object,
                                                         _elasticClient.Object);
 
-            await _sut.ProcessResource(_baseUrl, SearchCategory.Account);
+            await sut.ProcessResource(_baseUrl, _accountSiteResource);
 
 
             _indexProvider

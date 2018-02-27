@@ -16,7 +16,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceKey = SupportServiceResourceKey.EmployerAccount,
                     ResourceUrlFormat = "/account/{0}",
                     ResourceTitle = "Organisations",
-                    SearchItemsUrl = "/api/search/organisations",
+                    SearchItemsUrl = "/api/search/accounts/{0}/{1}",
+                    SearchTotalItemsUrl ="/api/search/accounts/totalCount/{0}",
                     SearchCategory = SearchCategory.Account,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true

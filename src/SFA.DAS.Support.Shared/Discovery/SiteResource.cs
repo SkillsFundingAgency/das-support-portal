@@ -12,6 +12,7 @@ namespace SFA.DAS.Support.Shared.Discovery
         [JsonRequired] public string ResourceUrlFormat { get; set; }
 
         public string SearchItemsUrl { get; set; }
+        public string SearchTotalItemsUrl { get; set; }
         public string ResourceTitle { get; set; }
         public SearchCategory SearchCategory { get; set; }
         public SupportServiceResourceKey? Challenge { get; set; }

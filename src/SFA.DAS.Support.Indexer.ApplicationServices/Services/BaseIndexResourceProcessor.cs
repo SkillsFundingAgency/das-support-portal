@@ -9,6 +9,7 @@ using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -30,6 +31,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         protected readonly ISearchSettings _searchSettings;
         protected readonly ISiteSettings _settings;
 
+        private const int _pageSize = 50;
+
         public BaseIndexResourceProcessor(ISiteSettings settings,
             ISiteConnector dataSource,
             IIndexProvider indexProvider,
@@ -47,45 +50,35 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _elasticClient = elasticClient;
         }
 
-        public async Task ProcessResource(Uri uri, SearchCategory searchCategory)
+        public async Task ProcessResource(Uri baseUri, SiteResource siteResource)
         {
-            if (!ContinueProcessing(searchCategory)) return;
+            if (!ContinueProcessing(siteResource.SearchCategory)) return;
 
             try
             {
-                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, searchCategory);
+                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, siteResource.SearchCategory);
                 CreateIndex(newIndexName);
 
-                _queryTimer.Start();
-                _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
-                var searchItems = await _dataSource.Download<IEnumerable<T>>(uri);
-                if (_dataSource.LastCode != HttpStatusCode.OK)
+                try
                 {
-                    _indexProvider.DeleteIndex(newIndexName);
-                    throw _dataSource.LastException ?? throw new InvalidOperationException("The requested data was not recieved");
+                    await IndexDocument(baseUri, siteResource, newIndexName);
                 }
-
-                _queryTimer.Stop();
-
-                _indexTimer.Start();
-
-                _logger.Info($" Indexing Documents for type {typeof(T).Name}...");
-                _indexProvider.IndexDocuments(newIndexName, searchItems);
-                _indexTimer.Stop();
-
+                catch (Exception)
+                {
+                    _logger.Info($"Deleting New Index {newIndexName} due to exception");
+                    _indexProvider.DeleteIndex(newIndexName);
+                    throw;
+                }
+                
                 _logger.Info($"Creating Index Alias and Swapping from old to new index for type {typeof(T).Name}...");
-                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchCategory);
+                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, siteResource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
-
 
                 _logger.Info($"Deleting Old Indexes for type {typeof(T).Name}...");
                 _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
                 _logger.Info($"Deleting Old Indexes Completed for type {typeof(T).Name}...");
 
-                _indexTimer.Stop();
-                _queryTimer.Stop();
-                _logger.Info(
-                    $"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed} - Indexing Time {_indexTimer.Elapsed}");
+               
             }
             catch (Exception ex)
             {
@@ -97,7 +90,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected abstract bool ContinueProcessing(SearchCategory searchCategory);
 
-
         protected void ValidateResponse(string indexName, ICreateIndexResponse response)
         {
             if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
@@ -105,5 +97,51 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                     $"Call to ElasticSearch client Received non-200 response when trying to create the Index {indexName}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
                     response.OriginalException);
         }
+
+        private async Task IndexDocument(Uri baseUri, SiteResource siteResource, string newIndexName)
+        {
+            _queryTimer.Start();
+            _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
+
+            var searchItemCountUri = new Uri(baseUri, string.Format(siteResource.SearchTotalItemsUrl, _pageSize));
+            var totalSearchItemsString = await _dataSource.Download(searchItemCountUri);
+
+            ValidateDownResponse(_dataSource.LastCode);
+
+            if (!int.TryParse(totalSearchItemsString, out int totalSearchItems))
+            {
+                var errorMsg = $"Get Total Search Item Count returned invalid data from : {totalSearchItemsString}";
+                throw new InvalidCastException(errorMsg);
+            }
+
+            _logger.Info($"Estimated Total Search Items Count  for type {typeof(T).Name}  equals {totalSearchItems}");
+
+            var pages = (int)Math.Ceiling(totalSearchItems / (double)_pageSize);
+
+            for (int pageNumber = 1; pageNumber <= pages; pageNumber++)
+            {
+                var searchUri = new Uri(baseUri, string.Format(siteResource.SearchItemsUrl, _pageSize, pageNumber));
+                var searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                ValidateDownResponse(_dataSource.LastCode);
+
+                _indexTimer.Start();
+                _logger.Info($" Indexing Documents for type {typeof(T).Name}...page : {pageNumber}");
+                _indexProvider.IndexDocuments(newIndexName, searchItems);
+                _indexTimer.Stop();
+                _logger.Info($"Indexing Time {_indexTimer.Elapsed} page : {pageNumber}");
+            }
+
+            _queryTimer.Stop();
+            _logger.Info($"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed}");
+        }
+
+        private void ValidateDownResponse(HttpStatusCode responseCode)
+        {
+            if (_dataSource.LastCode != HttpStatusCode.OK)
+            {
+                throw _dataSource.LastException ?? throw new InvalidOperationException("The requested data was not recieved");
+            }
+        }
+
     }
 }
