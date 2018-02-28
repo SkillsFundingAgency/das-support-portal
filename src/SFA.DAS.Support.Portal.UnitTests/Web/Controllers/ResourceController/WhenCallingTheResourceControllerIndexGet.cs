@@ -39,7 +39,9 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance, Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge };
             // MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
-                    It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_resourceKey.ToString()}/{_id}"))
+                    It.IsAny<HttpResponseBase>(), 
+                    It.IsAny<IPrincipal>(), 
+                    $"{_resourceKey.ToString()}/{_id}"))
                 .Returns(false);
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id, _childId);
@@ -48,8 +50,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             var result = (RedirectToRouteResult)ActionResultResponse;
 
             Assert.IsNotEmpty(result.RouteValues);
-            Assert.AreEqual(siteResource.ResourceKey, result.RouteValues["resourceKey"]);
-            Assert.AreEqual(siteResource.Challenge, result.RouteValues["challengeKey"]);
+            Assert.AreEqual((int)siteResource.ResourceKey, result.RouteValues["resourceKey"]);
+            Assert.AreEqual((int)siteResource.Challenge, result.RouteValues["challengeKey"]);
             Assert.AreEqual(_id, result.RouteValues["resourceId"]);
             Assert.AreEqual(MockContextBase.Object.Request.RawUrl, result.RouteValues["url"]);
         }

@@ -57,7 +57,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             if (result.HasRedirect)
             {
-                _granter.GivePermissions(Response, User, $"{challengeKey}/{resourceId}");
+                _granter.GivePermissions(Response, User, $"{resourceKey}/{resourceId}");
                 return Redirect(result.RedirectUrl);
             }
 
@@ -74,7 +74,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
 
-            if (! _serviceConfiguration.ResourceExists(key))
+            if (!_serviceConfiguration.ResourceExists(key))
                 return View("Sub",
                     new ResourceResultModel
                     {
@@ -83,12 +83,22 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                         Exception = null
                     });
 
-            var resource =  _serviceConfiguration.GetResource(key);
+            var resource = _serviceConfiguration.GetResource(key);
 
             if (resource.Challenge.HasValue)
+            {
                 if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))
+                {
                     return RedirectToAction("Challenge",
-                        new { resourceId = id, resourceKey = key, challengeKey = resource.Challenge, url = Request.RawUrl });
+                                            new
+                                            {
+                                                resourceId = id,
+                                                resourceKey = (int)key,
+                                                challengeKey = (int)resource.Challenge,
+                                                url = Request.RawUrl
+                                            });
+                }
+            }
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);

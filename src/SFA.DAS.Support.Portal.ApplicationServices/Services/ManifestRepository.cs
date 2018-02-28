@@ -171,8 +171,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         private async Task<ResourceResultModel> GetPage(string url)
         {
             var result = new ResourceResultModel();
-            var queryString = AddQueryString(url);
-            result.Resource = await _siteConnector.Download(new Uri(queryString));
+           /// var queryString = AddQueryString(url);
+            result.Resource = await _siteConnector.Download(new Uri(url));
             result.StatusCode = _siteConnector.LastCode;
             result.Exception = _siteConnector.LastException;
             return result;

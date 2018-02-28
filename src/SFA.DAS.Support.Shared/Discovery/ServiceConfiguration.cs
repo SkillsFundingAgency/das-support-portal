@@ -51,18 +51,18 @@ namespace SFA.DAS.Support.Shared.Discovery
         }
         private SiteChallenge FindChallenge(SupportServiceResourceKey key)
         {
-            SiteChallenge challenge = null;
             foreach (var manifest in this)
             {
                 foreach (var item in manifest.Challenges)
                 {
                     if (item.ChallengeKey == key)
                     {
-                        challenge = item;
+                        return item;
                     }
                 }
             }
-            return challenge;
+
+            return null;
         }
         public  SiteChallenge GetChallenge(SupportServiceResourceKey key)
         {
