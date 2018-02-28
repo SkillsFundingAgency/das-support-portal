@@ -42,6 +42,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceUrlFormat = "account/levysubmissions/{0}/{1}",
                     ResourceTitle = "Paye Scheme",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge
                 },
                 new SiteResource
                 {
