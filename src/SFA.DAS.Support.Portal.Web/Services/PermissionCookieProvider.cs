@@ -15,12 +15,13 @@ namespace SFA.DAS.Support.Portal.Web.Services
         private readonly string _cookieFormat = "Elevate[{0}]";
         private readonly ICrypto _crypto;
         private readonly IRoleSettings _roleSettings;
-        private readonly IChallengeSettings _settings;
+        private readonly IChallengeSettings _challengeSettings;
+
 
         public PermissionCookieProvider(ICrypto crypto, IChallengeSettings settings, IRoleSettings roleSettings)
         {
             _crypto = crypto;
-            _settings = settings;
+            _challengeSettings = settings;
             _roleSettings = roleSettings;
         }
 
@@ -32,11 +33,13 @@ namespace SFA.DAS.Support.Portal.Web.Services
             if (debugModeT2 || t2User) return true;
 
             var httpCookie = request.Cookies.Get(string.Format(_cookieFormat, id.ToLower()));
+
             if (httpCookie == null) return false;
 
             var payload = GetPayload(httpCookie.Value);
 
-            if (payload != null && payload.EndDate > DateTime.UtcNow &&
+            if (payload != null && 
+                payload.EndDate > DateTime.UtcNow &&
                 string.Equals(id, payload.Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 GivePermissions(response, user, id);
@@ -64,7 +67,7 @@ namespace SFA.DAS.Support.Portal.Web.Services
             var model = new PermissionCookieModel
             {
                 Id = id,
-                EndDate = DateTime.UtcNow.AddMinutes(_settings.ChallengeTimeoutMinutes)
+                EndDate = DateTime.UtcNow.AddMinutes(_challengeSettings.ChallengeTimeoutMinutes)
             };
 
             var json = JsonConvert.SerializeObject(model,
