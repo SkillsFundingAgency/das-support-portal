@@ -19,6 +19,8 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
         {
             try
             {
+                _log.Info($"Html: {html} - id : {id} - url : {url}");
+
                 var parser = new HtmlParser();
                 var document = parser.Parse(html);
                 var form = document.QuerySelector("form");
