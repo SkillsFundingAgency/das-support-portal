@@ -35,9 +35,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
 
-            // MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
             var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance, Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge };
-            // MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
                     It.IsAny<HttpResponseBase>(), 
                     It.IsAny<IPrincipal>(), 
@@ -59,8 +57,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [Test]
         public async Task ItShouldReturnABasicWarningViewIfResourceDoesnotExist()
         {
-            // MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(false));
-
             _resourceKey = SupportServiceResourceKey.None;
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id, _childId);
@@ -81,11 +77,17 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
 
-            //MockManifestRepository.Setup(x => x.ResourceExists(_resourceKey)).Returns(Task.FromResult(true));
-            var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance, Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge };
-            //MockManifestRepository.Setup(x => x.GetResource(_resourceKey)).Returns(Task.FromResult(siteResource));
-            MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
-                    It.IsAny<HttpResponseBase>(), It.IsAny<IPrincipal>(), $"{_resourceKey}/{_id}"))
+            var siteResource = new SiteResource
+            {
+                ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
+                Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge
+            };
+
+            MockPermissionsChecker
+                .Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
+                    It.IsAny<HttpResponseBase>(),
+                    It.IsAny<IPrincipal>(), 
+                    $"{SupportServiceResourceKey.EmployerAccountFinanceChallenge}/{_id}"))
                 .Returns(true);
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id, _childId);
