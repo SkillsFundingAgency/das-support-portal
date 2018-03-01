@@ -51,6 +51,59 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
         }
 
+        [Test]
+        public async Task ShouldNotProcessAccountModelIfUnauthorised()
+        {
+
+
+            _downloader
+                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl))
+                .Returns(Task.FromResult(_accountModels));
+
+            _downloader
+                .Setup(o => o.Download(It.IsAny<Uri>()))
+                .Returns(Task.FromResult(null as string));
+
+            _downloader
+                .Setup(o => o.LastCode)
+                .Returns(HttpStatusCode.Unauthorized);
+
+            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
+                _downloader.Object,
+                _indexProvider.Object,
+                _searchSettings.Object,
+                _logger.Object,
+                _indexNameCreator.Object,
+                _elasticClient.Object);
+
+            await sut.ProcessResource(_baseUrl, _accountSiteResource);
+
+            _indexNameCreator
+                .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Once);
+
+            _indexNameCreator
+                .Verify(o => o.CreateIndexesAliasName(_indexName, SearchCategory.Account), Times.Never);
+
+            _elasticClient
+                .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
+
+            _downloader
+                .Verify(o => o.Download(It.IsAny<Uri>()), Times.Exactly(3));
+
+            _indexProvider
+                .Verify(o => o.DeleteIndex(_indexName), Times.Once);
+
+            _indexProvider
+                .Verify(o => o.CreateIndexAlias(_indexName, It.IsAny<string>()), Times.Never);
+
+            _indexProvider
+                .Verify(o => o.DeleteIndexes(_indexToRetain, It.IsAny<string>()), Times.Never);
+
+            _elasticClient
+                .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.Once);
+
+        }
+
 
         [Test]
         public async Task ShouldProcessAccountModel()

@@ -104,7 +104,13 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
 
             var searchItemCountUri = new Uri(baseUri, string.Format(siteResource.SearchTotalItemsUrl, _pageSize));
-            var totalSearchItemsString = await _dataSource.Download(searchItemCountUri);
+            string totalSearchItemsString = null;
+            var retryCount = 0;
+            do
+            {
+                totalSearchItemsString = await _dataSource.Download(searchItemCountUri);
+            }
+            while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
             ValidateDownResponse(_dataSource.LastCode);
 
@@ -121,7 +127,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             for (int pageNumber = 1; pageNumber <= pages; pageNumber++)
             {
                 var searchUri = new Uri(baseUri, string.Format(siteResource.SearchItemsUrl, _pageSize, pageNumber));
-                var searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                IEnumerable<T> searchItems;
+                retryCount = 0;
+                do
+                {
+                    searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                }
+                while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
+
                 ValidateDownResponse(_dataSource.LastCode);
 
                 _indexTimer.Start();
