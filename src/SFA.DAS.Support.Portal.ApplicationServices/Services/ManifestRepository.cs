@@ -151,19 +151,21 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         }
 
         private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html,
-            SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey,
-            string id, string redirect)
+                                        SupportServiceResourceKey resourceKey,
+                                        SupportServiceResourceKey challengeKey,
+                                        string id, 
+                                        string redirect)
         {
-            if (string.IsNullOrWhiteSpace(html) &&
-                _siteConnector.LastCode == HttpStatusCode.Forbidden)
+            if (!string.IsNullOrWhiteSpace(html))
             {
-                html = _siteConnector.LastContent;
                 return new ChallengeResult
                 {
                     Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
                 };
             }
+
             if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+
             return new ChallengeResult {RedirectUrl = redirect};
         }
 

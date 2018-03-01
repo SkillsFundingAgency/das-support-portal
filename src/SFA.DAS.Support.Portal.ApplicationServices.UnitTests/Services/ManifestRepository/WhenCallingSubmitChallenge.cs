@@ -59,7 +59,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         {
             var mappedFormHtml = "<form action='/api/challenge/id'  method='post' />";
 
-
             MockFormMapper.Setup(x => x.UpdateForm(
                     It.IsAny<SupportServiceResourceKey>(),
                     It.IsAny<SupportServiceResourceKey>(),
@@ -70,10 +69,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 .Returns(mappedFormHtml);
 
 
-            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
-                .ReturnsAsync(null as string);
+            MockSiteConnector
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>()))
+                .ReturnsAsync(mappedFormHtml);
 
-            MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.Forbidden);
+            MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.OK);
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
 
