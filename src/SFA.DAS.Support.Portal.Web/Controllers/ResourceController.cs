@@ -57,7 +57,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             if (result.HasRedirect)
             {
-                _granter.GivePermissions(Response, User, $"{resourceKey}/{resourceId}");
+                _granter.GivePermissions(Response, User, $"{challengeKey}/{resourceId}");
                 return Redirect(result.RedirectUrl);
             }
 
@@ -87,7 +87,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             if (resource.Challenge.HasValue)
             {
-                if (!_checker.HasPermissions(Request, Response, User, $"{key}/{id}"))
+                if (!_checker.HasPermissions(Request, Response, User, $"{resource.Challenge}/{id}"))
                 {
                     return RedirectToAction("Challenge",
                                             new
