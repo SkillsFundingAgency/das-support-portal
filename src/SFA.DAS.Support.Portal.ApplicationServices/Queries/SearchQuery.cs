@@ -8,7 +8,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
     {
         public SearchQuery()
         {
-            PageSize = 10;
+            PageSize = 20;
         }
 
         public string SearchTerm { get; set; }

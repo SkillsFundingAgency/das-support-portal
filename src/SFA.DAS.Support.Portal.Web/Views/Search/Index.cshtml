@@ -149,18 +149,41 @@
                 <div class="page-navigation">
 
 
-
                     @if (Model.Page > 0)
                     {
-                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })"
-                           style="visibility: visible" class="page-navigation__btn prev">
+                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
                             <i class="arrow-button fa fa-angle-left"></i>
                             <span class="description">Previous <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
+
+                            @{
+                                var previousPageNumber = Model.Page;
+                                if (previousPageNumber <= 0)
+                                {
+                                    previousPageNumber = 1;
+                                }
+                                var lastPage = Model.LastPage + 1;
+
+                                <span class="counter">@previousPageNumber of @lastPage</span>
+                            }
+
                         </a>
                     }
 
 
+                        <a href="" style="visibility: visible" class="page-navigation__btn prev">
+
+                            @{
+                                var currentPageNumber = Model.Page + 1;
+                                if (currentPageNumber <= 0)
+                                {
+                                    currentPageNumber = 1;
+                                }
+                           
+                                <span class="counter">Page @currentPageNumber</span>
+                            }
+
+                        </a>
+  
 
                     @if (Model.Page != Model.LastPage)
                     {
@@ -168,12 +191,23 @@
                            style="visibility: visible" class="page-navigation__btn next">
                             <i class="arrow-button fa fa-angle-right"></i>
                             <span class="description">Next <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
+
+
+                            @{
+                                var pageNumber = Model.Page + 2;
+                                if (pageNumber <= 0)
+                                {
+                                    pageNumber = 1;
+                                }
+                                var lastPage = Model.LastPage + 1;
+
+
+                                <span class="counter">@pageNumber of @lastPage</span>
+                            }
                         </a>
                     }
 
                 </div>
-
             </div>
         </div>
 }
