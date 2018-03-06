@@ -5,7 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.ManifestRepository
@@ -13,14 +15,25 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingSubmitChallenge : WhenTestingManifestRepository
     {
+
+        private string _id;
+        private Dictionary<string, string> _submittedFormData;
+        private string _uriString;
+        private string _redirectUrl;
+        private string _innerAction;
+        private string _challengekey;
+        private IDictionary<string, string> _postedFormData;
+        private string _resourceKey;
+
+
         [SetUp]
         public override void Setup()
         {
             base.Setup();
             _id = "123";
             _uriString = "https://tempuri.org";
-            _resourceKey =  SupportServiceResourceKey.EmployerAccountFinance.ToString();
-            _challengekey =  SupportServiceResourceKey.EmployerAccountFinanceChallenge.ToString();
+            _resourceKey = SupportServiceResourceKey.EmployerAccountFinance.ToString();
+            _challengekey = SupportServiceResourceKey.EmployerAccountFinanceChallenge.ToString();
             _innerAction = $"/api/challenge/{_id}";
             _redirectUrl = $"{_uriString}/redirect/{_id}";
 
@@ -38,21 +51,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             foreach (var item in _submittedFormData)
             {
-                if (new[] {"redirect", "innerAction", "challengeKey"}.Contains(item.Key)) continue;
+                if (new[] { "redirect", "innerAction", "challengeKey" }.Contains(item.Key)) continue;
                 _postedFormData.Add(item.Key, item.Value);
             }
         }
-
-
-
-        private string _id;
-        private Dictionary<string, string> _submittedFormData;
-        private string _uriString;
-        private string _redirectUrl;
-        private string _innerAction;
-        private string _challengekey;
-        private IDictionary<string, string> _postedFormData;
-        private string _resourceKey;
 
         [Test]
         public async Task ItShouldReceiveAFormResponseOnFail()
@@ -86,8 +88,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldReceiveJustARedirectOnSuccess()
         {
-            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
-                .ReturnsAsync(string.Empty);
+            var challengeResult = new ChallengeValidationResult
+            {
+                IsValidResponse = true
+            };
+
+            MockSiteConnector
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>()))
+                .Returns(Task.FromResult(JsonConvert.SerializeObject(challengeResult)));
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
 
@@ -124,12 +132,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         public void ItShouldThrownAnExceptionIfTheSubmissionErrors()
         {
             var httpException = new HttpException();
-            MockSiteConnector.Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
+            MockSiteConnector
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
                 .ThrowsAsync(httpException);
 
-            MockSiteConnector.SetupGet(x => x.LastCode ).Returns(HttpStatusCode.InternalServerError);
-            MockSiteConnector.SetupGet(x => x.LastException ).Returns(httpException);
-            
+            MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.InternalServerError);
+            MockSiteConnector.SetupGet(x => x.LastException).Returns(httpException);
+
 
             Assert.ThrowsAsync<HttpException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
         }

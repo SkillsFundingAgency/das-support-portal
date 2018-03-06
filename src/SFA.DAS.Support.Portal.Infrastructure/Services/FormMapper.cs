@@ -24,13 +24,17 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Services
                 var parser = new HtmlParser();
                 var document = parser.Parse(html);
                 var form = document.QuerySelector("form");
-                var innerAction = form.Attributes["action"].Value;
-                form.SetAttribute("action", $"/resource/challenge?resourceId={id}&resourceKey={resourceKey}&challengeKey={challengeKey}");
 
-                form.AppendChild(document.CreateHidden("resourceKey", resourceKey.ToString()));
-                form.AppendChild(document.CreateHidden("challengeKey", challengeKey.ToString()));
-                form.AppendChild(document.CreateHidden("innerAction", innerAction));
-                form.AppendChild(document.CreateHidden("redirect", url));
+                if (form != null)
+                {
+                    var innerAction = form.Attributes["action"].Value;
+                    form.SetAttribute("action", $"/resource/challenge?resourceId={id}&resourceKey={resourceKey}&challengeKey={challengeKey}");
+                    form.AppendChild(document.CreateHidden("resourceKey", resourceKey.ToString()));
+                    form.AppendChild(document.CreateHidden("challengeKey", challengeKey.ToString()));
+                    form.AppendChild(document.CreateHidden("innerAction", innerAction));
+                    form.AppendChild(document.CreateHidden("redirect", url));
+                }
+
                 return document
                         .DocumentElement
                         .InnerHtml
