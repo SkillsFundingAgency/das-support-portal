@@ -4,9 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
+using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -34,11 +36,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             _sites = new Dictionary<SupportServiceIdentity, Uri>();
 
-            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] {','},
+            foreach (var item in (settings.BaseUrls ?? string.Empty).Split(new[] { ',' },
                 StringSplitOptions.RemoveEmptyEntries))
             {
-                var subItems = item.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
-                var key = (SupportServiceIdentity) Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
+                var subItems = item.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                var key = (SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), subItems[0]);
                 var value = new Uri(subItems[1]);
                 _sites.Add(key, value);
             }
@@ -47,14 +49,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
-            if (! _serviceConfiguration.ResourceExists(key))
-                return new ResourceResultModel {StatusCode = HttpStatusCode.NotFound};
-            var resource =  _serviceConfiguration.GetResource(key);
+            if (!_serviceConfiguration.ResourceExists(key))
+                return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
+            var resource = _serviceConfiguration.GetResource(key);
             var headerKey = resource.HeaderKey ?? key;
 
             var headerResource = _serviceConfiguration.GetResource(headerKey);
 
-            var uri = new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, headerKey), 
+            var uri = new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, headerKey),
                                 headerResource.ResourceUrlFormat);
 
             var url = string.Format(uri.ToString(), id);
@@ -65,7 +67,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey,
             SupportServiceResourceKey challengeKey, string id, string url)
         {
-            var challenge =  _serviceConfiguration.GetChallenge(challengeKey);
+            var challenge = _serviceConfiguration.GetChallenge(challengeKey);
             if (challenge == null)
             {
                 var e = new NullReferenceException($"The challenge {challengeKey} could not be found in any manifest");
@@ -87,11 +89,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var innerAction = formData["innerAction"];
 
             var challengeKey =
-                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
             var resourceKey =
-                (SupportServiceResourceKey) Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
+                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            if (! _serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
+            if (!_serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
 
             var siteUri = _serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey);
             var uri = new Uri(siteUri, innerAction);
@@ -100,7 +102,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             formData.Remove("resourceKey");
 
             var html = await _siteConnector.Upload<string>(uri, formData);
-            return AcceptTheHtmlOrTheForbiddenStatusCode(html, resourceKey, challengeKey, id, redirect);
+
+            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+
+            return HandleChallenegeResponseContent(html, resourceKey, challengeKey, id, redirect);
         }
 
 
@@ -116,11 +121,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
         {
-            var resource =  _serviceConfiguration.GetResource(key);
+            var resource = _serviceConfiguration.GetResource(key);
             if (resource == null)
             {
                 var e = new NullReferenceException($"The requested resource {key} was not found");
-                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
                 throw e;
             }
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -129,7 +134,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             if (manifest == null)
             {
                 var e = new NullReferenceException($"The manifest that defines {key} could not be found");
-                 _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
                 throw e;
             }
 
@@ -150,30 +155,39 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await GetPage(url);
         }
 
-        private ChallengeResult AcceptTheHtmlOrTheForbiddenStatusCode(string html,
+        private ChallengeResult HandleChallenegeResponseContent(string responseContent,
                                         SupportServiceResourceKey resourceKey,
                                         SupportServiceResourceKey challengeKey,
-                                        string id, 
+                                        string id,
                                         string redirect)
         {
-            if (!string.IsNullOrWhiteSpace(html))
+            var challengeValidationResult = new ChallengeValidationResult();
+
+            try
+            {
+                challengeValidationResult = JsonConvert.DeserializeObject<ChallengeValidationResult>(responseContent);
+            }
+            catch (Exception)
+            {
+                _log.Debug($"Not a Valid Json Challenge Result received for account Id: {id}");
+            }
+
+            if (!challengeValidationResult.IsValidResponse)
             {
                 return new ChallengeResult
                 {
-                    Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, html)
+                    Page = _formMapper.UpdateForm(resourceKey, challengeKey, id, redirect, responseContent)
                 };
             }
 
-            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
-
-            return new ChallengeResult {RedirectUrl = redirect};
+            return new ChallengeResult { RedirectUrl = redirect };
         }
 
 
         private async Task<ResourceResultModel> GetPage(string url)
         {
             var result = new ResourceResultModel();
-           /// var queryString = AddQueryString(url);
+            /// var queryString = AddQueryString(url);
             result.Resource = await _siteConnector.Download(new Uri(url));
             result.StatusCode = _siteConnector.LastCode;
             result.Exception = _siteConnector.LastException;
