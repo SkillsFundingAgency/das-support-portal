@@ -148,35 +148,80 @@
             <div class="column-full">
                 <div class="page-navigation">
 
+                @if (Model.Page > 0)
+                {
+                    <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
+                        <i class="arrow-button fa fa-angle-left"></i>
+                        <span class="description">Previous <span class="hide-mob">page</span></span>
 
+                        @{
+                            var previousPageNumber = Model.Page;
+                            if (previousPageNumber <= 0)
+                            {
+                                previousPageNumber = 1;
+                            }
+                            var lastPage = Model.LastPage + 1;
 
-                    @if (Model.Page > 0)
-                    {
-                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })"
-                           style="visibility: visible" class="page-navigation__btn prev">
-                            <i class="arrow-button fa fa-angle-left"></i>
-                            <span class="description">Previous <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
-                        </a>
+                            <span class="counter">@previousPageNumber of @lastPage</span>
+                        }
+
+                    </a>
+                }
+
+                <!-- <div class="page-navigation__btn m-">
+                    @{
+                        var currentPageNumber = Model.Page + 1;
+                        if (currentPageNumber <= 0)
+                        {
+                            currentPageNumber = 1;
+                        }
+
+                        <span class="counter">Page @currentPageNumber</span>
                     }
+                </div> -->
 
 
+                @if (Model.Page != Model.LastPage)
+                {
+                    <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })"
+                       style="visibility: visible" class="page-navigation__btn next">
+                        <i class="arrow-button fa fa-angle-right"></i>
+                        <span class="description">Next <span class="hide-mob">page</span></span>
 
-                    @if (Model.Page != Model.LastPage)
-                    {
-                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })"
-                           style="visibility: visible" class="page-navigation__btn next">
-                            <i class="arrow-button fa fa-angle-right"></i>
-                            <span class="description">Next <span class="hide-mob">page</span></span>
-                            <span class="counter">@Model.Page of @Model.LastPage</span>
-                        </a>
-                    }
 
+                        @{
+                            var pageNumber = Model.Page + 2;
+                            if (pageNumber <= 0)
+                            {
+                                pageNumber = 1;
+                            }
+                            var lastPage = Model.LastPage + 1;
+
+
+                            <span class="counter">@pageNumber of @lastPage</span>
+                        }
+                    </a>
+                }
                 </div>
-
             </div>
         </div>
+
 }
+
+<!-- 
+<div class="page-navigation">
+    <a class="previous" href="#">
+        <i class="arrow-button fa fa-angle-left"></i>
+        <span class="description">Previous <span class="hide-mob">page</span></span>
+        <span class="counter">Page <span class="prevPage">1</span> of <span class="totalPage">10</span></span>
+    </a>
+    <a class="next" href="#">
+        <i class="arrow-button fa fa-angle-right"></i>
+        <span class="description">Next <span class="hide-mob">page</span></span>
+        <span class="counter">Page <span class="nextPage">3</span> of <span class="totalPage">10</span></span>
+    </a>
+</div>     
+-->
 
 @helper ResultSummary(int totalSearchItems, string searchType)
     {
