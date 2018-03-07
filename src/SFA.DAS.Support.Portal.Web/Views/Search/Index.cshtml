@@ -145,7 +145,8 @@
 @helper Pager()
     {
         <div class="grid-row">
-            <div class="column-one-third">
+            <div class="column-full">
+                <div class="page-navigation">
 
                 @if (Model.Page > 0)
                 {
@@ -167,11 +168,7 @@
                     </a>
                 }
 
-                <p>  </p>
-            </div>
-            <div class="column-one-third">
-                <div class="page-navigation__btn m-">
-
+                <!-- <div class="page-navigation__btn m-">
                     @{
                         var currentPageNumber = Model.Page + 1;
                         if (currentPageNumber <= 0)
@@ -181,10 +178,8 @@
 
                         <span class="counter">Page @currentPageNumber</span>
                     }
+                </div> -->
 
-                </div>
-            </div>
-            <div class="column-one-third">
 
                 @if (Model.Page != Model.LastPage)
                 {
@@ -207,11 +202,26 @@
                         }
                     </a>
                 }
-                <p>  </p>
+                </div>
             </div>
         </div>
 
 }
+
+<!-- 
+<div class="page-navigation">
+    <a class="previous" href="#">
+        <i class="arrow-button fa fa-angle-left"></i>
+        <span class="description">Previous <span class="hide-mob">page</span></span>
+        <span class="counter">Page <span class="prevPage">1</span> of <span class="totalPage">10</span></span>
+    </a>
+    <a class="next" href="#">
+        <i class="arrow-button fa fa-angle-right"></i>
+        <span class="description">Next <span class="hide-mob">page</span></span>
+        <span class="counter">Page <span class="nextPage">3</span> of <span class="totalPage">10</span></span>
+    </a>
+</div>     
+-->
 
 @helper ResultSummary(int totalSearchItems, string searchType)
     {
