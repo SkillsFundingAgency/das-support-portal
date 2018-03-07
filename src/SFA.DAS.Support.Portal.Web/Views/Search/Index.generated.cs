@@ -65,18 +65,22 @@ WriteLiteralTo(__razor_helper_writer, " class=\"grid-row\"");
 
 WriteLiteralTo(__razor_helper_writer, ">\r\n            <div");
 
-WriteLiteralTo(__razor_helper_writer, " class=\"column-one-third\"");
+WriteLiteralTo(__razor_helper_writer, " class=\"column-full\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n                <div");
+
+WriteLiteralTo(__razor_helper_writer, " class=\"page-navigation\"");
 
 WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n");
 
 
-#line 150 "..\..\Views\Search\Index.cshtml"
+#line 151 "..\..\Views\Search\Index.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 150 "..\..\Views\Search\Index.cshtml"
+#line 151 "..\..\Views\Search\Index.cshtml"
                  if (Model.Page > 0)
                 {
 
@@ -85,14 +89,14 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                    <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6545), Tuple.Create("\"", 6652)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 6587), Tuple.Create("\"", 6694)
 
-#line 152 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 6552), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
+#line 153 "..\..\Views\Search\Index.cshtml"
+, Tuple.Create(Tuple.Create("", 6594), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 6552), false)
+, 6594), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, " style=\"visibility: visible\"");
@@ -114,13 +118,13 @@ WriteLiteralTo(__razor_helper_writer, " class=\"hide-mob\"");
 WriteLiteralTo(__razor_helper_writer, ">page</span></span>\r\n\r\n");
 
 
-#line 156 "..\..\Views\Search\Index.cshtml"
+#line 157 "..\..\Views\Search\Index.cshtml"
                         
 
 #line default
 #line hidden
 
-#line 156 "..\..\Views\Search\Index.cshtml"
+#line 157 "..\..\Views\Search\Index.cshtml"
                           
                             var previousPageNumber = Model.Page;
                             if (previousPageNumber <= 0)
@@ -140,7 +144,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"counter\"");
 WriteLiteralTo(__razor_helper_writer, ">");
 
 
-#line 164 "..\..\Views\Search\Index.cshtml"
+#line 165 "..\..\Views\Search\Index.cshtml"
                     WriteTo(__razor_helper_writer, previousPageNumber);
 
 
@@ -149,7 +153,7 @@ WriteLiteralTo(__razor_helper_writer, ">");
 WriteLiteralTo(__razor_helper_writer, " of ");
 
 
-#line 164 "..\..\Views\Search\Index.cshtml"
+#line 165 "..\..\Views\Search\Index.cshtml"
                                            WriteTo(__razor_helper_writer, lastPage);
 
 
@@ -158,7 +162,7 @@ WriteLiteralTo(__razor_helper_writer, " of ");
 WriteLiteralTo(__razor_helper_writer, "</span>\r\n");
 
 
-#line 165 "..\..\Views\Search\Index.cshtml"
+#line 166 "..\..\Views\Search\Index.cshtml"
                         
 
 #line default
@@ -166,76 +170,22 @@ WriteLiteralTo(__razor_helper_writer, "</span>\r\n");
 WriteLiteralTo(__razor_helper_writer, "\r\n\r\n                    </a>\r\n");
 
 
-#line 168 "..\..\Views\Search\Index.cshtml"
+#line 169 "..\..\Views\Search\Index.cshtml"
                 }
 
 
 #line default
 #line hidden
-WriteLiteralTo(__razor_helper_writer, "\r\n                <p>  </p>\r\n            </div>\r\n            <div");
-
-WriteLiteralTo(__razor_helper_writer, " class=\"column-one-third\"");
-
-WriteLiteralTo(__razor_helper_writer, ">\r\n                <div");
-
-WriteLiteralTo(__razor_helper_writer, " class=\"page-navigation__btn m-\"");
-
-WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n");
+WriteLiteralTo(__razor_helper_writer, "\r\n");
 
 
-#line 175 "..\..\Views\Search\Index.cshtml"
-                    
-
-#line default
-#line hidden
-
-#line 175 "..\..\Views\Search\Index.cshtml"
-                      
-                        var currentPageNumber = Model.Page + 1;
-                        if (currentPageNumber <= 0)
-                        {
-                            currentPageNumber = 1;
-                        }
-
-
-
-#line default
-#line hidden
-WriteLiteralTo(__razor_helper_writer, "                        <span");
-
-WriteLiteralTo(__razor_helper_writer, " class=\"counter\"");
-
-WriteLiteralTo(__razor_helper_writer, ">Page ");
-
-
-#line 182 "..\..\Views\Search\Index.cshtml"
-                     WriteTo(__razor_helper_writer, currentPageNumber);
-
-
-#line default
-#line hidden
-WriteLiteralTo(__razor_helper_writer, "</span>\r\n");
-
-
-#line 183 "..\..\Views\Search\Index.cshtml"
-                    
-
-#line default
-#line hidden
-WriteLiteralTo(__razor_helper_writer, "\r\n\r\n                </div>\r\n            </div>\r\n            <div");
-
-WriteLiteralTo(__razor_helper_writer, " class=\"column-one-third\"");
-
-WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n");
-
-
-#line 189 "..\..\Views\Search\Index.cshtml"
+#line 171 "..\..\Views\Search\Index.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 189 "..\..\Views\Search\Index.cshtml"
+#line 171 "..\..\Views\Search\Index.cshtml"
                  if (Model.Page != Model.LastPage)
                 {
 
@@ -244,14 +194,14 @@ WriteLiteralTo(__razor_helper_writer, ">\r\n\r\n");
 #line hidden
 WriteLiteralTo(__razor_helper_writer, "                    <a");
 
-WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 8081), Tuple.Create("\"", 8189)
+WriteAttributeTo(__razor_helper_writer, "href", Tuple.Create(" href=\"", 7532), Tuple.Create("\"", 7640)
 
-#line 191 "..\..\Views\Search\Index.cshtml"
-, Tuple.Create(Tuple.Create("", 8088), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
+#line 173 "..\..\Views\Search\Index.cshtml"
+, Tuple.Create(Tuple.Create("", 7539), Tuple.Create<System.Object, System.Int32>(Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })
 
 #line default
 #line hidden
-, 8088), false)
+, 7539), false)
 );
 
 WriteLiteralTo(__razor_helper_writer, "\r\n                       style=\"visibility: visible\"");
@@ -273,13 +223,13 @@ WriteLiteralTo(__razor_helper_writer, " class=\"hide-mob\"");
 WriteLiteralTo(__razor_helper_writer, ">page</span></span>\r\n\r\n\r\n");
 
 
-#line 197 "..\..\Views\Search\Index.cshtml"
+#line 179 "..\..\Views\Search\Index.cshtml"
                         
 
 #line default
 #line hidden
 
-#line 197 "..\..\Views\Search\Index.cshtml"
+#line 179 "..\..\Views\Search\Index.cshtml"
                           
                             var pageNumber = Model.Page + 2;
                             if (pageNumber <= 0)
@@ -300,7 +250,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"counter\"");
 WriteLiteralTo(__razor_helper_writer, ">");
 
 
-#line 206 "..\..\Views\Search\Index.cshtml"
+#line 188 "..\..\Views\Search\Index.cshtml"
                     WriteTo(__razor_helper_writer, pageNumber);
 
 
@@ -309,7 +259,7 @@ WriteLiteralTo(__razor_helper_writer, ">");
 WriteLiteralTo(__razor_helper_writer, " of ");
 
 
-#line 206 "..\..\Views\Search\Index.cshtml"
+#line 188 "..\..\Views\Search\Index.cshtml"
                                    WriteTo(__razor_helper_writer, lastPage);
 
 
@@ -318,7 +268,7 @@ WriteLiteralTo(__razor_helper_writer, " of ");
 WriteLiteralTo(__razor_helper_writer, "</span>\r\n");
 
 
-#line 207 "..\..\Views\Search\Index.cshtml"
+#line 189 "..\..\Views\Search\Index.cshtml"
                         
 
 #line default
@@ -326,16 +276,16 @@ WriteLiteralTo(__razor_helper_writer, "</span>\r\n");
 WriteLiteralTo(__razor_helper_writer, "\r\n                    </a>\r\n");
 
 
-#line 209 "..\..\Views\Search\Index.cshtml"
+#line 191 "..\..\Views\Search\Index.cshtml"
                 }
 
 
 #line default
 #line hidden
-WriteLiteralTo(__razor_helper_writer, "                <p>  </p>\r\n            </div>\r\n        </div>\r\n");
+WriteLiteralTo(__razor_helper_writer, "                </div>\r\n            </div>\r\n        </div>\r\n");
 
 
-#line 213 "..\..\Views\Search\Index.cshtml"
+#line 195 "..\..\Views\Search\Index.cshtml"
 
 
 
@@ -343,19 +293,19 @@ WriteLiteralTo(__razor_helper_writer, "                <p>  </p>\r\n            
 #line hidden
 });
 
-#line 214 "..\..\Views\Search\Index.cshtml"
+#line 196 "..\..\Views\Search\Index.cshtml"
 }
 #line default
 #line hidden
 
-#line 216 "..\..\Views\Search\Index.cshtml"
+#line 198 "..\..\Views\Search\Index.cshtml"
 public System.Web.WebPages.HelperResult ResultSummary(int totalSearchItems, string searchType)
     {
 #line default
 #line hidden
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
-#line 217 "..\..\Views\Search\Index.cshtml"
+#line 199 "..\..\Views\Search\Index.cshtml"
      
 
 
@@ -386,7 +336,7 @@ WriteLiteralTo(__razor_helper_writer, " class=\"heading-medium heading-medium__n
 WriteLiteralTo(__razor_helper_writer, ">Results</h2>\r\n                <p> ");
 
 
-#line 229 "..\..\Views\Search\Index.cshtml"
+#line 211 "..\..\Views\Search\Index.cshtml"
 WriteTo(__razor_helper_writer, totalSearchItems);
 
 
@@ -395,7 +345,7 @@ WriteTo(__razor_helper_writer, totalSearchItems);
 WriteLiteralTo(__razor_helper_writer, " ");
 
 
-#line 229 "..\..\Views\Search\Index.cshtml"
+#line 211 "..\..\Views\Search\Index.cshtml"
         WriteTo(__razor_helper_writer, searchType);
 
 
@@ -404,7 +354,7 @@ WriteLiteralTo(__razor_helper_writer, " ");
 WriteLiteralTo(__razor_helper_writer, " found</p>\r\n            </div>\r\n        </div>\r\n");
 
 
-#line 232 "..\..\Views\Search\Index.cshtml"
+#line 214 "..\..\Views\Search\Index.cshtml"
 
 
 
@@ -412,7 +362,7 @@ WriteLiteralTo(__razor_helper_writer, " found</p>\r\n            </div>\r\n     
 #line hidden
 });
 
-#line 233 "..\..\Views\Search\Index.cshtml"
+#line 215 "..\..\Views\Search\Index.cshtml"
 }
 #line default
 #line hidden
