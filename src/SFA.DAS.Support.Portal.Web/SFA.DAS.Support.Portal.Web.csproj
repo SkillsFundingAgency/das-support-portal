@@ -307,6 +307,7 @@
     <Content Include="assets\images\opengraph-image.png" />
     <Content Include="assets\javascripts\app.js" />
     <Content Include="assets\javascripts\ie.js" />
+    <Content Include="assets\javascripts\search-index.js" />
     <Content Include="assets\stylesheets\application.css" />
     <Content Include="assets\stylesheets\external-links\external-link-24x24.png" />
     <Content Include="assets\stylesheets\external-links\external-link-black-12x12.png" />
