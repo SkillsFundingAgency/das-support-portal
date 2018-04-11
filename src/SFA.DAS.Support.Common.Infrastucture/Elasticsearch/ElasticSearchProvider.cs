@@ -76,6 +76,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                         ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountIDSearchKeyWord))
                         ||
+                        m.Match(mt => mt.Query(searchText).Field(fs => fs.PublicAccountIDSearchKeyWord))
+                        ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.PayeSchemeIdSearchKeyWords))
                 )))
                  .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.AccountSearchKeyWord))

@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Web;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 
 namespace SFA.DAS.Support.Portal.Web.Services
 {
+    [ExcludeFromCodeCoverage]
     public class IdentityService : IGetCurrentIdentity
     {
         public ClaimsIdentity GetCurrentIdentity()

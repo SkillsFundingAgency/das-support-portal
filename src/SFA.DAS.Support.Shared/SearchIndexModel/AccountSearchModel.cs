@@ -9,12 +9,11 @@ namespace SFA.DAS.Support.Shared.SearchIndexModel
     {
         public string Account { get; set; }
         public string AccountID { get; set; }
+        public string PublicAccountID { get; set; }
         public List<string> PayeSchemeIds { get; set; }
-
-
         public string AccountSearchKeyWord { get => Account.ToLower(); }
         public string AccountIDSearchKeyWord { get => AccountID.ToLower(); }
-
+        public string PublicAccountIDSearchKeyWord { get => PublicAccountID.ToLower(); }
         public IEnumerable<string> PayeSchemeIdSearchKeyWords
         {
             get

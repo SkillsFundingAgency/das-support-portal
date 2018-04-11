@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Client;
@@ -7,6 +8,7 @@ using SFA.DAS.Support.Portal.Health.Model;
 
 namespace SFA.DAS.Support.Portal.Health
 {
+    [ExcludeFromCodeCoverage]
     public class HealthService : IHealthService
     {
         private readonly IAccountApiClient _accountApiClient;

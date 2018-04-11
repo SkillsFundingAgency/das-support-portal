@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -5,7 +6,9 @@ using RazorGenerator.Mvc;
 
 [assembly: WebActivatorEx.PostApplicationStartMethod(typeof(SFA.DAS.Support.Portal.Web.RazorGeneratorMvcStart), "Start")]
 
-namespace SFA.DAS.Support.Portal.Web {
+namespace SFA.DAS.Support.Portal.Web
+{
+    [ExcludeFromCodeCoverage]
     public static class RazorGeneratorMvcStart {
         public static void Start() {
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {
