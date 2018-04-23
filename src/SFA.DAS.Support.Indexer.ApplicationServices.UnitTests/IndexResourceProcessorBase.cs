@@ -31,7 +31,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
         protected const string _indexName = "new_index_name";
         protected Uri _baseUrl;
-        protected const int _indexToRetain = 5;
+        protected const int _indexToRetain = 3;
         protected IEnumerable<AccountSearchModel> _accountModels;
         protected SiteResource _accountSiteResource;
         protected SiteResource _userSiteResource;
