@@ -17,7 +17,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public abstract class BaseIndexResourceProcessor<T> : IIndexResourceProcessor where T : class
     {
-        private const int _indexToRetain = 5;
+        private const int _indexToRetain = 3;
 
         protected readonly ISiteConnector _dataSource;
         protected readonly IElasticsearchCustomClient _elasticClient;

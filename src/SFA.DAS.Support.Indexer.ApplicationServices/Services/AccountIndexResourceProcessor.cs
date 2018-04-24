@@ -47,7 +47,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                         .Mappings(ms => ms
                             .Map<AccountSearchModel>(m => m
                                 .Properties(p => p
-                                    .Keyword(k => k.Name(n => n.Account))
+                                    .Text(k => k.Name(n => n.Account))
                                     .Keyword(k => k.Name(n => n.AccountID))
                                     .Keyword(k => k.Name(n => n.PublicAccountID))
                                     .Keyword(k => k.Name(n => n.AccountSearchKeyWord))
