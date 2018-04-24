@@ -70,6 +70,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 .Query(q => q
                 .Bool(b => b
                 .Should(m =>
+                      m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.Account)))
+                        ||
                         m.QueryString(qs => qs.Query($"*{searchText }*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.AccountSearchKeyWord)))
                          ||
                         m.Match(mt => mt.Query(searchText).Field(fs => fs.AccountSearchKeyWord))
