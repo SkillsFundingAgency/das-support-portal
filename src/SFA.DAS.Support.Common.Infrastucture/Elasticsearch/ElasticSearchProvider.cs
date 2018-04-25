@@ -47,9 +47,18 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                      m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.EmailSearchKeyWord)))
                       ||
                      m.QueryString(qs => qs.Query($"*{searchText}*").AnalyzeWildcard(true).Fields(f => f.Field(fs => fs.NameSearchKeyWord)))
+                      ||
+                     m.Match(mt => mt.Query(searchText).Field(fs => fs.FirstNameSearchKeyWord))
+                      ||
+                     m.Match(mt => mt.Query(searchText).Field(fs => fs.LastNameSearchKeyWord))
+                      ||
+                     m.Match(mt => mt.Query(searchText).Field(fs => fs.NameSearchKeyWord))
+                      ||
+                     m.Match(mt => mt.Query(searchText).Field(fs => fs.EmailSearchKeyWord))
                  )
                  ))
-                 .Sort(sort => sort.Descending(SortSpecialField.Score).Ascending(a => a.FirstNameSearchKeyWord))
+                 .Sort(sort => sort.Descending(SortSpecialField.Score))
+
                 , string.Empty);
 
 
@@ -57,6 +66,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
             return GetSearchResponse(pageSize, response);
         }
+
 
         public PagedSearchResponse<AccountSearchModel> FindAccounts(string searchText, SearchCategory searchType, int pageSize = 10, int pageNumber = 1)
         {
