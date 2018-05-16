@@ -77,10 +77,12 @@
                                                 @account.Account
                                             </td>
                                             <td data-label="Account ID">
-                                                @account.AccountID
+                                                @account.PublicAccountID
                                             </td>
                                             <td data-label="">
-                                                @Html.ActionLink("view", "Index", "Resource", new { key = SupportServiceResourceKey.EmployerAccount, id = account.AccountID }, null)
+                                                @Html.ActionLink("view", "Index", "Resource",
+                                                    new { key = SupportServiceResourceKey.EmployerAccount,
+                                                        id = account.AccountID }, null)
                                             </td>
                                         </tr>
                                     }
@@ -143,74 +145,74 @@
 
 
 @helper Pager()
-    {
-        <div class="grid-row">
-            <div class="column-full">
-                <div class="page-navigation">
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <div class="page-navigation">
 
-                    @if (Model.Page > 0)
-                    {
-                        <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
-                            <i class="arrow-button fa fa-angle-left"></i>
-                            <span class="description">Previous <span class="hide-mob">page</span></span>
+                @if (Model.Page > 0)
+                {
+                    <a href="@Url.Action("Index", new { Model.SearchTerm, Page = Model.Page - 1, SearchType = Model.SearchType })" style="visibility: visible" class="page-navigation__btn prev">
+                        <i class="arrow-button fa fa-angle-left"></i>
+                        <span class="description">Previous <span class="hide-mob">page</span></span>
 
-                            @{
-                                var previousPageNumber = Model.Page;
-                                if (previousPageNumber <= 0)
-                                {
-                                    previousPageNumber = 1;
-                                }
-                                var lastPage = Model.LastPage + 1;
-
-                                <span class="counter">@previousPageNumber of @lastPage</span>
+                        @{
+                            var previousPageNumber = Model.Page;
+                            if (previousPageNumber <= 0)
+                            {
+                                previousPageNumber = 1;
                             }
+                            var lastPage = Model.LastPage + 1;
 
-                        </a>
-                    }
+                            <span class="counter">@previousPageNumber of @lastPage</span>
+                        }
 
-                    @if (Model.Page != Model.LastPage)
-                    {
-                        <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })"
-                           style="visibility: visible" class="page-navigation__btn next">
-                            <i class="arrow-button fa fa-angle-right"></i>
-                            <span class="description">Next <span class="hide-mob">page</span></span>
+                    </a>
+                }
 
-
-                            @{
-                                var pageNumber = Model.Page + 2;
-                                if (pageNumber <= 0)
-                                {
-                                    pageNumber = 1;
-                                }
-                                var lastPage = Model.LastPage + 1;
+                @if (Model.Page != Model.LastPage)
+                {
+                    <a href="@Url.Action( "Index", new { Model.SearchTerm, Page = Model.Page + 1, SearchType = Model.SearchType })"
+                       style="visibility: visible" class="page-navigation__btn next">
+                        <i class="arrow-button fa fa-angle-right"></i>
+                        <span class="description">Next <span class="hide-mob">page</span></span>
 
 
-                                <span class="counter">@pageNumber of @lastPage</span>
+                        @{
+                            var pageNumber = Model.Page + 2;
+                            if (pageNumber <= 0)
+                            {
+                                pageNumber = 1;
                             }
-                        </a>
-                    }
-                </div>
+                            var lastPage = Model.LastPage + 1;
+
+
+                            <span class="counter">@pageNumber of @lastPage</span>
+                        }
+                    </a>
+                }
             </div>
         </div>
+    </div>
 
 }
 
 @helper ResultSummary(int totalSearchItems, string searchType)
-    {
+{
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
+    <div class="grid-row">
+        <div class="column-two-thirds">
 
-                <p class="font-xsmall">
-                    <a href="/">Clear search</a>
-                </p>
+            <p class="font-xsmall">
+                <a href="/">Clear search</a>
+            </p>
 
-                <br />
+            <br />
 
-                <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
-                <p> @totalSearchItems @searchType found</p>
-            </div>
+            <h2 class="heading-medium heading-medium__no-top-margin">Results</h2>
+            <p> @totalSearchItems @searchType found</p>
         </div>
+    </div>
 
 }
 
