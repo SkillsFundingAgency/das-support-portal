@@ -148,6 +148,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger.Info($"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed}");
         }
 
+
         private void ValidateDownResponse(HttpStatusCode responseCode)
         {
             if (_dataSource.LastCode != HttpStatusCode.OK)
