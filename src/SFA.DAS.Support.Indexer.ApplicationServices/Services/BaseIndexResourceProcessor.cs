@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using Nest;
+using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
@@ -132,6 +133,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 do
                 {
                     searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                    _logger.Debug($" Indexing Documents received for type {typeof(T).Name}...page : {pageNumber} data: {JsonConvert.SerializeObject(searchItems)}");
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
