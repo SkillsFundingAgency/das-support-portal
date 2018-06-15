@@ -163,7 +163,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var count = 0;
             var elementCount = documents.Count();
             var timer = Stopwatch.StartNew();
-            var waitHandle = new CountdownEvent(1);
+            var waitHandle = new ManualResetEvent(false);
+            Exception bulkAllException = null;
 
             var bulkAll = _client.BulkAll(documents, b => b
                 .Index(indexName)
@@ -177,18 +178,26 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                 b =>
                 {
                     count = count + batchSize;
-
                     if (count > elementCount) count = elementCount;
-
                     _logger.Debug($"Indexed group of Document: {count} of {elementCount}");
                 },
                 e =>
                 {
                     _logger.Error(e, e.Message);
-                    throw e;
+                    bulkAllException = e;
+
+                    waitHandle.Set();
                 },
-                () => { waitHandle.Signal(); }));
-            waitHandle.Wait();
+                () => {
+                    waitHandle.Set();
+                }));
+
+            waitHandle.WaitOne();
+
+            if (bulkAllException != null)
+            {
+                throw bulkAllException;
+            }
 
             SendLog(null, null, timer.ElapsedMilliseconds, "Bulk completed for Document");
         }
