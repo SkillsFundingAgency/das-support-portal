@@ -18,7 +18,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public abstract class BaseIndexResourceProcessor<T> : IIndexResourceProcessor where T : class
     {
-        private const int _indexToRetain = 3;
+        private const int _indexToRetain = 2;
 
         protected readonly ISiteConnector _dataSource;
         protected readonly IElasticsearchCustomClient _elasticClient;
@@ -104,7 +104,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _queryTimer.Start();
             _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
 
-            var searchItemCountUri = new Uri(baseUri, string.Format(siteResource.SearchTotalItemsUrl, _pageSize));
+            var searchItemCountUri = new Uri(baseUri, string.Format(siteResource.SearchTotalItemsUrl, 1));
             string totalSearchItemsString = null;
             var retryCount = 0;
             do
@@ -137,7 +137,15 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
-                ValidateDownResponse(_dataSource.LastCode);
+                try
+                {
+                    ValidateDownResponse(_dataSource.LastCode);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, $" Error while retriving page {pageNumber} for type {typeof(T).Name}.");
+                    throw;
+                }
 
                 _indexTimer.Start();
                 _logger.Info($" Indexing Documents for type {typeof(T).Name}...page : {pageNumber}");
