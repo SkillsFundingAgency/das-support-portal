@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Threading.Tasks;
-using Nest;
-using Newtonsoft.Json;
+﻿using Nest;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
@@ -13,6 +7,11 @@ using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using SFA.DAS.Support.Shared.SiteConnection;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
@@ -70,7 +69,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                     _indexProvider.DeleteIndex(newIndexName);
                     throw;
                 }
-                
+
                 _logger.Info($"Creating Index Alias and Swapping from old to new index for type {typeof(T).Name}...");
                 var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, siteResource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
@@ -78,8 +77,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 _logger.Info($"Deleting Old Indexes for type {typeof(T).Name}...");
                 _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
                 _logger.Info($"Deleting Old Indexes Completed for type {typeof(T).Name}...");
-
-               
             }
             catch (Exception ex)
             {
@@ -133,7 +130,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 do
                 {
                     searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
-                    _logger.Debug($" Indexing Documents received for type {typeof(T).Name}...page : {pageNumber} data: {JsonConvert.SerializeObject(searchItems)}");
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
@@ -158,7 +154,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _logger.Info($"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed}");
         }
 
-
         private void ValidateDownResponse(HttpStatusCode responseCode)
         {
             if (_dataSource.LastCode != HttpStatusCode.OK)
@@ -166,6 +161,5 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 throw _dataSource.LastException ?? throw new InvalidOperationException("The requested data was not recieved");
             }
         }
-
     }
 }
