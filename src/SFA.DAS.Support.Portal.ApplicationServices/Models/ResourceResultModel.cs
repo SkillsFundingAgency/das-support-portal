@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ResourceResultModel
     {
         public string Resource { get; set; }

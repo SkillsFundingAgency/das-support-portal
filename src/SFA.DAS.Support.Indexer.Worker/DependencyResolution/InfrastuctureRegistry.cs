@@ -50,8 +50,8 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                 .EnumerableOf<IIndexResourceProcessor>()
                 .Contains(x =>
                 {
-                    x.Type<UserIndexResourceProcessor>();
                     x.Type<AccountIndexResourceProcessor>();
+                    x.Type<UserIndexResourceProcessor>();
                 });
         }
 
