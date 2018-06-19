@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.NLog.Logger;
@@ -13,6 +14,7 @@ using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
+    [ExcludeFromCodeCoverage]
     public class IndexerService : IIndexSearchItems
     {
         private readonly ISiteConnector _dataSource;

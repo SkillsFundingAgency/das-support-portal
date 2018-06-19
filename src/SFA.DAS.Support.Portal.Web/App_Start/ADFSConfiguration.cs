@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
@@ -14,6 +15,7 @@ using SFA.DAS.Support.Portal.Web.Settings;
 
 namespace SFA.DAS.Support.Portal.Web
 {
+    [ExcludeFromCodeCoverage]
     public class ADFSConfiguration : IADFSConfiguration
     {
         private readonly IAuthSettings _authSettings;

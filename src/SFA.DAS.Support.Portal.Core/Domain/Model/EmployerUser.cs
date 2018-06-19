@@ -1,5 +1,8 @@
-﻿namespace SFA.DAS.Support.Portal.Core.Domain.Model
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SFA.DAS.Support.Portal.Core.Domain.Model
 {
+    [ExcludeFromCodeCoverage]
     public class EmployerUser : IUser
     {
         public int FailedLoginAttempts { get; set; }
