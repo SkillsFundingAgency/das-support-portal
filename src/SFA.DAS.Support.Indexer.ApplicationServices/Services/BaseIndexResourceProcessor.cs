@@ -130,6 +130,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 do
                 {
                     searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                    _logger.Debug($" Indexing Documents received for type {typeof(T).Name}...page : {pageNumber} data: {JsonConvert.SerializeObject(searchItems)}");
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
@@ -153,6 +154,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _queryTimer.Stop();
             _logger.Info($"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed}");
         }
+
 
         private void ValidateDownResponse(HttpStatusCode responseCode)
         {
