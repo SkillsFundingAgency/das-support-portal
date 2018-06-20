@@ -1,0 +1,15 @@
+[
+  {
+    "Environment": "AT",
+    "Services": [
+      {
+        "Name": "support-portal",
+        "Address": "https://at-console.apprenticeships.sfa.bis.gov.uk/",
+        "Response": null,
+        "Status": null,
+        "ExceptionReport": null,
+        "RequestMethod": "/api/status"
+      }
+    ]
+  }
+]
