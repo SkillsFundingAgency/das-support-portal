@@ -1,0 +1,15 @@
+[
+  {
+    "Environment": "DEV",
+    "Services": [
+      {
+        "Name": "support-portal",
+        "Address": "https://localhost:44347/",
+        "Response": null,
+        "Status": null,
+        "ExceptionReport": null,
+        "RequestMethod": "/api/status"
+      }
+    ]
+  }
+]
