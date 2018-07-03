@@ -30,7 +30,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         private readonly ISiteSettings _siteSettings;
         private readonly ServiceConfiguration _manifests;
 
-      
+
 
         public IndexerService(ISiteSettings settings,
             ISiteConnector downloader,
@@ -52,10 +52,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         public async Task Run()
         {
+            _logger.Info($"Starting Indexer Service Run");
+
             _runtimer.Start();
             try
             {
-               var subSites =  GetSubsites();
+
+
+                var subSites = GetSubsites();
 
                 foreach (var subSite in subSites)
                 {
@@ -98,7 +102,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             finally
             {
                 _runtimer.Stop();
-                _logger.Info($"Indexer Run: Elapsed Time {_runtimer.Elapsed}");
+                _logger.Info($"Ending Indexer Service Run Elapsed Time {_runtimer.Elapsed}");
             }
         }
 
