@@ -116,7 +116,7 @@ namespace SFA.DAS.Support.Portal.Web
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "callback error");
+                _logger.Error(ex, "IDAMS Authentication Callback Error");
             }
 
             _logger.Debug("End of callback");
