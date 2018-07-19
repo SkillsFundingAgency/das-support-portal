@@ -76,8 +76,7 @@ namespace SFA.DAS.Support.Portal.Web
             return Task.FromResult(0);
         }
 
-        private Task OnSecurityTokenValidated(
-            SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
+        private Task OnSecurityTokenValidated(SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
         {
             _logger.Debug("SecurityTokenValidated");
             try
@@ -87,8 +86,7 @@ namespace SFA.DAS.Support.Portal.Web
                     {
                         "claims",
                         JsonConvert.SerializeObject(
-                            notification.AuthenticationTicket.Identity.Claims.Select(x =>
-                                new {x.Value, x.ValueType, x.Type}))
+                            notification.AuthenticationTicket.Identity.Claims.Select(x =>new {x.Value, x.ValueType, x.Type}))
                     },
                     {
                         "authentication-type",
@@ -96,32 +94,25 @@ namespace SFA.DAS.Support.Portal.Web
                     },
                     {"role-type", notification.AuthenticationTicket.Identity.RoleClaimType}
                 });
-                if (notification.AuthenticationTicket.Identity.HasClaim("http://schemas.xmlsoap.org/claims/Group",
-                    _rolesSettings.Tier2Claim))
+                if (notification.AuthenticationTicket.Identity.HasClaim("http://schemas.xmlsoap.org/claims/Group",_rolesSettings.Tier2Claim))
                 {
                     _logger.Debug("Adding Tier2 Role");
-                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,
-                        _rolesSettings.T2Role));
+                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role, _rolesSettings.T2Role));
                     _logger.Debug("Adding ConsoleUser Role");
-                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,
-                        _rolesSettings.ConsoleUserRole));
+                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role, _rolesSettings.ConsoleUserRole));
                 }
-                else if (notification.AuthenticationTicket.Identity.HasClaim(
-                    "http://schemas.xmlsoap.org/claims/Group", _rolesSettings.GroupClaim))
+                else if (notification.AuthenticationTicket.Identity.HasClaim(  "http://schemas.xmlsoap.org/claims/Group", _rolesSettings.GroupClaim))
                 {
                     _logger.Debug("Adding ConsoleUser Role");
-                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,
-                        _rolesSettings.ConsoleUserRole));
+                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,_rolesSettings.ConsoleUserRole));
                 }
                 else
                 {
                     throw new SecurityTokenValidationException();
                 }
 
-                var userEmail = notification.AuthenticationTicket.Identity.Claims
-                    .Single(x => x.Type == ClaimTypes.Upn).Value;
-                notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Email,
-                    userEmail));
+                var userEmail = notification.AuthenticationTicket.Identity.Claims.Single(x => x.Type == ClaimTypes.Upn).Value;
+                notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Email, userEmail));
             }
             catch (Exception ex)
             {
