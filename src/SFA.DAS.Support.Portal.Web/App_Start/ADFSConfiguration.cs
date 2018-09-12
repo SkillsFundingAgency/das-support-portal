@@ -76,8 +76,7 @@ namespace SFA.DAS.Support.Portal.Web
             return Task.FromResult(0);
         }
 
-        private Task OnSecurityTokenValidated(
-            SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
+        private Task OnSecurityTokenValidated(SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
         {
             _logger.Debug("SecurityTokenValidated");
 
@@ -88,8 +87,7 @@ namespace SFA.DAS.Support.Portal.Web
                     {
                         "claims",
                         JsonConvert.SerializeObject(
-                            notification.AuthenticationTicket.Identity.Claims.Select(x =>
-                                new {x.Value, x.ValueType, x.Type}))
+                            notification.AuthenticationTicket.Identity.Claims.Select(x =>new {x.Value, x.ValueType, x.Type}))
                     },
                     {
                         "authentication-type",
@@ -127,7 +125,7 @@ namespace SFA.DAS.Support.Portal.Web
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "callback error");
+                _logger.Error(ex, "IDAMS Authentication Callback Error");
             }
 
             _logger.Debug("End of callback");
