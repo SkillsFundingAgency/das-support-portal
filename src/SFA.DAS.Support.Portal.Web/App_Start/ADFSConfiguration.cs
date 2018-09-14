@@ -79,6 +79,7 @@ namespace SFA.DAS.Support.Portal.Web
         private Task OnSecurityTokenValidated(SecurityTokenValidatedNotification<WsFederationMessage, WsFederationAuthenticationOptions> notification)
         {
             _logger.Debug("SecurityTokenValidated");
+
             try
             {
                 _logger.Debug("Authentication Properties", new Dictionary<string, object>
@@ -94,14 +95,18 @@ namespace SFA.DAS.Support.Portal.Web
                     },
                     {"role-type", notification.AuthenticationTicket.Identity.RoleClaimType}
                 });
-                if (notification.AuthenticationTicket.Identity.HasClaim("http://schemas.xmlsoap.org/claims/Group",_rolesSettings.Tier2Claim))
+
+                const string serviceClaimType = "http://service/service";
+
+                if (notification.AuthenticationTicket.Identity.HasClaim(serviceClaimType, _rolesSettings.Tier2Claim))
                 {
                     _logger.Debug("Adding Tier2 Role");
-                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role, _rolesSettings.T2Role));
+                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,_rolesSettings.T2Role));
+
                     _logger.Debug("Adding ConsoleUser Role");
                     notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role, _rolesSettings.ConsoleUserRole));
                 }
-                else if (notification.AuthenticationTicket.Identity.HasClaim(  "http://schemas.xmlsoap.org/claims/Group", _rolesSettings.GroupClaim))
+                else if (notification.AuthenticationTicket.Identity.HasClaim(serviceClaimType, _rolesSettings.GroupClaim))
                 {
                     _logger.Debug("Adding ConsoleUser Role");
                     notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Role,_rolesSettings.ConsoleUserRole));
@@ -111,8 +116,12 @@ namespace SFA.DAS.Support.Portal.Web
                     throw new SecurityTokenValidationException();
                 }
 
+                var firstName = notification.AuthenticationTicket.Identity.Claims.SingleOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
+                var lastName = notification.AuthenticationTicket.Identity.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
                 var userEmail = notification.AuthenticationTicket.Identity.Claims.Single(x => x.Type == ClaimTypes.Upn).Value;
-                notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Email, userEmail));
+
+                notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Email,  userEmail));
+                notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Name, $"{firstName} {lastName}"));
             }
             catch (Exception ex)
             {
