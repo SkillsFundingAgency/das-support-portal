@@ -46,7 +46,7 @@ namespace SFA.DAS.Support.Portal.Web
             {
                 SecurityTokenValidated = OnSecurityTokenValidated,
                 SecurityTokenReceived = nx => OnSecurityTokenReceived(),
-                AuthenticationFailed = nx => OnAuthenticationFailed(),
+                AuthenticationFailed = nx => OnAuthenticationFailed(nx),
                 MessageReceived = nx => OnMessageReceived(),
                 RedirectToIdentityProvider = nx => OnRedirectToIdentityProvider()
             };
@@ -70,9 +70,10 @@ namespace SFA.DAS.Support.Portal.Web
             return Task.FromResult(0);
         }
 
-        private Task OnAuthenticationFailed()
+        private Task OnAuthenticationFailed(AuthenticationFailedNotification<WsFederationMessage, WsFederationAuthenticationOptions> nx)
         {
-            _logger.Debug("AuthenticationFailed");
+            var logReport = $"AuthenticationFailed, State: {nx.State}, Exception: {nx.Exception.GetBaseException().Message}, Protocol Message: Wct {nx.ProtocolMessage.Wct},\r\nWfresh {nx.ProtocolMessage.Wfresh},\r\nWhr {nx.ProtocolMessage.Whr},\r\nWp {nx.ProtocolMessage.Wp},\r\nWpseudo{nx.ProtocolMessage.Wpseudo},\r\nWpseudoptr {nx.ProtocolMessage.Wpseudoptr},\r\nWreq {nx.ProtocolMessage.Wreq},\r\nWfed {nx.ProtocolMessage.Wfed},\r\nWreqptr {nx.ProtocolMessage.Wreqptr},\r\nWres {nx.ProtocolMessage.Wres},\r\nWreply{nx.ProtocolMessage.Wreply},\r\nWencoding {nx.ProtocolMessage.Wencoding},\r\nWtrealm {nx.ProtocolMessage.Wtrealm},\r\nWresultptr {nx.ProtocolMessage.Wresultptr},\r\nWauth {nx.ProtocolMessage.Wauth},\r\nWattrptr{nx.ProtocolMessage.Wattrptr},\r\nWattr {nx.ProtocolMessage.Wattr},\r\nWa {nx.ProtocolMessage.Wa},\r\nIsSignOutMessage {nx.ProtocolMessage.IsSignOutMessage},\r\nIsSignInMessage {nx.ProtocolMessage.IsSignInMessage},\r\nWctx {nx.ProtocolMessage.Wctx},\r\n";
+            _logger.Debug(logReport);
             return Task.FromResult(0);
         }
 
