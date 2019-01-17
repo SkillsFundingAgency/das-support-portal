@@ -55,28 +55,36 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             await EnsureClientAuthorizationHeader();
 
-            var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
-
-            LastContent = await response.Content.ReadAsStringAsync();
-
-            HttpStatusCodeDecision = ExamineResponse(response);
-
-            switch (HttpStatusCodeDecision)
+            try
             {
-                case HttpStatusCodeDecision.HandleException:
-                    LastException = LastException ??
-                                    new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
-                    throw LastException;
+                var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
 
-                case HttpStatusCodeDecision.ReturnNull:
-                    return null;
+                LastContent = await response.Content.ReadAsStringAsync();
 
-                default:
+                HttpStatusCodeDecision = ExamineResponse(response);
+
+                switch (HttpStatusCodeDecision)
+                {
+                    case HttpStatusCodeDecision.HandleException:
+                        LastException = LastException ??
+                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        throw LastException;
+
+                    case HttpStatusCodeDecision.ReturnNull:
+                        return null;
+
+                    default:
 
 
-                    if (typeof(T) == typeof(string)) return LastContent as T;
+                        if (typeof(T) == typeof(string)) return LastContent as T;
 
-                    return JsonConvert.DeserializeObject<T>(LastContent);
+                        return JsonConvert.DeserializeObject<T>(LastContent);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                return null;
             }
         }
 
@@ -84,54 +92,69 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             await EnsureClientAuthorizationHeader();
 
-            var response = await _client.GetAsync(uri);
-
-            LastContent = await response.Content.ReadAsStringAsync();
-
-            HttpStatusCodeDecision = ExamineResponse(response);
-
-            switch (HttpStatusCodeDecision)
+            try
             {
-                case HttpStatusCodeDecision.RethrowException:
-                    var exception = LastException ??
-                                    new Exception(
-                                        $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
-                    _logger.Error(exception,
-                        $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
-                    throw exception;
+                var response = await _client.GetAsync(uri);
 
-                case HttpStatusCodeDecision.HandleException:
-                    var generatedException = LastException ??
-                                             new Exception(
-                                                 $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
-                    _logger.Error(generatedException,
-                        $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
-                    return null;
+                LastContent = await response.Content.ReadAsStringAsync();
 
-                case HttpStatusCodeDecision.ReturnNull:
-                    _logger.Debug(
-                        $"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
-                    return null;
+                HttpStatusCodeDecision = ExamineResponse(response);
+
+                switch (HttpStatusCodeDecision)
+                {
+                    case HttpStatusCodeDecision.RethrowException:
+                        var exception = LastException ??
+                                        new Exception(
+                                            $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
+                        _logger.Error(exception,
+                            $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
+                        throw exception;
+
+                    case HttpStatusCodeDecision.HandleException:
+                        var generatedException = LastException ??
+                                                 new Exception(
+                                                     $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
+                        _logger.Error(generatedException,
+                            $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
+                        return null;
+
+                    case HttpStatusCodeDecision.ReturnNull:
+                        _logger.Debug(
+                            $"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
+                        return null;
 
 
-                default:
-                    _logger.Info($"Successful call to site from {nameof(SiteConnector)} recieving {LastCode}");
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (typeof(T) == typeof(string)) return content as T;
-                    return JsonConvert.DeserializeObject<T>(content);
+                    default:
+                        _logger.Info($"Successful call to site from {nameof(SiteConnector)} recieving {LastCode}");
+                        var content = await response.Content.ReadAsStringAsync();
+                        if (typeof(T) == typeof(string)) return content as T;
+                        return JsonConvert.DeserializeObject<T>(content);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                return null;
             }
         }
 
         private async Task EnsureClientAuthorizationHeader()
         {
-            if (_client.DefaultRequestHeaders.Authorization == null)
+            try
             {
-                var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
-                    _settings.ClientSecret,
-                    _settings.IdentifierUri,
-                    _settings.Tenant);
-
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (_client.DefaultRequestHeaders.Authorization == null)
+                {
+                    var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
+                        _settings.ClientSecret,
+                        _settings.IdentifierUri,
+                        _settings.Tenant);
+                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _client.DefaultRequestHeaders.Authorization = null;
             }
         }
 
