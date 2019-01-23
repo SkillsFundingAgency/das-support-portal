@@ -51,6 +51,14 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceTitle = "Team members",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
+                },
+                new SiteResource
+                {
+                    ResourceKey = SupportServiceResourceKey.CommitmentSearch,
+                    ResourceUrlFormat = "/account/commitments/{0}",
+                    ResourceTitle = "Commitments",
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    IsNavigationItem = true
                 }
             };
             Challenges = new List<SiteChallenge>
