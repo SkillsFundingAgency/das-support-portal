@@ -130,22 +130,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var manifest = _serviceConfiguration.ManifestFromResource(resource);
-            if (manifest == null)
-            {
-                var e = new NullReferenceException($"The manifest that defines {key} could not be found");
-                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
-                throw e;
-            }
-
-            if (!_sites.ContainsKey(manifest.ServiceIdentity))
+            if (!_sites.ContainsKey(resource.ServiceIdentity))
                 throw new NullReferenceException(
-                    $"The site {manifest.ServiceIdentity} could not be found in any of the site configurations");
-            var site = _sites.First(x => x.Key == manifest.ServiceIdentity);
+                    $"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+            var site = _sites.First(x => x.Key == resource.ServiceIdentity);
 
             if (site.Value == null)
                 throw new NullReferenceException(
-                    $"The site {manifest.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+                    $"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
 
 
             resource.ResourceUrlFormat = new Uri(site.Value, resource.ResourceUrlFormat).ToString();

@@ -7,6 +7,8 @@ namespace SFA.DAS.Support.Shared.Discovery
     [ExcludeFromCodeCoverage]
     public class SiteResource
     {
+        public SupportServiceIdentity ServiceIdentity { get; set; }
+
         [JsonRequired] public SupportServiceResourceKey ResourceKey { get; set; }
 
         [JsonRequired] public string ResourceUrlFormat { get; set; }

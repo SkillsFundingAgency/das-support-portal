@@ -64,7 +64,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 foreach (var subSite in subSites)
                 {
                     var siteUri = new Uri(subSite.Value);
-                    var siteManifest = _manifests.FirstOrDefault(x => x.ServiceIdentity == subSite.Key);
+                    var siteManifest = _manifests.FirstOrDefault(x => x.Resources.Any(y=> y.ServiceIdentity == subSite.Key));
 
 
                     _queryTimer.Stop();

@@ -8,11 +8,11 @@ namespace SFA.DAS.Support.Shared.Discovery
     {
         public EmployerAccountSiteManifest()
         {
-            ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount;
             Resources = new[]
             {
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccount,
                     ResourceUrlFormat = "/account/{0}",
                     ResourceTitle = "Organisations",
@@ -24,11 +24,13 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountHeader,
                     ResourceUrlFormat = "/account/header/{0}"
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountFinance,
                     ResourceUrlFormat = "/account/finance/{0}",
                     ResourceTitle = "Finance",
@@ -38,6 +40,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                   new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountPayeSchemeLevys,
                     ResourceUrlFormat = "account/levysubmissions/{0}/{1}",
                     ResourceTitle = "Paye Scheme",
@@ -46,6 +49,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,
                     ResourceUrlFormat = "/account/team/{0}",
                     ResourceTitle = "Team members",
@@ -54,8 +58,9 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentSearch,
-                    ResourceUrlFormat = "/account/commitments/{0}",
+                    ResourceUrlFormat = "/apprenticeships/search/{0}",
                     ResourceTitle = "Commitments",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true

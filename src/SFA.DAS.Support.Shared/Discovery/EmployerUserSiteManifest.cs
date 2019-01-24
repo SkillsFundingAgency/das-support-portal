@@ -6,11 +6,11 @@ namespace SFA.DAS.Support.Shared.Discovery
     {
         public EmployerUserSiteManifest()
         {
-            ServiceIdentity = SupportServiceIdentity.SupportEmployerUser;
             Resources = new[]
             {
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerUser,
                     ResourceKey = SupportServiceResourceKey.EmployerUser,
                     ResourceTitle = "Overview",
 
@@ -23,12 +23,14 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerUser,
                     ResourceKey = SupportServiceResourceKey.EmployerUserHeader,
                     ResourceUrlFormat = "/user/header/{0}"
 
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerUser,
                     ResourceKey = SupportServiceResourceKey.EmployerUserAccounts,
                     ResourceUrlFormat = "/user/header/{0}"
 
