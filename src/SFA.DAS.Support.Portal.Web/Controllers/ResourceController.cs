@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Mvc;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -27,7 +29,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _serviceConfiguration = serviceConfiguration;
         }
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, string url)
         {
             if (!_serviceConfiguration.ChallengeExists(challengeKey)) return HttpNotFound();
@@ -50,7 +52,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
@@ -71,7 +73,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             });
         }
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
 
@@ -110,13 +112,25 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
 
-        [Route("/apprenticeships/search")]
-        [HttpPost]
-        public async Task<ActionResult> Apprenticeships(ApprenticeshipSearchQuery searchQuery)
+        [System.Web.Mvc.Route("resource/apprenticeships/search/{hashedAccountId}")]
+        public async Task<ActionResult> Apprenticeships(string hashedAccountId)
         {
+
+            var searchType = Request.Params["SearchType"] ??$"{ApprenticeshipSearchType.SearchByUln}";
+            var search = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), searchType);
+            var searchCriteria = Request.Params["SearchTerm"] ?? "";
+            ApprenticeshipSearchQuery searchQuery = new ApprenticeshipSearchQuery()
+            {
+                Id = hashedAccountId,
+                ChildId =  searchCriteria,
+                SearchType = search, Key =  SupportServiceResourceKey.CommitmentSearch
+            };
+
             ViewBag.SubNav = await _repository.GetNav(searchQuery.Key, searchQuery.Id);
             ViewBag.SubHeader = await _repository.GenerateHeader(searchQuery.Key, searchQuery.Id);
+            //TODO: Specifically get the resource that matches the search type...
             var resourceResult = await _repository.GetResourcePage(searchQuery.Key, searchQuery.Id, searchQuery.ChildId);
+
             return View("sub", resourceResult);
         }
     }
