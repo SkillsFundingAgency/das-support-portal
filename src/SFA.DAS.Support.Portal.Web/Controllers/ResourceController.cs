@@ -6,6 +6,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
@@ -106,6 +107,17 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             var resourceResult = await _repository.GetResourcePage(key, id, childId);
 
             return View("Sub", resourceResult);
+        }
+
+
+        [Route("/apprenticeships/search")]
+        [HttpPost]
+        public async Task<ActionResult> Apprenticeships(ApprenticeshipSearchQuery searchQuery)
+        {
+            ViewBag.SubNav = await _repository.GetNav(searchQuery.Key, searchQuery.Id);
+            ViewBag.SubHeader = await _repository.GenerateHeader(searchQuery.Key, searchQuery.Id);
+            var resourceResult = await _repository.GetResourcePage(searchQuery.Key, searchQuery.Id, searchQuery.ChildId);
+            return View("sub", resourceResult);
         }
     }
 }
