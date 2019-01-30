@@ -108,6 +108,32 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return HandleChallenegeResponseContent(html, resourceKey, challengeKey, id, redirect);
         }
 
+        public async Task<ResourceResultModel> SubmitApprenticeSearchRequest(SupportServiceResourceKey key,
+            string hashedAccountId,
+            ApprenticeshipSearchType searchType, string searchTerm)
+        {
+            var resource = _serviceConfiguration.GetResource(key);
+            var siteUri = _serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, key);
+            var resourceSearchItemsUrl = resource.SearchItemsUrl;
+
+            resourceSearchItemsUrl = resourceSearchItemsUrl
+                                        .Replace("{0}", hashedAccountId)
+                                        .Replace("{1}", $"{searchType}")
+                                        .Replace("{2}", HttpUtility.HtmlEncode(searchTerm));
+
+            var searchUri = new Uri(siteUri, resourceSearchItemsUrl);
+
+            ResourceResultModel result = new ResourceResultModel
+            {
+                Resource = await _siteConnector.Upload<string>(searchUri, string.Empty),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
+
+
+            return result;
+        }
+
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {

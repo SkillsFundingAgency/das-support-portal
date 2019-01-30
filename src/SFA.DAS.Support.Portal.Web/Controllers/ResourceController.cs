@@ -116,20 +116,17 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Apprenticeships(string hashedAccountId)
         {
 
-            var searchType = Request.Params["SearchType"] ??$"{ApprenticeshipSearchType.SearchByUln}";
-            var search = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), searchType);
-            var searchCriteria = Request.Params["SearchTerm"] ?? "";
-            ApprenticeshipSearchQuery searchQuery = new ApprenticeshipSearchQuery()
-            {
-                Id = hashedAccountId,
-                ChildId =  searchCriteria,
-                SearchType = search, Key =  SupportServiceResourceKey.CommitmentSearch
-            };
-
-            ViewBag.SubNav = await _repository.GetNav(searchQuery.Key, searchQuery.Id);
-            ViewBag.SubHeader = await _repository.GenerateHeader(searchQuery.Key, searchQuery.Id);
-            //TODO: Specifically get the resource that matches the search type...
-            var resourceResult = await _repository.GetResourcePage(searchQuery.Key, searchQuery.Id, searchQuery.ChildId);
+            var searchType = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), Request.Params["SearchType"] ?? $"{ApprenticeshipSearchType.SearchByUln}");
+            var searchTerm = Request.Params["SearchTerm"] ?? "";
+            
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
+           
+            var resourceResult = await _repository.SubmitApprenticeSearchRequest(
+                                                SupportServiceResourceKey.CommitmentSearch, 
+                                                hashedAccountId,
+                                                searchType, 
+                                                searchTerm);
 
             return View("sub", resourceResult);
         }

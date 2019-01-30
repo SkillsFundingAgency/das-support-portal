@@ -61,6 +61,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentSearch,
                     ResourceUrlFormat = "/apprenticeships/search/{0}",
+                    SearchItemsUrl = "/apprenticeships/search?hashedAccountId={0}&searchType={1}&searchTerm={2}",
                     ResourceTitle = "Commitments",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true

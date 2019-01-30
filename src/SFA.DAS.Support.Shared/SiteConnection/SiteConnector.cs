@@ -51,6 +51,45 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             return await Download<string>(url);
         }
 
+        public async Task<T> Upload<T>(Uri uri, string content)where T : class
+        {
+            await EnsureClientAuthorizationHeader();
+
+            try
+            {
+
+                var postContent = new StringContent(content);
+
+                var response = await _client.PostAsync(uri, postContent);
+
+                LastContent = await response.Content.ReadAsStringAsync();
+
+                HttpStatusCodeDecision = ExamineResponse(response);
+
+                switch (HttpStatusCodeDecision)
+                {
+                    case HttpStatusCodeDecision.HandleException:
+                        LastException = LastException ??
+                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        throw LastException;
+
+                    case HttpStatusCodeDecision.ReturnNull:
+                        return null;
+
+                    default:
+
+
+                        if (typeof(T) == typeof(string)) return LastContent as T;
+
+                        return JsonConvert.DeserializeObject<T>(LastContent);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                return null;
+            }
+        }
         public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class
         {
             await EnsureClientAuthorizationHeader();
@@ -87,6 +126,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 return null;
             }
         }
+
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
