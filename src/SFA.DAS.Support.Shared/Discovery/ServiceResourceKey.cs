@@ -10,6 +10,7 @@
         EmployerUserHeader,
         EmployerUserAccounts,
         CommitmentSearch,
+        CommitmentApprenticeDetail,
         EmployerAccount,
         EmployerAccountHeader,
         EmployerAccountTeam,

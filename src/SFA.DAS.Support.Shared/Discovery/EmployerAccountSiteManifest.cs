@@ -65,6 +65,15 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceTitle = "Commitments",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportCommitments,
+                    ResourceKey = SupportServiceResourceKey.CommitmentApprenticeDetail,
+                    ResourceUrlFormat = "/Apprenticeships/{0}/account/{1}",
+                    ResourceTitle = string.Empty,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    IsNavigationItem = false
                 }
             };
             Challenges = new List<SiteChallenge>
