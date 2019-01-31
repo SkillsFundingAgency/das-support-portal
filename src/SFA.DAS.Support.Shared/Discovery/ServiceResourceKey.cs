@@ -11,6 +11,7 @@
         EmployerUserAccounts,
         CommitmentSearch,
         CommitmentApprenticeDetail,
+        CommitmentCohortDetail,
         EmployerAccount,
         EmployerAccountHeader,
         EmployerAccountTeam,
