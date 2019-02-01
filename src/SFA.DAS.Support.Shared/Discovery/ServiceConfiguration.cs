@@ -13,22 +13,25 @@ namespace SFA.DAS.Support.Shared.Discovery
         {
             if (sites == null) throw new ArgumentNullException(nameof(sites));
             SiteResource resource = null;
-            KeyValuePair<SupportServiceIdentity, Uri> site;
+            KeyValuePair<SupportServiceIdentity, Uri> site ;
             foreach (var item in this)
             {
+
+                if (item.Challenges.Any(c => c.ChallengeKey == key))
+                {
+                    site = sites.FirstOrDefault(x => x.Key == item.Challenges.First(y => y.ChallengeKey == key).ServiceIdentity);
+                    return site.Value;
+                }
+
                 if (item.Resources.Any(c => c.ResourceKey == key))
                 {
-                    resource = item.Resources.First(x => x.ResourceKey == key);
-                    break;
+                    site = sites.FirstOrDefault(x => x.Key == item.Resources.First(y => y.ResourceKey == key).ServiceIdentity);
+                    return site.Value;
                 }
             }
 
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource)); ;
-            }
-            site = sites.FirstOrDefault(x => x.Key == resource.ServiceIdentity);
-            return site.Value;
+            return null;
+
         }
         public bool ResourceExists(SupportServiceResourceKey key)
         {

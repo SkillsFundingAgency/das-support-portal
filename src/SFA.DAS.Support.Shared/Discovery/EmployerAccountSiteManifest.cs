@@ -89,6 +89,7 @@ namespace SFA.DAS.Support.Shared.Discovery
             {
                 new SiteChallenge
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ChallengeKey = SupportServiceResourceKey.EmployerAccountFinanceChallenge,
                     ChallengeUrlFormat = "/challenge/{0}"
                 }

@@ -10,5 +10,6 @@ namespace SFA.DAS.Support.Shared.Authentication
         [JsonRequired] public SupportServiceResourceKey ChallengeKey { get; set; }
 
         [JsonRequired] public string ChallengeUrlFormat { get; set; }
+        public SupportServiceIdentity ServiceIdentity { get; set; }
     }
 }
