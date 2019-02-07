@@ -155,7 +155,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                                                  new Exception(
                                                      $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
                         _logger.Error(generatedException,
-                            $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent}");
+                            $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} from {uri}");
                         return null;
 
                     case HttpStatusCodeDecision.ReturnNull:

@@ -70,7 +70,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentApprenticeDetail,
-                    ResourceUrlFormat = "/Apprenticeships/{0}/account/{1}",
+                    ResourceUrlFormat = "/Apprenticeships/account/{0}/Apprenticeship/{1}", 
                     ResourceTitle = string.Empty,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false

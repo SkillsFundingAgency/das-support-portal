@@ -140,7 +140,10 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 catch (Exception ex)
                 {
                     _logger.Error(ex, $" Error while retriving page {pageNumber} for type {typeof(T).Name}.");
+#if DEBUG
+#else
                     throw;
+#endif
                 }
 
                 _indexTimer.Start();
