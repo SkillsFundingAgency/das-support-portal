@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -15,15 +16,37 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
         private string _id;
         private SupportServiceResourceKey _resourceKey;
-  private string _childId;
+        private string _childId;
 
-        [SetUp]
-        public override void Setup()
+        [OneTimeSetUp]
+        public void OneTimeSetup()
         {
-            base.Setup();
-            _id = "id";
+            _id = "ID";
             _resourceKey = SupportServiceResourceKey.EmployerAccountFinance;
             _childId = "childId";
+        }
+
+        [Test]
+        public async Task ItShouldConvertAccountIdToUpper()
+        {
+            var idLower = _id.ToLower();
+            MockContextBase.Setup(x => x.Request.RawUrl).Returns("https:/tempuri.org");
+
+            var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance, Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge };
+            MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
+                    It.IsAny<HttpResponseBase>(),
+                    It.IsAny<IPrincipal>(),
+                    $"{_resourceKey.ToString()}/{_id}"))
+                .Returns(false);
+
+            ActionResultResponse = await Unit.Index(_resourceKey, idLower, _childId);
+
+            MockManifestRepository.Setup(x => x.GetNav(It.Is<SupportServiceResourceKey>(rk => rk == _resourceKey), It.Is<string>(id => id == _id.ToUpper())));
+
+            Assert.IsInstanceOf<RedirectToRouteResult>(ActionResultResponse);
+            var result = (RedirectToRouteResult)ActionResultResponse;
+
+            Assert.AreEqual(result.RouteValues["resourceid"], _id);
         }
 
         /// <summary>
@@ -37,8 +60,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
             var siteResource = new SiteResource { ResourceKey = SupportServiceResourceKey.EmployerAccountFinance, Challenge = SupportServiceResourceKey.EmployerAccountFinanceChallenge };
             MockPermissionsChecker.Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
-                    It.IsAny<HttpResponseBase>(), 
-                    It.IsAny<IPrincipal>(), 
+                    It.IsAny<HttpResponseBase>(),
+                    It.IsAny<IPrincipal>(),
                     $"{_resourceKey.ToString()}/{_id}"))
                 .Returns(false);
 
@@ -50,7 +73,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Assert.IsNotEmpty(result.RouteValues);
             Assert.AreEqual((int)siteResource.ResourceKey, result.RouteValues["resourceKey"]);
             Assert.AreEqual((int)siteResource.Challenge, result.RouteValues["challengeKey"]);
-            Assert.AreEqual(_id.ToUpper(), result.RouteValues["resourceId"]);
+            Assert.AreEqual(_id, result.RouteValues["resourceId"]);
             Assert.AreEqual(MockContextBase.Object.Request.RawUrl, result.RouteValues["url"]);
         }
 
@@ -86,8 +109,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             MockPermissionsChecker
                 .Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
                     It.IsAny<HttpResponseBase>(),
-                    It.IsAny<IPrincipal>(), 
-                    $"{SupportServiceResourceKey.EmployerAccountFinanceChallenge}/{_id.ToUpper()}"))
+                    It.IsAny<IPrincipal>(),
+                    $"{SupportServiceResourceKey.EmployerAccountFinanceChallenge}/{_id}"))
                 .Returns(true);
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id, _childId);
