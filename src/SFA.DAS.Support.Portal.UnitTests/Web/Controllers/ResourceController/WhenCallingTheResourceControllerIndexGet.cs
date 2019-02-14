@@ -50,7 +50,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Assert.IsNotEmpty(result.RouteValues);
             Assert.AreEqual((int)siteResource.ResourceKey, result.RouteValues["resourceKey"]);
             Assert.AreEqual((int)siteResource.Challenge, result.RouteValues["challengeKey"]);
-            Assert.AreEqual(_id, result.RouteValues["resourceId"]);
+            Assert.AreEqual(_id.ToUpper(), result.RouteValues["resourceId"]);
             Assert.AreEqual(MockContextBase.Object.Request.RawUrl, result.RouteValues["url"]);
         }
 
@@ -87,7 +87,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
                 .Setup(x => x.HasPermissions(It.IsAny<HttpRequestBase>(),
                     It.IsAny<HttpResponseBase>(),
                     It.IsAny<IPrincipal>(), 
-                    $"{SupportServiceResourceKey.EmployerAccountFinanceChallenge}/{_id}"))
+                    $"{SupportServiceResourceKey.EmployerAccountFinanceChallenge}/{_id.ToUpper()}"))
                 .Returns(true);
 
             ActionResultResponse = await Unit.Index(_resourceKey, _id, _childId);

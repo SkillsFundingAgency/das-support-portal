@@ -76,7 +76,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
-
+            id = id.ToUpper();
             if (!_serviceConfiguration.ResourceExists(key))
                 return View("Sub",
                     new ResourceResultModel
