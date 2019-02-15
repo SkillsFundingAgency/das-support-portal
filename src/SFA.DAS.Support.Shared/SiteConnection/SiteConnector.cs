@@ -86,7 +86,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
             catch (Exception e)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
                 return null;
             }
         }
@@ -122,7 +122,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
             catch (Exception e)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
                 return null;
             }
         }
@@ -173,7 +173,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
             catch (Exception e)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response");
+                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
                 return null;
             }
         }
