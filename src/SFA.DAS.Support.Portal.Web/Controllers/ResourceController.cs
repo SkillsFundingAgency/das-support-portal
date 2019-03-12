@@ -1,11 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Mvc;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Discovery;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
@@ -26,7 +29,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _serviceConfiguration = serviceConfiguration;
         }
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, string url)
         {
             if (!_serviceConfiguration.ChallengeExists(challengeKey)) return HttpNotFound();
@@ -49,7 +52,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             }
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
@@ -70,10 +73,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             });
         }
 
-        [HttpGet]
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
-
+            id = id.ToUpper();
             if (!_serviceConfiguration.ResourceExists(key))
                 return View("Sub",
                     new ResourceResultModel
@@ -106,6 +109,26 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             var resourceResult = await _repository.GetResourcePage(key, id, childId);
 
             return View("Sub", resourceResult);
+        }
+
+
+        [System.Web.Mvc.Route("resource/apprenticeships/search/{hashedAccountId}")]
+        public async Task<ActionResult> Apprenticeships(string hashedAccountId)
+        {
+
+            var searchType = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), Request.Params["SearchType"] ?? $"{ApprenticeshipSearchType.SearchByUln}");
+            var searchTerm = Request.Params["SearchTerm"] ?? "";
+            
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
+           
+            var resourceResult = await _repository.SubmitApprenticeSearchRequest(
+                                                SupportServiceResourceKey.CommitmentSearch, 
+                                                hashedAccountId,
+                                                searchType, 
+                                                searchTerm);
+
+            return View("sub", resourceResult);
         }
     }
 }

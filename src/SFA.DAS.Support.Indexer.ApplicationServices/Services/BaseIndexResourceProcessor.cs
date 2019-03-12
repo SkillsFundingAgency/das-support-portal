@@ -140,7 +140,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 catch (Exception ex)
                 {
                     _logger.Error(ex, $" Error while retriving page {pageNumber} for type {typeof(T).Name}.");
-                    throw;
+                    // removed throw to allow index to be created when 1 or 2 pages fail to be retrieved.
                 }
 
                 _indexTimer.Start();

@@ -72,13 +72,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
-            For<IServiceConfiguration>().Singleton().Use(new ServiceConfiguration
-                                                                       {
-                                                                           new EmployerAccountSiteManifest(),
-                                                                           new EmployerUserSiteManifest()
-                                                                       }
-                                                                   );
-
+            For<IServiceConfiguration>().Singleton().Use(
+                new ServiceConfiguration { new EmployerAccountSiteManifest(), new EmployerUserSiteManifest() });
         }
 
 
@@ -89,8 +84,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString");
 
             if (environment == null) throw new ArgumentNullException(nameof(environment));
-            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
 
+            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
 
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
 

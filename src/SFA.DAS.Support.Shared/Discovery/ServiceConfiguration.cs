@@ -9,23 +9,29 @@ namespace SFA.DAS.Support.Shared.Discovery
 
     public class ServiceConfiguration : List<SiteManifest>, IServiceConfiguration
     {
-        public Uri FindSiteBaseUriForManfiestElement(Dictionary<SupportServiceIdentity, Uri> sites,  SupportServiceResourceKey key)
+        public Uri FindSiteBaseUriForManfiestElement(Dictionary<SupportServiceIdentity, Uri> sites, SupportServiceResourceKey key)
         {
             if (sites == null) throw new ArgumentNullException(nameof(sites));
-            SiteManifest manifest = null;
+            SiteResource resource = null;
+            KeyValuePair<SupportServiceIdentity, Uri> site ;
             foreach (var item in this)
             {
-                if (item.Challenges.Any(c => c.ChallengeKey == key)
-                 ||
-                    item.Resources.Any(r => r.ResourceKey == key))
+
+                if (item.Challenges.Any(c => c.ChallengeKey == key))
                 {
-                    manifest = item;
+                    site = sites.FirstOrDefault(x => x.Key == item.Challenges.First(y => y.ChallengeKey == key).ServiceIdentity);
+                    return site.Value;
+                }
+
+                if (item.Resources.Any(c => c.ResourceKey == key))
+                {
+                    site = sites.FirstOrDefault(x => x.Key == item.Resources.First(y => y.ResourceKey == key).ServiceIdentity);
+                    return site.Value;
                 }
             }
-            if (manifest == null) throw new ArgumentNullException(nameof(manifest));
-            var site = sites.FirstOrDefault(x => x.Key == manifest.ServiceIdentity);
-            if (site.Value == null)  throw new ArgumentNullException(nameof(site));;
-            return site.Value;
+
+            return null;
+
         }
         public bool ResourceExists(SupportServiceResourceKey key)
         {
@@ -64,12 +70,12 @@ namespace SFA.DAS.Support.Shared.Discovery
 
             return null;
         }
-        public  SiteChallenge GetChallenge(SupportServiceResourceKey key)
+        public SiteChallenge GetChallenge(SupportServiceResourceKey key)
         {
             var challenge = FindChallenge(key);
-           return  challenge;
+            return challenge;
         }
-        
+
         public IEnumerable<NavItem> GetNavItems(SupportServiceResourceKey key, string id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -115,5 +121,5 @@ namespace SFA.DAS.Support.Shared.Discovery
         }
 
     }
-    
+
 }

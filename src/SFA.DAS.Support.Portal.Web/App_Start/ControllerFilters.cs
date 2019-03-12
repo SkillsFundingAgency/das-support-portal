@@ -11,7 +11,6 @@ namespace SFA.DAS.Support.Portal.Web
         {
             var roleSettings = DependencyResolver.Current.GetService<IRoleSettings>();
             filters.Add(new AuthorizeAttribute { Roles = roleSettings.ConsoleUserRole });
-
         }
     }
 }

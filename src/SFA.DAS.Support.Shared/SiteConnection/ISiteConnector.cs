@@ -15,5 +15,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         Task<T> Download<T>(Uri uri) where T : class;
         Task<T> Download<T>(string url) where T : class;
         Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class;
+
+        Task<T> Upload<T>(Uri uri, string content)where T : class;
     }
 }
