@@ -9,12 +9,14 @@
         EmployerUser,
         EmployerUserHeader,
         EmployerUserAccounts,
-
+        CommitmentSearch,
+        CommitmentApprenticeDetail,
+        CommitmentCohortDetail,
         EmployerAccount,
         EmployerAccountHeader,
         EmployerAccountTeam,
         EmployerAccountFinance,
         EmployerAccountPayeSchemeLevys,
-        EmployerAccountFinanceChallenge
+        EmployerAccountFinanceChallenge,
     }
 }

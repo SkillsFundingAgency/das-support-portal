@@ -99,6 +99,8 @@
     <Compile Include="Discovery\ServiceConfiguration.cs" />
     <Compile Include="Discovery\ServiceResourceKey.cs" />
     <Compile Include="Discovery\SupportServiceIdentity.cs" />
+    <Compile Include="SiteConnection\ApprenticeshipSearchQuery.cs" />
+    <Compile Include="SiteConnection\ApprenticeshipSearchType.cs" />
     <Compile Include="SiteConnection\StrategyForClientErrorStatusCode.cs" />
     <Compile Include="SiteConnection\StrategyForRedirectionStatusCode.cs" />
     <Compile Include="SiteConnection\HttpStatusCodeDecision.cs" />
