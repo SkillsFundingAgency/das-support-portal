@@ -35,36 +35,37 @@
     <meta name="theme-color" content="#0b0c0c"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="@Url.Content("~/assets/images/opengraph-image.png")">
-    @Html.Partial("_Analytics")
+    @Html.Partial("_GoogleAnalyticsHeadPartial")
 </head>
 <body>
-<!-- <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script> -->
-<div id="skiplink-container">
-    <div>
-        <a href="#content" class="skiplink">Skip to main content</a>
-    </div>
-</div>
-<div id="global-cookie-message">
-    <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
-</div>
-@Html.Action("Header", "Shared")
-<main id="content" role="main">
-    @RenderBody()
-</main>
-<footer class="group js-footer" id="footer" role="contentinfo">
-    <div class="footer-wrapper">
-        <div class="footer-meta">
-            <div class="copyright">
-                <!-- <a href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a> -->
-            </div>
-            <div class="font-xsmall">
-                Version: @ViewContext.Controller.GetType().Assembly.GetName().Version
-            </div>
+    @Html.Partial("_GoogleAnalyticsBodyPartial")
+    <!-- <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script> -->
+    <div id="skiplink-container">
+        <div>
+            <a href="#content" class="skiplink">Skip to main content</a>
         </div>
     </div>
-</footer>
-<script src="@Url.Content("~/scripts/jquery-1.12.4.min.js")"></script>
-<script src="@Url.Content("~/assets/javascripts/app.js")"></script>
-@RenderSection("script", false)
+    <div id="global-cookie-message">
+        <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
+    </div>
+    @Html.Action("Header", "Shared")
+    <main id="content" role="main">
+        @RenderBody()
+    </main>
+    <footer class="group js-footer" id="footer" role="contentinfo">
+        <div class="footer-wrapper">
+            <div class="footer-meta">
+                <div class="copyright">
+                    <!-- <a href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a> -->
+                </div>
+                <div class="font-xsmall">
+                    Version: @ViewContext.Controller.GetType().Assembly.GetName().Version
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="@Url.Content("~/scripts/jquery-1.12.4.min.js")"></script>
+    <script src="@Url.Content("~/assets/javascripts/app.js")"></script>
+    @RenderSection("script", false)
 </body>
 </html>
