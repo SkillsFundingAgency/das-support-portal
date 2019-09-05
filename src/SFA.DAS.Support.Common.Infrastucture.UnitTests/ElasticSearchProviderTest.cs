@@ -49,7 +49,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
                 .Setup(x => x.Search(It.IsAny<Func<SearchDescriptor<T>, ISearchRequest>>(), string.Empty))
                 .Returns(response.Object);
 
-            var countResponse = new Mock<ICountResponse>();
+            var countResponse = new Mock<CountResponse>();
             countResponse.Setup(x => x.ApiCall).Returns(_apiCall.Object);
             countResponse.Setup(x => x.Count).Returns(documents.Count);
 

@@ -34,7 +34,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<UserSearchModel>(s => s.Index(_indexAliasName)
-                 .Type(Types.Type<UserSearchModel>())
                  .Skip(pageSize * GetPage(pageNumber))
                  .Take(pageSize)
                  .Query(q => q
@@ -74,7 +73,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             _indexAliasName = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, searchType);
 
             var response = _elasticSearchClient.Search<AccountSearchModel>(s => s.Index(_indexAliasName)
-                .Type(Types.Type<AccountSearchModel>())
                 .Skip(pageSize * GetPage(pageNumber))
                 .Take(pageSize)
                 .Query(q => q

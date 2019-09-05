@@ -35,7 +35,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             _loggerMock
                 .Setup(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()));
 
-            _deleteResponse = new Mock<IDeleteIndexResponse>();
+            _deleteResponse = new Mock<DeleteIndexResponse>();
             _deleteResponse
                 .Setup(x => x.Acknowledged)
                 .Returns(true);
@@ -44,7 +44,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         private Mock<IElasticsearchCustomClient> _clientMock;
         private Mock<ILog> _loggerMock;
         private Mock<ISearchSettings> _settings;
-        private Mock<IDeleteIndexResponse> _deleteResponse;
+        private Mock<DeleteIndexResponse> _deleteResponse;
 
         private ElasticSearchIndexProvider _sut;
 
@@ -57,13 +57,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             //Arrange 
             var aliasExist = false;
 
-            var objectExistsResponse = new Mock<IExistsResponse>();
+            var objectExistsResponse = new Mock<ExistsResponse>();
             objectExistsResponse
                 .Setup(x => x.Exists)
                 .Returns(aliasExist);
 
             _clientMock
-                .Setup(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty))
+                .Setup(x => x.AliasExists(It.IsAny<string>(), string.Empty))
                 .Returns(objectExistsResponse.Object)
                 .Verifiable();
 
@@ -77,7 +77,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert 
             _clientMock
-                .Verify(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty),
+                .Verify(x => x.AliasExists(It.IsAny<string>(), string.Empty),
                     Times.AtLeastOnce);
 
             _clientMock
@@ -89,7 +89,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenCheckingIfIndexExists()
         {
             //Arrange 
-            var indexExistsResponse = new Mock<IExistsResponse>();
+            var indexExistsResponse = new Mock<ExistsResponse>();
             indexExistsResponse
                 .Setup(x => x.Exists)
                 .Returns(true);
@@ -116,13 +116,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             apiCall.Setup(x => x.HttpStatusCode)
                 .Returns((int) HttpStatusCode.OK);
 
-            var response = new Mock<ICreateIndexResponse>();
+            var response = new Mock<CreateIndexResponse>();
             response
                 .Setup(o => o.ApiCall)
                 .Returns(apiCall.Object);
 
 
-            var mockExistResponse = new Mock<IExistsResponse>();
+            var mockExistResponse = new Mock<ExistsResponse>();
             mockExistResponse.SetupGet(x => x.Exists).Returns(false);
 
             _clientMock
@@ -212,7 +212,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             var readOnlyMockResult = new ReadOnlyDictionary<string, IndicesStats>(indexList);
 
-            var indicesStatsResult = new Mock<IIndicesStatsResponse>();
+            var indicesStatsResult = new Mock<IndicesStatsResponse>();
             indicesStatsResult
                 .SetupGet(x => x.Indices)
                 .Returns(readOnlyMockResult);
@@ -248,13 +248,13 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             //Arrange 
             var aliasExist = true;
 
-            var objectExistsResponse = new Mock<IExistsResponse>();
+            var objectExistsResponse = new Mock<ExistsResponse>();
             objectExistsResponse
                 .Setup(x => x.Exists)
                 .Returns(aliasExist);
 
             _clientMock
-                .Setup(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty))
+                .Setup(x => x.AliasExists(It.IsAny<string>(), string.Empty))
                 .Returns(objectExistsResponse.Object)
                 .Verifiable();
 
@@ -273,7 +273,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert 
             _clientMock
-                .Verify(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty),
+                .Verify(x => x.AliasExists(It.IsAny<string>(), string.Empty),
                     Times.AtLeastOnce);
 
             _clientMock
@@ -287,7 +287,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldThrowExceptiontWhenIndexDeletionRespnseIsInValid()
         {
             //Arrange 
-            IDeleteIndexResponse deleteResponse = null;
+            DeleteIndexResponse deleteResponse = null;
 
             _clientMock
                 .Setup(x => x.DeleteIndex(_indexName, string.Empty))
@@ -306,7 +306,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         {
             //Arrange 
 
-            var response = new Mock<ICreateIndexResponse>();
+            var response = new Mock<CreateIndexResponse>();
             response
                 .Setup(o => o.ApiCall.HttpStatusCode)
                 .Returns((int) HttpStatusCode.BadRequest);

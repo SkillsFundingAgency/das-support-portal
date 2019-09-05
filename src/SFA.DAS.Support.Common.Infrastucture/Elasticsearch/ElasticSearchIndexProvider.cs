@@ -116,7 +116,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndexAlias(string newIndexName, string aliasName)
         {
-            if (!_client.AliasExists(a => a.Name(aliasName), string.Empty).Exists)
+            if (!_client.AliasExists(aliasName).Exists)
             {
                 _logger.Warn("Alias doesn't exist, creating a new one...");
 

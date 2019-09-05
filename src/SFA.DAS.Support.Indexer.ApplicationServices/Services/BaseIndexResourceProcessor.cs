@@ -88,7 +88,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected abstract bool ContinueProcessing(SearchCategory searchCategory);
 
-        protected void ValidateResponse(string indexName, ICreateIndexResponse response)
+        protected void ValidateResponse(string indexName, CreateIndexResponse response)
         {
             if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
                 throw new Exception(
