@@ -6,6 +6,22 @@ using Nest;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 {
+    public class DeleteIndexResponse
+    {
+        public bool Acknowledged { get; set; }
+        public Exception OriginalException { get; internal set; }
+    }
+
+    public class IndicesStatsResponse
+    {
+        public IReadOnlyDictionary<string, IndicesStats> Indices { get; set; }
+    }
+
+    public class CountResponse
+    {
+        public long Count { get; set; }
+    }
+
     public interface IElasticsearchCustomClient
     {
         ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, ISearchRequest> selector,
@@ -15,7 +31,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         CountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
             [CallerMemberName] string callerName = "") where T : class;
 
-        ExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "");
+        bool IndexExists(IndexName index, [CallerMemberName] string callerName = "");
 
         DeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "");
 
@@ -28,7 +44,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
         RefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
             [CallerMemberName] string callerName = "");
 
-        ExistsResponse AliasExists(string aliasName,
+        bool AliasExists(string aliasName,
             [CallerMemberName] string callerName = "");
 
         BulkAliasResponse Alias(string aliasName, string indexName, [CallerMemberName] string callerName = "");

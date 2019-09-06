@@ -26,7 +26,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndex<T>(string indexName) where T : class
         {
-            if (!_client.IndexExists(indexName, string.Empty).Exists)
+            if (!_client.IndexExists(indexName, string.Empty))
             {
                 var response = _client.CreateIndex(
                     indexName,
@@ -111,12 +111,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public bool IndexExists(string indexName)
         {
-            return _client.IndexExists(indexName, string.Empty).Exists;
+            return _client.IndexExists(indexName, string.Empty);
         }
 
         public void CreateIndexAlias(string newIndexName, string aliasName)
         {
-            if (!_client.AliasExists(aliasName).Exists)
+            if (!_client.AliasExists(aliasName))
             {
                 _logger.Warn("Alias doesn't exist, creating a new one...");
 

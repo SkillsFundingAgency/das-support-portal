@@ -42,10 +42,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var result = _client.Count(selector);
 
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Search : {callerName}");
-            return result;
+
+            return new CountResponse { Count = result.Count } ;
         }
 
-        public ExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "")
+        public bool IndexExists(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             ExistsResponse result = null;
@@ -59,7 +60,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             }
 
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Index Exists {index.Name}");
-            return result;
+
+            return result.Exists;
         }
 
         public DeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "")
@@ -67,7 +69,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.Delete(index);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Delete Index {index.Name}");
-            return result;
+            
+            if (result != null)
+                return new DeleteIndexResponse { Acknowledged = result.Acknowledged, OriginalException = result.OriginalException };
+
+            return null;
         }
 
         public GetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
@@ -97,13 +103,14 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public ExistsResponse AliasExists(string aliasName,
+        public bool AliasExists(string aliasName,
             string callerName = "")
         {
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.AliasExists(aliasName);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias Exists {callerName}");
-            return result;
+
+            return result.Exists;
         }
 
         public BulkAliasResponse Alias(string aliasName, string indexName, string callerName = "")
@@ -130,7 +137,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.Stats(indices, selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Indices Stats {callerName}");
-            return result;
+
+            return new IndicesStatsResponse { Indices = result.Indices };
         }
 
         public IList<string> GetIndicesPointingToAlias(string aliasName, string callerName = "")

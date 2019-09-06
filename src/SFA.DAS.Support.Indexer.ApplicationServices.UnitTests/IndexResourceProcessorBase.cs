@@ -77,12 +77,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
             _elasticClient = new Mock<IElasticsearchCustomClient>();
             _siteSettings = new Mock<ISiteSettings>();
 
-            var existsResponse = new Mock<ExistsResponse>();
-
-            existsResponse
-                .SetupGet(o => o.Exists)
-                .Returns(false);
-
             _indexNameCreator
                 .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.Account))
                 .Returns(_indexName);
@@ -93,7 +87,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
             _elasticClient
                 .Setup(o => o.IndexExists(_indexName, string.Empty))
-                .Returns(existsResponse.Object);
+                .Returns(false);
 
             var createIndexResponse = new Mock<CreateIndexResponse>();
             createIndexResponse
