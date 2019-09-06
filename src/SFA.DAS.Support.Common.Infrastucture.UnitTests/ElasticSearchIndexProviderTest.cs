@@ -94,15 +94,6 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenCreatingIndex()
         {
             //Arrange 
-            var apiCall = new Mock<IApiCallDetails>();
-            apiCall.Setup(x => x.HttpStatusCode)
-                .Returns((int) HttpStatusCode.OK);
-
-            var response = new Mock<CreateIndexResponse>();
-            response
-                .Setup(o => o.ApiCall)
-                .Returns(apiCall.Object);
-
             _clientMock
                 .Setup(x => x.IndexExists(_indexName, string.Empty))
                 .Returns(false);
@@ -110,7 +101,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             _clientMock
                 .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(),
                     string.Empty))
-                .Returns(response.Object);
+                .Returns(new Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.OK });
 
 
             //Act
@@ -274,17 +265,10 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldThrowExceptionWhenIndexCreationStatusIsNotOk()
         {
             //Arrange 
-
-            var response = new Mock<CreateIndexResponse>();
-            response
-                .Setup(o => o.ApiCall.HttpStatusCode)
-                .Returns((int) HttpStatusCode.BadRequest);
-
-
             _clientMock
                 .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(),
                     string.Empty))
-                .Returns(response.Object)
+                .Returns(new Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.BadRequest })
                 .Verifiable();
 
             //Act

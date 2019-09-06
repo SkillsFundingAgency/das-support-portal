@@ -77,13 +77,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elasticsearch\Responses\BulkAliasResponse.cs" />
+    <Compile Include="Elasticsearch\Responses\BulkResponse.cs" />
+    <Compile Include="Elasticsearch\Responses\CountResponse.cs" />
+    <Compile Include="Elasticsearch\Responses\CreateIndexResponse.cs" />
+    <Compile Include="Elasticsearch\Responses\DeleteIndexResponse.cs" />
     <Compile Include="Elasticsearch\ElasticsearchClientFactory.cs" />
     <Compile Include="Elasticsearch\ElasticsearchCustomClient.cs" />
     <Compile Include="Elasticsearch\ElasticSearchIndexProvider.cs" />
     <Compile Include="Elasticsearch\ElasticSearchProvider.cs" />
     <Compile Include="Elasticsearch\Exceptions\ElasticSearchInvalidResponseException.cs" />
+    <Compile Include="Elasticsearch\Responses\GetMappingResponse.cs" />
     <Compile Include="Elasticsearch\IElasticsearchClientFactory.cs" />
     <Compile Include="Elasticsearch\IElasticsearchCustomClient.cs" />
+    <Compile Include="Elasticsearch\Responses\IndicesStatsResponse.cs" />
+    <Compile Include="Elasticsearch\Responses\RefreshResponse.cs" />
     <Compile Include="Extensions\MyCertificateIgnoringHttpConnection.cs" />
     <Compile Include="Indexer\IIndexNameCreator.cs" />
     <Compile Include="Indexer\IIndexProvider.cs" />

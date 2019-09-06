@@ -89,14 +89,9 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Setup(o => o.IndexExists(_indexName, string.Empty))
                 .Returns(false);
 
-            var createIndexResponse = new Mock<CreateIndexResponse>();
-            createIndexResponse
-                .Setup(o => o.ApiCall.HttpStatusCode)
-                .Returns((int)HttpStatusCode.OK);
-
             _elasticClient
                .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty))
-               .Returns(createIndexResponse.Object);
+               .Returns(new Common.Infrastucture.Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.OK });
 
             _downloader
                 .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl))

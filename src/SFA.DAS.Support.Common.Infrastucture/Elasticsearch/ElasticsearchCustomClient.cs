@@ -83,7 +83,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.GetMapping(selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Get Mapping {callerName}");
-            return result;
+
+            return new GetMappingResponse();
         }
 
         public RefreshResponse Refresh(IRefreshRequest request, [CallerMemberName] string callerName = "")
@@ -91,7 +92,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.Refresh(request);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Refresh {callerName}");
-            return result;
+
+            return new RefreshResponse();
         }
 
         public RefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
@@ -100,7 +102,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.Refresh(indices);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Refresh {callerName}");
-            return result;
+
+            return new RefreshResponse();
         }
 
         public bool AliasExists(string aliasName,
@@ -120,7 +123,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.BulkAlias(selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias {aliasName} > {indexName}");
-            return result;
+
+            return new BulkAliasResponse();
         }
 
         public BulkAliasResponse Alias(IBulkAliasRequest request, string callerName = "")
@@ -128,7 +132,8 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.BulkAlias(request);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias {callerName}");
-            return result;
+
+            return new BulkAliasResponse();
         }
 
         public IndicesStatsResponse IndicesStats(Indices indices,
@@ -155,15 +160,22 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var timer = Stopwatch.StartNew();
             var result = _client.Indices.Create(index, selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Create Index {index.Name}");
-            return result;
+
+            return new CreateIndexResponse
+            {
+                HttpStatusCode = result.ApiCall.HttpStatusCode.Value,
+                OriginalException = result.ApiCall.OriginalException,
+                DebugInformation = result.DebugInformation
+            };
         }
 
-        public virtual Task<BulkResponse> BulkAsync(IBulkRequest request, string callerName = "")
+        public virtual async Task<BulkResponse> BulkAsync(IBulkRequest request, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.BulkAsync(request);
+            var result = await _client.BulkAsync(request);
             SendLog(null, null, timer.ElapsedMilliseconds, $"Bulk Async {callerName}");
-            return result;
+
+            return new BulkResponse();
         }
 
         public void BulkAll<T>(IEnumerable<T> documents, string indexName, int batchSize) where T : class

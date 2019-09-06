@@ -88,11 +88,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected abstract bool ContinueProcessing(SearchCategory searchCategory);
 
-        protected void ValidateResponse(string indexName, CreateIndexResponse response)
+        protected void ValidateResponse(string indexName, Common.Infrastucture.Elasticsearch.CreateIndexResponse response)
         {
-            if (response.ApiCall.HttpStatusCode != (int)HttpStatusCode.OK)
+            if (response.HttpStatusCode != (int)HttpStatusCode.OK)
                 throw new Exception(
-                    $"Call to ElasticSearch client Received non-200 response when trying to create the Index {indexName}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
+                    $"Call to ElasticSearch client Received non-200 response when trying to create the Index {indexName}, Status Code:{response.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
                     response.OriginalException);
         }
 

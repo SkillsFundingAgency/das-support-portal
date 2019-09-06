@@ -6,21 +6,6 @@ using Nest;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 {
-    public class DeleteIndexResponse
-    {
-        public bool Acknowledged { get; set; }
-        public Exception OriginalException { get; internal set; }
-    }
-
-    public class IndicesStatsResponse
-    {
-        public IReadOnlyDictionary<string, IndicesStats> Indices { get; set; }
-    }
-
-    public class CountResponse
-    {
-        public long Count { get; set; }
-    }
 
     public interface IElasticsearchCustomClient
     {

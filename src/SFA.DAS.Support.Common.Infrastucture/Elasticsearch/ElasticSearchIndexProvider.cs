@@ -42,9 +42,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                                 .Properties(p => p)))
                     , string.Empty);
 
-                if (response.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+                if (response.HttpStatusCode != (int) HttpStatusCode.OK)
                     throw new Exception(
-                        $"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
+                        $"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
                         response.OriginalException);
             }
         }
