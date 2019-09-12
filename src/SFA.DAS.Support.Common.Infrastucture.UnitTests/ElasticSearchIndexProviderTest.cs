@@ -34,17 +34,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             _loggerMock
                 .Setup(x => x.Error(It.IsAny<Exception>(), It.IsAny<string>()));
-
-            _deleteResponse = new Mock<IDeleteIndexResponse>();
-            _deleteResponse
-                .Setup(x => x.Acknowledged)
-                .Returns(true);
         }
 
         private Mock<IElasticsearchCustomClient> _clientMock;
         private Mock<ILog> _loggerMock;
         private Mock<ISearchSettings> _settings;
-        private Mock<IDeleteIndexResponse> _deleteResponse;
 
         private ElasticSearchIndexProvider _sut;
 
@@ -55,16 +49,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientCreateIndexAliasIfAliasDoNotExist()
         {
             //Arrange 
-            var aliasExist = false;
-
-            var objectExistsResponse = new Mock<IExistsResponse>();
-            objectExistsResponse
-                .Setup(x => x.Exists)
-                .Returns(aliasExist);
-
             _clientMock
-                .Setup(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty))
-                .Returns(objectExistsResponse.Object)
+                .Setup(x => x.AliasExists(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(false)
                 .Verifiable();
 
             _clientMock
@@ -77,7 +64,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert 
             _clientMock
-                .Verify(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty),
+                .Verify(x => x.AliasExists(It.IsAny<string>(), It.IsAny<string>()),
                     Times.AtLeastOnce);
 
             _clientMock
@@ -89,14 +76,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenCheckingIfIndexExists()
         {
             //Arrange 
-            var indexExistsResponse = new Mock<IExistsResponse>();
-            indexExistsResponse
-                .Setup(x => x.Exists)
-                .Returns(true);
-
             _clientMock
                 .Setup(x => x.IndexExists(_indexName, string.Empty))
-                .Returns(indexExistsResponse.Object)
+                .Returns(true)
                 .Verifiable();
 
             //Act
@@ -112,27 +94,14 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenCreatingIndex()
         {
             //Arrange 
-            var apiCall = new Mock<IApiCallDetails>();
-            apiCall.Setup(x => x.HttpStatusCode)
-                .Returns((int) HttpStatusCode.OK);
-
-            var response = new Mock<ICreateIndexResponse>();
-            response
-                .Setup(o => o.ApiCall)
-                .Returns(apiCall.Object);
-
-
-            var mockExistResponse = new Mock<IExistsResponse>();
-            mockExistResponse.SetupGet(x => x.Exists).Returns(false);
-
             _clientMock
                 .Setup(x => x.IndexExists(_indexName, string.Empty))
-                .Returns(mockExistResponse.Object);
+                .Returns(false);
 
             _clientMock
                 .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(),
                     string.Empty))
-                .Returns(response.Object);
+                .Returns(new Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.OK });
 
 
             //Act
@@ -154,9 +123,10 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldCallClientWhenDeletingIndex()
         {
             //Arrange 
+            var deleteResponse = new Elasticsearch.DeleteIndexResponse { Acknowledged = true };
             _clientMock
                 .Setup(x => x.DeleteIndex(_indexName, string.Empty))
-                .Returns(_deleteResponse.Object);
+                .Returns(deleteResponse);
 
             //Act
             _sut = new ElasticSearchIndexProvider(_clientMock.Object, _loggerMock.Object, _settings.Object);
@@ -197,13 +167,11 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         [Test]
         public void ShouldDeleteOnlyOldIndexes()
         {
-            //Arrange 
             var indexToDelete01 = "at-das-support-portal-account_20180119100000";
             var indexToDelete02 = "at-das-support-portal-account_20180119103000";
             var indexToKeep01 = "at-das-support-portal-account_20180119110000";
             var indexToKeep02 = "at-das-support-portal-account_20180119113000";
-
-
+            //Arrange 
             var indexList = new Dictionary<string, IndicesStats>();
             indexList.Add(indexToDelete01, new IndicesStats());
             indexList.Add(indexToKeep01, new IndicesStats());
@@ -212,18 +180,17 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             var readOnlyMockResult = new ReadOnlyDictionary<string, IndicesStats>(indexList);
 
-            var indicesStatsResult = new Mock<IIndicesStatsResponse>();
-            indicesStatsResult
-                .SetupGet(x => x.Indices)
-                .Returns(readOnlyMockResult);
+            var indicesStatsResult = new Elasticsearch.IndicesStatsResponse { Indices = readOnlyMockResult };
 
             _clientMock
-                .Setup(x => x.IndicesStats(Indices.All, null, string.Empty))
-                .Returns(indicesStatsResult.Object);
+                .Setup(x => x.IndicesStats(Indices.All, null, It.IsAny<string>()))
+                .Returns(indicesStatsResult)
+                .Verifiable();
 
+            var deleteResponse = new Elasticsearch.DeleteIndexResponse { Acknowledged = true };
             _clientMock
-                .Setup(x => x.DeleteIndex(It.IsAny<IndexName>(), string.Empty))
-                .Returns(_deleteResponse.Object)
+                .Setup(x => x.DeleteIndex(It.IsAny<IndexName>(), It.IsAny<string>()))
+                .Returns(deleteResponse)
                 .Verifiable();
 
             //Act
@@ -233,29 +200,22 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
             ////Assert 
 
             _clientMock
-                .Verify(x => x.DeleteIndex(indexToDelete01, string.Empty), Times.Once);
+                .Verify(x => x.DeleteIndex(indexToDelete01, It.IsAny<string>()), Times.Once);
 
             _clientMock
-                .Verify(x => x.DeleteIndex(indexToDelete02, string.Empty), Times.Once);
+                .Verify(x => x.DeleteIndex(indexToDelete02, It.IsAny<string>()), Times.Once);
 
             _clientMock
-                .Verify(x => x.DeleteIndex(It.IsAny<IndexName>(), string.Empty), Times.Exactly(2));
+                .Verify(x => x.DeleteIndex(It.IsAny<IndexName>(), It.IsAny<string>()), Times.Exactly(2));
         }
 
         [Test]
         public void ShouldSwapAliasIfAliasAlreadyExist()
         {
             //Arrange 
-            var aliasExist = true;
-
-            var objectExistsResponse = new Mock<IExistsResponse>();
-            objectExistsResponse
-                .Setup(x => x.Exists)
-                .Returns(aliasExist);
-
             _clientMock
-                .Setup(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty))
-                .Returns(objectExistsResponse.Object)
+                .Setup(x => x.AliasExists(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(true)
                 .Verifiable();
 
             _clientMock
@@ -273,7 +233,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
 
             //Assert 
             _clientMock
-                .Verify(x => x.AliasExists(It.IsAny<Func<AliasExistsDescriptor, IAliasExistsRequest>>(), string.Empty),
+                .Verify(x => x.AliasExists(It.IsAny<string>(), It.IsAny<string>()),
                     Times.AtLeastOnce);
 
             _clientMock
@@ -287,7 +247,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldThrowExceptiontWhenIndexDeletionRespnseIsInValid()
         {
             //Arrange 
-            IDeleteIndexResponse deleteResponse = null;
+            Elasticsearch.DeleteIndexResponse deleteResponse = null;
 
             _clientMock
                 .Setup(x => x.DeleteIndex(_indexName, string.Empty))
@@ -305,17 +265,10 @@ namespace SFA.DAS.Support.Common.Infrastucture.UnitTests
         public void ShouldThrowExceptionWhenIndexCreationStatusIsNotOk()
         {
             //Arrange 
-
-            var response = new Mock<ICreateIndexResponse>();
-            response
-                .Setup(o => o.ApiCall.HttpStatusCode)
-                .Returns((int) HttpStatusCode.BadRequest);
-
-
             _clientMock
                 .Setup(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(),
                     string.Empty))
-                .Returns(response.Object)
+                .Returns(new Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.BadRequest })
                 .Verifiable();
 
             //Act

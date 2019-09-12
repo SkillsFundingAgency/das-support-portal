@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result;
         }
 
-        public ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
+        public CountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
             [CallerMemberName] string callerName = "")
             where T : class
         {
@@ -42,16 +42,17 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             var result = _client.Count(selector);
 
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Search : {callerName}");
-            return result;
+
+            return new CountResponse { Count = result.Count } ;
         }
 
-        public IExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "")
+        public bool IndexExists(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            IExistsResponse result = null;
+            ExistsResponse result = null;
             try
             {
-                result = _client.IndexExists(index);
+                result = _client.Indices.Exists(index);
             }
             catch (Exception e)
             {
@@ -59,78 +60,90 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             }
 
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Index Exists {index.Name}");
-            return result;
+
+            return result.Exists;
         }
 
-        public IDeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "")
+        public DeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.DeleteIndex(index);
+            var result = _client.Indices.Delete(index);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Delete Index {index.Name}");
-            return result;
+            
+            if (result != null)
+                return new DeleteIndexResponse { Acknowledged = result.Acknowledged, OriginalException = result.OriginalException };
+
+            return null;
         }
 
-        public IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
+        public GetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
             [CallerMemberName] string callerName = "")
             where T : class
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.GetMapping(selector);
+            var result = _client.Indices.GetMapping(selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Get Mapping {callerName}");
-            return result;
+
+            return new GetMappingResponse();
         }
 
-        public IRefreshResponse Refresh(IRefreshRequest request, [CallerMemberName] string callerName = "")
+        public RefreshResponse Refresh(IRefreshRequest request, [CallerMemberName] string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.Refresh(request);
+            var result = _client.Indices.Refresh(request);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Refresh {callerName}");
-            return result;
+
+            return new RefreshResponse();
         }
 
-        public IRefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
+        public RefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
             string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.Refresh(indices);
+            var result = _client.Indices.Refresh(indices);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Refresh {callerName}");
-            return result;
+
+            return new RefreshResponse();
         }
 
-        public IExistsResponse AliasExists(Func<AliasExistsDescriptor, IAliasExistsRequest> selector,
+        public bool AliasExists(string aliasName,
             string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.AliasExists(selector);
+            var result = _client.Indices.AliasExists(aliasName);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias Exists {callerName}");
-            return result;
+
+            return result.Exists;
         }
 
-        public IBulkAliasResponse Alias(string aliasName, string indexName, string callerName = "")
+        public BulkAliasResponse Alias(string aliasName, string indexName, string callerName = "")
         {
             Func<BulkAliasDescriptor, IBulkAliasRequest> selector = a =>
                 a.Add(add => add.Index(indexName).Alias(aliasName));
             var timer = Stopwatch.StartNew();
-            var result = _client.Alias(selector);
+            var result = _client.Indices.BulkAlias(selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias {aliasName} > {indexName}");
-            return result;
+
+            return new BulkAliasResponse();
         }
 
-        public IBulkAliasResponse Alias(IBulkAliasRequest request, string callerName = "")
+        public BulkAliasResponse Alias(IBulkAliasRequest request, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.Alias(request);
+            var result = _client.Indices.BulkAlias(request);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Alias {callerName}");
-            return result;
+
+            return new BulkAliasResponse();
         }
 
-        public IIndicesStatsResponse IndicesStats(Indices indices,
+        public IndicesStatsResponse IndicesStats(Indices indices,
             Func<IndicesStatsDescriptor, IIndicesStatsRequest> selector = null, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.IndicesStats(indices, selector);
+            var result = _client.Indices.Stats(indices, selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Indices Stats {callerName}");
-            return result;
+
+            return new IndicesStatsResponse { Indices = result.Indices };
         }
 
         public IList<string> GetIndicesPointingToAlias(string aliasName, string callerName = "")
@@ -141,21 +154,28 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
             return result.ToList();
         }
 
-        public ICreateIndexResponse CreateIndex(IndexName index,
+        public CreateIndexResponse CreateIndex(IndexName index,
             Func<CreateIndexDescriptor, ICreateIndexRequest> selector = null, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.CreateIndex(index, selector);
+            var result = _client.Indices.Create(index, selector);
             SendLog(result.ApiCall, null, timer.ElapsedMilliseconds, $"Create Index {index.Name}");
-            return result;
+
+            return new CreateIndexResponse
+            {
+                HttpStatusCode = result.ApiCall.HttpStatusCode.Value,
+                OriginalException = result.ApiCall.OriginalException,
+                DebugInformation = result.DebugInformation
+            };
         }
 
-        public virtual Task<IBulkResponse> BulkAsync(IBulkRequest request, string callerName = "")
+        public virtual async Task<BulkResponse> BulkAsync(IBulkRequest request, string callerName = "")
         {
             var timer = Stopwatch.StartNew();
-            var result = _client.BulkAsync(request);
+            var result = await _client.BulkAsync(request);
             SendLog(null, null, timer.ElapsedMilliseconds, $"Bulk Async {callerName}");
-            return result;
+
+            return new BulkResponse();
         }
 
         public void BulkAll<T>(IEnumerable<T> documents, string indexName, int batchSize) where T : class

@@ -26,7 +26,7 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public void CreateIndex<T>(string indexName) where T : class
         {
-            if (!_client.IndexExists(indexName, string.Empty).Exists)
+            if (!_client.IndexExists(indexName, string.Empty))
             {
                 var response = _client.CreateIndex(
                     indexName,
@@ -42,9 +42,9 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
                                 .Properties(p => p)))
                     , string.Empty);
 
-                if (response.ApiCall.HttpStatusCode != (int) HttpStatusCode.OK)
+                if (response.HttpStatusCode != (int) HttpStatusCode.OK)
                     throw new Exception(
-                        $"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.ApiCall.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
+                        $"Call to ElasticSearch client Received non-200 response when trying to create the Index {nameof(indexName)}, Status Code:{response.HttpStatusCode ?? -1}\r\n{response.DebugInformation}",
                         response.OriginalException);
             }
         }
@@ -111,12 +111,12 @@ namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 
         public bool IndexExists(string indexName)
         {
-            return _client.IndexExists(indexName, string.Empty).Exists;
+            return _client.IndexExists(indexName, string.Empty);
         }
 
         public void CreateIndexAlias(string newIndexName, string aliasName)
         {
-            if (!_client.AliasExists(a => a.Name(aliasName), string.Empty).Exists)
+            if (!_client.AliasExists(aliasName))
             {
                 _logger.Warn("Alias doesn't exist, creating a new one...");
 

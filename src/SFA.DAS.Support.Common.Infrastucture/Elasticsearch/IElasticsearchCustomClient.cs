@@ -6,46 +6,47 @@ using Nest;
 
 namespace SFA.DAS.Support.Common.Infrastucture.Elasticsearch
 {
+
     public interface IElasticsearchCustomClient
     {
         ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, ISearchRequest> selector,
             [CallerMemberName] string callerName = "")
             where T : class;
 
-        ICountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
+        CountResponse Count<T>(Func<CountDescriptor<T>, ICountRequest> selector,
             [CallerMemberName] string callerName = "") where T : class;
 
-        IExistsResponse IndexExists(IndexName index, [CallerMemberName] string callerName = "");
+        bool IndexExists(IndexName index, [CallerMemberName] string callerName = "");
 
-        IDeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "");
+        DeleteIndexResponse DeleteIndex(IndexName index, [CallerMemberName] string callerName = "");
 
-        IGetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
+        GetMappingResponse GetMapping<T>(Func<GetMappingDescriptor<T>, IGetMappingRequest> selector = null,
             [CallerMemberName] string callerName = "")
             where T : class;
 
-        IRefreshResponse Refresh(IRefreshRequest request, [CallerMemberName] string callerName = "");
+        RefreshResponse Refresh(IRefreshRequest request, [CallerMemberName] string callerName = "");
 
-        IRefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
+        RefreshResponse Refresh(Indices indices, Func<RefreshDescriptor, IRefreshRequest> selector = null,
             [CallerMemberName] string callerName = "");
 
-        IExistsResponse AliasExists(Func<AliasExistsDescriptor, IAliasExistsRequest> selector,
+        bool AliasExists(string aliasName,
             [CallerMemberName] string callerName = "");
 
-        IBulkAliasResponse Alias(string aliasName, string indexName, [CallerMemberName] string callerName = "");
+        BulkAliasResponse Alias(string aliasName, string indexName, [CallerMemberName] string callerName = "");
 
-        IBulkAliasResponse Alias(IBulkAliasRequest request, [CallerMemberName] string callerName = "");
+        BulkAliasResponse Alias(IBulkAliasRequest request, [CallerMemberName] string callerName = "");
 
-        IIndicesStatsResponse IndicesStats(Indices indices,
+        IndicesStatsResponse IndicesStats(Indices indices,
             Func<IndicesStatsDescriptor, IIndicesStatsRequest> selector = null,
             [CallerMemberName] string callerName = "");
 
         IList<string> GetIndicesPointingToAlias(string aliasName, [CallerMemberName] string callerName = "");
 
-        ICreateIndexResponse CreateIndex(IndexName index,
+        CreateIndexResponse CreateIndex(IndexName index,
             Func<CreateIndexDescriptor, ICreateIndexRequest> selector = null,
             [CallerMemberName] string callerName = "");
 
-        Task<IBulkResponse> BulkAsync(IBulkRequest request, [CallerMemberName] string callerName = "");
+        Task<BulkResponse> BulkAsync(IBulkRequest request, [CallerMemberName] string callerName = "");
 
         void BulkAll<T>(IEnumerable<T> documents, string indexName, int batchSize) where T : class;
     }

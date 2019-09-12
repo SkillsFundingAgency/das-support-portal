@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected override void CreateIndex(string indexName)
         {
-            if (!_elasticClient.IndexExists(indexName, string.Empty).Exists)
+            if (!_elasticClient.IndexExists(indexName, string.Empty))
             {
                 var response = _elasticClient.CreateIndex(
                               indexName,
