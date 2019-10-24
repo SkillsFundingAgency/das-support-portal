@@ -14,7 +14,7 @@ namespace SFA.DAS.Support.Indexer.Jobs.ScheduledJobs
             _indexer = indexer;
         }
 
-        public Task Run([TimerTrigger("0 0 * * * *")] TimerInfo timer, ILogger logger)
+        public Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo timer, ILogger logger)
         {
             return _indexer.Run();
         }
