@@ -72,6 +72,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		RunBuild.bat = RunBuild.bat
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Jobs", "SFA.DAS.Support.Indexer.Jobs\SFA.DAS.Support.Indexer.Jobs.csproj", "{B32D2EAC-7512-4D80-B1ED-B99834631E27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +152,10 @@ Global
 		{8D0A47FE-236C-4FC0-9BFA-55B6868D8CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D0A47FE-236C-4FC0-9BFA-55B6868D8CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D0A47FE-236C-4FC0-9BFA-55B6868D8CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32D2EAC-7512-4D80-B1ED-B99834631E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32D2EAC-7512-4D80-B1ED-B99834631E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32D2EAC-7512-4D80-B1ED-B99834631E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32D2EAC-7512-4D80-B1ED-B99834631E27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{DB114C77-4906-4F20-9824-C01BEEB26EDC} = {1EF32DE6-416E-40B7-934B-E92E8363B182}
 		{1EF32DE6-416E-40B7-934B-E92E8363B182} = {A1872D18-C20C-4365-B94A-5DE83F811233}
 		{8D0A47FE-236C-4FC0-9BFA-55B6868D8CFF} = {39C55247-F5FE-42CB-9488-EFB6C88B3D6C}
+		{B32D2EAC-7512-4D80-B1ED-B99834631E27} = {646D8258-CD8E-475E-9F33-36E554693651}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C00C456E-E88C-482E-992F-78AC6252AC20}

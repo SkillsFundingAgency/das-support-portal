@@ -67,27 +67,6 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
             Assert.IsNotNull(actual);
         }
 
-
-        [Test]
-        public void ItShouldGenerateASchema()
-        {
-            var provider = new FormatSchemaProvider();
-            var jSchemaGenerator = new JSchemaGenerator();
-            jSchemaGenerator.GenerationProviders.Clear();
-            jSchemaGenerator.GenerationProviders.Add(provider);
-            var actual = jSchemaGenerator.Generate(typeof(WebConfiguration));
-
-
-            Assert.IsNotNull(actual);
-            // hack to leverage format as 'environmentVariable'
-            var schemaString = actual.ToString().Replace($"\"format\":", "\"environmentVariable\":");
-
-
-            Assert.IsNotNull(schemaString);
-            File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.schema.json",
-                schemaString);
-        }
-
         [Test]
         public void ItShouldSerialize()
         {

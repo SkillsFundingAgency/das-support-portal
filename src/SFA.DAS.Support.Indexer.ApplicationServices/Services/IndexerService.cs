@@ -54,7 +54,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         {
             _logger.Info($"Starting Indexer Service Run");
 
-            _runtimer.Start();
+            _runtimer.Restart();
             try
             {
 
