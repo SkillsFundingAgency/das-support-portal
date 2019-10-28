@@ -64,6 +64,10 @@
       <Project>{D0FD8153-1944-43B9-B255-135EE775699B}</Project>
       <Name>SFA.DAS.Support.Indexer.ApplicationServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Support.Indexer.Jobs\SFA.DAS.Support.Indexer.Jobs.csproj">
+      <Project>{b32d2eac-7512-4d80-b1ed-b99834631e27}</Project>
+      <Name>SFA.DAS.Support.Indexer.Jobs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj">
       <Project>{369d5548-cf74-4e48-946b-0183587f52a8}</Project>
       <Name>SFA.DAS.Support.Shared</Name>

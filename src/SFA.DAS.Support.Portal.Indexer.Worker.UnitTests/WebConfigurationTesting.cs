@@ -5,10 +5,10 @@ using Newtonsoft.Json.Schema.Generation;
 using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
-using SFA.DAS.Support.Indexer.Worker;
+using SFA.DAS.Support.Indexer.Jobs;
 using SFA.DAS.Support.Shared.SiteConnection;
 
-namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
+namespace SFA.DAS.Support.Portal.Indexer.Jobs.UnitTests
 {
     [TestFixture]
     public class WebConfigurationTesting
