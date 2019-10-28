@@ -25,15 +25,14 @@ steps:
   inputs:
     updateAssemblyInfo: true
 
-- task: VSBuild@1
-  displayName: 'Restore solutions'
+- task: NuGetToolInstaller@1
   inputs:
-    solution: 'src/SFA.DAS.Support.Portal.sln'
-    vsVersion: 15.0
-    msbuildArgs: '/t:restore'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    clean: true
+    versionSpec: '4.x'
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: 'src/SFA.DAS.Support.Portal.sln'
 
 - task: VSBuild@1
   displayName: 'Build solutions'
