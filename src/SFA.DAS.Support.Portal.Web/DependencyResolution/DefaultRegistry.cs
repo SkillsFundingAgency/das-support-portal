@@ -21,7 +21,6 @@ using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 {
-    using Microsoft.Azure;
     using SFA.DAS.Configuration;
     using SFA.DAS.Configuration.AzureTableStorage;
     using SFA.DAS.NLog.Logger;
@@ -32,6 +31,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using SFA.DAS.Support.Shared.Discovery;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
+    using System.Configuration;
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
@@ -79,9 +79,9 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
 
         private WebConfiguration GetConfiguration()
         {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName");
+            var environment = ConfigurationManager.AppSettings["EnvironmentName"];
 
-            var storageConnectionString = CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString");
+            var storageConnectionString = ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"];
 
             if (environment == null) throw new ArgumentNullException(nameof(environment));
 

@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Azure;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using SFA.DAS.AutoConfiguration;
@@ -51,10 +50,10 @@ namespace SFA.DAS.Support.Indexer.Jobs.DependencyResolution
 
         private WebConfiguration GetConfiguration()
         {
-            var environment = CloudConfigurationManager.GetSetting("EnvironmentName") ?? "LOCAL";
+            var environment = ConfigurationManager.AppSettings["EnvironmentName"] ?? "LOCAL";
 
             var storageConnectionString =
-                CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString") ??
+                ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"] ??
                 "UseDevelopmentStorage=true;";
 
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);

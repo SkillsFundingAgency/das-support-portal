@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}"
 EndProject
@@ -25,17 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portal", "Portal", "{4926D5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indexer", "Indexer", "{646D8258-CD8E-475E-9F33-36E554693651}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cloud", "Cloud", "{0C47B3E5-26FC-4ACF-BA9E-BF8D68F14794}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.ApplicationServices", "SFA.DAS.Support.Indexer.ApplicationServices\SFA.DAS.Support.Indexer.ApplicationServices.csproj", "{D0FD8153-1944-43B9-B255-135EE775699B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Worker", "SFA.DAS.Support.Indexer.Worker\SFA.DAS.Support.Indexer.Worker.csproj", "{127E0CB4-7B8C-490E-8A38-233C21EB03BE}"
-EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SFA.DAS.Support.Portal.Web.CloudService", "SFA.DAS.Support.Portal.Web.CloudService\SFA.DAS.Support.Portal.Web.CloudService.ccproj", "{114C3D2F-1E05-45ED-ACF6-161F534475C6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{39C55247-F5FE-42CB-9488-EFB6C88B3D6C}"
-EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SFA.DAS.Support.Indexer.CloudService", "SFA.DAS.Support.Indexer.CloudService\SFA.DAS.Support.Indexer.CloudService.ccproj", "{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{EE10161A-BB1F-42A4-B5EE-1958A424D21C}"
 EndProject
@@ -45,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{03D1EF1D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Common.Infrastucture.UnitTests", "SFA.DAS.Support.Common.Infrastucture.UnitTests\SFA.DAS.Support.Common.Infrastucture.UnitTests.csproj", "{A5323804-C057-4145-8C83-DC07E00F38C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Portal.Indexer.Worker.UnitTests", "SFA.DAS.Support.Portal.Indexer.Worker.UnitTests\SFA.DAS.Support.Portal.Indexer.Worker.UnitTests.csproj", "{D2A88196-DA7D-43B1-B0E9-3AA07659AB61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Portal.Indexer.Jobs.UnitTests", "SFA.DAS.Support.Portal.Indexer.Worker.UnitTests\SFA.DAS.Support.Portal.Indexer.Jobs.UnitTests.csproj", "{D2A88196-DA7D-43B1-B0E9-3AA07659AB61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Shared", "SFA.DAS.Support.Shared\SFA.DAS.Support.Shared.csproj", "{369D5548-CF74-4E48-946B-0183587F52A8}"
 EndProject
@@ -64,12 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.App
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{641521CC-76F2-4B35-8455-B763B83B232E}"
 	ProjectSection(SolutionItems) = preProject
-		Build.fsx = Build.fsx
-		CustomTargets.fsx = CustomTargets.fsx
-		DefaultTargets.fsx = DefaultTargets.fsx
 		DevInstall.ps1 = DevInstall.ps1
 		GenCert.ps1 = GenCert.ps1
-		RunBuild.bat = RunBuild.bat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Support.Indexer.Jobs", "SFA.DAS.Support.Indexer.Jobs\SFA.DAS.Support.Indexer.Jobs.csproj", "{B32D2EAC-7512-4D80-B1ED-B99834631E27}"
@@ -116,18 +104,6 @@ Global
 		{D0FD8153-1944-43B9-B255-135EE775699B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0FD8153-1944-43B9-B255-135EE775699B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0FD8153-1944-43B9-B255-135EE775699B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{127E0CB4-7B8C-490E-8A38-233C21EB03BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{114C3D2F-1E05-45ED-ACF6-161F534475C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{114C3D2F-1E05-45ED-ACF6-161F534475C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{114C3D2F-1E05-45ED-ACF6-161F534475C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{114C3D2F-1E05-45ED-ACF6-161F534475C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E233B49B-0294-41E0-B3AC-284D36E0B16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E233B49B-0294-41E0-B3AC-284D36E0B16E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E233B49B-0294-41E0-B3AC-284D36E0B16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -171,10 +147,7 @@ Global
 		{C7A37DC6-3AC6-4397-9E06-0EA932D69A17} = {F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}
 		{1E211E27-E55C-41C8-B7B8-3C91109CB3E7} = {F05ED0D6-CE7B-4CD7-A44B-08AA8580D05D}
 		{D0FD8153-1944-43B9-B255-135EE775699B} = {646D8258-CD8E-475E-9F33-36E554693651}
-		{127E0CB4-7B8C-490E-8A38-233C21EB03BE} = {646D8258-CD8E-475E-9F33-36E554693651}
-		{114C3D2F-1E05-45ED-ACF6-161F534475C6} = {0C47B3E5-26FC-4ACF-BA9E-BF8D68F14794}
 		{39C55247-F5FE-42CB-9488-EFB6C88B3D6C} = {646D8258-CD8E-475E-9F33-36E554693651}
-		{8EFB0EEB-33DA-4B59-8B93-ADCD0FEF5798} = {0C47B3E5-26FC-4ACF-BA9E-BF8D68F14794}
 		{E233B49B-0294-41E0-B3AC-284D36E0B16E} = {EE10161A-BB1F-42A4-B5EE-1958A424D21C}
 		{03D1EF1D-C8F6-44D6-903F-F163F610709E} = {EE10161A-BB1F-42A4-B5EE-1958A424D21C}
 		{A5323804-C057-4145-8C83-DC07E00F38C5} = {03D1EF1D-C8F6-44D6-903F-F163F610709E}
