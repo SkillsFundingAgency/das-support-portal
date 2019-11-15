@@ -20,12 +20,6 @@
         "sharedFrontEndAppServicePlanResourceGroupName": {
             "type": "string"
         },
-        "webJobAppServicePlan": {
-            "type": "string"
-        },
-        "webJobAppServicePlanResourceGroupName": {
-            "type": "string"
-        },
         "appServiceAllowedIPs": {
             "type": "array",
             "defaultValue": [
@@ -46,15 +40,47 @@
         },
         "keyVaultResourceGroupName": {
             "type": "string"
+        },
+        "aspSize": {
+            "type": "string",
+            "defaultValue": "1"
+        },
+        "aspInstances": {
+            "type": "int",
+            "defaultValue": 2
         }
     },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "portalAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]"
+        "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
+        "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
     },
     "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "webjob-app-service-plan",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('webJobAppServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('aspSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('aspInstances')]"
+                    }
+                }
+            }
+        },
         {
             "apiVersion": "2017-05-10",
             "name": "webjob-application-insights",
@@ -90,10 +116,7 @@
                         "value": "[variables('webJobAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('webJobAppServicePlan')]"
-                    },
-                    "appServicePlanResourceGroup": {
-                        "value": "[parameters('webJobAppServicePlanResourceGroupName')]"
+                        "value": "[variables('webJobAppServicePlanName')]"
                     },
                     "appServiceAppSettings": {
                         "value": [
@@ -112,14 +135,6 @@
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
                                 "value": "[toUpper(parameters('environmentName'))]"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_PATH",
-                                "value": "/health"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_STATUSES",
-                                "value": "200"
                             }
                         ]
                     },
@@ -133,7 +148,10 @@
                         ]
                     }
                 }
-            }
+            },
+            "dependsOn": [
+                "webjob-app-service-plan"
+            ]
         },
         {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
@@ -241,7 +259,7 @@
                         "value": "[parameters('customHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[if(greater(length(parameters('customHostname')), 0), reference('ui-app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
+                        "value": "[if(greater(length(parameters('customHostname')), 0), reference('portal-app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('appServiceAllowedIPs')]"
@@ -254,13 +272,13 @@
         }
     ],
     "outputs": {
-        "UiAppServiceName": {
+        "portalAppServiceName": {
             "type": "string",
-            "value": "[variables('uiAppServiceName')]"
+            "value": "[variables('portalAppServiceName')]"
         },
-        "ApiAppServiceName": {
+        "webJobAppServiceName": {
             "type": "string",
-            "value": "[variables('apiAppServiceName')]"
+            "value": "[variables('webJobAppServiceName')]"
         }
     }
 }
