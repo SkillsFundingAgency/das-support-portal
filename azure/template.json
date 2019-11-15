@@ -230,19 +230,11 @@
                             },
                             {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference('ui-application-insights').outputs.InstrumentationKey.value]"
+                                "value": "[reference('portal-application-insights').outputs.InstrumentationKey.value]"
                             },
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
                                 "value": "[toUpper(parameters('environmentName'))]"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_PATH",
-                                "value": "/health"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_STATUSES",
-                                "value": "200"
                             }
                         ]
                     },
