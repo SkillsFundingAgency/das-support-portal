@@ -9,8 +9,8 @@
     <ProjectGuid>{D2A88196-DA7D-43B1-B0E9-3AA07659AB61}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SFA.DAS.Support.Portal.Indexer.Worker.UnitTests</RootNamespace>
-    <AssemblyName>SFA.DAS.Support.Portal.Indexer.Worker.UnitTests</AssemblyName>
+    <RootNamespace>SFA.DAS.Support.Portal.Indexer.Jobs.UnitTests</RootNamespace>
+    <AssemblyName>SFA.DAS.Support.Portal.Indexer.Jobs.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
