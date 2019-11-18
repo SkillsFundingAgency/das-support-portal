@@ -118,6 +118,9 @@
                     "appServicePlanName": {
                         "value": "[variables('webJobAppServicePlanName')]"
                     },
+                    "appServicePlanResourceGroup": {
+                        "value": "[resourceGroup().name]"
+                    },
                     "appServiceAppSettings": {
                         "value": [
                             {
