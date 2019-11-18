@@ -55,7 +55,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "portalAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
-        "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
+        "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), 'wkr-asp')]"
     },
     "resources": [
         {
@@ -120,6 +120,9 @@
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[resourceGroup().name]"
+                    },
+                    "deployStagingSlot": {
+                        "value": false
                     },
                     "appServiceAppSettings": {
                         "value": [
