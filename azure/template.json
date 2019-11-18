@@ -272,11 +272,11 @@
     "outputs": {
         "portalAppServiceName": {
             "type": "string",
-            "value": "[variables('portalAppServiceName')]"
+            "value": "[variables('PortalAppServiceName')]"
         },
         "webJobAppServiceName": {
             "type": "string",
-            "value": "[variables('webJobAppServiceName')]"
+            "value": "[variables('WebJobAppServiceName')]"
         }
     }
 }
