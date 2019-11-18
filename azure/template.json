@@ -11,6 +11,9 @@
         "configurationStorageConnectionString": {
             "type": "securestring"
         },
+        "sharedStorageAccountConnectionString": {
+            "type": "securestring"
+        },
         "serviceName": {
             "type": "string"
         },
@@ -150,6 +153,14 @@
                                 "name": "Redis",
                                 "connectionString": "[parameters('loggingRedisConnectionString')]",
                                 "type": "Custom"
+                            },
+                            {
+                                "name": "AzureWebJobsStorage",
+                                "value": "[parameters('sharedStorageAccountConnectionString')]"
+                            },
+                            {
+                                "name": "AzureWebJobsDashboard",
+                                "value": "[parameters('sharedStorageAccountConnectionString')]"
                             }
                         ]
                     }
