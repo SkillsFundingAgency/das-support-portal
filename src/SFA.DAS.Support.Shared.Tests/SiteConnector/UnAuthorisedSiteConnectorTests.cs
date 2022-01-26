@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Moq;
+using Moq.Protected;
 using NUnit.Framework;
-using RichardSzalay.MockHttp;
 
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 {
@@ -12,10 +14,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         [Test]
         public async Task ItShouldRequestATokenForUnAuthorisedClients()
         {
-            var code = HttpStatusCode.OK;
             MockHttpMessageHandler
-                .When(TestUrl)
-                .Respond(code, "application/json", ValidTestResponseData);
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) });
 
             HttpClient.DefaultRequestHeaders.Authorization = null;
             var response = await Unit.Download(new Uri(TestUrl));

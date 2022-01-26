@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Moq;
+using Moq.Protected;
 using NUnit.Framework;
-using RichardSzalay.MockHttp;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
@@ -19,9 +22,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldReturnNullWhenDownloadTypeRecievesHttpStatus(HttpStatusCode code)
         {
             MockHttpMessageHandler
-                .When(TestUrlMatch)
-                .Respond(code, "application/json", ValidTestResponseData)
-                ;
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(code) { Content = new StringContent(ValidTestResponseData) });
 
             var actual = await Unit.Download<TestType>(TestUri);
             Assert.IsNull(Unit.LastException);
@@ -37,9 +40,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldReturnNullAndStripTheAuthorizationAfterThisCodeIsRecieved(HttpStatusCode code)
         {
             MockHttpMessageHandler
-                .When(TestUrlMatch)
-                .Respond(code, "application/json", "{}")
-                ;
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(code) { Content = new StringContent(ValidTestResponseData) });
 
             var actual = await Unit.Download(new Uri(TestUrlMatch));
             Assert.IsNull(Unit.LastException);
@@ -54,8 +57,12 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldDownloadStringSuccessfully()
         {
             MockHttpMessageHandler
-                .When(TestUrl)
-                .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => 
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
+                });
 
             var actual = await Unit.Download(new Uri(TestUrl));
 
@@ -72,8 +79,12 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldDownloadTypeByUriSuccessfully()
         {
             MockHttpMessageHandler
-                .When(TestUrl)
-                .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
+                });
 
             var actual = await Unit.Download<TestType>(TestUri);
 
@@ -91,8 +102,12 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldDownloadTypeByUrlSuccessfully()
         {
             MockHttpMessageHandler
-                .When(TestUrlMatch)
-                .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
+                });
 
             var actual = await Unit.Download<TestType>(TestUrl);
 
@@ -109,8 +124,12 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         public async Task ItShouldUploadByUriAndFormDataSuccessfully()
         {
             MockHttpMessageHandler
-                .When(TestUrlMatch)
-                .Respond(HttpStatusCode.OK, "application/json", ValidTestResponseData);
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
+                });
 
             var formData = new Dictionary<string, string> {{"key", "value"}};
             var actual = await Unit.Upload<TestType>(TestUri, formData);
