@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web.Http;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using RichardSzalay.MockHttp;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.SiteConnection;
@@ -19,7 +19,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected List<IHttpStatusCodeStrategy> Handlers;
         protected HttpClient HttpClient;
         protected Mock<IClientAuthenticator> MockClientAuthenticator;
-        protected MockHttpMessageHandler MockHttpMessageHandler;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
         protected TestType TestType;
@@ -27,10 +26,16 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected string TestUrlMatch;
         protected ISiteConnector Unit;
         protected string ValidTestResponseData;
+        protected Mock<HttpMessageHandler> MockHttpMessageHandler;
+        protected HttpRequestMessage HttpRequestMessage;
 
         [SetUp]
         public void Setup()
         {
+            var configuration = new HttpConfiguration();
+            HttpRequestMessage = new System.Net.Http.HttpRequestMessage();
+            HttpRequestMessage.Properties[System.Web.Http.Hosting.HttpPropertyKeys.HttpConfigurationKey] = configuration;
+
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
             MockLogger = new Mock<ILog>();
@@ -45,8 +50,8 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             EmptyJsonContent = "{}";
             TestType = new TestType();
             ValidTestResponseData = JsonConvert.SerializeObject(TestType);
-            MockHttpMessageHandler = new MockHttpMessageHandler();
-            HttpClient = new HttpClient(MockHttpMessageHandler);
+            MockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            HttpClient = new HttpClient(MockHttpMessageHandler.Object);
 
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");
 
