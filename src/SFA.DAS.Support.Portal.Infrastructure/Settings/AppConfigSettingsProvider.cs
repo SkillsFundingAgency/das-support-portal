@@ -31,7 +31,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Settings
 
         public string GetNullableSetting(string settingKey)
         {
-            var setting = CloudConfigurationManager.GetSetting(GetKey(settingKey))
+            var setting = ConfigurationManager.AppSettings(GetKey(settingKey))
                 ?? ConfigurationManager.AppSettings[settingKey];
 
             if (string.IsNullOrWhiteSpace(setting))
@@ -52,7 +52,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Settings
             }
 
             return _baseSettings.GetArray(settingKey);
-            
+
         }
 
         private IEnumerable<string> GetCloudArray(string settingKey)
@@ -60,7 +60,7 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Settings
             for (int i = 0; i < 100; i++)
             {
                 var key = GetKey($"{settingKey}:{i}");
-                var setting = CloudConfigurationManager.GetSetting(key);
+                var setting = ConfigurationManager.AppSettings(key);
                 if (setting == null)
                 {
                     break;

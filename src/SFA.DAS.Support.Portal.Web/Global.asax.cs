@@ -101,7 +101,7 @@ namespace SFA.DAS.Support.Portal.Web
         private void SetupApplicationInsights()
         {
             TelemetryConfiguration.Active.InstrumentationKey =
-                WebConfigurationManager.AppSettings["InstrumentationKey"];
+                WebConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
 
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new ApplicationInsightsInitializer());
         }

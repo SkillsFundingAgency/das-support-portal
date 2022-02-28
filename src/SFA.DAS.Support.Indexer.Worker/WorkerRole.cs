@@ -1,7 +1,9 @@
+using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
@@ -14,7 +16,7 @@ namespace SFA.DAS.Support.Indexer.Worker
     public class WorkerRole : RoleEntryPoint
     {
         private const int SecondsToMilliSeconds = 1000;
-       
+
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
         private int _delayTime = 1800 * SecondsToMilliSeconds;
@@ -42,7 +44,7 @@ namespace SFA.DAS.Support.Indexer.Worker
         {
             // Set the maximum number of concurrent connections
             ServicePointManager.DefaultConnectionLimit = 12;
-
+            SetupApplicationInsights();
             var container = IoC.Initialize();
 
             _indexer = container.GetInstance<IIndexSearchItems>();
@@ -79,6 +81,13 @@ namespace SFA.DAS.Support.Indexer.Worker
                 await _indexer.Run();
                 await Task.Delay(_delayTime);
             }
+        }
+
+        private void SetupApplicationInsights()
+        {
+            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
+
+            TelemetryConfiguration.Active.TelemetryInitializers.Add(new ApplicationInsightsInitializer());
         }
     }
 }

@@ -1,0 +1,106 @@
+jobs:
+- job: CodeBuild
+  pool:
+    name: DAS - Continuous Integration
+    demands: Agent.OS -equals Windows_NT
+  variables:
+  - group: BUILD Management Resources
+  workspace:
+    clean: all
+  steps:
+  - task: gitversion/setup@0
+    displayName: gitversion/setup
+    inputs:
+      versionSpec: 5.x.x
+
+  - task: gitversion/execute@0
+    displayName: gitversion/execute
+    inputs:
+      useConfigFile: true
+      configFilePath: GitVersion.yml
+
+  - task: SonarCloudPrepare@1
+    displayName: Prepare SonarCloud analysis configuration
+    condition: and(succeeded(), or(in(variables['Build.SourceBranch'], 'refs/heads/master', 'refs/heads/main'), eq(variables['Build.Reason'], 'PullRequest')))
+    inputs:
+      SonarCloud: ESFA - SonarCloud
+      organization: $(SonarCloudOrganisationKey)
+      scannerMode: MSBuild
+      projectName: "$(Build.DefinitionName)"
+      projectKey: SkillsFundingAgency_das-support-portal
+      extraProperties: |
+        sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/CoverageResults/coverage.opencover.xml
+
+  - template: azure-pipelines-templates/build/step/dependency-check.yml@das-platform-building-blocks
+
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 4.3.0'
+    inputs:
+      versionSpec: 4.x
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet Restore SFA.DAS.Support.Portal.sln'
+    inputs:
+      restoreSolution: 'src/SFA.DAS.Support.Portal.sln'
+
+  - task: VSBuild@1
+    displayName: 'Build SFA.DAS.Support.Portal.sln'
+    inputs:
+      solution: 'src/SFA.DAS.Support.Portal.sln'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      clean: true
+      vsVersion: '16.0'
+
+  - task: VSTest@2
+    displayName: 'Run NUnit Tests'
+    inputs:
+      testAssemblyVer2: |
+        **/bin/Release/*UnitTests.dll
+        **/bin/Release/*/*UnitTests.dll
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run SonarCloud analysis'
+    condition: and(succeeded(), or(in(variables['Build.SourceBranch'], 'refs/heads/master', 'refs/heads/main'), eq(variables['Build.Reason'], 'PullRequest')))
+
+  - task: SonarCloudPublish@1
+    displayName: 'Publish results on build summary'
+    condition: and(succeeded(), or(in(variables['Build.SourceBranch'], 'refs/heads/master', 'refs/heads/main'), eq(variables['Build.Reason'], 'PullRequest')))
+    inputs:
+      pollingTimeoutSec: '300'
+
+  - task: VSBuild@1
+    displayName: 'Publish Web App'
+    inputs:
+      solution: src/SFA.DAS.Support.Portal.Web/SFA.DAS.Support.Portal.Web.csproj
+      vsVersion: '16.0'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)/publish/SFA.DAS.Support.Portal.Web/"'
+      platform: 'anycpu'
+      configuration: '$(buildConfiguration)'
+      clean: true
+
+  - task: VSBuild@1
+    displayName: 'Publish WebJob'
+    inputs:
+      solution: src/SFA.DAS.Support.Indexer.Worker/SFA.DAS.Support.Indexer.Worker.csproj
+      vsVersion: '16.0'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)/publish/SFA.DAS.Support.Indexer.Worker/"'
+      platform: 'anycpu'
+      configuration: '$(buildConfiguration)'
+      clean: true
+
+  - task: CopyFiles@2
+    displayName: Copy Files to $(build.artifactstagingdirectory)/publish
+    inputs:
+      Contents: |
+        azure/**
+      TargetFolder: $(build.artifactstagingdirectory)/publish
+      OverWrite: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Build Artifact
+    inputs:
+      targetPath: $(build.artifactstagingdirectory)/publish
+      artifactName: ${{ parameters.SolutionBaseName }}

@@ -12,14 +12,14 @@ namespace SFA.DAS.Support.Portal.Infrastructure.Settings
     public sealed class ApplicationSettings : IConfigurationSettings
     {
         public IEnumerable<Uri> ElasticServerUrls => GetElasticSearchIps();
-        
+
         public string EnvironmentName => ConfigurationManager.AppSettings["EnvironmentName"];
 
         public string ApplicationName => ConfigurationManager.AppSettings["ApplicationName"];
-        
+
         private IEnumerable<Uri> GetElasticSearchIps()
         {
-            var urlStrings = CloudConfigurationManager.GetSetting("ElasticServerUrls").Split(',');
+            var urlStrings = ConfigurationManager.AppSettings("ElasticServerUrls").Split(',');
             return urlStrings.Select(url => new Uri(url));
         }
     }
