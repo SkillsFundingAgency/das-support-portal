@@ -83,16 +83,16 @@ stages:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
 
-# - stage: Deploy_PROD
-#   dependsOn: Build
-#   displayName: Deploy to PROD
-#   variables:
-#   - group: PROD Management Resources
-#   - group: PROD Shared Resources
-#   - group: PROD das-support-portal
-#   jobs:
-#   - template: pipeline-templates/job/deploy.yml
-#     parameters:
-#       Environment: PROD
-#       ServiceConnection: SFA-DIG-Prod-ARM
+- stage: Deploy_PROD
+  dependsOn: Build
+  displayName: Deploy to PROD
+  variables:
+  - group: PROD Management Resources
+  - group: PROD Shared Resources
+  - group: PROD das-support-portal
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: PROD
+      ServiceConnection: SFA-DIG-Prod-ARM
 
