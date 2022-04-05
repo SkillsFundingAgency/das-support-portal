@@ -809,3 +809,75 @@ dl dd.last-dd {
   }
 
 }
+
+
+/* GDS tags */
+
+.govuk-tag {
+  display: inline-block;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  color: #fff;
+  background-color: #1d70b8;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  padding-top: 5px;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+}
+
+@media (min-width: 641px) {
+  .govuk-tag {
+    font-size: 16px;
+  }
+}
+
+.govuk-tag--grey {
+  color: #383f43;
+  background: #eeefef;
+}
+
+.govuk-tag--green {
+  color: #005a30;
+  background: #cce2d8;
+}
+
+.govuk-tag--turquoise {
+  color: #10403c;
+  background: #bfe3e0;
+}
+
+.govuk-tag--blue {
+  color: #144e81;
+  background: #d2e2f1;
+}
+
+.govuk-tag--purple {
+  color: #3d2375;
+  background: #dbd5e9;
+}
+
+.govuk-tag--pink {
+  color: #80224d;
+  background: #f7d7e6;
+}
+
+.govuk-tag--red {
+  color: #942514;
+  background: #f6d7d2;
+}
+
+.govuk-tag--orange {
+  color: #6e3619;
+  background: #fcd6c3;
+}
+
+.govuk-tag--yellow {
+  color: #594d00;
+  background: #fff7bf;
+}
