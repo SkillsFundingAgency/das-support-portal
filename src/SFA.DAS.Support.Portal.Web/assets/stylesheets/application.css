@@ -472,6 +472,102 @@ body {
   }
 }
 
+.tabs {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.tabs__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 641px) {
+  .tabs__list {
+
+  }
+  .tabs__list:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+@media (min-width: 641px) {
+  .tabs__list {
+    margin-bottom: 0;
+    border-bottom: 1px solid #b1b4b6;
+  }
+}
+
+.tabs__list-item {
+  font-size: 16px;
+  line-height: 1.25;
+  margin-left: 25px;
+}
+
+@media (min-width: 641px) {
+  .tabs__list-item {
+    position: relative;
+    margin-right: 5px;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding: 10px 20px;
+    float: left;
+    background-color: #f3f2f1;
+    text-align: center;
+  }
+  .tabs__list-item.current {
+    position: relative;
+    margin-top: -5px;
+    margin-bottom: -1px;
+    padding-top: 14px;
+    padding-right: 19px;
+    padding-bottom: 16px;
+    padding-left: 19px;
+    border: 1px solid #b1b4b6;
+    border-bottom: 0;
+    background-color: #fff;
+  }
+}
+
+.tabs__tab {
+  display: inline-block;
+}
+
+.tabs__list-item.current .tabs__tab {
+  text-decoration: none;
+}
+
+.tabs__tab:link,
+.tabs__tab:visited {
+  color: #0b0c0c;
+}
+
+@media (max-width: 640px) {
+  .tabs__list-item:before {
+    color: #0b0c0c;
+    content: "\2014 ";
+    margin-left: -25px;
+    padding-right: 5px;
+  }
+}
+
+.tabs__pane {
+  margin-bottom: 30px;
+}
+
+@media (min-width: 641px) {
+  .tabs__pane {
+    margin-bottom: 0;
+    padding: 30px 20px;
+    border: 1px solid #b1b4b6;
+    border-top: 0;
+  }
+}
+
 /* Responsive tables */
 
 table.responsive thead {
@@ -636,6 +732,10 @@ table.responsive tr.total {
 }
 
 .heading-medium__no-top-margin {
+  margin-top: 0;
+}
+
+.heading-no-margin-top {
   margin-top: 0;
 }
 
