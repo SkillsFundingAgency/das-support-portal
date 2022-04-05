@@ -485,9 +485,6 @@ body {
 }
 
 @media (min-width: 641px) {
-  .tabs__list {
-
-  }
   .tabs__list:after {
     content: "";
     display: block;
