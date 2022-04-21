@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) });
 
             HttpClient.DefaultRequestHeaders.Authorization = null;
-            var response = await Unit.Download(new Uri(TestUrl));
+            var response = await Unit.Download(new Uri(TestUrl), It.IsAny<SupportServiceResourceKey>());
 
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<string>(response);

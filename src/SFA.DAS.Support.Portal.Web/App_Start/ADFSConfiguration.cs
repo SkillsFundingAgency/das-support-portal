@@ -36,7 +36,8 @@ namespace SFA.DAS.Support.Portal.Web
             {
                 Wtrealm = _authSettings.Realm,
                 MetadataAddress = _authSettings.AdfsMetadata,
-                Notifications = Notifications()
+                Notifications = Notifications(),
+                Wreply = "https://localhost:44344"
             };
         }
 

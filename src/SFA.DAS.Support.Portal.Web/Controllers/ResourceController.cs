@@ -43,7 +43,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 return View("Sub", new ResourceResultModel
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Resource = challengeForm
+                    Resource = challengeForm,
+                    SupportServiceResourceKey = resourceKey
                 });
             }
             catch
@@ -69,7 +70,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Sub", new ResourceResultModel
             {
                 StatusCode = HttpStatusCode.OK,
-                Resource = result.Page
+                Resource = result.Page,
+                SupportServiceResourceKey = resourceKey
             });
         }
 
@@ -83,7 +85,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                     {
                         Resource = "<h3>This resource isn't registered</h3>",
                         StatusCode = HttpStatusCode.OK,
-                        Exception = null
+                        Exception = null,
+                        SupportServiceResourceKey = key
                     });
 
             var resource = _serviceConfiguration.GetResource(key);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.Discovery;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
 {
@@ -19,16 +20,19 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
+        private readonly IEmployerAccountSiteConnectorSettings _employerAccountSiteConnectorSettings;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
             ISiteConnectorSettings settings,
+            IEmployerAccountSiteConnectorSettings employerAccountSiteConnectorSettings,
             List<IHttpStatusCodeStrategy> handlers,
             ILog logger)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _employerAccountSiteConnectorSettings = employerAccountSiteConnectorSettings ?? throw new ArgumentNullException(nameof(employerAccountSiteConnectorSettings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -41,20 +45,20 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         public Exception LastException { get; set; }
         public HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
 
-        public async Task<T> Download<T>(string url) where T : class
+        public async Task<T> Download<T>(string url, SupportServiceResourceKey resourceKey) where T : class
         {
-            return await Download<T>(new Uri(url));
+            return await Download<T>(new Uri(url), resourceKey);
         }
 
-        public async Task<string> Download(Uri url)
+        public async Task<string> Download(Uri url, SupportServiceResourceKey resourceKey)
         {
-            return await Download<string>(url);
+            return await Download<string>(url, resourceKey);
         }
 
-        public async Task<T> Upload<T>(Uri uri, string content)where T : class
+        public async Task<T> Upload<T>(Uri uri, string content, SupportServiceResourceKey resourceKey) where T : class
         {
-            await EnsureClientAuthorizationHeader();
-
+            await EnsureClientAuthorizationHeader(resourceKey);
+            //await EnsureClientAuthorizationHeader();
             try
             {
 
@@ -91,7 +95,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
         public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class
-        {
+        {            
             await EnsureClientAuthorizationHeader();
 
             try
@@ -128,9 +132,10 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         }
 
 
-        public async Task<T> Download<T>(Uri uri) where T : class
+        public async Task<T> Download<T>(Uri uri, SupportServiceResourceKey resourceKey) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            //await EnsureClientAuthorizationHeader();
+            await EnsureClientAuthorizationHeader(resourceKey);
 
             try
             {
@@ -198,6 +203,45 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
 
+        private async Task EnsureClientAuthorizationHeader(SupportServiceResourceKey resourceKey)
+        {
+            try
+            {
+                if (_client.DefaultRequestHeaders.Authorization == null)
+                {
+                    switch (resourceKey)
+                    {
+                        case SupportServiceResourceKey.EmployerAccount:
+                        case SupportServiceResourceKey.EmployerAccountFinance:
+                        case SupportServiceResourceKey.EmployerAccountTeam:
+                            {
+                                var employertoken = await _clientAuthenticator.Authenticate(_employerAccountSiteConnectorSettings.ClientId,
+                                  _employerAccountSiteConnectorSettings.ClientSecret,
+                                  _employerAccountSiteConnectorSettings.IdentifierUri,
+                                  _employerAccountSiteConnectorSettings.Tenant);
+                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", employertoken);
+                                break;
+                            }
+                        default:
+                            {
+
+                                var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
+                                    _settings.ClientSecret,
+                                    _settings.IdentifierUri,
+                                    _settings.Tenant);
+                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _client.DefaultRequestHeaders.Authorization = null;
+            }
+        }
+
         private HttpStatusCodeDecision ExamineResponse(HttpResponseMessage message)
         {
             LastException = null;
@@ -210,6 +254,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             if (handlerOptions.Any()) return handlerOptions.First().Handle(_client, LastCode);
 
             return HttpStatusCodeDecision.Continue;
-        }
+        }        
     }
 }

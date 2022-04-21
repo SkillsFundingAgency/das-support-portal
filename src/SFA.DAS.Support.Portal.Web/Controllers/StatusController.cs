@@ -56,7 +56,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                     var uri = new Uri(subSite.Value, "api/status");
                     try
                     {
-                        await _siteConnector.Download<dynamic>(uri);
+                        await _siteConnector.Download<dynamic>(uri, SupportServiceResourceKey.EmployerAccount); //TODO: need to implement generic SupportServiceResourceKey
                         localResult.SubSites.Add(subSite.Key, new
                         {
                             Result = _siteConnector.HttpStatusCodeDecision,

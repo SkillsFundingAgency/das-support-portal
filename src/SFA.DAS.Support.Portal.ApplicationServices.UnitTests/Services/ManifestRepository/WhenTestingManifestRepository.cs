@@ -59,7 +59,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
 
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);
+            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri, It.IsAny<SupportServiceResourceKey>())).ReturnsAsync(TestSiteManifest);
 
             Unit = new ApplicationServices.Services.ManifestRepository(
                 MockSiteSettings.Object,

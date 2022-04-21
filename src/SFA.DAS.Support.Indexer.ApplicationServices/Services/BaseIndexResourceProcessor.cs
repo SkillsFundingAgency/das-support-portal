@@ -106,7 +106,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             var retryCount = 0;
             do
             {
-                totalSearchItemsString = await _dataSource.Download(searchItemCountUri);
+                totalSearchItemsString = await _dataSource.Download(searchItemCountUri, siteResource.ResourceKey);
             }
             while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
@@ -129,7 +129,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 retryCount = 0;
                 do
                 {
-                    searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                    searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri, siteResource.ResourceKey);
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 

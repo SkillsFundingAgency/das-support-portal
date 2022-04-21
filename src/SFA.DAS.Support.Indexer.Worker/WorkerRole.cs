@@ -44,7 +44,7 @@ namespace SFA.DAS.Support.Indexer.Worker
         {
             // Set the maximum number of concurrent connections
             ServicePointManager.DefaultConnectionLimit = 12;
-            SetupApplicationInsights();
+            //SetupApplicationInsights();
             var container = IoC.Initialize();
 
             _indexer = container.GetInstance<IIndexSearchItems>();

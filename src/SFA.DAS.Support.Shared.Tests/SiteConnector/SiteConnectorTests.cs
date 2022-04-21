@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Shared.Tests.SiteConnector
@@ -26,7 +27,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(code) { Content = new StringContent(ValidTestResponseData) });
 
-            var actual = await Unit.Download<TestType>(TestUri);
+            var actual = await Unit.Download<TestType>(TestUri, It.IsAny<SupportServiceResourceKey>());
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);
 
@@ -44,7 +45,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => new HttpResponseMessage(code) { Content = new StringContent(ValidTestResponseData) });
 
-            var actual = await Unit.Download(new Uri(TestUrlMatch));
+            var actual = await Unit.Download(new Uri(TestUrlMatch), It.IsAny<SupportServiceResourceKey>());
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);
             Assert.AreEqual(code, Unit.LastCode);
@@ -64,7 +65,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
                 });
 
-            var actual = await Unit.Download(new Uri(TestUrl));
+            var actual = await Unit.Download(new Uri(TestUrl), It.IsAny<SupportServiceResourceKey>());
 
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);
@@ -86,7 +87,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
                 });
 
-            var actual = await Unit.Download<TestType>(TestUri);
+            var actual = await Unit.Download<TestType>(TestUri, It.IsAny<SupportServiceResourceKey>());
 
 
             Assert.IsNull(Unit.LastException);
@@ -109,7 +110,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ValidTestResponseData) };
                 });
 
-            var actual = await Unit.Download<TestType>(TestUrl);
+            var actual = await Unit.Download<TestType>(TestUrl, It.IsAny<SupportServiceResourceKey>());
 
             Assert.IsNull(Unit.LastException);
             Assert.IsNotNull(Unit.LastContent);

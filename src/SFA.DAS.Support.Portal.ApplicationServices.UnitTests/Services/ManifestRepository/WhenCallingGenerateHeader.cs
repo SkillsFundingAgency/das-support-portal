@@ -31,7 +31,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         {
             var html = "<html>This is a page</html>";
 
-            MockSiteConnector.Setup(x => x.Download(It.IsAny<Uri> ()))
+            MockSiteConnector.Setup(x => x.Download(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()))
                 .ReturnsAsync(html);
 
             var result = await Unit.GenerateHeader(SupportServiceResourceKey.EmployerAccountFinance, "id");

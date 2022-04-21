@@ -13,7 +13,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public void ItShouldNotThrowAnExceptionIfTheSiteManifestNull()
         {
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(null as SiteManifest);
+            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri, It.IsAny<SupportServiceResourceKey>())).ReturnsAsync(null as SiteManifest);
 
             Assert.DoesNotThrow(() =>
             {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var mappedFormHtml = "<html><form action='/api/challenge/id'  method='post' /></html>";
 
 
-            MockSiteConnector.Setup(c => c.Download(It.IsAny<Uri>()))
+            MockSiteConnector.Setup(c => c.Download(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()))
                 .ReturnsAsync(downloadedFormHtml);
 
             MockFormMapper.Setup(x => x.UpdateForm(

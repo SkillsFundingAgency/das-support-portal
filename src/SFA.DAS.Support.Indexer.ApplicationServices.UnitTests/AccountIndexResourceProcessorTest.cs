@@ -57,11 +57,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
 
             _downloader
-                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl))
+                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl, It.IsAny<SupportServiceResourceKey>()))
                 .Returns(Task.FromResult(_accountModels));
 
             _downloader
-                .Setup(o => o.Download(It.IsAny<Uri>()))
+                .Setup(o => o.Download(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()))
                 .Returns(Task.FromResult(null as string));
 
             _downloader
@@ -88,7 +88,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
 
             _downloader
-                .Verify(o => o.Download(It.IsAny<Uri>()), Times.Exactly(3));
+                .Verify(o => o.Download(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()), Times.Exactly(3));
 
             _indexProvider
                 .Verify(o => o.DeleteIndex(_indexName), Times.Once);
@@ -130,7 +130,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
 
             _downloader
-                .Verify(o => o.Download<IEnumerable<AccountSearchModel>>(It.IsAny<Uri>()), Times.AtLeastOnce);
+                .Verify(o => o.Download<IEnumerable<AccountSearchModel>>(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()), Times.AtLeastOnce);
 
             _indexProvider
                 .Verify(o => o.DeleteIndex(_indexName), Times.Never);

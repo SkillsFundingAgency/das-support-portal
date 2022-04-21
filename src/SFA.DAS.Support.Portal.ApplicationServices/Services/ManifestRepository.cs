@@ -60,7 +60,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                                 headerResource.ResourceUrlFormat);
 
             var url = string.Format(uri.ToString(), id);
-            return await GetPage(url);
+            return await GetPage(url, key);
         }
 
 
@@ -79,7 +79,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var challengeUrl =
                 string.Format(
                     new Uri(_serviceConfiguration.FindSiteBaseUriForManfiestElement(_sites, challengeKey), challenge.ChallengeUrlFormat).ToString(), id);
-            var page = await GetPage(challengeUrl);
+            var page = await GetPage(challengeUrl, resourceKey);
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
@@ -125,7 +125,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             ResourceResultModel result = new ResourceResultModel
             {
-                Resource = await _siteConnector.Upload<string>(searchUri, string.Empty),
+                //SupportServiceResourceKey = key,
+                Resource = await _siteConnector.Upload<string>(searchUri, string.Empty, key),
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
@@ -170,7 +171,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
 
             var url = string.Format(resource.ResourceUrlFormat, id, childId);
-            return await GetPage(url);
+            return await GetPage(url, key);
         }
 
         private ChallengeResult HandleChallenegeResponseContent(string responseContent,
@@ -202,13 +203,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         }
 
 
-        private async Task<ResourceResultModel> GetPage(string url)
+        private async Task<ResourceResultModel> GetPage(string url, SupportServiceResourceKey supportServiceResourceKey)
         {
             var result = new ResourceResultModel();
             /// var queryString = AddQueryString(url);
-            result.Resource = await _siteConnector.Download(new Uri(url));
+            result.Resource = await _siteConnector.Download(new Uri(url), supportServiceResourceKey);
             result.StatusCode = _siteConnector.LastCode;
             result.Exception = _siteConnector.LastException;
+            result.SupportServiceResourceKey = supportServiceResourceKey; //TODO : change to generic
             return result;
         }
 

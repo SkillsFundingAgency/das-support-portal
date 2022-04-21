@@ -94,11 +94,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                .Returns(new Common.Infrastucture.Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.OK });
 
             _downloader
-                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl))
+                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl, It.IsAny<SupportServiceResourceKey>()))
                 .Returns(Task.FromResult(_accountModels));
 
             _downloader
-               .Setup(o => o.Download(It.IsAny<Uri>()))
+               .Setup(o => o.Download(It.IsAny<Uri>(), It.IsAny<SupportServiceResourceKey>()))
                .Returns(Task.FromResult("50"));
 
             _downloader
