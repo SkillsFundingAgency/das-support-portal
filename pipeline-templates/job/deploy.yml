@@ -1,6 +1,8 @@
 parameters:
   ServiceConnection:
   Environment:
+  AppRoleAssignmentsServiceConnection:
+  AADGroupObjectIdArray:
 
 jobs:
 - deployment: DeployApps
@@ -49,7 +51,8 @@ jobs:
             ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
             ResourceName: $(AppServiceName)
             Tenant: $(Tenant)
-            IsMultiRepoCheckout: true     
+            AADGroupObjectIdArray: ${{ parameters.AADGroupObjectIdArray }}
+            IsMultiRepoCheckout: true
         - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
