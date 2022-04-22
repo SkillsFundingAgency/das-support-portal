@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
@@ -20,19 +21,25 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
-        private readonly IEmployerAccountSiteConnectorSettings _employerAccountSiteConnectorSettings;
+        private readonly ISupportEASSiteConnectorSettings _supportEASSiteConnectorSettings;
+        private readonly ISupportCommitmentsSiteConnectorSettings _supportCommitmentsSiteConnectorSettings;
+        private readonly ISupportEmployerUsersSiteConnectorSettings _supportEmployerUsersSiteConnectorSettings;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
             ISiteConnectorSettings settings,
-            IEmployerAccountSiteConnectorSettings employerAccountSiteConnectorSettings,
+            ISupportEASSiteConnectorSettings supportEASSiteConnectorSettings,
+            ISupportCommitmentsSiteConnectorSettings supportCommitmentsSiteConnectorSettings,
+            ISupportEmployerUsersSiteConnectorSettings supportEmployerUsersSiteConnectorSettings,
             List<IHttpStatusCodeStrategy> handlers,
             ILog logger)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _employerAccountSiteConnectorSettings = employerAccountSiteConnectorSettings ?? throw new ArgumentNullException(nameof(employerAccountSiteConnectorSettings));
+            _supportEASSiteConnectorSettings = supportEASSiteConnectorSettings ?? throw new ArgumentNullException(nameof(supportEASSiteConnectorSettings));
+            _supportCommitmentsSiteConnectorSettings = supportCommitmentsSiteConnectorSettings ?? throw new ArgumentNullException(nameof(supportCommitmentsSiteConnectorSettings));
+            _supportEmployerUsersSiteConnectorSettings = supportEmployerUsersSiteConnectorSettings ?? throw new ArgumentNullException(nameof(supportEmployerUsersSiteConnectorSettings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -206,20 +213,57 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private async Task EnsureClientAuthorizationHeader(SupportServiceResourceKey resourceKey)
         {
             try
-            {
+            {               
+
                 if (_client.DefaultRequestHeaders.Authorization == null)
                 {
                     switch (resourceKey)
                     {
                         case SupportServiceResourceKey.EmployerAccount:
-                        case SupportServiceResourceKey.EmployerAccountFinance:
+                        case SupportServiceResourceKey.EmployerAccountHeader:                        
                         case SupportServiceResourceKey.EmployerAccountTeam:
+                        case SupportServiceResourceKey.EmployerAccountFinance:
+                        case SupportServiceResourceKey.EmployerAccountPayeSchemeLevys:
+                        case SupportServiceResourceKey.EmployerAccountFinanceChallenge:
                             {
-                                var employertoken = await _clientAuthenticator.Authenticate(_employerAccountSiteConnectorSettings.ClientId,
-                                  _employerAccountSiteConnectorSettings.ClientSecret,
-                                  _employerAccountSiteConnectorSettings.IdentifierUri,
-                                  _employerAccountSiteConnectorSettings.Tenant);
-                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", employertoken);
+                                var employerToken = IsClientCredentialConfiguration(_supportEASSiteConnectorSettings.ClientId, _supportEASSiteConnectorSettings.ClientSecret, _supportEASSiteConnectorSettings.Tenant)
+                                  ? await  GetClientCredentialAuthenticationResult(_supportEASSiteConnectorSettings.ClientId,
+                                              _supportEASSiteConnectorSettings.ClientSecret,
+                                              _supportEASSiteConnectorSettings.IdentifierUri,
+                                              _supportEASSiteConnectorSettings.Tenant)
+                                  : await GetManagedIdentityAuthenticationResult(_supportEASSiteConnectorSettings.IdentifierUri);                               
+                                
+                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", employerToken);
+                                break;
+                            }
+                        case SupportServiceResourceKey.CommitmentSearch:
+                        case SupportServiceResourceKey.CommitmentApprenticeDetail:
+                        case SupportServiceResourceKey.CommitmentCohortDetail:
+                            {
+                                var commitmentToken = IsClientCredentialConfiguration(_supportCommitmentsSiteConnectorSettings.ClientId,
+                                    _supportCommitmentsSiteConnectorSettings.ClientSecret, _supportCommitmentsSiteConnectorSettings.Tenant)
+                                  ? await GetClientCredentialAuthenticationResult(_supportCommitmentsSiteConnectorSettings.ClientId,
+                                              _supportCommitmentsSiteConnectorSettings.ClientSecret,
+                                              _supportCommitmentsSiteConnectorSettings.IdentifierUri,
+                                              _supportCommitmentsSiteConnectorSettings.Tenant)
+                                  : await GetManagedIdentityAuthenticationResult(_supportCommitmentsSiteConnectorSettings.IdentifierUri);
+
+                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", commitmentToken);
+                                break;
+                            }
+                        case SupportServiceResourceKey.EmployerUser:
+                        case SupportServiceResourceKey.EmployerUserHeader:
+                        case SupportServiceResourceKey.EmployerUserAccounts:
+                            {
+                                var employerUsersToken = IsClientCredentialConfiguration(_supportEmployerUsersSiteConnectorSettings.ClientId,
+                                    _supportEmployerUsersSiteConnectorSettings.ClientSecret, _supportEmployerUsersSiteConnectorSettings.Tenant)
+                                  ? await GetClientCredentialAuthenticationResult(_supportEmployerUsersSiteConnectorSettings.ClientId,
+                                              _supportEmployerUsersSiteConnectorSettings.ClientSecret,
+                                              _supportEmployerUsersSiteConnectorSettings.IdentifierUri,
+                                              _supportEmployerUsersSiteConnectorSettings.Tenant)
+                                  : await GetManagedIdentityAuthenticationResult(_supportEmployerUsersSiteConnectorSettings.IdentifierUri);
+
+                                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", employerUsersToken);
                                 break;
                             }
                         default:
@@ -242,6 +286,18 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
 
+        private async Task<string> GetClientCredentialAuthenticationResult(string clientId, string clientSecret, string identifierUri, string tenant)
+        {
+            return await _clientAuthenticator.Authenticate(clientId, clientSecret, identifierUri, tenant);
+        }
+       
+        private async Task<string> GetManagedIdentityAuthenticationResult(string resource)
+        {
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();            
+            return await azureServiceTokenProvider.GetAccessTokenAsync(resource);
+        }
+
+
         private HttpStatusCodeDecision ExamineResponse(HttpResponseMessage message)
         {
             LastException = null;
@@ -254,6 +310,11 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             if (handlerOptions.Any()) return handlerOptions.First().Handle(_client, LastCode);
 
             return HttpStatusCodeDecision.Continue;
-        }        
+        }
+
+        private bool IsClientCredentialConfiguration(string clientId, string clientSecret, string tenant)
+        {
+            return !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret) && !string.IsNullOrEmpty(tenant);
+        }
     }
 }

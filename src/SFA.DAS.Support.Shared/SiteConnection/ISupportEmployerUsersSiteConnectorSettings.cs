@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
 {
-    public interface IEmployerAccountSiteConnectorSettings
+    public interface  ISupportEmployerUsersSiteConnectorSettings
     {
         string ClientId { get; set; }
         string ClientSecret { get; set; }
@@ -17,7 +12,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
     }
 
     [ExcludeFromCodeCoverage]
-    public sealed class EmployerAccountSiteConnectorSetting : IEmployerAccountSiteConnectorSettings
+    public sealed class SupportEmployerUsersSiteConnectorSetting : ISupportEmployerUsersSiteConnectorSettings
     {
         [JsonRequired] public string ClientId { get; set; }
 
@@ -27,5 +22,4 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         [JsonRequired] public string Tenant { get; set; }
     }
-    
 }

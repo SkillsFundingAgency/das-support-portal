@@ -14,7 +14,9 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         [JsonRequired] public RoleSettings Roles { get; set; }
         [JsonRequired] public SiteSettings Site { get; set; }
         [JsonRequired] public SiteConnectorSettings SiteConnector { get; set; }
-        [JsonRequired] public EmployerAccountSiteConnectorSetting EmployerAccountSiteConnector { get; set; }
+        [JsonRequired] public SupportEASSiteConnectorSetting SupportEASSiteConnector { get; set; }
+        [JsonRequired] public SupportCommitmentsSiteConnectorSetting SupportCommitmentsSiteConnector { get; set; }
+        [JsonRequired] public SupportEmployerUsersSiteConnectorSetting SupportEmployerUsersSiteConnector { get; set; }
 
     }
 }

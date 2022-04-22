@@ -62,7 +62,21 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     IdentifierUri = "--- configuration value goes here ---",
                     Tenant = "--- configuration value goes here ---"
                 },
-                EmployerAccountSiteConnector = new EmployerAccountSiteConnectorSetting
+                SupportEASSiteConnector = new SupportEASSiteConnectorSetting
+                {
+                    ClientId = "--- configuration value goes here ---",
+                    ClientSecret = "--- configuration value goes here ---",
+                    IdentifierUri = "--- configuration value goes here ---",
+                    Tenant = "--- configuration value goes here ---"
+                },
+                SupportCommitmentsSiteConnector = new SupportCommitmentsSiteConnectorSetting
+                {
+                    ClientId = "--- configuration value goes here ---",
+                    ClientSecret = "--- configuration value goes here ---",
+                    IdentifierUri = "--- configuration value goes here ---",
+                    Tenant = "--- configuration value goes here ---"
+                },
+                SupportEmployerUsersSiteConnector = new SupportEmployerUsersSiteConnectorSetting
                 {
                     ClientId = "--- configuration value goes here ---",
                     ClientSecret = "--- configuration value goes here ---",

@@ -21,7 +21,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected Mock<IClientAuthenticator> MockClientAuthenticator;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;        
-        protected Mock<IEmployerAccountSiteConnectorSettings> MockIEmployerAccountSiteConnectorSettings;
+        protected Mock<ISupportEASSiteConnectorSettings> MockIEmployerAccountSiteConnectorSettings;
+        protected Mock<ISupportCommitmentsSiteConnectorSettings> MockISupportCommitmentsSiteConnectorSettings;
+        protected Mock<ISupportEmployerUsersSiteConnectorSettings> MockISupportEmployerUsersSiteConnectorSettings;
         protected TestType TestType;
         protected Uri TestUri;
         protected string TestUrlMatch;
@@ -39,7 +41,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
-            MockIEmployerAccountSiteConnectorSettings = new Mock<IEmployerAccountSiteConnectorSettings>();
+            MockIEmployerAccountSiteConnectorSettings = new Mock<ISupportEASSiteConnectorSettings>();
+            MockISupportCommitmentsSiteConnectorSettings = new Mock<ISupportCommitmentsSiteConnectorSettings>();
+            MockISupportEmployerUsersSiteConnectorSettings = new Mock<ISupportEmployerUsersSiteConnectorSettings>();
             MockLogger = new Mock<ILog>();
             Handlers = new List<IHttpStatusCodeStrategy>
             {
@@ -62,7 +66,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             TestUri = new Uri(TestUrl);
 
             Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object,
-                MockSiteConnectorSettings.Object, MockIEmployerAccountSiteConnectorSettings.Object, Handlers, MockLogger.Object);
+                MockSiteConnectorSettings.Object, MockIEmployerAccountSiteConnectorSettings.Object,
+                MockISupportCommitmentsSiteConnectorSettings.Object, MockISupportEmployerUsersSiteConnectorSettings.Object,
+                Handlers, MockLogger.Object);
 
 
             MockClientAuthenticator.Setup(x => x.Authenticate(It.IsAny<string>(), It.IsAny<string>(),
