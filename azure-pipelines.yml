@@ -56,6 +56,7 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
 - stage: Deploy_TEST
   dependsOn: Build
@@ -69,6 +70,7 @@ stages:
     parameters:
       Environment: TEST
       ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
 - stage: Deploy_PP
   dependsOn: Build
@@ -82,6 +84,7 @@ stages:
     parameters:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
 - stage: Deploy_PROD
   dependsOn: Build
@@ -95,4 +98,5 @@ stages:
     parameters:
       Environment: PROD
       ServiceConnection: SFA-DIG-Prod-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
