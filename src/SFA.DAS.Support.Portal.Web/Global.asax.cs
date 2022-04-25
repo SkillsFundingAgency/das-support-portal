@@ -23,7 +23,7 @@ namespace SFA.DAS.Support.Portal.Web
 
             logger.Info("Starting Web Role");
 
-            SetupApplicationInsights();
+            //SetupApplicationInsights();
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);

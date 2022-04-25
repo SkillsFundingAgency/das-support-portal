@@ -21,6 +21,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected Mock<IClientAuthenticator> MockClientAuthenticator;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
+        protected Mock<ISiteConnectorSettingsV2> MockSiteConnectorSettingsV2;        
         protected TestType TestType;
         protected Uri TestUri;
         protected string TestUrlMatch;
@@ -38,6 +39,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
+            MockSiteConnectorSettingsV2 = new Mock<ISiteConnectorSettingsV2>();
             MockLogger = new Mock<ILog>();
             Handlers = new List<IHttpStatusCodeStrategy>
             {
@@ -57,10 +59,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             TestUrlMatch = "http://localhost/api/user/*";
             TestUrl = "http://localhost/api/user/1234";
-            TestUri = new Uri(TestUrl);
+            TestUri = new Uri(TestUrl);            
 
             Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object,
-                MockSiteConnectorSettings.Object, Handlers, MockLogger.Object);
+                MockSiteConnectorSettings.Object, MockSiteConnectorSettingsV2.Object, Handlers, MockLogger.Object);
 
 
             MockClientAuthenticator.Setup(x => x.Authenticate(It.IsAny<string>(), It.IsAny<string>(),

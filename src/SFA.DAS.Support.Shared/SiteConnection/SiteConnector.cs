@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
@@ -19,11 +20,13 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
+        private readonly ISiteConnectorSettingsV2 _siteConnectorSettingsV2;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
             ISiteConnectorSettings settings,
-            List<IHttpStatusCodeStrategy> handlers,
+            ISiteConnectorSettingsV2 siteConnectorSettingsV2,
+        List<IHttpStatusCodeStrategy> handlers,
             ILog logger)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
@@ -32,6 +35,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _siteConnectorSettingsV2 = siteConnectorSettingsV2 ?? throw new ArgumentNullException(nameof(siteConnectorSettingsV2));
         }
 
         public HttpStatusCode LastCode { get; set; }
@@ -130,7 +134,28 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            var baseUrl = uri.Scheme + Uri.SchemeDelimiter + uri.Host + ":" + uri.Port;            
+            var identifierUri = string.Empty;
+            
+            if (_siteConnectorSettingsV2.SupportCommitmentsSiteConnector != null &&
+                _siteConnectorSettingsV2.SupportCommitmentsSiteConnector.BaseUrl == baseUrl)
+            {
+                identifierUri = _siteConnectorSettingsV2.SupportCommitmentsSiteConnector.IdentifierUri;
+            }
+
+            if (_siteConnectorSettingsV2.SupportEASSiteConnector != null &&
+                _siteConnectorSettingsV2.SupportEASSiteConnector.BaseUrl == baseUrl)
+            {
+                identifierUri = _siteConnectorSettingsV2.SupportEASSiteConnector.IdentifierUri;
+            }
+
+            if (_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector != null && 
+                _siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.BaseUrl == baseUrl)
+            {
+                identifierUri = _siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.IdentifierUri;
+            }
+
+            await EnsureClientAuthorizationHeader(identifierUri);
 
             try
             {
@@ -180,8 +205,15 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         private async Task EnsureClientAuthorizationHeader()
         {
+            var test = _siteConnectorSettingsV2;
+            var testc = _siteConnectorSettingsV2.SupportCommitmentsSiteConnector;
+
+  
+
+
             try
             {
+               
                 if (_client.DefaultRequestHeaders.Authorization == null)
                 {
                     var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
@@ -190,6 +222,21 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         _settings.Tenant);
                     _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _client.DefaultRequestHeaders.Authorization = null;
+            }
+        }
+
+        private async Task EnsureClientAuthorizationHeader(string baseUrl)
+        {
+            try
+            {   
+                var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                var token = await azureServiceTokenProvider.GetAccessTokenAsync(baseUrl);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);               
             }
             catch (Exception e)
             {

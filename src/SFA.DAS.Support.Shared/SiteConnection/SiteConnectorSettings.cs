@@ -14,4 +14,13 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         [JsonRequired] public string Tenant { get; set; }
     }
+
+
+    [ExcludeFromCodeCoverage]
+    public sealed class SiteConnectorSettingsV2 : ISiteConnectorSettingsV2
+    {
+        public SiteConnectorV2 SupportCommitmentsSiteConnector { get; set; }
+        public SiteConnectorV2 SupportEASSiteConnector { get; set; }
+        public SiteConnectorV2 SupportEmployerUsersSiteConnector { get; set; }
+    }
 }
