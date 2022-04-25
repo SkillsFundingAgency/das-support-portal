@@ -106,8 +106,6 @@
     <Compile Include="Discovery\SupportServiceIdentity.cs" />
     <Compile Include="SiteConnection\ApprenticeshipSearchQuery.cs" />
     <Compile Include="SiteConnection\ApprenticeshipSearchType.cs" />
-    <Compile Include="SiteConnection\ISiteConnectorV2Settings.cs" />
-    <Compile Include="SiteConnection\SiteConnectorV2Settings.cs" />
     <Compile Include="SiteConnection\StrategyForClientErrorStatusCode.cs" />
     <Compile Include="SiteConnection\StrategyForRedirectionStatusCode.cs" />
     <Compile Include="SiteConnection\HttpStatusCodeDecision.cs" />
