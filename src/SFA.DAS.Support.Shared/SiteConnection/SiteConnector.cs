@@ -134,28 +134,28 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
-            //var baseUrl = uri.Scheme + Uri.SchemeDelimiter + uri.Host + ":" + uri.Port; //TODO : need to sort out for DEV specific (Local / AT)
-            var baseUrl = uri.Scheme + Uri.SchemeDelimiter + uri.Host;
+            var baseUrl = uri.Scheme + Uri.SchemeDelimiter + uri.Host + ":" + uri.Port;
             var identifierUri = string.Empty;
             
             if (_siteConnectorSettingsV2.SupportCommitmentsSiteConnector != null &&
-                _siteConnectorSettingsV2.SupportCommitmentsSiteConnector.BaseUrl.Contains(baseUrl))
+                baseUrl.Contains(_siteConnectorSettingsV2.SupportCommitmentsSiteConnector.BaseUrl))
             {                
                 identifierUri = _siteConnectorSettingsV2.SupportCommitmentsSiteConnector.IdentifierUri;
                 _logger.Info($"Commitments IdentifierUri : {_siteConnectorSettingsV2.SupportCommitmentsSiteConnector.IdentifierUri} ");
             }
 
             if (_siteConnectorSettingsV2.SupportEASSiteConnector != null &&
-                _siteConnectorSettingsV2.SupportEASSiteConnector.BaseUrl.Contains(baseUrl))
+                baseUrl.Contains(_siteConnectorSettingsV2.SupportEASSiteConnector.BaseUrl))
             {
                 identifierUri = _siteConnectorSettingsV2.SupportEASSiteConnector.IdentifierUri;
                 _logger.Info($"EAS support IdentifierUri : {_siteConnectorSettingsV2.SupportEASSiteConnector.IdentifierUri} ");
             }
 
-            if (_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector != null && 
-                _siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.BaseUrl.Contains(baseUrl))
+            if (_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector != null &&
+                 baseUrl.Contains(_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.BaseUrl))
             {
                 identifierUri = _siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.IdentifierUri;
+                _logger.Info($"Employer Users IdentifierUri : {_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.IdentifierUri} ");
             }
 
             await EnsureClientAuthorizationHeader(identifierUri);
@@ -207,10 +207,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         }
 
         private async Task EnsureClientAuthorizationHeader()
-        {
-            //var test = _siteConnectorSettingsV2;
-            //var testc = _siteConnectorSettingsV2.SupportCommitmentsSiteConnector;
-
+        {           
             try
             {
                
@@ -230,13 +227,14 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
 
-        private async Task EnsureClientAuthorizationHeader(string baseUrl)
+        private async Task EnsureClientAuthorizationHeader(string identifierUri)
         {
+            //TODO : Create interface IAzureClientCredentialHelper to unit test
             try
             {
-                _logger.Info($"MI Baseurl : {baseUrl}");
+                _logger.Info($"MI IdentifierUri : {identifierUri}");
                 var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                var token = await azureServiceTokenProvider.GetAccessTokenAsync(baseUrl);
+                var token = await azureServiceTokenProvider.GetAccessTokenAsync(identifierUri);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);               
             }
             catch (Exception e)

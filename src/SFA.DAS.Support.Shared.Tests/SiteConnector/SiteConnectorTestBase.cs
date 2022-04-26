@@ -57,6 +57,17 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");
 
+            var siteConnector = new SiteConnectorV2
+            {
+                BaseUrl = "http://localhost:80",
+                Tenant = "citizenazuresfabisgov.onmicrosoft.com",
+                IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-scomt-as-ar"
+            };
+
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportCommitmentsSiteConnector).Returns(siteConnector);
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportEASSiteConnector).Returns(It.IsAny<SiteConnectorV2>);
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportEmployerUsersSiteConnector).Returns(It.IsAny<SiteConnectorV2>);            
+
             TestUrlMatch = "http://localhost/api/user/*";
             TestUrl = "http://localhost/api/user/1234";
             TestUri = new Uri(TestUrl);            
