@@ -19,6 +19,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected List<IHttpStatusCodeStrategy> Handlers;
         protected HttpClient HttpClient;
         protected Mock<IClientAuthenticator> MockClientAuthenticator;
+        protected Mock<IAzureClientCredentialHelper> MockAzureClientCredentialHelper;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
         protected Mock<ISiteConnectorSettingsV2> MockSiteConnectorSettingsV2;        
@@ -38,6 +39,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             HttpRequestMessage.Properties[System.Web.Http.Hosting.HttpPropertyKeys.HttpConfigurationKey] = configuration;
 
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
+            MockAzureClientCredentialHelper = new Mock<IAzureClientCredentialHelper>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
             MockSiteConnectorSettingsV2 = new Mock<ISiteConnectorSettingsV2>();
             MockLogger = new Mock<ILog>();
@@ -55,30 +57,25 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             MockHttpMessageHandler = new Mock<HttpMessageHandler>();
             HttpClient = new HttpClient(MockHttpMessageHandler.Object);
 
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");          
 
-            var siteConnector = new SiteConnectorV2
-            {
-                BaseUrl = "http://localhost:80",
-                Tenant = "citizenazuresfabisgov.onmicrosoft.com",
-                IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-scomt-as-ar"
-            };
-
-            MockSiteConnectorSettingsV2.Setup(x => x.SupportCommitmentsSiteConnector).Returns(siteConnector);
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportCommitmentsSiteConnector).Returns(It.IsAny<SiteConnectorV2>);
             MockSiteConnectorSettingsV2.Setup(x => x.SupportEASSiteConnector).Returns(It.IsAny<SiteConnectorV2>);
             MockSiteConnectorSettingsV2.Setup(x => x.SupportEmployerUsersSiteConnector).Returns(It.IsAny<SiteConnectorV2>);            
 
             TestUrlMatch = "http://localhost/api/user/*";
             TestUrl = "http://localhost/api/user/1234";
-            TestUri = new Uri(TestUrl);            
+            TestUri = new Uri(TestUrl);
 
-            Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object,
+            Unit = new SiteConnection.SiteConnector(HttpClient, MockClientAuthenticator.Object, MockAzureClientCredentialHelper.Object,
                 MockSiteConnectorSettings.Object, MockSiteConnectorSettingsV2.Object, Handlers, MockLogger.Object);
 
 
             MockClientAuthenticator.Setup(x => x.Authenticate(It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => "mockToken_dndndndndndndndnd=");
+          
+            MockAzureClientCredentialHelper.Setup(x => x.GetAccessTokenAsync(It.IsAny<string>())).ReturnsAsync(It.IsAny<string>());
         }
 
         [TearDown]

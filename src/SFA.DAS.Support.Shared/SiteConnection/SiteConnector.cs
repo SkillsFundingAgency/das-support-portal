@@ -17,6 +17,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private const string TheHttpClientMayNotBeNull = "The Http client may not be null";
         private readonly HttpClient _client;
         private readonly IClientAuthenticator _clientAuthenticator;
+        private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
@@ -24,6 +25,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
+            IAzureClientCredentialHelper azureClientCredentialHelper,
             ISiteConnectorSettings settings,
             ISiteConnectorSettingsV2 siteConnectorSettingsV2,
         List<IHttpStatusCodeStrategy> handlers,
@@ -31,6 +33,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
+            _azureClientCredentialHelper = azureClientCredentialHelper ?? throw new ArgumentNullException(nameof(azureClientCredentialHelper));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
@@ -207,7 +210,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         }
 
         private async Task EnsureClientAuthorizationHeader()
-        {           
+        {
             try
             {
                
@@ -229,12 +232,10 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         private async Task EnsureClientAuthorizationHeader(string identifierUri)
         {
-            //TODO : Create interface IAzureClientCredentialHelper to unit test
             try
             {
-                _logger.Info($"MI IdentifierUri : {identifierUri}");
-                var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                var token = await azureServiceTokenProvider.GetAccessTokenAsync(identifierUri);
+                _logger.Info($"MI IdentifierUri : {identifierUri}");              
+                var token = await _azureClientCredentialHelper.GetAccessTokenAsync(identifierUri);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);               
             }
             catch (Exception e)
