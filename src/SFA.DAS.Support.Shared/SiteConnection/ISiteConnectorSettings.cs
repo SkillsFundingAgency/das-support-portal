@@ -10,19 +10,18 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         string Tenant { get; set; }
     }
 
-    public interface ISiteConnectorSettingsV2
+    public interface ISiteConnectorMISettings
     {
-        SiteConnectorV2 SupportCommitmentsSiteConnector { get; set; }
+        SiteConnectorMI SupportCommitmentsSiteConnector { get; set; }
 
-        SiteConnectorV2 SupportEASSiteConnector { get; set; }
+        SiteConnectorMI SupportEASSiteConnector { get; set; }
 
-        SiteConnectorV2 SupportEmployerUsersSiteConnector { get; set; }       
+        SiteConnectorMI SupportEmployerUsersSiteConnector { get; set; }       
     }
 
-    public class SiteConnectorV2
+    public class SiteConnectorMI
     {
         [JsonRequired] public string BaseUrl { get; set; }
-        [JsonRequired] public string IdentifierUri { get; set; }
-        [JsonRequired] public string Tenant { get; set; }
+        [JsonRequired] public string IdentifierUri { get; set; }        
     }
 }

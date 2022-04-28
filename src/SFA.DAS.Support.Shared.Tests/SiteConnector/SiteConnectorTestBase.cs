@@ -22,7 +22,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected Mock<IAzureClientCredentialHelper> MockAzureClientCredentialHelper;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
-        protected Mock<ISiteConnectorSettingsV2> MockSiteConnectorSettingsV2;        
+        protected Mock<ISiteConnectorMISettings> MockSiteConnectorSettingsV2;        
         protected TestType TestType;
         protected Uri TestUri;
         protected string TestUrlMatch;
@@ -41,7 +41,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
             MockAzureClientCredentialHelper = new Mock<IAzureClientCredentialHelper>();
             MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
-            MockSiteConnectorSettingsV2 = new Mock<ISiteConnectorSettingsV2>();
+            MockSiteConnectorSettingsV2 = new Mock<ISiteConnectorMISettings>();
             MockLogger = new Mock<ILog>();
             Handlers = new List<IHttpStatusCodeStrategy>
             {
@@ -59,9 +59,9 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dummytoken");          
 
-            MockSiteConnectorSettingsV2.Setup(x => x.SupportCommitmentsSiteConnector).Returns(It.IsAny<SiteConnectorV2>);
-            MockSiteConnectorSettingsV2.Setup(x => x.SupportEASSiteConnector).Returns(It.IsAny<SiteConnectorV2>);
-            MockSiteConnectorSettingsV2.Setup(x => x.SupportEmployerUsersSiteConnector).Returns(It.IsAny<SiteConnectorV2>);            
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportCommitmentsSiteConnector).Returns(It.IsAny<SiteConnectorMI>);
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportEASSiteConnector).Returns(It.IsAny<SiteConnectorMI>);
+            MockSiteConnectorSettingsV2.Setup(x => x.SupportEmployerUsersSiteConnector).Returns(It.IsAny<SiteConnectorMI>);            
 
             TestUrlMatch = "http://localhost/api/user/*";
             TestUrl = "http://localhost/api/user/1234";

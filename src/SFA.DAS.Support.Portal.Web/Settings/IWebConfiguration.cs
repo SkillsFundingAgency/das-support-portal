@@ -13,6 +13,6 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         RoleSettings Roles { get; set; }
         SiteSettings Site { get; set; }
         SiteConnectorSettings SiteConnector { get; set; }
-        SiteConnectorSettingsV2 SiteConnectorSettingsV2 { get; set; }   
+        SiteConnectorMISettings SiteConnectorSettings { get; set; }   
     }
 }

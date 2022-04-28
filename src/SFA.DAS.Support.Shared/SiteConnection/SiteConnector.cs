@@ -21,13 +21,13 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
-        private readonly ISiteConnectorSettingsV2 _siteConnectorSettingsV2;
+        private readonly ISiteConnectorMISettings _siteConnectorSettingsV2;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
             IAzureClientCredentialHelper azureClientCredentialHelper,
             ISiteConnectorSettings settings,
-            ISiteConnectorSettingsV2 siteConnectorSettingsV2,
+            ISiteConnectorMISettings siteConnectorSettingsV2,
         List<IHttpStatusCodeStrategy> handlers,
             ILog logger)
         {

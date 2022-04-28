@@ -17,10 +17,10 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
 
     [ExcludeFromCodeCoverage]
-    public sealed class SiteConnectorSettingsV2 : ISiteConnectorSettingsV2
+    public sealed class SiteConnectorMISettings : ISiteConnectorMISettings
     {
-        public SiteConnectorV2 SupportCommitmentsSiteConnector { get; set; }
-        public SiteConnectorV2 SupportEASSiteConnector { get; set; }
-        public SiteConnectorV2 SupportEmployerUsersSiteConnector { get; set; }
+        public SiteConnectorMI SupportCommitmentsSiteConnector { get; set; }
+        public SiteConnectorMI SupportEASSiteConnector { get; set; }
+        public SiteConnectorMI SupportEmployerUsersSiteConnector { get; set; }
     }
 }
