@@ -74,7 +74,7 @@ jobs:
     inputs:
       solution: src/SFA.DAS.Support.Portal.Web/SFA.DAS.Support.Portal.Web.csproj
       vsVersion: '16.0'
-      msbuildArgs: '/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:publishUrl="$(build.artifactstagingdirectory)/publish/SFA.DAS.Support.Portal.Web"'
+      msbuildArgs: '/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:publishUrl="$(build.artifactstagingdirectory)/SFA.DAS.Support.Portal.Web"'
       platform: 'anycpu'
       configuration: '$(buildConfiguration)'
       clean: true
@@ -91,7 +91,7 @@ jobs:
     inputs:
       solution: src/SFA.DAS.Support.Indexer.Worker/SFA.DAS.Support.Indexer.Worker.csproj
       vsVersion: '16.0'
-      msbuildArgs: '/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:publishUrl="$(build.artifactstagingdirectory)/publish/SFA.DAS.Support.Indexer.Worker"'
+      msbuildArgs: '/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:publishUrl="$(build.artifactstagingdirectory)/SFA.DAS.Support.Indexer.Worker"'
       platform: 'anycpu'
       configuration: '$(buildConfiguration)'
       clean: true
