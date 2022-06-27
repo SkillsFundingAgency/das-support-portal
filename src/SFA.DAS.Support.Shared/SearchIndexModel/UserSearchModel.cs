@@ -18,5 +18,7 @@ namespace SFA.DAS.Support.Shared.SearchIndexModel
         public string FirstNameSearchKeyWord { get => FirstName.ToLower(); }
         public string LastNameSearchKeyWord { get => LastName.ToLower(); }
         public string NameSearchKeyWord { get => Name.ToLower(); }
+        public bool IsSuspended { get; set; }
+
     }
 }
