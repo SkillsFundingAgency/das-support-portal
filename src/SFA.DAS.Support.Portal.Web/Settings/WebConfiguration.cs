@@ -2,6 +2,7 @@
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SiteConnection;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Support.Portal.Web.Settings
 {
@@ -14,6 +15,6 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         [JsonRequired] public RoleSettings Roles { get; set; }
         [JsonRequired] public SiteSettings Site { get; set; }
         [JsonRequired] public SiteConnectorSettings SiteConnector { get; set; }
-        
+        [JsonRequired] public SiteConnectorMISettings SiteConnectorSettings { get; set; }
     }
 }

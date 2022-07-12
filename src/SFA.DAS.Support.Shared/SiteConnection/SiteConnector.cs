@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
@@ -16,22 +17,28 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private const string TheHttpClientMayNotBeNull = "The Http client may not be null";
         private readonly HttpClient _client;
         private readonly IClientAuthenticator _clientAuthenticator;
+        private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly ISiteConnectorSettings _settings;
+        private readonly ISiteConnectorMISettings _siteConnectorSettingsV2;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
+            IAzureClientCredentialHelper azureClientCredentialHelper,
             ISiteConnectorSettings settings,
-            List<IHttpStatusCodeStrategy> handlers,
+            ISiteConnectorMISettings siteConnectorSettingsV2,
+        List<IHttpStatusCodeStrategy> handlers,
             ILog logger)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
+            _azureClientCredentialHelper = azureClientCredentialHelper ?? throw new ArgumentNullException(nameof(azureClientCredentialHelper));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _siteConnectorSettingsV2 = siteConnectorSettingsV2 ?? throw new ArgumentNullException(nameof(siteConnectorSettingsV2));
         }
 
         public HttpStatusCode LastCode { get; set; }
@@ -130,7 +137,31 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         public async Task<T> Download<T>(Uri uri) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            var baseUrl = uri.Scheme + Uri.SchemeDelimiter + uri.Host + ":" + uri.Port;
+            var identifierUri = string.Empty;
+            
+            if (_siteConnectorSettingsV2.SupportCommitmentsSiteConnector != null &&
+                baseUrl.Contains(_siteConnectorSettingsV2.SupportCommitmentsSiteConnector.BaseUrl))
+            {                
+                identifierUri = _siteConnectorSettingsV2.SupportCommitmentsSiteConnector.IdentifierUri;
+                _logger.Info($"Commitments IdentifierUri : {_siteConnectorSettingsV2.SupportCommitmentsSiteConnector.IdentifierUri} ");
+            }
+
+            if (_siteConnectorSettingsV2.SupportEASSiteConnector != null &&
+                baseUrl.Contains(_siteConnectorSettingsV2.SupportEASSiteConnector.BaseUrl))
+            {
+                identifierUri = _siteConnectorSettingsV2.SupportEASSiteConnector.IdentifierUri;
+                _logger.Info($"EAS support IdentifierUri : {_siteConnectorSettingsV2.SupportEASSiteConnector.IdentifierUri} ");
+            }
+
+            if (_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector != null &&
+                 baseUrl.Contains(_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.BaseUrl))
+            {
+                identifierUri = _siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.IdentifierUri;
+                _logger.Info($"Employer Users IdentifierUri : {_siteConnectorSettingsV2.SupportEmployerUsersSiteConnector.IdentifierUri} ");
+            }
+
+            await EnsureClientAuthorizationHeader(identifierUri);
 
             try
             {
@@ -182,6 +213,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             try
             {
+               
                 if (_client.DefaultRequestHeaders.Authorization == null)
                 {
                     var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
@@ -190,6 +222,21 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         _settings.Tenant);
                     _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _client.DefaultRequestHeaders.Authorization = null;
+            }
+        }
+
+        private async Task EnsureClientAuthorizationHeader(string identifierUri)
+        {
+            try
+            {
+                _logger.Info($"MI IdentifierUri : {identifierUri}");              
+                var token = await _azureClientCredentialHelper.GetAccessTokenAsync(identifierUri);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);               
             }
             catch (Exception e)
             {

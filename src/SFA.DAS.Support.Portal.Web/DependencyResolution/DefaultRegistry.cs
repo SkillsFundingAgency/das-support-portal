@@ -34,6 +34,8 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
+    
 
     [ExcludeFromCodeCoverage]
     public class DefaultRegistry : Registry
@@ -68,6 +70,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<ICryptoSettings>().Use(configuration.Crypto);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
+            For<ISiteConnectorMISettings>().Use(configuration.SiteConnectorSettings);            
             For<ISiteSettings>().Use(configuration.Site);
             For<IRoleSettings>().Use(configuration.Roles);
 
