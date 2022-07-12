@@ -3,42 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Navigation;
+using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Shared.Discovery
 {
-
     public class ServiceConfiguration : List<SiteManifest>, IServiceConfiguration
     {
-        public Uri FindSiteBaseUriForManfiestElement(Dictionary<SupportServiceIdentity, Uri> sites, SupportServiceResourceKey key)
+        public SubSiteConnectorConfig FindSiteConfigForManfiestElement(List<SubSiteConnectorConfig> sites, SupportServiceResourceKey key)
         {
             if (sites == null) throw new ArgumentNullException(nameof(sites));
             SiteResource resource = null;
-            KeyValuePair<SupportServiceIdentity, Uri> site ;
+
+            SubSiteConnectorConfig site;
             foreach (var item in this)
             {
-
                 if (item.Challenges.Any(c => c.ChallengeKey == key))
                 {
-                    site = sites.FirstOrDefault(x => x.Key == item.Challenges.First(y => y.ChallengeKey == key).ServiceIdentity);
-                    return site.Value;
+                    var itemChallengeResourceKey = item.Challenges.First(y => y.ChallengeKey == key).ServiceIdentity.ToString();
+                    site = sites.FirstOrDefault(x => x.Key.Equals(itemChallengeResourceKey, StringComparison.InvariantCultureIgnoreCase));
+                    return site;
                 }
 
                 if (item.Resources.Any(c => c.ResourceKey == key))
                 {
-                    site = sites.FirstOrDefault(x => x.Key == item.Resources.First(y => y.ResourceKey == key).ServiceIdentity);
-                    return site.Value;
+                    var itemChallengeResourceKey = item.Resources.First(y => y.ResourceKey == key).ServiceIdentity.ToString();
+                    site = sites.FirstOrDefault(x => x.Key.Equals(itemChallengeResourceKey, StringComparison.InvariantCultureIgnoreCase));
+                    return site;
                 }
             }
 
             return null;
-
         }
+
         public bool ResourceExists(SupportServiceResourceKey key)
         {
             var resource = FindResource(key);
 
             return resource != null;
         }
+
         public bool ChallengeExists(SupportServiceResourceKey key)
         {
             foreach (var manifest in this)
@@ -50,11 +53,13 @@ namespace SFA.DAS.Support.Shared.Discovery
             }
             return false;
         }
+
         public SiteResource GetResource(SupportServiceResourceKey key)
         {
             var resource = this.FindResource(key);
             return resource;
         }
+
         private SiteChallenge FindChallenge(SupportServiceResourceKey key)
         {
             foreach (var manifest in this)
@@ -70,6 +75,7 @@ namespace SFA.DAS.Support.Shared.Discovery
 
             return null;
         }
+
         public SiteChallenge GetChallenge(SupportServiceResourceKey key)
         {
             var challenge = FindChallenge(key);
@@ -89,12 +95,10 @@ namespace SFA.DAS.Support.Shared.Discovery
                 Key = r.ResourceKey,
                 Href = $"/resource?key={r.ResourceKey}&id={id}"
             });
-
         }
 
         public SiteManifest ManifestFromResource(SiteResource resource)
         {
-
             foreach (var manifest in this)
             {
                 if (manifest.Resources.Any(item => item.ResourceKey == resource.ResourceKey))
@@ -119,7 +123,5 @@ namespace SFA.DAS.Support.Shared.Discovery
             }
             return null;
         }
-
     }
-
 }

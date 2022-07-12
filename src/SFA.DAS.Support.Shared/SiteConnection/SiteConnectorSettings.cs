@@ -6,12 +6,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
     [ExcludeFromCodeCoverage]
     public sealed class SiteConnectorSettings : ISiteConnectorSettings
     {
-        [JsonRequired] public string ClientId { get; set; }
+        public string ClientId { get; set; }
 
-        [JsonRequired] public string ClientSecret { get; set; }
+        public string ClientSecret { get; set; }
 
-        [JsonRequired] public string IdentifierUri { get; set; }
+        public string IdentifierUri { get; set; }
 
-        [JsonRequired] public string Tenant { get; set; }
+        public string Tenant { get; set; }
     }
 }

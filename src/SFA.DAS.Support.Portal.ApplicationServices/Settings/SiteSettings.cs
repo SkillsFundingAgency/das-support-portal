@@ -6,6 +6,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Settings
     [ExcludeFromCodeCoverage]
     public class SiteSettings : ISiteSettings
     {
-        [JsonRequired] public string BaseUrls { get; set; }
+        public string BaseUrls { get; set; }
     }
 }

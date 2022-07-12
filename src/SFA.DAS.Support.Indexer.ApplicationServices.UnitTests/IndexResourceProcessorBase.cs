@@ -20,7 +20,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 {
     public class IndexResourceProcessorBase
     {
-
         protected Mock<ISiteConnector> _downloader;
         protected Mock<IIndexProvider> _indexProvider;
         protected Mock<ISearchSettings> _searchSettings;
@@ -31,15 +30,17 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
         protected const string _indexName = "new_index_name";
         protected Uri _baseUrl;
+        protected string _resourceIdentifier;
+
         protected const int _indexToRetain = 2;
         protected IEnumerable<AccountSearchModel> _accountModels;
         protected SiteResource _accountSiteResource;
         protected SiteResource _userSiteResource;
 
-
         protected void Initialise()
         {
             _baseUrl = new Uri("http://localhost");
+            _resourceIdentifier = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar";
 
             _accountModels = new List<AccountSearchModel>
             {
@@ -48,7 +49,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                     Account = "Valtech"
                 }
             };
-
 
             _accountSiteResource = new SiteResource
             {
@@ -64,13 +64,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                 SearchItemsUrl = "localhost",
             };
 
-
             _downloader = new Mock<ISiteConnector>();
             _indexProvider = new Mock<IIndexProvider>();
 
             _searchSettings = new Mock<ISearchSettings>();
             _searchSettings.Setup(o => o.IndexName).Returns(_indexName);
-
 
             _logger = new Mock<ILog>();
             _indexNameCreator = new Mock<IIndexNameCreator>();
@@ -94,11 +92,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                .Returns(new Common.Infrastucture.Elasticsearch.CreateIndexResponse { HttpStatusCode = (int)HttpStatusCode.OK });
 
             _downloader
-                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl))
+                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl, It.IsAny<string>()))
                 .Returns(Task.FromResult(_accountModels));
 
             _downloader
-               .Setup(o => o.Download(It.IsAny<Uri>()))
+               .Setup(o => o.Download(It.IsAny<Uri>(), It.IsAny<string>()))
                .Returns(Task.FromResult("50"));
 
             _downloader
@@ -113,12 +111,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
 
             _indexProvider
               .Setup(o => o.DeleteIndexes(_indexToRetain, It.IsAny<string>()));
-
-           
         }
-
-
-
-
     }
 }

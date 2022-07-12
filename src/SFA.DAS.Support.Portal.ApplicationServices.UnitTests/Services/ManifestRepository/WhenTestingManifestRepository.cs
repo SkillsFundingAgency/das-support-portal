@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
@@ -12,57 +13,62 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 {
     public class WhenTestingManifestRepository
     {
-       
         private ServiceConfiguration _siteManifests = new ServiceConfiguration();
-
 
         protected string HttpsTestsite;
         protected Mock<IFormMapper> MockFormMapper;
         protected Mock<ILog> MockLogger;
         protected Mock<ISiteConnector> MockSiteConnector;
-        protected Mock<ISiteSettings> MockSiteSettings;
+        protected ISubSiteConnectorSettings MockSiteSettings;
 
         protected SiteManifest TestSiteManifest;
         protected string TestSites;
         protected Uri TestSiteUri;
+        protected string TestSiteIdentifier;
 
         protected IManifestRepository Unit;
-
 
         [SetUp]
         public virtual void Setup()
         {
-            MockSiteSettings = new Mock<ISiteSettings>();
             MockSiteConnector = new Mock<ISiteConnector>();
             MockFormMapper = new Mock<IFormMapper>();
             MockLogger = new Mock<ILog>();
 
             _siteManifests = new ServiceConfiguration();
 
-
             HttpsTestsite = $"{SupportServiceIdentity.SupportEmployerAccount}|https://testsite/";
 
             TestSiteManifest = new EmployerAccountSiteManifest();
 
-            _siteManifests.Add( TestSiteManifest);
-
+            _siteManifests.Add(TestSiteManifest);
 
             TestSites = HttpsTestsite;
 
-            MockSiteSettings.SetupGet(x => x.BaseUrls)
-                .Returns(TestSites);
+            MockSiteSettings = new SubSiteConnectorConfigs
+            {
+                SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
+                {
+                    new SubSiteConnectorConfig
+                    {
+                        BaseUrl = "https://testsite/",
+                        Key = SupportServiceIdentity.SupportEmployerAccount.ToString(),
+                        IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar"
+                    }
+                }
+            };
 
-            TestSiteUri = TestSites.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x=>x.Split(new []{'|'},StringSplitOptions.RemoveEmptyEntries ))
-                .Select(x => new Uri(x[1])).First();
+            var subSite = MockSiteSettings.SubSiteConnectorSettings.First();
 
-            TestSiteUri = new Uri($"{TestSiteUri}api/manifest");
+            TestSiteUri = new Uri($"{subSite.BaseUrl}api/manifest");
+            TestSiteIdentifier = subSite.IdentifierUri;
 
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(TestSiteManifest);
+            MockSiteConnector
+                .Setup(x => x.Download<SiteManifest>(TestSiteUri, TestSiteIdentifier))
+                .ReturnsAsync(TestSiteManifest);
 
             Unit = new ApplicationServices.Services.ManifestRepository(
-                MockSiteSettings.Object,
+                MockSiteSettings,
                 MockSiteConnector.Object,
                 MockFormMapper.Object,
                 MockLogger.Object, _siteManifests);

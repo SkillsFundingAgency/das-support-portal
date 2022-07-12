@@ -9,11 +9,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingGetChallengeForm : WhenTestingManifestRepository
     {
-       
         [Test]
         public void ItShouldNotThrowAnExceptionIfTheSiteManifestNull()
         {
-            MockSiteConnector.Setup(x => x.Download<SiteManifest>(TestSiteUri)).ReturnsAsync(null as SiteManifest);
+            MockSiteConnector
+                .Setup(x => x.Download<SiteManifest>(TestSiteUri, It.IsAny<string>()))
+                .ReturnsAsync(null as SiteManifest);
 
             Assert.DoesNotThrow(() =>
             {
@@ -28,8 +29,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             var downloadedFormHtml = "<html><form action='' method='post' /></html>";
             var mappedFormHtml = "<html><form action='/api/challenge/id'  method='post' /></html>";
 
-
-            MockSiteConnector.Setup(c => c.Download(It.IsAny<Uri>()))
+            MockSiteConnector
+                .Setup(c => c.Download(It.IsAny<Uri>(), TestSiteIdentifier))
                 .ReturnsAsync(downloadedFormHtml);
 
             MockFormMapper.Setup(x => x.UpdateForm(
@@ -43,7 +44,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             var actual = await Unit.GetChallengeForm(
                 SupportServiceResourceKey.EmployerAccountFinance,
-                SupportServiceResourceKey.EmployerAccountFinanceChallenge, 
+                SupportServiceResourceKey.EmployerAccountFinanceChallenge,
                 "id",
                 "http://tempuri.org/challenge/form");
 
@@ -51,7 +52,5 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             Assert.IsTrue(actual.Contains("<html"));
             Assert.IsTrue(actual.Contains("<form"));
         }
-
-       
     }
 }

@@ -41,7 +41,6 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
         private const string ServiceName = "SFA.DAS.Support.Portal";
         private const string Version = "1.0";
 
-
         public DefaultRegistry()
         {
             Scan(
@@ -58,8 +57,6 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
-
-
             WebConfiguration configuration = GetConfiguration();
 
             For<IWebConfiguration>().Use(configuration);
@@ -70,13 +67,16 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
             For<ISiteSettings>().Use(configuration.Site);
             For<IRoleSettings>().Use(configuration.Roles);
+            For<ISubSiteConnectorSettings>().Use(new SubSiteConnectorConfigs
+            {
+                SubSiteConnectorSettings = configuration.SubSiteConnectorSettings
+            });
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
 
             For<IServiceConfiguration>().Singleton().Use(
                 new ServiceConfiguration { new EmployerAccountSiteManifest(), new EmployerUserSiteManifest() });
         }
-
 
         private WebConfiguration GetConfiguration()
         {
