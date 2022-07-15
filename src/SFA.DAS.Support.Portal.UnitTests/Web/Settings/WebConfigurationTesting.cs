@@ -52,10 +52,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     T2Role = "--- configuration value goes here ---",
                     Tier2Claim = "--- configuration value goes here ---"
                 },
-                Site = new SiteSettings
-                {
-                    BaseUrls = "https://127.0.0.1:51274,https://127.0.0.1:19722"
-                },
                 SiteConnector = new SiteConnectorSettings
                 {
                     ClientId = "--- configuration value goes here ---",

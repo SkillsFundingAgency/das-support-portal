@@ -182,11 +182,8 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             try
             {
-                if (_client.DefaultRequestHeaders.Authorization == null)
-                {
-                    var token = await GetAuthenticationToken(resourceIdentity);
-                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                }
+                var token = await GetAuthenticationToken(resourceIdentity);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             catch (Exception e)
             {

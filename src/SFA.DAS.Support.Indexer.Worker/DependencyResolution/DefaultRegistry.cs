@@ -29,19 +29,21 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
-
             var configuration = GetConfiguration();
             For<IWebConfiguration>().Use(configuration);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
             For<ISiteSettings>().Use(configuration.Site);
-            For<ISiteConnectorSettings>().Use(configuration.SiteConnector);
+            For<ISiteConnectorSettings>().Use(configuration.SiteConnector ?? new SiteConnectorSettings());
             For<ServiceConfiguration>().Singleton().Use(new ServiceConfiguration
                 {
                     new EmployerAccountSiteManifest(),
                     new EmployerUserSiteManifest()
                 }
             );
-
+            For<ISubSiteConnectorSettings>().Use(new SubSiteConnectorConfigs
+            {
+                SubSiteConnectorSettings = configuration.SubSiteConnectorSettings
+            });
         }
 
         private WebConfiguration GetConfiguration()

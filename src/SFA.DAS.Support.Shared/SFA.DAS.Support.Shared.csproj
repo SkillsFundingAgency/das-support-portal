@@ -123,6 +123,8 @@
     <Compile Include="SiteConnection\ApprenticeshipSearchQuery.cs" />
     <Compile Include="SiteConnection\ApprenticeshipSearchType.cs" />
     <Compile Include="Authentication\AzureClientCredentialHelper.cs" />
+    <Compile Include="SiteConnection\ISiteConnectorSettings.cs" />
+    <Compile Include="SiteConnection\SiteConnectorSettings.cs" />
     <Compile Include="SiteConnection\SubSiteConnectorSettings.cs" />
     <Compile Include="SiteConnection\StrategyForClientErrorStatusCode.cs" />
     <Compile Include="SiteConnection\StrategyForRedirectionStatusCode.cs" />
@@ -131,9 +133,7 @@
     <Compile Include="SiteConnection\StrategyForInformationStatusCode.cs" />
     <Compile Include="SiteConnection\ISiteValidatorSettings.cs" />
     <Compile Include="SiteConnection\StrategyForSuccessStatusCode.cs" />
-    <Compile Include="SiteConnection\SiteConnectorSettings.cs" />
     <Compile Include="SiteConnection\ISiteConnector.cs" />
-    <Compile Include="SiteConnection\ISiteConnectorSettings.cs" />
     <Compile Include="Discovery\ISiteManifest.cs" />
     <Compile Include="Navigation\NavItem.cs" />
     <Compile Include="Navigation\PageLinks.cs" />

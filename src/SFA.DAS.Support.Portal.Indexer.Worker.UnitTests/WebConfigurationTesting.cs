@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema.Generation;
@@ -6,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
 using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Indexer.Worker;
+using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
@@ -29,10 +31,8 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
                     IndexShards = 1,
                     IndexReplicas = 0
                 },
-
                 Site = new SiteSettings
                 {
-                    BaseUrls = "https://127.0.0.1:51274,https://127.0.0.1:19722",
                     DelayTimeInSeconds = "1800"
                 },
                 SiteConnector = new SiteConnectorSettings
@@ -41,6 +41,15 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
                     ClientSecret = "--- configuration value goes here ---",
                     IdentifierUri = "--- configuration value goes here ---",
                     Tenant = "--- configuration value goes here ---"
+                },
+                SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
+                {
+                    new SubSiteConnectorConfig
+                    {
+                        BaseUrl = "https://testsite/",
+                        Key = SupportServiceIdentity.SupportEmployerAccount.ToString(),
+                        IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar"
+                    }
                 }
             };
         }
@@ -67,7 +76,6 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
             Assert.IsNotNull(actual);
         }
 
-
         [Test]
         public void ItShouldGenerateASchema()
         {
@@ -77,11 +85,9 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
             jSchemaGenerator.GenerationProviders.Add(provider);
             var actual = jSchemaGenerator.Generate(typeof(WebConfiguration));
 
-
             Assert.IsNotNull(actual);
             // hack to leverage format as 'environmentVariable'
             var schemaString = actual.ToString().Replace($"\"format\":", "\"environmentVariable\":");
-
 
             Assert.IsNotNull(schemaString);
             File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.schema.json",
@@ -93,7 +99,6 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
         {
             var json = JsonConvert.SerializeObject(_unit);
             Assert.IsFalse(string.IsNullOrWhiteSpace(json));
-
 
             File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.json", json);
         }
