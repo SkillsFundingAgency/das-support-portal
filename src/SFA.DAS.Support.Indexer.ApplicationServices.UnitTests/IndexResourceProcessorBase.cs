@@ -40,7 +40,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
         protected void Initialise()
         {
             _baseUrl = new Uri("http://localhost");
-            _resourceIdentifier = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar";
+            _resourceIdentifier = "https://das-test";
 
             _accountModels = new List<AccountSearchModel>
             {
