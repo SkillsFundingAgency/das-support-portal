@@ -52,13 +52,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     T2Role = "--- configuration value goes here ---",
                     Tier2Claim = "--- configuration value goes here ---"
                 },
-                SiteConnector = new SiteConnectorSettings
-                {
-                    ClientId = "--- configuration value goes here ---",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---"
-                },
                 SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
                 {
                     new SubSiteConnectorConfig

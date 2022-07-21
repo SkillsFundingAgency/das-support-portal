@@ -15,7 +15,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Assert.Throws<ArgumentNullException>(() =>
                 new SiteConnection.SiteConnector(null,
                     MockClientAuthenticator.Object,
-                    MockSiteConnectorSettings.Object,
                     Handlers, MockLogger.Object,
                      MockazureClientCredentialHelper.Object)
             );
@@ -26,8 +25,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         {
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
-                new SiteConnection.SiteConnector(null, null, MockSiteConnectorSettings.Object, Handlers,
-                    MockLogger.Object, MockazureClientCredentialHelper.Object)
+                new SiteConnection.SiteConnector(null,
+                    null, Handlers,
+                    MockLogger.Object,
+                    MockazureClientCredentialHelper.Object)
             );
         }
 
@@ -36,8 +37,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         {
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
-                new SiteConnection.SiteConnector(null, MockClientAuthenticator.Object, MockSiteConnectorSettings.Object,
-                    Handlers, MockLogger.Object, MockazureClientCredentialHelper.Object)
+                new SiteConnection.SiteConnector(null,
+                     MockClientAuthenticator.Object,
+                    Handlers, MockLogger.Object,
+                    MockazureClientCredentialHelper.Object)
             );
         }
 
@@ -46,8 +49,10 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         {
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
-                new SiteConnection.SiteConnector(null, MockClientAuthenticator.Object, MockSiteConnectorSettings.Object,
-                    Handlers, null, MockazureClientCredentialHelper.Object)
+                new SiteConnection.SiteConnector(null,
+                    MockClientAuthenticator.Object,
+                    Handlers, null,
+                    MockazureClientCredentialHelper.Object)
             );
         }
 
@@ -56,8 +61,11 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         {
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
-                new SiteConnection.SiteConnector(null, MockClientAuthenticator.Object, null, Handlers,
-                    MockLogger.Object, MockazureClientCredentialHelper.Object)
+                new SiteConnection.SiteConnector(null,
+                   MockClientAuthenticator.Object,
+                   Handlers,
+                    MockLogger.Object,
+                    MockazureClientCredentialHelper.Object)
             );
         }
     }

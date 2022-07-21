@@ -8,10 +8,7 @@ namespace SFA.DAS.Support.Indexer.Worker
 {
     public class WebConfiguration : IWebConfiguration
     {
-        public SiteConnectorSettings SiteConnector { get; set; }
-
         [JsonRequired] public SiteSettings Site { get; set; }
-
         [JsonRequired] public ElasticSearchSettings ElasticSearch { get; set; }
         [JsonRequired] public List<SubSiteConnectorConfig> SubSiteConnectorSettings { get; set; }
     }

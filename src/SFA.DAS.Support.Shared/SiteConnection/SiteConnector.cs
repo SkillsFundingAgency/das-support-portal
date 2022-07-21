@@ -20,19 +20,16 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly IClientAuthenticator _clientAuthenticator;
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
-        private readonly ISiteConnectorSettings _settings;
         private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
-            ISiteConnectorSettings settings,
             List<IHttpStatusCodeStrategy> handlers,
             ILog logger,
             IAzureClientCredentialHelper azureClientCredentialHelper)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -208,24 +205,8 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
         private async Task<string> GetAuthenticationToken(string resourceIdentity)
         {
-            var accessToken = IsClientCredentialConfiguration(_settings.ClientId, _settings.ClientSecret, _settings.Tenant)
-                ? await GetClientCredentialAuthenticationResult()
-                : await _azureClientCredentialHelper.GetAccessTokenAsync(resourceIdentity);
+            var accessToken = await _azureClientCredentialHelper.GetAccessTokenAsync(resourceIdentity);
             return accessToken;
-        }
-
-        private bool IsClientCredentialConfiguration(string clientId, string clientSecret, string tenant)
-        {
-            return !string.IsNullOrWhiteSpace(clientId) && !string.IsNullOrWhiteSpace(clientSecret) && !string.IsNullOrWhiteSpace(tenant);
-        }
-
-        private async Task<string> GetClientCredentialAuthenticationResult()
-        {
-            var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
-                      _settings.ClientSecret,
-                      _settings.IdentifierUri,
-                      _settings.Tenant);
-            return token;
         }
     }
 }

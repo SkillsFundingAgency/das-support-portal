@@ -21,7 +21,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         protected HttpClient HttpClient;
         protected Mock<IClientAuthenticator> MockClientAuthenticator;
         protected Mock<ILog> MockLogger;
-        protected Mock<ISiteConnectorSettings> MockSiteConnectorSettings;
         protected TestType TestType;
         protected Uri TestUri;
         protected string TestResourceIdentifier;
@@ -40,7 +39,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             HttpRequestMessage.Properties[System.Web.Http.Hosting.HttpPropertyKeys.HttpConfigurationKey] = configuration;
 
             MockClientAuthenticator = new Mock<IClientAuthenticator>();
-            MockSiteConnectorSettings = new Mock<ISiteConnectorSettings>();
             MockLogger = new Mock<ILog>();
             Handlers = new List<IHttpStatusCodeStrategy>
             {
@@ -74,7 +72,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             Unit = new SiteConnection.SiteConnector(HttpClient,
                 MockClientAuthenticator.Object,
-                MockSiteConnectorSettings.Object,
                 Handlers,
                 MockLogger.Object,
                 MockazureClientCredentialHelper.Object);

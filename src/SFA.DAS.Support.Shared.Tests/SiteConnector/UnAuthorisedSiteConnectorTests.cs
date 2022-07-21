@@ -25,14 +25,8 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             HttpClient.DefaultRequestHeaders.Authorization = null;
 
-            MockSiteConnectorSettings.SetupGet(x => x.ClientSecret).Returns(string.Empty);
-            MockSiteConnectorSettings.SetupGet(x => x.ClientId).Returns(string.Empty);
-            MockSiteConnectorSettings.SetupGet(x => x.IdentifierUri).Returns(string.Empty);
-            MockSiteConnectorSettings.SetupGet(x => x.ClientSecret).Returns(string.Empty);
-
             Unit = new SiteConnection.SiteConnector(HttpClient,
               MockClientAuthenticator.Object,
-              MockSiteConnectorSettings.Object,
               Handlers,
               MockLogger.Object,
               MockazureClientCredentialHelper.Object);
@@ -59,14 +53,8 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
 
             HttpClient.DefaultRequestHeaders.Authorization = null;
 
-            MockSiteConnectorSettings.SetupGet(x => x.ClientSecret).Returns("credentials");
-            MockSiteConnectorSettings.SetupGet(x => x.ClientId).Returns("credentials");
-            MockSiteConnectorSettings.SetupGet(x => x.IdentifierUri).Returns("credentials");
-            MockSiteConnectorSettings.SetupGet(x => x.Tenant).Returns("credentials");
-
             Unit = new SiteConnection.SiteConnector(HttpClient,
               MockClientAuthenticator.Object,
-              MockSiteConnectorSettings.Object,
               Handlers,
               MockLogger.Object,
               MockazureClientCredentialHelper.Object);

@@ -35,13 +35,6 @@ namespace SFA.DAS.Support.Portal.Indexer.Worker.UnitTests
                 {
                     DelayTimeInSeconds = "1800"
                 },
-                SiteConnector = new SiteConnectorSettings
-                {
-                    ClientId = "--- configuration value goes here ---",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---"
-                },
                 SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
                 {
                     new SubSiteConnectorConfig

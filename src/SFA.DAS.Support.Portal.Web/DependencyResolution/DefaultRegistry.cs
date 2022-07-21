@@ -64,7 +64,6 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             For<IChallengeSettings>().Use(configuration.Challenge);
             For<ICryptoSettings>().Use(configuration.Crypto);
             For<ISearchSettings>().Use(configuration.ElasticSearch);
-            For<ISiteConnectorSettings>().Use(configuration.SiteConnector ?? new SiteConnectorSettings());
 
             For<IRoleSettings>().Use(configuration.Roles);
             For<ISubSiteConnectorSettings>().Use(new SubSiteConnectorConfigs
