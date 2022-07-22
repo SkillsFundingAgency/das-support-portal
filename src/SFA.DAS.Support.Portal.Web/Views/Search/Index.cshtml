@@ -109,7 +109,6 @@
                                     <tr>
                                         <th scope="col">Name</th>
                                         <th scope="col">Email</th>
-                                        <th scope="col">Account status</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -122,9 +121,6 @@
                                             </td>
                                             <td data-label="Email">
                                                 @user.Email
-                                            </td>
-                                            <td data-label="Status">
-                                                @user.Status
                                             </td>
                                             <td data-label="">
                                                 @Html.ActionLink("view", "Index", "Resource", new { key = SupportServiceResourceKey.EmployerUser, id = user.Id }, null)
