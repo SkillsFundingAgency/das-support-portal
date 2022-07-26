@@ -9,6 +9,7 @@ using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
+using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
@@ -18,18 +19,15 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
     {
         public InfrastuctureRegistry()
         {
-           
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForSuccessStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForInformationStatusCode>();
 
-
             For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>().Use(c => new HttpClient());
-
 
             For<IElasticsearchClientFactory>().Use<ElasticsearchClientFactory>();
 
@@ -53,7 +51,8 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
                     x.Type<AccountIndexResourceProcessor>();
                     x.Type<UserIndexResourceProcessor>();
                 });
-        }
 
+            For<IAzureClientCredentialHelper>().Use<AzureClientCredentialHelper>();
+        }
     }
 }

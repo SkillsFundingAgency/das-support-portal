@@ -7,6 +7,7 @@ using SFA.DAS.Support.Portal.Web.Logging;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.SiteConnection;
+using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 using StructureMap.Configuration.DSL;
 
 namespace SFA.DAS.Support.Portal.Web.DependencyResolution
@@ -16,14 +17,13 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     {
         public WebRegistry()
         {
-           
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForRedirectionStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForSuccessStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForInformationStatusCode>();
 
-
+            For<IAzureClientCredentialHelper>().Use<AzureClientCredentialHelper>();
             For<IClientAuthenticator>().Use<ActiveDirectoryClientAuthenticator>();
 
             For<HttpClient>().Use(c => new HttpClient());

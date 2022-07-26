@@ -5,9 +5,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Shared.Authentication;
+using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
 {
@@ -18,46 +20,44 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly IClientAuthenticator _clientAuthenticator;
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
-        private readonly ISiteConnectorSettings _settings;
+        private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
 
         public SiteConnector(HttpClient client,
             IClientAuthenticator clientAuthenticator,
-            ISiteConnectorSettings settings,
             List<IHttpStatusCodeStrategy> handlers,
-            ILog logger)
+            ILog logger,
+            IAzureClientCredentialHelper azureClientCredentialHelper)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
             _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _azureClientCredentialHelper = azureClientCredentialHelper ?? throw new ArgumentNullException(nameof(azureClientCredentialHelper));
         }
 
         public HttpStatusCode LastCode { get; set; }
-
 
         public string LastContent { get; set; }
         public Exception LastException { get; set; }
         public HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
 
-        public async Task<T> Download<T>(string url) where T : class
+        public async Task<T> Download<T>(string url, string resourceIdentity) where T : class
         {
-            return await Download<T>(new Uri(url));
+            return await Download<T>(new Uri(url), resourceIdentity);
         }
 
-        public async Task<string> Download(Uri url)
+        public async Task<string> Download(Uri url, string resourceIdentity)
         {
-            return await Download<string>(url);
+            return await Download<string>(url, resourceIdentity);
         }
 
-        public async Task<T> Upload<T>(Uri uri, string content)where T : class
+        public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            await EnsureClientAuthorizationHeader(resourceIdentity);
 
             try
             {
-
                 var postContent = new StringContent(content);
 
                 var response = await _client.PostAsync(uri, postContent);
@@ -78,7 +78,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
                     default:
 
-
                         if (typeof(T) == typeof(string)) return LastContent as T;
 
                         return JsonConvert.DeserializeObject<T>(LastContent);
@@ -90,9 +89,10 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 return null;
             }
         }
-        public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData) where T : class
+
+        public async Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData, string resourceIdentity) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            await EnsureClientAuthorizationHeader(resourceIdentity);
 
             try
             {
@@ -114,7 +114,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
                     default:
 
-
                         if (typeof(T) == typeof(string)) return LastContent as T;
 
                         return JsonConvert.DeserializeObject<T>(LastContent);
@@ -127,10 +126,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
 
-
-        public async Task<T> Download<T>(Uri uri) where T : class
+        public async Task<T> Download<T>(Uri uri, string resourceIdentity) where T : class
         {
-            await EnsureClientAuthorizationHeader();
+            await EnsureClientAuthorizationHeader(resourceIdentity);
 
             try
             {
@@ -163,7 +161,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                             $"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
                         return null;
 
-
                     default:
                         _logger.Info($"Successful call to site from {nameof(SiteConnector)} recieving {LastCode}");
                         var content = await response.Content.ReadAsStringAsync();
@@ -178,18 +175,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             }
         }
 
-        private async Task EnsureClientAuthorizationHeader()
+        private async Task EnsureClientAuthorizationHeader(string resourceIdentity)
         {
             try
             {
-                if (_client.DefaultRequestHeaders.Authorization == null)
-                {
-                    var token = await _clientAuthenticator.Authenticate(_settings.ClientId,
-                        _settings.ClientSecret,
-                        _settings.IdentifierUri,
-                        _settings.Tenant);
-                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                }
+                var token = await GetAuthenticationToken(resourceIdentity);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             catch (Exception e)
             {
@@ -210,6 +201,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             if (handlerOptions.Any()) return handlerOptions.First().Handle(_client, LastCode);
 
             return HttpStatusCodeDecision.Continue;
+        }
+
+        private async Task<string> GetAuthenticationToken(string resourceIdentity)
+        {
+            var accessToken = await _azureClientCredentialHelper.GetAccessTokenAsync(resourceIdentity);
+            return accessToken;
         }
     }
 }

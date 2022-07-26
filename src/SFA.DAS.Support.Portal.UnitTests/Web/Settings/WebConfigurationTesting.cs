@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema.Generation;
@@ -51,16 +52,14 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
                     T2Role = "--- configuration value goes here ---",
                     Tier2Claim = "--- configuration value goes here ---"
                 },
-                Site = new SiteSettings
+                SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
                 {
-                    BaseUrls = "https://127.0.0.1:51274,https://127.0.0.1:19722"
-                },
-                SiteConnector = new SiteConnectorSettings
-                {
-                    ClientId = "--- configuration value goes here ---",
-                    ClientSecret = "--- configuration value goes here ---",
-                    IdentifierUri = "--- configuration value goes here ---",
-                    Tenant = "--- configuration value goes here ---"
+                    new SubSiteConnectorConfig
+                    {
+                        BaseUrl ="configuration",
+                        IdentifierUri = "configuration",
+                        Key = "configuration"
+                    }
                 }
             };
         }
@@ -87,7 +86,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
             Assert.IsNotNull(actual);
         }
 
-
         [Test]
         public void ItShouldGenerateASchema()
         {
@@ -96,7 +94,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
             jSchemaGenerator.GenerationProviders.Clear();
             jSchemaGenerator.GenerationProviders.Add(provider);
             var actual = jSchemaGenerator.Generate(typeof(WebConfiguration));
-
 
             Assert.IsNotNull(actual);
             // hack to leverage format as 'environmentVariable'
@@ -111,7 +108,6 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Settings
         {
             var json = JsonConvert.SerializeObject(_unit);
             Assert.IsFalse(string.IsNullOrWhiteSpace(json));
-
 
             File.WriteAllText($@"{AppDomain.CurrentDomain.BaseDirectory}\{SiteConfigFileName}.json", json);
         }
