@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.Discovery;
@@ -16,19 +17,22 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     public class StatusController : ApiController
     {
         private ISiteConnector _siteConnector;
-        private readonly ISiteSettings _siteSettings;
+        private readonly ISubSiteConnectorSettings _siteSettings;
+        private readonly ILog _log;
 
-        public StatusController(ISiteConnector siteConnector, ISiteSettings siteSettings)
+        public StatusController(ISiteConnector siteConnector, ISubSiteConnectorSettings siteSettings, ILog log)
         {
             _siteConnector = siteConnector;
             _siteSettings = siteSettings;
+            _log = log;
         }
+
         [System.Web.Mvc.AllowAnonymous]
         public async Task<IHttpActionResult> Get()
         {
             // Get the status of each site
             // add it to this one and output the results
-            var sites = _siteSettings.BaseUrls.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var sites = _siteSettings.SubSiteConnectorSettings.Select(x => $"{x.Key}|{x.BaseUrl}").ToList();
             var localResult = new
             {
                 ServiceName = AddServiceName(),
@@ -41,23 +45,21 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             try
             {
-                var subSites = new Dictionary<SupportServiceIdentity, Uri>();
-                foreach (var subSite in sites)
+                foreach (var subSite in _siteSettings.SubSiteConnectorSettings)
                 {
-                    var siteElements = subSite.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (siteElements.Length != 2) continue;
-                    if (string.IsNullOrWhiteSpace(siteElements[0])) continue;
-                    if (string.IsNullOrWhiteSpace(siteElements[1])) continue;
-                    subSites.Add((SupportServiceIdentity)Enum.Parse(typeof(SupportServiceIdentity), siteElements[0]), new Uri(siteElements[1]));
-                }
+                    var uri = new Uri(new Uri(subSite.BaseUrl), "api/status");
+                    SupportServiceIdentity resourceKey;
+                    if (!Enum.TryParse<SupportServiceIdentity>(subSite.Key, out resourceKey))
+                    {
+                        _log.Warn($"Error while trying to convert subSite {subSite.Key} to SupportServiceIdentity enum ");
+                        continue;
+                    }
 
-                foreach (var subSite in subSites)
-                {
-                    var uri = new Uri(subSite.Value, "api/status");
                     try
                     {
-                        await _siteConnector.Download<dynamic>(uri);
-                        localResult.SubSites.Add(subSite.Key, new
+                        await _siteConnector.Download<dynamic>(uri, subSite.IdentifierUri);
+
+                        localResult.SubSites.Add(resourceKey, new
                         {
                             Result = _siteConnector.HttpStatusCodeDecision,
                             HttpStatusCode = _siteConnector.LastCode,
@@ -67,7 +69,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                     }
                     catch (Exception e)
                     {
-                        localResult.SubSites.Add(subSite.Key, new
+                        localResult.SubSites.Add(resourceKey, new
                         {
                             Result = _siteConnector.HttpStatusCodeDecision,
                             HttpStatusCode = _siteConnector.LastCode,
@@ -81,7 +83,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             {
                 // ignored
             }
-
 
             return Ok(localResult);
         }

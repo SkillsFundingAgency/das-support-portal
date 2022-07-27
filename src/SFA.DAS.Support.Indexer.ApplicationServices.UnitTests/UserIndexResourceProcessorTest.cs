@@ -16,22 +16,18 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
     [TestFixture]
     public class UserIndexResourceProcessorTest : IndexResourceProcessorBase
     {
-       
         [SetUp]
         public void Setup()
         {
             Initialise();
         }
 
-
         [Test]
         public async Task ShouldProcessOnlyUserSearchType()
         {
-
             _indexNameCreator
                 .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.Account))
                 .Returns("new_index_name");
-
 
             var _sut = new UserIndexResourceProcessor(_siteSettings.Object,
                                                         _downloader.Object,
@@ -41,13 +37,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
                                                         _indexNameCreator.Object,
                                                         _elasticClient.Object);
 
-            await _sut.ProcessResource(new System.Uri("http://localhost"), _accountSiteResource);
+            await _sut.ProcessResource(new IndexResourceProcessorModel
+            {
+                BasUri = new System.Uri("http://localhost"),
+                SiteResource = _accountSiteResource,
+                ResourceIdentifier = _resourceIdentifier
+            });
 
-            _indexNameCreator
-                .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Never);
-
+            _indexNameCreator.Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Never);
         }
-
-
     }
 }
