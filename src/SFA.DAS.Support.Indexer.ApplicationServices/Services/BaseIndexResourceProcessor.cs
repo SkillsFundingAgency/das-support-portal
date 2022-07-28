@@ -50,18 +50,18 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _elasticClient = elasticClient;
         }
 
-        public async Task ProcessResource(Uri baseUri, SiteResource siteResource)
+        public async Task ProcessResource(IndexResourceProcessorModel resourceProcessorModel)
         {
-            if (!ContinueProcessing(siteResource.SearchCategory)) return;
+            if (!ContinueProcessing(resourceProcessorModel.SiteResource.SearchCategory)) return;
 
             try
             {
-                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, siteResource.SearchCategory);
+                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
                 CreateIndex(newIndexName);
 
                 try
                 {
-                    await IndexDocument(baseUri, siteResource, newIndexName);
+                    await IndexDocument(resourceProcessorModel.BasUri, resourceProcessorModel.SiteResource, newIndexName, resourceProcessorModel.ResourceIdentifier);
                 }
                 catch (Exception)
                 {
@@ -71,7 +71,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 }
 
                 _logger.Info($"Creating Index Alias and Swapping from old to new index for type {typeof(T).Name}...");
-                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, siteResource.SearchCategory);
+                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
                 _logger.Info($"Deleting Old Indexes for type {typeof(T).Name}...");
@@ -96,7 +96,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                     response.OriginalException);
         }
 
-        private async Task IndexDocument(Uri baseUri, SiteResource siteResource, string newIndexName)
+        private async Task IndexDocument(Uri baseUri, SiteResource siteResource, string newIndexName, string resourceIdentifier)
         {
             _queryTimer.Start();
             _logger.Info($" Downloading Index Records for type {typeof(T).Name}...");
@@ -106,7 +106,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             var retryCount = 0;
             do
             {
-                totalSearchItemsString = await _dataSource.Download(searchItemCountUri);
+                totalSearchItemsString = await _dataSource.Download(searchItemCountUri, resourceIdentifier);
             }
             while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
@@ -129,7 +129,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 retryCount = 0;
                 do
                 {
-                    searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri);
+                    searchItems = await _dataSource.Download<IEnumerable<T>>(searchUri, resourceIdentifier);
                 }
                 while (_dataSource.LastCode == HttpStatusCode.Unauthorized && ++retryCount < 3);
 
@@ -153,7 +153,6 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             _queryTimer.Stop();
             _logger.Info($"Query Elapse Time For {typeof(T).Name} : {_queryTimer.Elapsed}");
         }
-
 
         private void ValidateDownResponse(HttpStatusCode responseCode)
         {
