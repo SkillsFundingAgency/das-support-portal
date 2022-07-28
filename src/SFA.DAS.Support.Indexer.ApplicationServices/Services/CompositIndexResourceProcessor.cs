@@ -15,13 +15,12 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 indexResourceProcessors ?? throw new ArgumentNullException("IndexResourceProcessors");
         }
 
-        public async Task ProcessResource(Uri basUri, SiteResource siteResource)
-        { 
+        public async Task ProcessResource(IndexResourceProcessorModel resourceProcessorModel)
+        {
             foreach (var indexResourceProcessor in _indexResourceProcessors)
             {
-                await indexResourceProcessor.ProcessResource(basUri, siteResource);
+                await indexResourceProcessor.ProcessResource(resourceProcessorModel);
             }
-                
         }
     }
 }

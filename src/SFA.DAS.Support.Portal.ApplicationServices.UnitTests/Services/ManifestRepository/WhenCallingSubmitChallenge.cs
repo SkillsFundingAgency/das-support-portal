@@ -15,7 +15,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
     [TestFixture]
     public class WhenCallingSubmitChallenge : WhenTestingManifestRepository
     {
-
         private string _id;
         private Dictionary<string, string> _submittedFormData;
         private string _uriString;
@@ -24,7 +23,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         private string _challengekey;
         private IDictionary<string, string> _postedFormData;
         private string _resourceKey;
-
 
         [SetUp]
         public override void Setup()
@@ -70,9 +68,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 ))
                 .Returns(mappedFormHtml);
 
-
             MockSiteConnector
-                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>()))
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<string>()))
                 .ReturnsAsync(mappedFormHtml);
 
             MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.OK);
@@ -94,7 +91,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             };
 
             MockSiteConnector
-                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>()))
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(JsonConvert.SerializeObject(challengeResult)));
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
@@ -104,7 +101,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             Assert.AreEqual(_redirectUrl, result.RedirectUrl);
             Assert.IsNull(result.Page);
         }
-
 
         [Test]
         public void ItShouldThrowAnExceptionIfTheFormChallengeKeyIsInvalid()
@@ -133,12 +129,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         {
             var httpException = new HttpException();
             MockSiteConnector
-                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData))
+                .Setup(x => x.Upload<string>(It.IsAny<Uri>(), _postedFormData, It.IsAny<string>()))
                 .ThrowsAsync(httpException);
 
             MockSiteConnector.SetupGet(x => x.LastCode).Returns(HttpStatusCode.InternalServerError);
             MockSiteConnector.SetupGet(x => x.LastException).Returns(httpException);
-
 
             Assert.ThrowsAsync<HttpException>(() => Unit.SubmitChallenge(_id, _submittedFormData));
         }
