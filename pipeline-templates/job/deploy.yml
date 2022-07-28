@@ -1,6 +1,8 @@
 parameters:
   ServiceConnection:
   Environment:
+  AppRoleAssignmentsServiceConnection:
+  AADGroupObjectIdArray:
 
 jobs:
 - deployment: DeployApps
@@ -44,6 +46,13 @@ jobs:
             SourcePath: $(Pipeline.Workspace)/das-employer-config/Configuration/das-support-portal
             TargetFileName: '*.schema.json'
             TableName: Configuration
+        - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
+            ResourceName: $(AppServiceName)
+            Tenant: $(Tenant)
+            AADGroupObjectIdArray: ${{ parameters.AADGroupObjectIdArray }}
+            IsMultiRepoCheckout: true
         - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}

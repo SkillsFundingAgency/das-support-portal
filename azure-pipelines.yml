@@ -22,7 +22,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.4.63
+    ref: refs/tags/0.4.70
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
@@ -58,6 +58,8 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      AADGroupObjectIdArray: $(AdminAADGroupObjectId),$(DevAADGroupObjectId)
 
 - stage: Deploy_TEST
   dependsOn: Build
@@ -71,6 +73,8 @@ stages:
     parameters:
       Environment: TEST
       ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      AADGroupObjectIdArray: $(AdminAADGroupObjectId),$(DevAADGroupObjectId)
 
 - stage: Deploy_PP
   dependsOn: Build
@@ -84,6 +88,8 @@ stages:
     parameters:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
+      AADGroupObjectIdArray: $(AdminAADGroupObjectId),$(DevAADGroupObjectId)
 
 - stage: Deploy_PROD
   dependsOn: Build
@@ -97,4 +103,4 @@ stages:
     parameters:
       Environment: PROD
       ServiceConnection: SFA-DIG-Prod-ARM
-
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
