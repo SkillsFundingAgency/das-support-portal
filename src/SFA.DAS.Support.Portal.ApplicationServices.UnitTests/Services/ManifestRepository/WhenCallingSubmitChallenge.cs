@@ -76,6 +76,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
 
+            MockSiteConnector.Verify(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>(),
+                MockSiteSettings.SubSiteConnectorSettings[0].IdentifierUri), Times.Once);
+
             Assert.IsNotNull(result);
             Assert.IsFalse(result.HasRedirect);
             Assert.IsNull(result.RedirectUrl);
@@ -95,6 +98,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                 .Returns(Task.FromResult(JsonConvert.SerializeObject(challengeResult)));
 
             var result = await Unit.SubmitChallenge(_id, _submittedFormData);
+
+            MockSiteConnector.Verify(x => x.Upload<string>(It.IsAny<Uri>(), It.IsAny<IDictionary<string, string>>(),
+             MockSiteSettings.SubSiteConnectorSettings[0].IdentifierUri), Times.Once);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.HasRedirect);
