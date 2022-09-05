@@ -105,7 +105,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             formData.Remove("innerAction");
             formData.Remove("resourceKey");
 
-            var html = await _siteConnector.Upload<string>(uri, formData, subSiteConfig.BaseUrl);
+            var html = await _siteConnector.Upload<string>(uri, formData, subSiteConfig.IdentifierUri);
 
             if (_siteConnector.LastException != null) throw _siteConnector.LastException;
 
