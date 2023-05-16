@@ -14,5 +14,8 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         [JsonRequired] public ElasticSearchSettings ElasticSearch { get; set; }
         [JsonRequired] public RoleSettings Roles { get; set; }
         [JsonRequired] public List<SubSiteConnectorConfig> SubSiteConnectorSettings { get; set; }
+
+        /// <inheritdoc />
+        [JsonRequired] public bool UseDfESignIn { get;set; }
     }
 }

@@ -11,5 +11,6 @@ namespace SFA.DAS.Support.Portal.Web.Settings
         ChallengeSettings Challenge { get; set; }
         ElasticSearchSettings ElasticSearch { get; set; }
         RoleSettings Roles { get; set; }
+        bool UseDfESignIn { get; set; }
     }
 }

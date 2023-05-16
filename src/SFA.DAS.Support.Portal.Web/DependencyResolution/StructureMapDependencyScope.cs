@@ -118,10 +118,14 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
         protected override object DoGetInstance(Type serviceType, string key) {
             IContainer container = (CurrentNestedContainer ?? Container);
 
-            if (string.IsNullOrEmpty(key)) {
-                return serviceType.IsAbstract || serviceType.IsInterface
-                    ? container.TryGetInstance(serviceType)
-                    : container.GetInstance(serviceType);
+            //var instances = container.GetAllInstances(serviceType);
+
+            if (string.IsNullOrEmpty(key))
+            {
+                if (serviceType.IsAbstract || serviceType.IsInterface)
+                    return container.TryGetInstance(serviceType);
+                else
+                    return container.GetInstance(serviceType);
             }
 
             return container.GetInstance(serviceType, key);

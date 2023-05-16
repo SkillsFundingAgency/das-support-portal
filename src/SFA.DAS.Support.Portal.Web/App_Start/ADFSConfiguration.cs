@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Portal.Web.Settings;
+using WsFederationMessage = Microsoft.IdentityModel.Protocols.WsFederation.WsFederationMessage;
 
 namespace SFA.DAS.Support.Portal.Web
 {
@@ -44,7 +45,7 @@ namespace SFA.DAS.Support.Portal.Web
         {
             return new WsFederationAuthenticationNotifications
             {
-                SecurityTokenValidated = OnSecurityTokenValidated,
+                SecurityTokenValidated = nx => OnSecurityTokenValidated(nx),
                 SecurityTokenReceived = nx => OnSecurityTokenReceived(),
                 AuthenticationFailed = nx => OnAuthenticationFailed(nx),
                 MessageReceived = nx => OnMessageReceived(),
