@@ -25,7 +25,7 @@ namespace SFA.DAS.Support.Portal.Web
             routes.MapRoute(
                 "Default",
                 "{controller}/{action}/{id}",
-                new {controller = "Search", action = "Index", id = UrlParameter.Optional}
+                new {controller = "Home", action = "StartPage", id = UrlParameter.Optional}
             );
         }
     }

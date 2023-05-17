@@ -168,6 +168,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Controllers\HomeController\HomeControllerTest.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengeGet.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengePost.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerIndexGet.cs" />
