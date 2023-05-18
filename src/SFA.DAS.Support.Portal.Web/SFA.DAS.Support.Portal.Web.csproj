@@ -643,6 +643,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\ControllerFilters.cs" />
     <Compile Include="App_Start\IADFSConfiguration.cs" />
+    <Compile Include="App_Start\DfESignInOpenIdConnectConfiguration.cs" />
+    <Compile Include="App_Start\IOpenIdConnectConfiguration.cs" />
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
@@ -656,6 +658,7 @@
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="DependencyResolution\DfESignInApiClientRegistry.cs" />
     <Compile Include="Extensions\ClaimsIdentityExtensions.cs" />
+    <Compile Include="Extensions\ServiceConfigurationExtension.cs" />
     <Compile Include="Interfaces\IDfESignInService.cs" />
     <Compile Include="Interfaces\IDfESignInServiceConfiguration.cs" />
     <Compile Include="Models\DfESignInClientConfig.cs" />
