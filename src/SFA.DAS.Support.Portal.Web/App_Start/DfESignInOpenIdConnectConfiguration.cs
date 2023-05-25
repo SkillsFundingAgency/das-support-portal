@@ -124,7 +124,7 @@ namespace SFA.DAS.Support.Portal.Web
                     roleClaims.Add(new Claim(ClaimName.RoleNumericId, role.NumericId.ToString(), ClaimTypes.Role, notification.Options.ClientId));
 
                     // add service role claim to initial identity.
-                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ServiceClaimType, role.Name));
+                    notification.AuthenticationTicket.Identity.AddClaim(new Claim(ServiceClaimType, role.Code));
                 }
 
                 // add service role claims to identity.
