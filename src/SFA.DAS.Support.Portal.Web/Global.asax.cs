@@ -19,7 +19,7 @@ namespace SFA.DAS.Support.Portal.Web
         protected void Application_Start()
         {
             MvcHandler.DisableMvcResponseHeader = true;
-            var logger = DependencyResolver.Current.GetService<ILog>();
+            var logger = DependencyResolver.Current.GetService<ILog>() ?? new NLogLogger();
 
             logger.Info("Starting Web Role");
 
@@ -53,7 +53,7 @@ namespace SFA.DAS.Support.Portal.Web
 
         private void BuildAndLogExceptionReport(Exception ex)
         {
-            var logger = DependencyResolver.Current.GetService<ILog>();
+            var logger = DependencyResolver.Current.GetService<ILog>() ?? new NLogLogger();
 
             var exceptionReport = $"An Unhandled exception was caught by {nameof(Application_Error)}\r\n";
             exceptionReport += TryAddUserContext();
@@ -94,7 +94,7 @@ namespace SFA.DAS.Support.Portal.Web
 
             if (context.Request.Path.StartsWith("/__browserlink")) return;
 
-            var logger = DependencyResolver.Current.GetService<ILog>();
+            var logger = DependencyResolver.Current.GetService<ILog>() ?? new NLogLogger();
             logger.Info($"{context.Request.HttpMethod} {context.Request.Path}");
         }
 

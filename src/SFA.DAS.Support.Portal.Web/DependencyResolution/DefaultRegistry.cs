@@ -16,6 +16,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using SFA.DAS.Support.Portal.Web.App_Start;
 using SFA.DAS.Support.Portal.Web.Settings;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -34,6 +35,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using System.Diagnostics.CodeAnalysis;
+    using SFA.DAS.Support.Portal.Web.Extensions;
 
     [ExcludeFromCodeCoverage]
     public class DefaultRegistry : Registry
@@ -57,7 +59,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 x.GetInstance<ILoggingPropertyFactory>().GetProperties())).AlwaysUnique();
 
-            WebConfiguration configuration = GetConfiguration();
+            var configuration = ServiceConfigurationExtension.GetConfiguration<WebConfiguration>(ServiceName, Version);
 
             For<IWebConfiguration>().Use(configuration);
             For<IAuthSettings>().Use(configuration.Authentication);
@@ -72,32 +74,10 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             });
 
             For<IADFSConfiguration>().Use<ADFSConfiguration>();
+            For<IOpenIdConnectConfiguration>().Use<DfESignInOpenIdConnectConfiguration>();
 
             For<IServiceConfiguration>().Singleton().Use(
                 new ServiceConfiguration { new EmployerAccountSiteManifest(), new EmployerUserSiteManifest() });
-        }
-
-        private WebConfiguration GetConfiguration()
-        {
-            var environment = ConfigurationManager.AppSettings["EnvironmentName"];
-
-            var storageConnectionString = ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"];
-
-            if (environment == null) throw new ArgumentNullException(nameof(environment));
-
-            if (storageConnectionString == null) throw new ArgumentNullException(nameof(storageConnectionString));
-
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString); ;
-
-            var configurationOptions = new ConfigurationOptions(ServiceName, environment, Version);
-
-            var configurationService = new ConfigurationService(configurationRepository, configurationOptions);
-
-            var webConfiguration = configurationService.Get<WebConfiguration>();
-
-            if (webConfiguration == null) throw new ArgumentOutOfRangeException($"The requried configuration settings were not retrieved, please check the environmentName case, and the configuration connection string is correct.");
-
-            return webConfiguration;
         }
     }
 }

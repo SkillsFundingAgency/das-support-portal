@@ -40,6 +40,7 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution {
                 c.AddRegistry<ApplicationServicesRegistry>();
                 c.AddRegistry<MediatrRegistry>();
                 c.AddRegistry<HealthRegistry>();
+                c.AddRegistry<DfESignInApiClientRegistry>();
             });
         }
     }
