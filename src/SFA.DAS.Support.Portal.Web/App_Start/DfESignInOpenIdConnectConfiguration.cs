@@ -44,7 +44,7 @@ namespace SFA.DAS.Support.Portal.Web
 
         public OpenIdConnectAuthenticationOptions GetOpenIdConnectOptions()
         {
-            var oidcRedirectUrl = _webConfiguration.Authentication.Realm + "sign-in";
+            var oidcRedirectUrl = _webConfiguration.Authentication.Realm + "/sign-in";
             return new OpenIdConnectAuthenticationOptions
             {
                 Authority = _dfESignInServiceConfiguration.DfEOidcConfiguration.BaseUrl,
@@ -90,7 +90,7 @@ namespace SFA.DAS.Support.Portal.Web
             System.Web.HttpContext.Current.Items.Add(ClaimsIdentity.DefaultNameClaimType, ukPrn);
             System.Web.HttpContext.Current.Items.Add(CustomClaimsIdentity.DisplayName, $"{firstName} {lastName}");
 
-            notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, ukPrn.ToString()));
+            notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, $"{firstName} {lastName}"));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(CustomClaimsIdentity.DisplayName, $"{firstName} {lastName}"));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(CustomClaimsIdentity.UkPrn, ukPrn.ToString()));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Name, $"{firstName} {lastName}"));
