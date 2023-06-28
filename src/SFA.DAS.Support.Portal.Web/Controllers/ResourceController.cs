@@ -74,6 +74,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         }
 
         [System.Web.Mvc.HttpGet]
+        [System.Web.Mvc.Route("/resource")]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
             id = id.ToUpper();
