@@ -92,7 +92,7 @@ namespace SFA.DAS.Support.Shared.Discovery
             {
                 Title = r.ResourceTitle,
                 Key = r.ResourceKey,
-                Href = $"/resource?key={r.ResourceKey}&id={id}"
+                Href = $"/resource/index?key={r.ResourceKey}&id={id}"
             });
         }
 
