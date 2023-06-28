@@ -12,8 +12,7 @@ namespace SFA.DAS.Support.Shared.Discovery
         public SubSiteConnectorConfig FindSiteConfigForManfiestElement(List<SubSiteConnectorConfig> sites, SupportServiceResourceKey key)
         {
             if (sites == null) throw new ArgumentNullException(nameof(sites));
-            SiteResource resource = null;
-
+            
             SubSiteConnectorConfig site;
             foreach (var item in this)
             {
@@ -56,7 +55,7 @@ namespace SFA.DAS.Support.Shared.Discovery
 
         public SiteResource GetResource(SupportServiceResourceKey key)
         {
-            var resource = this.FindResource(key);
+            var resource = FindResource(key);
             return resource;
         }
 
@@ -93,7 +92,8 @@ namespace SFA.DAS.Support.Shared.Discovery
             {
                 Title = r.ResourceTitle,
                 Key = r.ResourceKey,
-                Href = $"/resource?key={r.ResourceKey}&id={id}"
+                //Href = $"/resource?key={r.ResourceKey}&id={id}"
+                Href = $"/resource/index/{id}?key={r.ResourceKey}"
             });
         }
 
