@@ -113,12 +113,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
 
         [System.Web.Mvc.Route("resource/apprenticeships/search/{hashedAccountId}")]
-        public async Task<ActionResult> Apprenticeships(string hashedAccountId)
+        public async Task<ActionResult> Apprenticeships(string hashedAccountId, ApprenticeshipSearchType searchType, string searchTerm)
         {
-
-            var searchType = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), Request.Params["SearchType"] ?? $"{ApprenticeshipSearchType.SearchByUln}");
-            var searchTerm = Request.Params["SearchTerm"] ?? "";
-            
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
            
