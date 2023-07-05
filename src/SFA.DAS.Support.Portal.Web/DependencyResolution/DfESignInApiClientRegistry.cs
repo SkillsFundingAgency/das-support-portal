@@ -5,6 +5,9 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Owin.Security.Cookies;
 using SFA.DAS.Support.Portal.Web.Interfaces;
 using SFA.DAS.Support.Portal.Web.Services;
 using StructureMap.Configuration.DSL;
@@ -26,6 +29,11 @@ namespace SFA.DAS.Support.Portal.Web.DependencyResolution
             var configuration = ServiceConfigurationExtension.GetConfiguration<DfESignInServiceConfiguration>(ServiceName, Version);
 
             For<DfESignInServiceConfiguration>().Use(configuration);
+            For<IDistributedCache>().Use(new RedisCache(new RedisCacheOptions
+            {
+                Configuration = configuration.DfEOidcConfiguration.DfELoginSessionConnectionString
+            }));
+            For<IAuthenticationSessionStore>().Use(c => c.GetInstance<AuthenticationTicketStore>());
             For<IDfESignInServiceConfiguration>().Use(c => c.GetInstance<DfESignInServiceConfiguration>());
             For<IDfESignInService>().Use<DfESignInService>().Ctor<HttpClient>().Is(c => CreateClient());
             For<ITokenDataSerializer>().Use<TokenDataSerializer>();
