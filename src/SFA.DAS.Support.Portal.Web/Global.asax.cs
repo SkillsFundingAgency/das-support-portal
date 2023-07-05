@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Configuration;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -26,7 +25,6 @@ namespace SFA.DAS.Support.Portal.Web
             SetupApplicationInsights();
 
             AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             ControllerFilters.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
