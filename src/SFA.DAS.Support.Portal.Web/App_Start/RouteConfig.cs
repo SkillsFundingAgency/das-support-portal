@@ -12,20 +12,13 @@ namespace SFA.DAS.Support.Portal.Web
             routes.LowercaseUrls = true;
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //enable attribute routing
-            try
-            {
-                routes.MapMvcAttributeRoutes();
-            }
-            catch
-            {
-                // not valid scenario
-            }
+
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 "Default",
                 "{controller}/{action}/{id}",
-                new {controller = "Home", action = "StartPage", id = UrlParameter.Optional}
+                new { controller = "Home", action = "StartPage", id = UrlParameter.Optional }
             );
         }
     }
