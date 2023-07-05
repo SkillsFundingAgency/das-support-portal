@@ -17,6 +17,16 @@
             /// </summary>
             public string ApiServiceUrl { get; set; }
 
+            /// <summary>
+            /// Gets or Sets LoginSlidingExpiryTimeOutInMinutes.
+            /// </summary>
+            public int LoginSlidingExpiryTimeOutInMinutes { get; set; } = 30;
+
+            /// <summary>
+            /// Gets or Sets Redis DfELoginSessionConnectionString.
+            /// </summary>
+            public string DfELoginSessionConnectionString { get; set; }
+
         }
     }
 }
