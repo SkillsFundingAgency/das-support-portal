@@ -13,9 +13,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _webConfiguration = webConfiguration;
         }
 
-        [System.Web.Mvc.AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet]
-        [Route("/")]
+        [Route("")]
         public ActionResult StartPage()
         {
             return View(new StartPageViewModel{ UseDfESignIn = _webConfiguration.UseDfESignIn });

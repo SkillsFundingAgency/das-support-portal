@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
 using System.Web.Mvc;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -29,7 +27,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _serviceConfiguration = serviceConfiguration;
         }
 
-        [System.Web.Mvc.HttpGet]
+        [HttpGet]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, string url)
         {
             if (!_serviceConfiguration.ChallengeExists(challengeKey)) return HttpNotFound();
@@ -52,7 +50,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             }
         }
 
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, FormCollection formData)
         {
             var pairs = formData.AllKeys.ToDictionary(k => k, v => formData[v]);
@@ -73,7 +71,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             });
         }
 
-        [System.Web.Mvc.HttpGet]
+        [HttpGet]
+        [Route("resource")]
+        [Route("resource/index/{id?}")]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
             id = id.ToUpper();
@@ -111,14 +111,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return View("Sub", resourceResult);
         }
 
-
-        [System.Web.Mvc.Route("resource/apprenticeships/search/{hashedAccountId}")]
-        public async Task<ActionResult> Apprenticeships(string hashedAccountId)
-        {
-
-            var searchType = (ApprenticeshipSearchType) Enum.Parse(typeof(ApprenticeshipSearchType), Request.Params["SearchType"] ?? $"{ApprenticeshipSearchType.SearchByUln}");
-            var searchTerm = Request.Params["SearchTerm"] ?? "";
-            
+        [HttpGet]
+        [Route("resource/apprenticeships/search/{hashedAccountId}")]
+        public async Task<ActionResult> Apprenticeships(string hashedAccountId, ApprenticeshipSearchType searchType, string searchTerm)
+        {            
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
            
