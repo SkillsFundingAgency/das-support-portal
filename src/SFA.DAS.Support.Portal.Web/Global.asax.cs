@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -26,6 +27,7 @@ namespace SFA.DAS.Support.Portal.Web
 
             AreaRegistration.RegisterAllAreas();
             ControllerFilters.RegisterGlobalFilters(GlobalFilters.Filters);
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
@@ -60,7 +62,7 @@ namespace SFA.DAS.Support.Portal.Web
             logger.Error(ex, exceptionReport);
         }
 
-        private string TryAddHttpRequestContext()
+        private static string TryAddHttpRequestContext()
         {
             try
             {
@@ -74,7 +76,7 @@ namespace SFA.DAS.Support.Portal.Web
         }
 
 
-        private string TryAddUserContext()
+        private static string TryAddUserContext()
         {
             return $"User Name: {HttpContext.Current?.User?.Identity?.Name ?? "Unknown"}\r\n";
         }
@@ -96,11 +98,9 @@ namespace SFA.DAS.Support.Portal.Web
             logger.Info($"{context.Request.HttpMethod} {context.Request.Path}");
         }
 
-        private void SetupApplicationInsights()
+        private static void SetupApplicationInsights()
         {
-            TelemetryConfiguration.Active.InstrumentationKey =
-                WebConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
-
+            TelemetryConfiguration.Active.InstrumentationKey = WebConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new ApplicationInsightsInitializer());
         }
     }
