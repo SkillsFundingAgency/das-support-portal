@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
-    [System.Web.Mvc.RoutePrefix("api/status")]
+    [Route("api/status")]
     public class StatusController : ApiController
     {
-        private ISiteConnector _siteConnector;
+        private readonly ISiteConnector _siteConnector;
         private readonly ISubSiteConnectorSettings _siteSettings;
         private readonly ILog _log;
 
@@ -27,18 +26,19 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             _log = log;
         }
 
-        [System.Web.Mvc.AllowAnonymous]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> Get()
         {
             // Get the status of each site
             // add it to this one and output the results
             var sites = _siteSettings.SubSiteConnectorSettings.Select(x => $"{x.Key}|{x.BaseUrl}").ToList();
+
             var localResult = new
             {
-                ServiceName = AddServiceName(),
-                ServiceVersion = AddServiceVersion(),
+                ServiceName = UnknownIfNotFound(() => Assembly.GetExecutingAssembly().Title()),
+                ServiceVersion = UnknownIfNotFound(() => Assembly.GetExecutingAssembly().Version()),
                 ServiceTime = AddServerTime(),
-                Request = AddRequestContext(),
+                Request = UnknownIfNotFound(() => $" {HttpContext.Current.Request.HttpMethod}: {HttpContext.Current.Request.RawUrl}"),
                 SubSites = new Dictionary<SupportServiceIdentity, dynamic>(),
                 Sites = sites
             };
@@ -49,9 +49,11 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 {
                     var uri = new Uri(new Uri(subSite.BaseUrl), "api/status");
                     SupportServiceIdentity resourceKey;
-                    if (!Enum.TryParse<SupportServiceIdentity>(subSite.Key, out resourceKey))
+                    
+                    if (!Enum.TryParse(subSite.Key, out resourceKey))
                     {
-                        _log.Warn($"Error while trying to convert subSite {subSite.Key} to SupportServiceIdentity enum ");
+                        _log.Warn($"Error while trying to convert subSite {subSite.Key} to SupportServiceIdentity enum.");
+                        
                         continue;
                     }
 
@@ -87,40 +89,16 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             return Ok(localResult);
         }
 
-        private string AddServiceVersion()
-        {
-            try
-            {
-                return Assembly.GetExecutingAssembly().Version();
-            }
-            catch (Exception)
-            {
-                return "Unknown";
-            }
-        }
-
-        private string AddRequestContext()
-        {
-            try
-            {
-                return $" {HttpContext.Current.Request.HttpMethod}: {HttpContext.Current.Request.RawUrl}";
-            }
-            catch
-            {
-                return "Unknown";
-            }
-        }
-
-        private DateTimeOffset AddServerTime()
+        private static DateTimeOffset AddServerTime()
         {
             return DateTimeOffset.UtcNow;
         }
 
-        private string AddServiceName()
+        private static string UnknownIfNotFound(Func<string> action)
         {
             try
             {
-                return Assembly.GetExecutingAssembly().Title();
+                return action();
             }
             catch
             {
