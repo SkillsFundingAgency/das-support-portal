@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -47,7 +48,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             _mockChallengeService.Setup(c => c.GetPayeSchemesCharacters(account.PayeSchemes))
                 .Returns(characterIndexes);
 
-            var response = await _unit.Handle(challengeQuery);
+            var response = await _unit.Handle(challengeQuery, CancellationToken.None);
 
             CollectionAssert.AreEqual(characterIndexes, response.Characters);
         }
@@ -62,7 +63,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             _mockAccountRepository.Setup(r => r.Get(id, AccountFieldsSelection.PayeSchemes))
                 .Returns(Task.FromResult(null as Account));
 
-            var response = await _unit.Handle(challengeQuery);
+            var response = await _unit.Handle(challengeQuery, CancellationToken.None);
 
             Assert.AreEqual(SearchResponseCodes.NoSearchResultsFound, response.StatusCode);
         }
@@ -78,7 +79,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             _mockAccountRepository.Setup(r => r.Get(id, AccountFieldsSelection.PayeSchemes))
                 .Returns(Task.FromResult(account));
 
-            var response = await _unit.Handle(challengeQuery);
+            var response = await _unit.Handle(challengeQuery, CancellationToken.None);
 
             Assert.AreEqual(SearchResponseCodes.Success, response.StatusCode);
         }

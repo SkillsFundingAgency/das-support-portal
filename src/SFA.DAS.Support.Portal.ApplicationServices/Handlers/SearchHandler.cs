@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch.Exceptions;
@@ -8,7 +9,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class SearchHandler : IAsyncRequestHandler<SearchQuery, SearchResponse>
+    public class SearchHandler : IRequestHandler<SearchQuery, SearchResponse>
     {
         private readonly ILog _log;
 
@@ -20,7 +21,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             _log = log;
         }
 
-        public async Task<SearchResponse> Handle(SearchQuery query)
+        public async Task<SearchResponse> Handle(SearchQuery query, CancellationToken cancellationToken)
         {
             var searchResponse = new SearchResponse
             {

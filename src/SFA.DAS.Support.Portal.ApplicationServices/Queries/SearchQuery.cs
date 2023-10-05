@@ -4,7 +4,7 @@ using SFA.DAS.Support.Shared.SearchIndexModel;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
-    public class SearchQuery : IAsyncRequest<SearchResponse>
+    public class SearchQuery : IRequest<SearchResponse>
     {
         public SearchQuery()
         {

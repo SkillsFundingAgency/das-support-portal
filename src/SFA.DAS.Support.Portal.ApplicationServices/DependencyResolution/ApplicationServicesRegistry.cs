@@ -18,7 +18,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.DependencyResolution
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
                     scan.AddAllTypesOf(typeof(IRequestHandler<,>));
-                    scan.AddAllTypesOf(typeof(IAsyncRequestHandler<,>));
                 });
             For<ICrypto>().Use<Crypto>();
             For<IChallengeService>().Use<ChallengeService>();

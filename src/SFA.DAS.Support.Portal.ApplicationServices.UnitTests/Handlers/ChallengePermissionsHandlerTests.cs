@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -55,7 +56,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             var message = new ChallengePermissionQuery(challengeEntry);
 
             //Act
-            var result = await _sut.Handle(message);
+            var result = await _sut.Handle(message, CancellationToken.None);
 
             //Assert
             result.IsValid.Should().Be(true);
@@ -91,7 +92,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
             var message = new ChallengePermissionQuery(challengeEntry);
 
             //Act
-            var result = await _sut.Handle(message);
+            var result = await _sut.Handle(message, CancellationToken.None);
 
             //Assert
             result.IsValid.Should().Be(false);

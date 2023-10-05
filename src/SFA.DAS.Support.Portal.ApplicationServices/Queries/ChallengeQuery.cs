@@ -3,7 +3,7 @@ using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
-    public class ChallengeQuery : IAsyncRequest<ChallengeResponse>
+    public class ChallengeQuery : IRequest<ChallengeResponse>
     {
         public ChallengeQuery(string id)
         {

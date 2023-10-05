@@ -29,7 +29,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             {
                 query.SearchTerm = query.SearchTerm.Trim();
 
-                var response = await _mediator.SendAsync(query);
+                var response = await _mediator.Send(query);
 
                 var viewModel = _mappingService.Map<SearchResponse, SearchResultsViewModel>(response);
                 return View(viewModel);

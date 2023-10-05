@@ -4,7 +4,7 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Queries
 {
-    public class ChallengePermissionQuery : IAsyncRequest<ChallengePermissionResponse>
+    public class ChallengePermissionQuery : IRequest<ChallengePermissionResponse>
     {
         public ChallengePermissionQuery(ChallengeEntry challengeEntry)
         {

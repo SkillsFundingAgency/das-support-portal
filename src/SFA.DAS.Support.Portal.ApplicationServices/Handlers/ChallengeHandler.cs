@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
@@ -7,7 +8,7 @@ using SFA.DAS.Support.Portal.Core.Domain.Model;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
 {
-    public class ChallengeHandler : IAsyncRequestHandler<ChallengeQuery, ChallengeResponse>
+    public class ChallengeHandler : IRequestHandler<ChallengeQuery, ChallengeResponse>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IChallengeService _challengeService;
@@ -18,7 +19,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Handlers
             _challengeService = challengeService;
         }
 
-        public async Task<ChallengeResponse> Handle(ChallengeQuery message)
+        public async Task<ChallengeResponse> Handle(ChallengeQuery message, CancellationToken cancellationToken)
         {
             var response = new ChallengeResponse
             {

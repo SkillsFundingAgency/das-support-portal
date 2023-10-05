@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Queries;
 using SFA.DAS.Support.Portal.ApplicationServices.Responses;
 using SFA.DAS.Support.Portal.Web.Services;
@@ -19,13 +19,11 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SearchController
         [SetUp]
         public void Init()
         {
-            _mockLogger = new Mock<ILog>();
             _mockMappingService = new Mock<IMappingService>();
             _mockMediator = new Mock<IMediator>();
         }
 
         private Portal.Web.Controllers.SearchController _sut;
-        private Mock<ILog> _mockLogger;
         private Mock<IMappingService> _mockMappingService;
         private Mock<IMediator> _mockMediator;
 
@@ -42,8 +40,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.SearchController
             var response = new SearchResponse();
 
             _mockMediator
-                .Setup(x => x.SendAsync(query))
-                .Returns(Task.FromResult(response));
+                .Setup(x => x.Send(query, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
 
             _mockMappingService
                 .Setup(x => x.Map<SearchResponse, SearchResultsViewModel>(response))

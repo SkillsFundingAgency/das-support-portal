@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -55,7 +56,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Handlers
 
 
             _unit = new SearchHandler(_mockSearchProvider.Object, Mock.Of<ILog>());
-            _actual = await _unit.Handle(searchQuery);
+            _actual = await _unit.Handle(searchQuery, CancellationToken.None);
 
             CollectionAssert.IsNotEmpty(_actual.AccountSearchResult.Results);
             Assert.AreEqual(ecpectedResult.Count, _actual.AccountSearchResult.Results.ToList().Count);
