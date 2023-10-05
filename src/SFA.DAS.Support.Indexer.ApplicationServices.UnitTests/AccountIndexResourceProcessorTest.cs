@@ -23,154 +23,151 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
         [Test]
         public async Task ShouldProcessOnlyAccountSearchType()
         {
-            _indexNameCreator
-                .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.User))
-                .Returns(_indexName);
+            IndexNameCreator
+                .Setup(o => o.CreateNewIndexName(IndexName, SearchCategory.User))
+                .Returns(IndexName);
 
-            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
-                                                        _downloader.Object,
-                                                        _indexProvider.Object,
-                                                        _searchSettings.Object,
-                                                        _logger.Object,
-                                                        _indexNameCreator.Object,
-                                                        _elasticClient.Object);
+            var sut = new AccountIndexResourceProcessor(Downloader.Object,
+                                                        IndexProvider.Object,
+                                                        SearchSettings.Object,
+                                                        Logger.Object,
+                                                        IndexNameCreator.Object,
+                                                        ElasticClient.Object);
 
             await sut.ProcessResource(new IndexResourceProcessorModel
             {
-                BasUri = _baseUrl,
-                SiteResource = _userSiteResource,
-                ResourceIdentifier = _resourceIdentifier
+                BasUri = BaseUrl,
+                SiteResource = UserSiteResource,
+                ResourceIdentifier = ResourceIdentifier
             });
 
-            _indexNameCreator
-                .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.User), Times.Never);
+            IndexNameCreator
+                .Verify(o => o.CreateNewIndexName(IndexName, SearchCategory.User), Times.Never);
         }
 
         [Test]
         public async Task ShouldNotProcessAccountModelIfUnauthorised()
         {
-            _downloader
-                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(_baseUrl, It.IsAny<string>()))
-                .Returns(Task.FromResult(_accountModels));
+            Downloader
+                .Setup(o => o.Download<IEnumerable<AccountSearchModel>>(BaseUrl, It.IsAny<string>()))
+                .Returns(Task.FromResult(AccountModels));
 
-            _downloader
+            Downloader
                 .Setup(o => o.Download(It.IsAny<Uri>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(null as string));
 
-            _downloader
+            Downloader
                 .Setup(o => o.LastCode)
                 .Returns(HttpStatusCode.Unauthorized);
 
-            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
-                _downloader.Object,
-                _indexProvider.Object,
-                _searchSettings.Object,
-                _logger.Object,
-                _indexNameCreator.Object,
-                _elasticClient.Object);
+            var sut = new AccountIndexResourceProcessor(
+                Downloader.Object,
+                IndexProvider.Object,
+                SearchSettings.Object,
+                Logger.Object,
+                IndexNameCreator.Object,
+                ElasticClient.Object);
 
             await sut.ProcessResource(new IndexResourceProcessorModel
             {
-                BasUri = _baseUrl,
-                SiteResource = _accountSiteResource,
-                ResourceIdentifier = _resourceIdentifier
+                BasUri = BaseUrl,
+                SiteResource = AccountSiteResource,
+                ResourceIdentifier = ResourceIdentifier
             });
 
-            _indexNameCreator
-                .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Once);
+            IndexNameCreator
+                .Verify(o => o.CreateNewIndexName(IndexName, SearchCategory.Account), Times.Once);
 
-            _indexNameCreator
-                .Verify(o => o.CreateIndexesAliasName(_indexName, SearchCategory.Account), Times.Never);
+            IndexNameCreator
+                .Verify(o => o.CreateIndexesAliasName(IndexName, SearchCategory.Account), Times.Never);
 
-            _elasticClient
-                .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
+            ElasticClient
+                .Verify(o => o.IndexExists(IndexName, string.Empty), Times.Once);
 
-            _downloader
+            Downloader
                 .Verify(o => o.Download(It.IsAny<Uri>(), It.IsAny<string>()), Times.Exactly(3));
 
-            _indexProvider
-                .Verify(o => o.DeleteIndex(_indexName), Times.Once);
+            IndexProvider
+                .Verify(o => o.DeleteIndex(IndexName), Times.Once);
 
-            _indexProvider
-                .Verify(o => o.CreateIndexAlias(_indexName, It.IsAny<string>()), Times.Never);
+            IndexProvider
+                .Verify(o => o.CreateIndexAlias(IndexName, It.IsAny<string>()), Times.Never);
 
-            _indexProvider
-                .Verify(o => o.DeleteIndexes(_indexToRetain, It.IsAny<string>()), Times.Never);
+            IndexProvider
+                .Verify(o => o.DeleteIndexes(IndexToRetain, It.IsAny<string>()), Times.Never);
 
-            _elasticClient
-                .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.Once);
+            ElasticClient
+                .Verify(x => x.CreateIndex(IndexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.Once);
         }
 
         [Test]
         public async Task ShouldProcessAccountModel()
         {
-            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
-                                                        _downloader.Object,
-                                                        _indexProvider.Object,
-                                                        _searchSettings.Object,
-                                                        _logger.Object,
-                                                        _indexNameCreator.Object,
-                                                        _elasticClient.Object);
+            var sut = new AccountIndexResourceProcessor(Downloader.Object,
+                                                        IndexProvider.Object,
+                                                        SearchSettings.Object,
+                                                        Logger.Object,
+                                                        IndexNameCreator.Object,
+                                                        ElasticClient.Object);
 
             await sut.ProcessResource(new IndexResourceProcessorModel
             {
-                BasUri = _baseUrl,
-                SiteResource = _accountSiteResource,
-                ResourceIdentifier = _resourceIdentifier
+                BasUri = BaseUrl,
+                SiteResource = AccountSiteResource,
+                ResourceIdentifier = ResourceIdentifier
             });
 
-            _indexNameCreator
-                .Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Once);
+            IndexNameCreator
+                .Verify(o => o.CreateNewIndexName(IndexName, SearchCategory.Account), Times.Once);
 
-            _indexNameCreator
-                .Verify(o => o.CreateIndexesAliasName(_indexName, SearchCategory.Account), Times.Once);
+            IndexNameCreator
+                .Verify(o => o.CreateIndexesAliasName(IndexName, SearchCategory.Account), Times.Once);
 
-            _elasticClient
-                .Verify(o => o.IndexExists(_indexName, string.Empty), Times.Once);
+            ElasticClient
+                .Verify(o => o.IndexExists(IndexName, string.Empty), Times.Once);
 
-            _downloader
+            Downloader
                 .Verify(o => o.Download<IEnumerable<AccountSearchModel>>(It.IsAny<Uri>(), It.IsAny<string>()), Times.AtLeastOnce);
 
-            _indexProvider
-                .Verify(o => o.DeleteIndex(_indexName), Times.Never);
+            IndexProvider
+                .Verify(o => o.DeleteIndex(IndexName), Times.Never);
 
-            _indexProvider
-               .Verify(o => o.CreateIndexAlias(_indexName, It.IsAny<string>()), Times.Once);
+            IndexProvider
+               .Verify(o => o.CreateIndexAlias(IndexName, It.IsAny<string>()), Times.Once);
 
-            _indexProvider
-              .Verify(o => o.DeleteIndexes(_indexToRetain, It.IsAny<string>()), Times.Once);
+            IndexProvider
+              .Verify(o => o.DeleteIndexes(IndexToRetain, It.IsAny<string>()), Times.Once);
 
-            _elasticClient
-              .Verify(x => x.CreateIndex(_indexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.Once);
+            ElasticClient
+              .Verify(x => x.CreateIndex(IndexName, It.IsAny<Func<CreateIndexDescriptor, ICreateIndexRequest>>(), string.Empty), Times.Once);
         }
 
         [Test]
         public async Task ShouldCallDeleteIndexWhenDownloadFails()
         {
-            _indexNameCreator
-                .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.Account))
-                .Returns(_indexName);
+            IndexNameCreator
+                .Setup(o => o.CreateNewIndexName(IndexName, SearchCategory.Account))
+                .Returns(IndexName);
 
-            _downloader
+            Downloader
                .Setup(o => o.LastCode)
                .Returns(HttpStatusCode.InternalServerError);
 
-            var sut = new AccountIndexResourceProcessor(_siteSettings.Object,
-                                                        _downloader.Object,
-                                                        _indexProvider.Object,
-                                                        _searchSettings.Object,
-                                                        _logger.Object,
-                                                        _indexNameCreator.Object,
-                                                        _elasticClient.Object);
+            var sut = new AccountIndexResourceProcessor(Downloader.Object,
+                                                        IndexProvider.Object,
+                                                        SearchSettings.Object,
+                                                        Logger.Object,
+                                                        IndexNameCreator.Object,
+                                                        ElasticClient.Object);
 
             await sut.ProcessResource(new IndexResourceProcessorModel
             {
-                BasUri = _baseUrl,
-                SiteResource = _accountSiteResource,
-                ResourceIdentifier = _resourceIdentifier
+                BasUri = BaseUrl,
+                SiteResource = AccountSiteResource,
+                ResourceIdentifier = ResourceIdentifier
             });
 
-            _indexProvider.Verify(o => o.DeleteIndex(_indexName), Times.Once);
+            IndexProvider.Verify(o => o.DeleteIndex(IndexName), Times.Once);
         }
     }
 }

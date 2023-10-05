@@ -17,23 +17,20 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public abstract class BaseIndexResourceProcessor<T> : IIndexResourceProcessor where T : class
     {
-        private const int _indexToRetain = 2;
+        private const int IndexToRetain = 2;
+        private const int PageSize = 50;
+        
+        protected readonly IElasticsearchCustomClient ElasticClient;
+        protected readonly ISearchSettings SearchSettings;
+        
+        private readonly ISiteConnector _dataSource;
+        private readonly IIndexNameCreator _indexNameCreator;
+        private readonly IIndexProvider _indexProvider;
+        private readonly Stopwatch _indexTimer = new Stopwatch();
+        private readonly ILog _logger;
+        private readonly Stopwatch _queryTimer = new Stopwatch();
 
-        protected readonly ISiteConnector _dataSource;
-        protected readonly IElasticsearchCustomClient _elasticClient;
-        protected readonly IIndexNameCreator _indexNameCreator;
-        protected readonly IIndexProvider _indexProvider;
-
-        protected readonly Stopwatch _indexTimer = new Stopwatch();
-        protected readonly ILog _logger;
-        protected readonly Stopwatch _queryTimer = new Stopwatch();
-        protected readonly Stopwatch _runtimer = new Stopwatch();
-        protected readonly ISearchSettings _searchSettings;
-        protected readonly ISiteSettings _settings;
-
-        private const int _pageSize = 50;
-
-        public BaseIndexResourceProcessor(ISiteSettings settings,
+        protected BaseIndexResourceProcessor(
             ISiteConnector dataSource,
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
@@ -41,13 +38,12 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             IIndexNameCreator indexNameCreator,
             IElasticsearchCustomClient elasticClient)
         {
-            _settings = settings;
             _dataSource = dataSource;
             _indexProvider = indexProvider;
-            _searchSettings = searchSettings;
+            SearchSettings = searchSettings;
             _logger = logger;
             _indexNameCreator = indexNameCreator;
-            _elasticClient = elasticClient;
+            ElasticClient = elasticClient;
         }
 
         public async Task ProcessResource(IndexResourceProcessorModel resourceProcessorModel)
@@ -56,7 +52,7 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
             try
             {
-                var newIndexName = _indexNameCreator.CreateNewIndexName(_searchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
+                var newIndexName = _indexNameCreator.CreateNewIndexName(SearchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
                 CreateIndex(newIndexName);
 
                 try
@@ -71,11 +67,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
                 }
 
                 _logger.Info($"Creating Index Alias and Swapping from old to new index for type {typeof(T).Name}...");
-                var indexAlias = _indexNameCreator.CreateIndexesAliasName(_searchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
+                var indexAlias = _indexNameCreator.CreateIndexesAliasName(SearchSettings.IndexName, resourceProcessorModel.SiteResource.SearchCategory);
                 _indexProvider.CreateIndexAlias(newIndexName, indexAlias);
 
                 _logger.Info($"Deleting Old Indexes for type {typeof(T).Name}...");
-                _indexProvider.DeleteIndexes(_indexToRetain, indexAlias);
+                _indexProvider.DeleteIndexes(IndexToRetain, indexAlias);
                 _logger.Info($"Deleting Old Indexes Completed for type {typeof(T).Name}...");
             }
             catch (Exception ex)
@@ -120,11 +116,11 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
             _logger.Info($"Estimated Total Search Items Count  for type {typeof(T).Name}  equals {totalSearchItems}");
 
-            var pages = (int)Math.Ceiling(totalSearchItems / (double)_pageSize);
+            var pages = (int)Math.Ceiling(totalSearchItems / (double)PageSize);
 
             for (int pageNumber = 1; pageNumber <= pages; pageNumber++)
             {
-                var searchUri = new Uri(baseUri, string.Format(siteResource.SearchItemsUrl, _pageSize, pageNumber));
+                var searchUri = new Uri(baseUri, string.Format(siteResource.SearchItemsUrl, PageSize, pageNumber));
                 IEnumerable<T> searchItems;
                 retryCount = 0;
                 do

@@ -25,26 +25,25 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.UnitTests
         [Test]
         public async Task ShouldProcessOnlyUserSearchType()
         {
-            _indexNameCreator
-                .Setup(o => o.CreateNewIndexName(_indexName, SearchCategory.Account))
+            IndexNameCreator
+                .Setup(o => o.CreateNewIndexName(IndexName, SearchCategory.Account))
                 .Returns("new_index_name");
 
-            var _sut = new UserIndexResourceProcessor(_siteSettings.Object,
-                                                        _downloader.Object,
-                                                        _indexProvider.Object,
-                                                        _searchSettings.Object,
-                                                        _logger.Object,
-                                                        _indexNameCreator.Object,
-                                                        _elasticClient.Object);
+            var sut = new UserIndexResourceProcessor(Downloader.Object,
+                                                        IndexProvider.Object,
+                                                        SearchSettings.Object,
+                                                        Logger.Object,
+                                                        IndexNameCreator.Object,
+                                                        ElasticClient.Object);
 
-            await _sut.ProcessResource(new IndexResourceProcessorModel
+            await sut.ProcessResource(new IndexResourceProcessorModel
             {
                 BasUri = new System.Uri("http://localhost"),
-                SiteResource = _accountSiteResource,
-                ResourceIdentifier = _resourceIdentifier
+                SiteResource = AccountSiteResource,
+                ResourceIdentifier = ResourceIdentifier
             });
 
-            _indexNameCreator.Verify(o => o.CreateNewIndexName(_indexName, SearchCategory.Account), Times.Never);
+            IndexNameCreator.Verify(o => o.CreateNewIndexName(IndexName, SearchCategory.Account), Times.Never);
         }
     }
 }

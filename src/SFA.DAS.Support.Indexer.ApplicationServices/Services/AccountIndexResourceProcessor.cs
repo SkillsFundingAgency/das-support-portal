@@ -2,7 +2,6 @@
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Common.Infrastucture.Settings;
-using SFA.DAS.Support.Indexer.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.SearchIndexModel;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -10,15 +9,14 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 {
     public class AccountIndexResourceProcessor : BaseIndexResourceProcessor<AccountSearchModel>
     {
-        public AccountIndexResourceProcessor(ISiteSettings settings,
+        public AccountIndexResourceProcessor(
             ISiteConnector downloader,
             IIndexProvider indexProvider,
             ISearchSettings searchSettings,
             ILog logger,
             IIndexNameCreator indexNameCreator,
             IElasticsearchCustomClient elasticClient)
-            : base(settings,
-                downloader,
+            : base(downloader,
                 indexProvider,
                 searchSettings,
                 logger,
@@ -34,31 +32,33 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
 
         protected override void CreateIndex(string indexName)
         {
-            if (!_elasticClient.IndexExists(indexName, string.Empty))
+            if (ElasticClient.IndexExists(indexName, string.Empty))
             {
-                var response = _elasticClient.CreateIndex(
-                    indexName,
-                    i => i
-                        .Settings(settings =>
-                            settings
-                                .NumberOfShards(_searchSettings.IndexShards)
-                                .NumberOfReplicas(_searchSettings.IndexReplicas)
-                        )
-                        .Mappings(ms => ms
-                            .Map<AccountSearchModel>(m => m
-                                .Properties(p => p
-                                    .Text(k => k.Name(n => n.Account))
-                                    .Keyword(k => k.Name(n => n.AccountID))
-                                    .Keyword(k => k.Name(n => n.PublicAccountID))
-                                    .Keyword(k => k.Name(n => n.AccountSearchKeyWord))
-                                    .Keyword(k => k.Name(n => n.AccountIDSearchKeyWord))
-                                    .Keyword(k => k.Name(n => n.PublicAccountIDSearchKeyWord))
-                                    .Keyword(k => k.Name(n => n.PayeSchemeIdSearchKeyWords))
-                                )))
-                    , string.Empty);
-
-                ValidateResponse(indexName, response);
+                return;
             }
+            
+            var response = ElasticClient.CreateIndex(
+                indexName,
+                i => i
+                    .Settings(settings =>
+                        settings
+                            .NumberOfShards(SearchSettings.IndexShards)
+                            .NumberOfReplicas(SearchSettings.IndexReplicas)
+                    )
+                    .Mappings(ms => ms
+                        .Map<AccountSearchModel>(m => m
+                            .Properties(p => p
+                                .Text(k => k.Name(n => n.Account))
+                                .Keyword(k => k.Name(n => n.AccountID))
+                                .Keyword(k => k.Name(n => n.PublicAccountID))
+                                .Keyword(k => k.Name(n => n.AccountSearchKeyWord))
+                                .Keyword(k => k.Name(n => n.AccountIDSearchKeyWord))
+                                .Keyword(k => k.Name(n => n.PublicAccountIDSearchKeyWord))
+                                .Keyword(k => k.Name(n => n.PayeSchemeIdSearchKeyWords))
+                            )))
+                , string.Empty);
+
+            ValidateResponse(indexName, response);
         }
     }
 }

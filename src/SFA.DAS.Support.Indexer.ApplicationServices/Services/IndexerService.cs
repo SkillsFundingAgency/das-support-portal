@@ -17,33 +17,20 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
     [ExcludeFromCodeCoverage]
     public class IndexerService : IIndexSearchItems
     {
-        private readonly ISiteConnector _dataSource;
-        private readonly IIndexNameCreator _indexNameCreator;
-        private readonly IIndexProvider _indexProvider;
         private readonly IIndexResourceProcessor _indexResourceProcessor;
-
-        private readonly Stopwatch _indexTimer = new Stopwatch();
         private readonly ILog _logger;
         private readonly Stopwatch _queryTimer = new Stopwatch();
-        private readonly Stopwatch _runtimer = new Stopwatch();
-        private readonly ISearchSettings _searchSettings;
+        private readonly Stopwatch _runTimer = new Stopwatch();
         private readonly ISubSiteConnectorSettings _siteSettings;
         private readonly ServiceConfiguration _manifests;
 
         public IndexerService(ISubSiteConnectorSettings settings,
-            ISiteConnector downloader,
-            IIndexProvider indexProvider,
-            ISearchSettings searchSettings,
             ILog logger,
-            IIndexNameCreator indexNameCreator,
-            IIndexResourceProcessor indexResourceProcessor, ServiceConfiguration manifests)
+            IIndexResourceProcessor indexResourceProcessor,
+            ServiceConfiguration manifests)
         {
             _siteSettings = settings;
-            _dataSource = downloader;
-            _indexProvider = indexProvider;
-            _searchSettings = searchSettings;
             _logger = logger;
-            _indexNameCreator = indexNameCreator;
             _indexResourceProcessor = indexResourceProcessor;
             _manifests = manifests;
         }
@@ -51,8 +38,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
         public async Task Run()
         {
             _logger.Info($"Starting Indexer Service Run");
-
-            _runtimer.Start();
+            _runTimer.Start();
+            
             try
             {
                 foreach (var subSite in _siteSettings.SubSiteConnectorSettings)
@@ -100,8 +87,8 @@ namespace SFA.DAS.Support.Indexer.ApplicationServices.Services
             }
             finally
             {
-                _runtimer.Stop();
-                _logger.Info($"Ending Indexer Service Run Elapsed Time {_runtimer.Elapsed}");
+                _runTimer.Stop();
+                _logger.Info($"Ending Indexer Service Run Elapsed Time {_runTimer.Elapsed}");
             }
         }
     }
