@@ -16,11 +16,12 @@ namespace SFA.DAS.Support.Indexer.Worker
     public class WorkerRole : RoleEntryPoint
     {
         private const int SecondsToMilliSeconds = 1000;
-
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+        private const int DelayTimeInSeconds = 1800 * 1000;
+        
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly ManualResetEvent _runCompleteEvent = new ManualResetEvent(false);
         private int _delayTime = 1800 * SecondsToMilliSeconds;
-        private readonly int _delayTimeInSeconds = 1800 * 1000;
+        
         private IIndexSearchItems _indexer;
         private ILog _logger;
         private ISiteSettings _siteSettings;
@@ -32,11 +33,11 @@ namespace SFA.DAS.Support.Indexer.Worker
 
             try
             {
-                RunAsync(cancellationTokenSource.Token).Wait();
+                RunAsync(_cancellationTokenSource.Token).Wait();
             }
             finally
             {
-                runCompleteEvent.Set();
+                _runCompleteEvent.Set();
             }
         }
 
@@ -54,7 +55,7 @@ namespace SFA.DAS.Support.Indexer.Worker
             if (int.TryParse(_siteSettings.DelayTimeInSeconds, out var configDelayTime))
                 _delayTime = configDelayTime * SecondsToMilliSeconds;
 
-            _logger.Info($"Support.Indexer.Worker delay time in seconds: {_delayTimeInSeconds}");
+            _logger.Info($"Support.Indexer.Worker delay time in seconds: {DelayTimeInSeconds}");
 
             var result = base.OnStart();
             _logger.Info("ESFA.DAS.Support.Indexer.Worker has been started");
@@ -66,8 +67,8 @@ namespace SFA.DAS.Support.Indexer.Worker
         {
             _logger.Info("ESFA.DAS.Support.Indexer.Worker is stopping");
 
-            cancellationTokenSource.Cancel();
-            runCompleteEvent.WaitOne();
+            _cancellationTokenSource.Cancel();
+            _runCompleteEvent.WaitOne();
 
             base.OnStop();
 
@@ -79,11 +80,11 @@ namespace SFA.DAS.Support.Indexer.Worker
             while (!cancellationToken.IsCancellationRequested)
             {
                 await _indexer.Run();
-                await Task.Delay(_delayTime);
+                await Task.Delay(_delayTime, cancellationToken);
             }
         }
 
-        private void SetupApplicationInsights()
+        private static void SetupApplicationInsights()
         {
             TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["APPINSIGHTS_INSTRUMENTATIONKEY"];
 

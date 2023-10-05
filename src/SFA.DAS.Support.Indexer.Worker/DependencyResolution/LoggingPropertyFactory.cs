@@ -27,7 +27,7 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
         }
 
 
-        private string GetVersion()
+        private static string GetVersion()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);

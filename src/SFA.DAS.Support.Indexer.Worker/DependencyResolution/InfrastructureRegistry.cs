@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Reflection;
 using SFA.DAS.Support.Common.Infrastucture.Elasticsearch;
 using SFA.DAS.Support.Common.Infrastucture.Indexer;
 using SFA.DAS.Support.Indexer.ApplicationServices.Services;
 using SFA.DAS.Support.Shared.Authentication;
-using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 using StructureMap.Configuration.DSL;
@@ -15,9 +11,9 @@ using StructureMap.Configuration.DSL;
 namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
 {
     [ExcludeFromCodeCoverage]
-    public class InfrastuctureRegistry : Registry
+    public class InfrastructureRegistry : Registry
     {
-        public InfrastuctureRegistry()
+        public InfrastructureRegistry()
         {
             For<IHttpStatusCodeStrategy>().Use<StrategyForSystemErrorStatusCode>();
             For<IHttpStatusCodeStrategy>().Use<StrategyForClientErrorStatusCode>();

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Azure;
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.NLog.Logger;
@@ -45,7 +43,7 @@ namespace SFA.DAS.Support.Indexer.Worker.DependencyResolution
             });
         }
 
-        private WebConfiguration GetConfiguration()
+        private static WebConfiguration GetConfiguration()
         {
             var environment = ConfigurationManager.AppSettings["EnvironmentName"] ?? "LOCAL";
 
