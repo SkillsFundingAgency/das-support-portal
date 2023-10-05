@@ -82,7 +82,6 @@
     <Compile Include="Services\IndexerService.cs" />
     <Compile Include="Services\UserIndexResourceProcessor.cs" />
     <Compile Include="Settings\ISiteSettings.cs" />
-    <Compile Include="Settings\SearchSettings.cs" />
     <Compile Include="Settings\SiteSettings.cs" />
   </ItemGroup>
   <ItemGroup>
