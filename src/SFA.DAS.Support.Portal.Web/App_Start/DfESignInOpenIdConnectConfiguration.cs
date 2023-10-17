@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security.Notifications;
 using Newtonsoft.Json;
-using System.Web.Mvc;
 using OpenAthens.Owin.Security.OpenIdConnect;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Support.Portal.Core.Services;
+using SFA.DAS.Support.Portal.Web.Api.Enums;
 using SFA.DAS.Support.Portal.Web.Api.Models;
 using SFA.DAS.Support.Portal.Web.Constants;
 using SFA.DAS.Support.Portal.Web.Extensions;
 using SFA.DAS.Support.Portal.Web.Interfaces;
-using OpenIdConnectMessage = Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectMessage;
-using SFA.DAS.Support.Portal.Core.Services;
 using SFA.DAS.Support.Portal.Web.Settings;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using OpenIdConnectMessage = Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectMessage;
 
 namespace SFA.DAS.Support.Portal.Web
 {
@@ -54,7 +55,7 @@ namespace SFA.DAS.Support.Portal.Web
                 PostLogoutRedirectUri = oidcRedirectUrl,
                 RedirectUri = oidcRedirectUrl,
                 ResponseType = OpenIdConnectResponseType.Code,
-                Scope = "openid email profile organisation organisationid",
+                Scope = _dfESignInServiceConfiguration.DfEOidcConfiguration.Scopes,
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     SecurityTokenValidated = async notification =>
@@ -74,13 +75,12 @@ namespace SFA.DAS.Support.Portal.Web
         {
             _logger.Info("SecurityTokenValidated notification called");
 
-            #region "READ THE CLAIMS FROM AUTHENTICATION TICKET"
+            // "READ THE CLAIMS FROM AUTHENTICATION TICKET"
             var userId = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.NameIdentifier);
             var firstName = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.GivenName);
             var lastName = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.Surname);
             var userOrganization = JsonConvert.DeserializeObject<Organisation>(notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.Organisation));
-            #endregion
-
+            
             var ukPrn = userOrganization.UkPrn != null ? Convert.ToInt64(userOrganization.UkPrn) : 0;
 
             // when the UserId and UserOrgId are available then fetch additional claims from DfESignIn Api Service.
@@ -115,7 +115,7 @@ namespace SFA.DAS.Support.Portal.Web
             if (apiServiceResponse != null)
             {
                 var roleClaims = new List<Claim>();
-                foreach (var role in apiServiceResponse.Roles.Where(role => role.Status.Id.Equals(1)))
+                foreach (var role in apiServiceResponse.Roles.Where(role => role.Status.Id.Equals((int)RoleStatus.Active)))
                 {
                     // add to current identity because you cannot have multiple identities
                     roleClaims.Add(new Claim(ClaimName.RoleCode, role.Code, ClaimTypes.Role, notification.Options.ClientId));

@@ -49,6 +49,16 @@ namespace SFA.DAS.Support.Portal.Web
         {
             var ex = Server.GetLastError().GetBaseException();
             BuildAndLogExceptionReport(ex);
+            var httpException = ex as HttpException;
+            if (httpException != null)
+            {
+                switch (httpException.GetHttpCode())
+                {
+                    case 403:
+                        Server.Transfer("~/Error/Forbidden");
+                        break;
+                }
+            }
         }
 
         private void BuildAndLogExceptionReport(Exception ex)

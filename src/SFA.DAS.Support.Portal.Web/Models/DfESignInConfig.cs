@@ -17,6 +17,10 @@
             /// </summary>
             public string ApiServiceUrl { get; set; }
 
+            /// <summary>
+            /// Gets or Sets Scopes.
+            /// </summary>
+            public string Scopes { get; set; }
         }
     }
 }
