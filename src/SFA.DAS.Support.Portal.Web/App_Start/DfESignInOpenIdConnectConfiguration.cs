@@ -15,8 +15,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using OpenIdConnectMessage = Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectMessage;
 
@@ -63,6 +65,7 @@ namespace SFA.DAS.Support.Portal.Web
                         await PopulateAccountsClaim(notification);
                     }
                 },
+                
             };
         }
 
@@ -183,6 +186,7 @@ namespace SFA.DAS.Support.Portal.Web
             catch (Exception ex)
             {
                 _logger.Error(ex, "OpenIdConnect Authentication Callback Error");
+                throw new HttpException((int)HttpStatusCode.Forbidden, "OpenIdConnect Authentication Callback Error:" + ex.Message);
             }
         }
     }
