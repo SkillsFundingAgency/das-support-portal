@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Owin;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Web.Policy;
 
@@ -55,7 +56,7 @@ namespace SFA.DAS.Support.Portal.Web
                 switch (httpException.GetHttpCode())
                 {
                     case 403:
-                        Server.Transfer("/Error/Forbidden");
+                        Response.RedirectPermanent("/error/forbidden");
                         break;
                 }
             }
