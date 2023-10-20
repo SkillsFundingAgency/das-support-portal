@@ -55,7 +55,7 @@ namespace SFA.DAS.Support.Portal.Web
                 switch (httpException.GetHttpCode())
                 {
                     case 403:
-                        Server.Transfer("~/Error/Forbidden");
+                        Server.Transfer("/Error/Forbidden");
                         break;
                 }
             }
