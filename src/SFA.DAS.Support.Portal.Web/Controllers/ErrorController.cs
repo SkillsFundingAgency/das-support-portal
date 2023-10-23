@@ -55,7 +55,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [AllowAnonymous]
         public ViewResult Forbidden()
         {
-            var resourceEnvironmentName = ConfigurationManager.AppSettings["ResourceEnvironmentName"];
+            var resourceEnvironmentName = "TEST";//ConfigurationManager.AppSettings["ResourceEnvironmentName"];
 
             Response.StatusCode = 403;
 
