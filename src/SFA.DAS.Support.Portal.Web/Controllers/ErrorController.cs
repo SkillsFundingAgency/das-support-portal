@@ -55,9 +55,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [AllowAnonymous]
         public ViewResult Forbidden()
         {
-            var resourceEnvironmentName = "TEST";//ConfigurationManager.AppSettings["ResourceEnvironmentName"];
-
-            //Response.StatusCode = 403;
+            var resourceEnvironmentName = ConfigurationManager.AppSettings["ResourceEnvironmentName"];
 
             return View("Error403", new Error403ViewModel(resourceEnvironmentName){ UseDfESignIn = _webConfiguration.UseDfESignIn });
         }
