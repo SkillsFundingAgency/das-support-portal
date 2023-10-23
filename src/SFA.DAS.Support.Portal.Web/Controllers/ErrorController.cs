@@ -57,7 +57,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var resourceEnvironmentName = "TEST";//ConfigurationManager.AppSettings["ResourceEnvironmentName"];
 
-            Response.StatusCode = 403;
+            //Response.StatusCode = 403;
 
             return View("Error403", new Error403ViewModel(resourceEnvironmentName){ UseDfESignIn = _webConfiguration.UseDfESignIn });
         }
