@@ -18,7 +18,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("")]
         public ActionResult StartPage()
         {
-            return View(new StartPageViewModel{ UseDfESignIn = _webConfiguration.UseDfESignIn });
+            if (User != null && User.Identity.IsAuthenticated) return RedirectToAction("Index", "Search");
+
+            return View(new StartPageViewModel { UseDfESignIn = _webConfiguration.UseDfESignIn });
         }
     }
 }

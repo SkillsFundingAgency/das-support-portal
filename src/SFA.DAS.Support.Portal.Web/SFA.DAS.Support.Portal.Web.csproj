@@ -628,6 +628,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Enums\RoleStatus.cs" />
     <Compile Include="Api\Helpers\JsonWebAlgorithm.cs" />
     <Compile Include="Api\Helpers\TokenBuilder.cs" />
     <Compile Include="Api\Helpers\TokenData.cs" />
@@ -663,6 +664,7 @@
     <Compile Include="Interfaces\IDfESignInServiceConfiguration.cs" />
     <Compile Include="Models\DfESignInClientConfig.cs" />
     <Compile Include="Models\DfESignInConfig.cs" />
+    <Compile Include="Models\Error\Error403ViewModel.cs" />
     <Compile Include="Models\VersionInformation.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapWebApiDependencyScope.cs" />
@@ -785,6 +787,7 @@
       <LastGenOutput>Index.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Shared\_PreAuthLayout.cshtml" />
+    <Content Include="Views\Error\Error403.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
