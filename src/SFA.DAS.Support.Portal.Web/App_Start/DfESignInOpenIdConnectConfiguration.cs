@@ -99,7 +99,6 @@ namespace SFA.DAS.Support.Portal.Web
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(CustomClaimsIdentity.UkPrn, ukPrn.ToString()));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Name, $"{firstName} {lastName}"));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Upn, email));
-            notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Email, email));
         }
 
         /// <summary>
