@@ -82,6 +82,7 @@ namespace SFA.DAS.Support.Portal.Web
             var userId = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.NameIdentifier);
             var firstName = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.GivenName);
             var lastName = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.Surname);
+            var email = notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.Email);
             var userOrganization = JsonConvert.DeserializeObject<Organisation>(notification.AuthenticationTicket.Identity.GetClaimValue(ClaimName.Organisation));
             
             var ukPrn = userOrganization.UkPrn != null ? Convert.ToInt64(userOrganization.UkPrn) : 0;
@@ -97,6 +98,7 @@ namespace SFA.DAS.Support.Portal.Web
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(CustomClaimsIdentity.DisplayName, $"{firstName} {lastName}"));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(CustomClaimsIdentity.UkPrn, ukPrn.ToString()));
             notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Name, $"{firstName} {lastName}"));
+            notification.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.Upn, email));
         }
 
         /// <summary>
