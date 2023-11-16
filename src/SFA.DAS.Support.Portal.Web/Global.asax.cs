@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Owin;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Web.Policy;
 
@@ -49,6 +50,16 @@ namespace SFA.DAS.Support.Portal.Web
         {
             var ex = Server.GetLastError().GetBaseException();
             BuildAndLogExceptionReport(ex);
+            var httpException = ex as HttpException;
+            if (httpException != null)
+            {
+                switch (httpException.GetHttpCode())
+                {
+                    case 403:
+                        Response.RedirectPermanent("/error/forbidden");
+                        break;
+                }
+            }
         }
 
         private void BuildAndLogExceptionReport(Exception ex)
