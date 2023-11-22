@@ -1,5 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Configuration;
+using SFA.DAS.Support.Portal.Web.Settings;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Mvc;
+using SFA.DAS.Support.Portal.Web.Models.Error;
 
 namespace SFA.DAS.Support.Portal.Web.Controllers
 {
@@ -7,6 +10,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
     [AllowAnonymous]
     public sealed class ErrorController : Controller
     {
+        private readonly IWebConfiguration _webConfiguration;
+
+        public ErrorController(IWebConfiguration webConfiguration)
+        {
+            _webConfiguration = webConfiguration;
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ViewResult BadRequest()
@@ -39,6 +49,15 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public ViewResult NoError()
         {
             return View("Error404");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult Forbidden()
+        {
+            var resourceEnvironmentName = ConfigurationManager.AppSettings["ResourceEnvironmentName"];
+
+            return View("Error403", new Error403ViewModel(resourceEnvironmentName){ UseDfESignIn = _webConfiguration.UseDfESignIn });
         }
     }
 }

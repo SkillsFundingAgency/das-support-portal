@@ -168,6 +168,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\Controllers\ErrorController\WhenCallingTheForbiddenActionMethod.cs" />
     <Compile Include="Web\Controllers\HomeController\HomeControllerTest.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengeGet.cs" />
     <Compile Include="Web\Controllers\ResourceController\WhenCallingTheResourceControllerChallengePost.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Web\ExtensionHelpers\HtmlAgilityPackExtensions.cs" />
     <Compile Include="Web\Helpers\AccountHelperTests.cs" />
     <Compile Include="Web\Helpers\ChallengeHelperTests.cs" />
+    <Compile Include="Web\Models\Error\WhenBuildingError403ViewModel.cs" />
     <Compile Include="Web\Services\MappingServiceTests.cs" />
     <Compile Include="Web\Settings\FormatSchemaProvider.cs" />
     <Compile Include="Web\Settings\WebConfigurationTesting.cs" />
