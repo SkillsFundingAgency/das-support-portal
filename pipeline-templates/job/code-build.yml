@@ -121,4 +121,4 @@ jobs:
     parameters:
       DotNetFrameworkPackagesToPack: |
         src/SFA.DAS.Support.Shared/SFA.DAS.Support.Shared.csproj
-      IncludeReferencedProjects: true  
+      IncludeReferencedProjects: false  
