@@ -17,7 +17,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceUrlFormat = "/account/{0}",
                     ResourceTitle = "Organisations",
                     SearchItemsUrl = "/api/search/accounts/{0}/{1}",
-                    SearchTotalItemsUrl ="/api/search/accounts/totalCount/{0}",
+                    SearchTotalItemsUrl = "/api/search/accounts/totalCount/{0}",
                     SearchCategory = SearchCategory.Account,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
@@ -38,7 +38,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
                 },
-                  new SiteResource
+                new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountPayeSchemeLevys,
@@ -58,6 +58,15 @@ namespace SFA.DAS.Support.Shared.Discovery
                 },
                 new SiteResource
                 {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
+                    ResourceUrlFormat = "/account/{0}/change-role/{1}",
+                    ResourceTitle = "Team member",
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    IsNavigationItem = true
+                },
+                new SiteResource
+                {
                     ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentSearch,
                     ResourceUrlFormat = "/apprenticeships/search/{0}",
@@ -70,7 +79,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentApprenticeDetail,
-                    ResourceUrlFormat = "/Apprenticeships/account/{0}/Apprenticeship/{1}", 
+                    ResourceUrlFormat = "/Apprenticeships/account/{0}/Apprenticeship/{1}",
                     ResourceTitle = string.Empty,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false
