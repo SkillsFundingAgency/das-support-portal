@@ -69,9 +69,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountResendInvitation,
                     ResourceUrlFormat = "/account/{0}/resend-invitation/{1}",
-                    ResourceTitle = "Resend Invitation",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    IsNavigationItem = true
+                    IsNavigationItem = false
                 },
                 new SiteResource
                 {
