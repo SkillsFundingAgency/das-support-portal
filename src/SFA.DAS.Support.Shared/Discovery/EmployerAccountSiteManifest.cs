@@ -52,15 +52,15 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,
                     ResourceUrlFormat = "/account/team/{0}",
-                    ResourceTitle = "Team members",
+                    ResourceTitle = "Role",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    IsNavigationItem = true
+                    IsNavigationItem = true,
                 },
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
-                    ResourceUrlFormat = "/account/{0}/change-role/{1}",
+                    ResourceUrlFormat = "/role/{0}/change/{1}",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false
                 },
