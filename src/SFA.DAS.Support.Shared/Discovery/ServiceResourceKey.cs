@@ -17,6 +17,7 @@
         EmployerAccountTeam,
         EmployerAccountChangeRole,
         EmployerAccountFinance,
+        EmployerAccountResendInvitation,
         EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge,
     }
