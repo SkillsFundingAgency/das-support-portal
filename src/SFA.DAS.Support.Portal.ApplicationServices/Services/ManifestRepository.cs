@@ -139,6 +139,33 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             return result;
         }
+        
+        public async Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key,
+            string hashedAccountId, string userRef, string role)
+        {
+            var resource = _serviceConfiguration.GetResource(key);
+
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
+            var siteUri = new Uri(subSiteConfig.BaseUrl);
+
+            var resourceSearchItemsUrl = resource.SearchItemsUrl;
+
+            resourceSearchItemsUrl = resourceSearchItemsUrl
+                .Replace("{0}", hashedAccountId)
+                .Replace("{1}", $"{userRef}")
+                .Replace("{2}", role);
+
+            var searchUri = new Uri(siteUri, resourceSearchItemsUrl);
+
+            ResourceResultModel result = new ResourceResultModel
+            {
+                Resource = await _siteConnector.Upload<string>(searchUri, string.Empty, subSiteConfig.IdentifierUri),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
+
+            return result;
+        }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {

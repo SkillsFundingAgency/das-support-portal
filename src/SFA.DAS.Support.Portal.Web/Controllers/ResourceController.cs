@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
@@ -16,15 +17,20 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly IGrantPermissions _granter;
         private readonly IManifestRepository _repository;
         private readonly IServiceConfiguration _serviceConfiguration;
+        private readonly ILog _logger;
+
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
-            IGrantPermissions granter, IServiceConfiguration serviceConfiguration)
+            IGrantPermissions granter, 
+            IServiceConfiguration serviceConfiguration,
+            ILog logger)
         {
             _repository = repository;
             _checker = checker;
             _granter = granter;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -110,7 +116,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             return View("Sub", resourceResult);
         }
-
+        
         [HttpGet]
         [Route("resource/apprenticeships/search/{hashedAccountId}")]
         public async Task<ActionResult> Apprenticeships(string hashedAccountId, ApprenticeshipSearchType searchType, string searchTerm)
@@ -123,6 +129,24 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                                                 hashedAccountId,
                                                 searchType, 
                                                 searchTerm);
+
+            return View("sub", resourceResult);
+        }
+
+        [HttpGet]
+        [Route("resource/role/change/{hashedAccountId}/{userRef}")]
+        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role)
+        {
+            _logger.Info($"ChangeRole. hashedAccountId: {hashedAccountId}, userRef: {userRef}, role: {role}");
+            
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccount, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccount, hashedAccountId);
+            
+            var resourceResult = await _repository.SubmitChangeRoleRequest(
+                SupportServiceResourceKey.CommitmentSearch, 
+                hashedAccountId,
+                userRef, 
+                role);
 
             return View("sub", resourceResult);
         }
