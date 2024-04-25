@@ -59,14 +59,8 @@ namespace SFA.DAS.Support.Shared.Discovery
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
-                    ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRoleHeader,
-                    ResourceUrlFormat = "/roles/header/{0}/{1}",
-                },
-                new SiteResource
-                {
-                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
-                    HeaderKey = SupportServiceResourceKey.EmployerAccountChangeRoleHeader,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     ResourceUrlFormat = "/roles/{0}/{1}",
                     ResourceTitle = "Role",
                     IsNavigationItem = false,
