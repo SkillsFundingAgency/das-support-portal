@@ -16,6 +16,7 @@
         EmployerAccountHeader,
         EmployerAccountTeam,
         EmployerAccountChangeRole,
+        EmployerAccountChangeRoleHeader,
         EmployerAccountFinance,
         EmployerAccountResendInvitation,
         EmployerAccountPayeSchemeLevys,
