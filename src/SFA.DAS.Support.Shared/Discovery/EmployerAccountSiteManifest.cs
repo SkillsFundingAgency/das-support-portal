@@ -52,7 +52,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,
                     ResourceUrlFormat = "/account/team/{0}",
-                    ResourceTitle = "Role",
+                    ResourceTitle = "Team members",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true,
                 },
@@ -61,6 +61,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
                     ResourceUrlFormat = "/role/{0}/change/{1}",
+                    ResourceTitle = "Role",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false
                 },
