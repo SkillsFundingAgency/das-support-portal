@@ -153,17 +153,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 .Replace("{0}", hashedAccountId)
                 .Replace("{1}", userRef);
 
-            var uri = new Uri(siteUri, $"{resourceUrl}?role={role}");
+            var uri = new Uri(siteUri, resourceUrl);
 
             _log.Warn($"SubmitChangeRoleRequest uri: '{uri}'.");
 
             var result = new ResourceResultModel
             {
-                Resource = await _siteConnector.Upload<string>(uri, string.Empty, subSiteConfig.IdentifierUri),
+                Resource = await _siteConnector.Upload<string>(uri, role, subSiteConfig.IdentifierUri),
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
-            
+
             _log.Warn($"SubmitChangeRoleRequest resource: '{result.Resource}', status code: '{result.StatusCode}', exception: '{result.Exception}'.");
 
             return result;
