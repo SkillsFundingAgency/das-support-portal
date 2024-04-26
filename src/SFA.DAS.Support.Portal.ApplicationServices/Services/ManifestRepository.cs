@@ -162,7 +162,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             {
                 new KeyValuePair<string, string>("role", role)
             });
-
+            
             var result = new ResourceResultModel
             {
                 //Resource = await _siteConnector.Upload<string>(uri, JsonConvert.SerializeObject(content), subSiteConfig.IdentifierUri),

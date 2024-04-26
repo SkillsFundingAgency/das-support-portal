@@ -83,9 +83,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(LastContent);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -119,9 +119,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(LastContent);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -168,9 +168,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(content);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -182,9 +182,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 var token = await GetAuthenticationToken(resourceIdentity);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _logger.Error(exception, "Error obtaining active directory token. Communication with the sub sites is not possible.");
                 _client.DefaultRequestHeaders.Authorization = null;
             }
         }
