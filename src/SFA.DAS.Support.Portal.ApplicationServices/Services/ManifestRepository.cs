@@ -155,12 +155,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var uri = new Uri(siteUri, $"{resourceUrl}?role={role}");
 
-            ResourceResultModel result = new ResourceResultModel
+            _log.Warn($"SubmitChangeRoleRequest uri: '{uri}'.");
+
+            var result = new ResourceResultModel
             {
                 Resource = await _siteConnector.Upload<string>(uri, string.Empty, subSiteConfig.IdentifierUri),
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
+            
+            _log.Warn($"SubmitChangeRoleRequest resource: '{result.Resource}', status code: '{result.StatusCode}', exception: '{result.Exception}'.");
 
             return result;
         }
