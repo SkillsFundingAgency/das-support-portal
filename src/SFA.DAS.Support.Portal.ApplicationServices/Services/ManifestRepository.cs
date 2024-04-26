@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
@@ -156,10 +157,16 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var uri = new Uri(siteUri, resourceUrl);
 
             _log.Warn($"SubmitChangeRoleRequest uri: '{uri}'.");
+            
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("role", role)
+            });
 
             var result = new ResourceResultModel
             {
-                Resource = await _siteConnector.Upload<string>(uri, role, subSiteConfig.IdentifierUri),
+                //Resource = await _siteConnector.Upload<string>(uri, JsonConvert.SerializeObject(content), subSiteConfig.IdentifierUri),
+                Resource = await _siteConnector.Upload<string>(uri, string.Empty, subSiteConfig.IdentifierUri),
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
