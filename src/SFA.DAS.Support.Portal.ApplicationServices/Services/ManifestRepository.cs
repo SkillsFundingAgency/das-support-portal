@@ -152,7 +152,8 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             resourceUrl = resourceUrl
                 .Replace("{0}", hashedAccountId)
-                .Replace("{1}", userRef);
+                .Replace("{1}", userRef)
+                .Replace("{2}", role);
 
             var uri = new Uri(siteUri, resourceUrl);
             
