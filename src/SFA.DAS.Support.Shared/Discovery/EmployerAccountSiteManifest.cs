@@ -61,7 +61,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    ResourceUrlFormat = "/roles/{0}/{1}?role={2}",
+                    ResourceUrlFormat = "/roles/{0}/{1}",
                     ResourceTitle = "Role",
                     IsNavigationItem = false,
                 },
