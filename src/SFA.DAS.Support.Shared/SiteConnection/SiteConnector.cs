@@ -65,7 +65,8 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.HandleException:
-                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        LastException = LastException ??
+                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
 
                     case HttpStatusCodeDecision.ReturnNull:
