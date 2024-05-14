@@ -157,7 +157,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var uri = new Uri(siteUri, resourceUrl);
 
-            await _siteConnector.Upload(uri, new StringContent(role), subSiteConfig.IdentifierUri);
+            await _siteConnector.Upload(uri, role, subSiteConfig.IdentifierUri);
             
             var result = new ResourceResultModel
             {

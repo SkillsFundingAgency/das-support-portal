@@ -52,13 +52,15 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             return await Download<string>(url, resourceIdentity);
         }
         
-        public async Task Upload(Uri uri, StringContent content, string resourceIdentity)
+        public async Task Upload(Uri uri, string content, string resourceIdentity)
         {
             await EnsureClientAuthorizationHeader(resourceIdentity);
 
+            var postContent = new StringContent(content);
+            
             try
             {
-                var response = await _client.PostAsync(uri, content);
+                var response = await _client.PostAsync(uri, postContent);
 
                 HttpStatusCodeDecision = ExamineResponse(response);
 
