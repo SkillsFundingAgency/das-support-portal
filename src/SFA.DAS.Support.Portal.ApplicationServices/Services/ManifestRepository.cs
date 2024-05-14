@@ -156,10 +156,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 .Replace("{2}", role);
 
             var uri = new Uri(siteUri, resourceUrl);
+
+            await _siteConnector.Upload(uri, new StringContent(role), subSiteConfig.IdentifierUri);
             
             var result = new ResourceResultModel
             {
-                Resource = await _siteConnector.Upload<string>(uri, string.Empty, subSiteConfig.IdentifierUri),
+                //Resource = ,
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };

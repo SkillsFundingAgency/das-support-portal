@@ -51,6 +51,35 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             return await Download<string>(url, resourceIdentity);
         }
+        
+        public async Task Upload(Uri uri, StringContent content, string resourceIdentity)
+        {
+            await EnsureClientAuthorizationHeader(resourceIdentity);
+
+            try
+            {
+                var response = await _client.PostAsync(uri, content);
+
+                HttpStatusCodeDecision = ExamineResponse(response);
+
+                switch (HttpStatusCodeDecision)
+                {
+                    case HttpStatusCodeDecision.HandleException:
+                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        throw LastException;
+
+                    case HttpStatusCodeDecision.ReturnNull:
+                        return;
+
+                    default:
+                        return;
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
+            }
+        }
 
         public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity) where T : class
         {
