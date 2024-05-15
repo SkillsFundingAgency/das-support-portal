@@ -84,12 +84,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("resource/index/{id?}")]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
-            if (HttpContext.User.Identity != null)
-            {
-                var claims = ((ClaimsIdentity)HttpContext.User.Identity).Claims.OrderBy(x => x.Type).Select(x => new { x.Type, x.Value });
-                _logger.Warn($"ResourceController.Index, UserClaims: {JsonConvert.SerializeObject(claims)}.");
-            }
-            
             id = id.ToUpper();
             if (!_serviceConfiguration.ResourceExists(key))
                 return View("Sub",
