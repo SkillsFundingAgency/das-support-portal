@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -22,7 +24,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
-            IGrantPermissions granter, 
+            IGrantPermissions granter,
             IServiceConfiguration serviceConfiguration,
             ILog logger)
         {
@@ -82,6 +84,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("resource/index/{id?}")]
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
+            var claims = ((ClaimsIdentity)HttpContext.User.Identity).Claims.ToDictionary(x => x.Type, y => y.Value);
+            _logger.Warn($"ResourceController.Index, UserClaims: {JsonConvert.SerializeObject(claims)}.");
+            
             id = id.ToUpper();
             if (!_serviceConfiguration.ResourceExists(key))
                 return View("Sub",
@@ -99,13 +104,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 if (!_checker.HasPermissions(Request, Response, User, $"{resource.Challenge}/{id}"))
                 {
                     return RedirectToAction("Challenge",
-                                            new
-                                            {
-                                                resourceId = id,
-                                                resourceKey = (int)key,
-                                                challengeKey = (int)resource.Challenge,
-                                                url = Request.RawUrl
-                                            });
+                        new
+                        {
+                            resourceId = id,
+                            resourceKey = (int)key,
+                            challengeKey = (int)resource.Challenge,
+                            url = Request.RawUrl
+                        });
                 }
             }
 
@@ -116,19 +121,19 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             return View("Sub", resourceResult);
         }
-        
+
         [HttpGet]
         [Route("resource/apprenticeships/search/{hashedAccountId}")]
         public async Task<ActionResult> Apprenticeships(string hashedAccountId, ApprenticeshipSearchType searchType, string searchTerm)
-        {            
+        {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
-           
+
             var resourceResult = await _repository.SubmitApprenticeSearchRequest(
-                                                SupportServiceResourceKey.CommitmentSearch, 
-                                                hashedAccountId,
-                                                searchType, 
-                                                searchTerm);
+                SupportServiceResourceKey.CommitmentSearch,
+                hashedAccountId,
+                searchType,
+                searchTerm);
 
             return View("sub", resourceResult);
         }
@@ -139,14 +144,15 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
-            
+
             var resourceResult = await _repository.SubmitChangeRoleRequest(
-                SupportServiceResourceKey.EmployerAccountChangeRole, 
+                SupportServiceResourceKey.EmployerAccountChangeRole,
                 hashedAccountId,
-                userRef, 
+                userRef,
                 role);
 
-            return View("sub", resourceResult);
+            //return View("sub", resourceResult);
+            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRole, id = hashedAccountId, childId = userRef });
         }
     }
 }

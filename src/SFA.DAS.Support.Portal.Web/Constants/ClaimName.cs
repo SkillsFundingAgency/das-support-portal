@@ -14,5 +14,6 @@
         public const string RoleName = "roleName";
         public const string RoleNumericId = "rolenumericid";
         public const string NameIdentifier = "nameidentifier";
+        public const string IsSupportUser = nameof(IsSupportUser);
     }
 }
