@@ -86,7 +86,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             if (HttpContext.User.Identity != null)
             {
-                var claims = ((ClaimsIdentity)HttpContext.User.Identity).Claims.ToDictionary(x => x.Type, y => y.Value);
+                var claims = ((ClaimsIdentity)HttpContext.User.Identity).Claims.OrderBy(x => x.Type).Select(x => new { x.Type, x.Value });
                 _logger.Warn($"ResourceController.Index, UserClaims: {JsonConvert.SerializeObject(claims)}.");
             }
             
