@@ -42,10 +42,8 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             {
                 actual.Should().NotBeNull();
                 
-                actual.Should().BeOfType<ViewResult>();
+                actual.Should().BeOfType<RedirectToRouteResult>();
 
-                ((ViewResult)actual).ViewName.Should().Be("sub");
-                
                 repository.Verify(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString()), Times.Once);
