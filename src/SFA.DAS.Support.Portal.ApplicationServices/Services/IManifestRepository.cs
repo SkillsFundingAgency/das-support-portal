@@ -8,8 +8,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
     public interface IManifestRepository
     {
-        Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId);
-        Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string data);
+        Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string data = null);
         Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id);
         Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id);
         Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url);
