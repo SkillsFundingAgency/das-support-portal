@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
-using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
-using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
@@ -203,6 +200,34 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
             var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId));
+
+            return await GetPage(url, site.IdentifierUri);
+        }
+
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string data)
+        {
+            var resource = _serviceConfiguration.GetResource(key);
+            if (resource == null)
+            {
+                var e = new NullReferenceException($"The requested resource {key} was not found");
+                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw e;
+            }
+
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            if (!_sites.Any(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+                throw new NullReferenceException(
+                    $"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+
+            var site = _sites.FirstOrDefault(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase));
+
+            if (string.IsNullOrWhiteSpace(site.BaseUrl))
+                throw new NullReferenceException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+
+            resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
+
+            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId), WebUtility.HtmlEncode(data));
 
             return await GetPage(url, site.IdentifierUri);
         }
