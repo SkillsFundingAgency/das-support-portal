@@ -117,7 +117,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
             var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
+            
             var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
 
             return View("Sub", resourceResult);
