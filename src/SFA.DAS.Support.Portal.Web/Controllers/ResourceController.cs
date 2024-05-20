@@ -141,16 +141,18 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [HttpGet]
         [Route("resource/role/change/{hashedAccountId}/{userRef}")]
-        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role, string sid)
+        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role)
         {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
 
+            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+            
             var resourceResult = await _repository.SubmitChangeRoleRequest(
                 hashedAccountId,
                 userRef,
                 role,
-                sid);
+                supportUserEmail);
 
             //return View("sub", resourceResult);
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRole, id = hashedAccountId, childId = userRef });

@@ -189,7 +189,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string sid = null)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail = null)
         {
             var resource = _serviceConfiguration.GetResource(key);
             if (resource == null)
@@ -219,7 +219,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             if (resource.IncludeSupportEmail)
             {
-                url = $"{url}&sid={sid}";
+                url = $"{url}&sid={supportUserEmail}";
             }
             
             return await GetPage(url, site.IdentifierUri);

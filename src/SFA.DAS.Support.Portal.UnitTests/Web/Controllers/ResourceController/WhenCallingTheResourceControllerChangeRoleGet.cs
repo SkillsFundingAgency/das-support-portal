@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -34,20 +36,21 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
-            repository.Setup(x => x.SubmitChangeRoleRequest( hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
-            
+            repository.Setup(x => x.SubmitChangeRoleRequest(hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
+
             var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object, logger.Object);
-            var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString(), supportUserEmail);
+
+            var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString());
 
             using (new AssertionScope())
             {
                 actual.Should().NotBeNull();
-                
+
                 actual.Should().BeOfType<RedirectToRouteResult>();
 
                 repository.Verify(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
-                repository.Verify(x => x.SubmitChangeRoleRequest( hashedAccountId, userRef, role.ToString(), supportUserEmail), Times.Once);
+                repository.Verify(x => x.SubmitChangeRoleRequest(hashedAccountId, userRef, role.ToString(), It.IsAny<string>()), Times.Once);
             }
         }
     }
