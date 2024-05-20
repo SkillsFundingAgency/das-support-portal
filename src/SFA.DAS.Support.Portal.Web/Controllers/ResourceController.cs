@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Portal.Web.Extensions;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
@@ -82,7 +84,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         [Route("resource")]
         [Route("resource/index/{id?}")]
-        public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId, string data = null)
+        public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
             id = id.ToUpper();
             if (!_serviceConfiguration.ResourceExists(key))
@@ -114,7 +116,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            var resourceResult = await _repository.GetResourcePage(key, id, childId, data);
+            var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
 
             return View("Sub", resourceResult);
         }
@@ -137,7 +141,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [HttpGet]
         [Route("resource/role/change/{hashedAccountId}/{userRef}")]
-        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role)
+        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role, string sid)
         {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
@@ -146,7 +150,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 SupportServiceResourceKey.EmployerAccountChangeRole,
                 hashedAccountId,
                 userRef,
-                role);
+                role,
+                sid);
 
             //return View("sub", resourceResult);
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRole, id = hashedAccountId, childId = userRef });

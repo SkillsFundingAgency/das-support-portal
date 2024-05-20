@@ -138,7 +138,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return result;
         }
 
-        public async Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key, string hashedAccountId, string userRef, string role)
+        public class UpdateRoleRequest
+        {
+            public string Role { get; set; }
+            public string SupportUserEmail { get; set; }
+        }
+
+        public async Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key, string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
             var resource = _serviceConfiguration.GetResource(key);
 
@@ -154,7 +160,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var uri = new Uri(siteUri, resourceUrl);
 
-            await _siteConnector.Upload(uri, role, subSiteConfig.IdentifierUri);
+            var request = new UpdateRoleRequest
+            {
+                Role = role,
+                SupportUserEmail = supportUserEmail
+            };
+
+            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
 
             var result = new ResourceResultModel
             {
@@ -176,7 +188,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string data = null)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string sid = null)
         {
             var resource = _serviceConfiguration.GetResource(key);
             if (resource == null)
@@ -189,19 +201,22 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (!_sites.Any(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase)))
-                throw new NullReferenceException(
-                    $"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+            {
+                throw new NullReferenceException($"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+            }
 
             var site = _sites.FirstOrDefault(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
             if (string.IsNullOrWhiteSpace(site.BaseUrl))
+            {
                 throw new NullReferenceException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+            }
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
-            var url = string.IsNullOrEmpty(data)
-                ? string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId))
-                : string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId), WebUtility.HtmlEncode(data));
+            var url = resource.ResourceUrlFormat.Contains("sid") && !string.IsNullOrEmpty(sid)
+                ? string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId), WebUtility.HtmlEncode(sid))
+                : string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId));
 
             return await GetPage(url, site.IdentifierUri);
         }

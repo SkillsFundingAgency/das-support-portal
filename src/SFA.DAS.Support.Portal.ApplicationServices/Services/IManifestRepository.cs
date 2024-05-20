@@ -8,13 +8,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
     public interface IManifestRepository
     {
-        Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string data = null);
+        Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail = null);
         Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id);
         Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id);
         Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url);
         Task<ChallengeResult> SubmitChallenge(string id, IDictionary<string, string> pairs);
 
         Task<ResourceResultModel> SubmitApprenticeSearchRequest(SupportServiceResourceKey key, string hashedAccountId,ApprenticeshipSearchType searchType,string searchTerm);
-        Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key, string hashedAccountId,string userRef, string role);
+        Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key, string hashedAccountId,string userRef, string role, string supportUserEmail);
     }
 }

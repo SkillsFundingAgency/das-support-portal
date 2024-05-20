@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
@@ -56,7 +57,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             await EnsureClientAuthorizationHeader(resourceIdentity);
 
-            var postContent = new StringContent(content);
+            var postContent = new StringContent(content, Encoding.UTF8, "application/json");
             
             try
             {

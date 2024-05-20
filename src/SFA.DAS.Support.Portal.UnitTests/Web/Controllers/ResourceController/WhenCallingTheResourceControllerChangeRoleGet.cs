@@ -29,14 +29,15 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Role role,
             NavViewModel navViewModel,
             ResourceResultModel headerModel,
-            ResourceResultModel resourceModel)
+            ResourceResultModel resourceModel,
+            string supportUserEmail)
         {
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
-            repository.Setup(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString())).ReturnsAsync(resourceModel);
+            repository.Setup(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
             
             var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object, logger.Object);
-            var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString());
+            var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString(), supportUserEmail);
 
             using (new AssertionScope())
             {
@@ -46,7 +47,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
                 repository.Verify(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
-                repository.Verify(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString()), Times.Once);
+                repository.Verify(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString(), supportUserEmail), Times.Once);
             }
         }
     }
