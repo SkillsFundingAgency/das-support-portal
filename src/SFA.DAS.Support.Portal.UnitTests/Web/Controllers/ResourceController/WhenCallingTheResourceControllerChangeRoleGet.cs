@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
-            repository.Setup(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
+            repository.Setup(x => x.SubmitChangeRoleRequest( hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
             
             var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object, logger.Object);
             var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString(), supportUserEmail);
@@ -47,7 +47,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
                 repository.Verify(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
-                repository.Verify(x => x.SubmitChangeRoleRequest(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId, userRef, role.ToString(), supportUserEmail), Times.Once);
+                repository.Verify(x => x.SubmitChangeRoleRequest( hashedAccountId, userRef, role.ToString(), supportUserEmail), Times.Once);
             }
         }
     }

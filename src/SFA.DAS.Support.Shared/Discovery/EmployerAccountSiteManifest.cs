@@ -51,7 +51,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountTeam,
-                    ResourceUrlFormat = "/account/team/{0}",
+                    ResourceUrlFormat = "/account/team/{0}?sid={sid}",
                     ResourceTitle = "Team members",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true,
@@ -69,7 +69,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountResendInvitation,
-                    ResourceUrlFormat = "/invitations/resend/{0}?email={1}&sid={2}",
+                    ResourceUrlFormat = "/invitations/resend/{0}?email={1}&sid={sid}",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false
                 },

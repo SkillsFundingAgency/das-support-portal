@@ -147,7 +147,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
 
             var resourceResult = await _repository.SubmitChangeRoleRequest(
-                SupportServiceResourceKey.EmployerAccountChangeRole,
                 hashedAccountId,
                 userRef,
                 role,

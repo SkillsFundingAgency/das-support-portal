@@ -144,8 +144,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             public string SupportUserEmail { get; set; }
         }
 
-        public async Task<ResourceResultModel> SubmitChangeRoleRequest(SupportServiceResourceKey key, string hashedAccountId, string userRef, string role, string supportUserEmail)
+        public async Task<ResourceResultModel> SubmitChangeRoleRequest( string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
+            
             var resource = _serviceConfiguration.GetResource(key);
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
@@ -155,8 +157,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             resourceUrl = resourceUrl
                 .Replace("{0}", hashedAccountId)
-                .Replace("{1}", userRef)
-                .Replace("{2}", role);
+                .Replace("{1}", userRef);
 
             var uri = new Uri(siteUri, resourceUrl);
 
@@ -213,11 +214,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
-
-            var url = resource.ResourceUrlFormat.Contains("sid") && !string.IsNullOrEmpty(sid)
-                ? string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId), WebUtility.HtmlEncode(sid))
-                : string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId));
-
+            
+            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId))
+                                 .Replace("{sid}", sid);
+            
             return await GetPage(url, site.IdentifierUri);
         }
 
