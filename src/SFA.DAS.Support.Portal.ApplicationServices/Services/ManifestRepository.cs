@@ -179,16 +179,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
         {
             var resource = _serviceConfiguration.GetResource(key);
+           
             if (resource == null)
             {
                 var exception = new ManifestRepositoryException($"The requested resource {key} was not found");
                 _log.Error(exception, "A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
                 throw exception;
-            }
-
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
             }
 
             if (!_sites.Any(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase)))
