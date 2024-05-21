@@ -144,7 +144,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             public string SupportUserEmail { get; set; }
         }
 
-        public async Task<ResourceResultModel> SubmitChangeRoleRequest( string hashedAccountId, string userRef, string role, string supportUserEmail)
+        public async Task<ResourceResultModel> SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
             
@@ -214,14 +214,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
-            
+
             var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId));
 
             if (resource.IncludeSupportEmail)
             {
                 url = $"{url}&sid={supportUserEmail}";
             }
-            
+
             return await GetPage(url, site.IdentifierUri);
         }
 
