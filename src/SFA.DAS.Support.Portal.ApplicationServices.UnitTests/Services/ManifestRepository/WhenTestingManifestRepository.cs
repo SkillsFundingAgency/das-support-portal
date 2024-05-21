@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
-using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
 
@@ -27,6 +26,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         protected string TestSiteIdentifier;
 
         protected IManifestRepository Unit;
+        protected readonly string BaseUrl = "https://testsite/";
 
         [SetUp]
         public virtual void Setup()
@@ -45,13 +45,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             TestSites = HttpsTestsite;
 
+            
             MockSiteSettings = new SubSiteConnectorConfigs
             {
                 SubSiteConnectorSettings = new List<SubSiteConnectorConfig>
                 {
                     new SubSiteConnectorConfig
                     {
-                        BaseUrl = "https://testsite/",
+                        BaseUrl = BaseUrl,
                         Key = SupportServiceIdentity.SupportEmployerAccount.ToString(),
                         IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar"
                     }

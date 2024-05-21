@@ -193,6 +193,7 @@
     <Compile Include="Services\ManifestRepository\WhenCallingGetNav.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingGetResourcePage.cs" />
     <Compile Include="Services\ManifestRepository\WhenCallingSubmitChallenge.cs" />
+    <Compile Include="Services\ManifestRepository\WhenCallingSubmitChangeRoleRequest.cs" />
     <Compile Include="Services\ManifestRepository\WhenTestingManifestRepository.cs" />
   </ItemGroup>
   <ItemGroup>

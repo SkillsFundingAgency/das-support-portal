@@ -123,6 +123,8 @@
     <Compile Include="Services\IManifestRepository.cs" />
     <Compile Include="Services\ManifestRepository.cs" />
     <Compile Include="Models\ResourceResultModel.cs" />
+    <Compile Include="Services\ManifestRepositoryException.cs" />
+    <Compile Include="Services\UpdateRoleRequest.cs" />
     <Compile Include="Settings\CryptoSettings.cs" />
     <Compile Include="Settings\ICryptoSettings.cs" />
   </ItemGroup>

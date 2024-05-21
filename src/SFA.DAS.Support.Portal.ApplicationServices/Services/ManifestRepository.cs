@@ -109,7 +109,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 throw _siteConnector.LastException;
             }
 
-            return HandleChallenegeResponseContent(html, resourceKey, challengeKey, id, redirect);
+            return HandleChallengeResponseContent(html, resourceKey, challengeKey, id, redirect);
         }
 
         public async Task<ResourceResultModel> SubmitApprenticeSearchRequest(SupportServiceResourceKey key,
@@ -138,12 +138,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             return result;
-        }
-
-        private class UpdateRoleRequest
-        {
-            public string Role { get; set; }
-            public string SupportUserEmail { get; set; }
         }
 
         public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
@@ -187,28 +181,31 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var resource = _serviceConfiguration.GetResource(key);
             if (resource == null)
             {
-                var exception = new NullReferenceException($"The requested resource {key} was not found");
-                _log.Error(exception, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                var exception = new ManifestRepositoryException($"The requested resource {key} was not found");
+                _log.Error(exception, "A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
                 throw exception;
             }
 
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (resource == null)
+            {
+                throw new ArgumentNullException(nameof(resource));
+            }
 
             if (!_sites.Any(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase)))
             {
-                throw new NullReferenceException($"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+                throw new ManifestRepositoryException($"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
             }
 
             var site = _sites.FirstOrDefault(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
             if (string.IsNullOrWhiteSpace(site.BaseUrl))
             {
-                throw new NullReferenceException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+                throw new ManifestRepositoryException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
             }
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
-            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.HtmlEncode(childId));
+            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.UrlEncode(childId));
 
             if (resource.IncludeSupportEmail)
             {
@@ -218,7 +215,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await GetPage(url, site.IdentifierUri);
         }
 
-        private ChallengeResult HandleChallenegeResponseContent(string responseContent,
+        private ChallengeResult HandleChallengeResponseContent(string responseContent,
             SupportServiceResourceKey resourceKey,
             SupportServiceResourceKey challengeKey,
             string id,
