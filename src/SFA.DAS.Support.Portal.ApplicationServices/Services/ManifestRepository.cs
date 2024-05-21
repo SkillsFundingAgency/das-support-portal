@@ -144,7 +144,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             public string SupportUserEmail { get; set; }
         }
 
-        public async Task<ResourceResultModel> SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
+        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
             
@@ -168,14 +168,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
-
-            var result = new ResourceResultModel
-            {
-                StatusCode = _siteConnector.LastCode,
-                Exception = _siteConnector.LastException
-            };
-
-            return result;
         }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)

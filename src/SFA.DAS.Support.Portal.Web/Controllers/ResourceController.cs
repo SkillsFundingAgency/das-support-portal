@@ -146,14 +146,13 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
             
-            var resourceResult = await _repository.SubmitChangeRoleRequest(
+            await _repository.SubmitChangeRoleRequest(
                 hashedAccountId,
                 userRef,
                 role,
                 supportUserEmail);
 
-            //return View("sub", resourceResult);
-            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRole, id = hashedAccountId, childId = userRef });
+            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, id = hashedAccountId, childId = userRef });
         }
     }
 }

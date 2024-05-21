@@ -1,8 +1,5 @@
-﻿using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Mvc;
 using Moq;
@@ -36,8 +33,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         {
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
-            repository.Setup(x => x.SubmitChangeRoleRequest(hashedAccountId, userRef, role.ToString(), supportUserEmail)).ReturnsAsync(resourceModel);
-
+            
             var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object, logger.Object);
 
             var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString());
