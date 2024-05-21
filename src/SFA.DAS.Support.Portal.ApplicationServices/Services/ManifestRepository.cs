@@ -205,7 +205,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             if (resource.IncludeSupportEmail)
             {
-                url = $"{url}&sid={supportUserEmail}";
+                url = $"{url}&sid={WebUtility.UrlEncode(supportUserEmail)}";
             }
 
             return await GetPage(url, site.IdentifierUri);

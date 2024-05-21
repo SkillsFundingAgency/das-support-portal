@@ -54,7 +54,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                     {
                         BaseUrl = BaseUrl,
                         Key = SupportServiceIdentity.SupportEmployerAccount.ToString(),
-                        IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar"
+                        IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar",
                     }
                 }
             };
@@ -67,7 +67,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             MockSiteConnector
                 .Setup(x => x.Download<SiteManifest>(TestSiteUri, TestSiteIdentifier))
                 .ReturnsAsync(TestSiteManifest);
-
+            
             Unit = new ApplicationServices.Services.ManifestRepository(
                 MockSiteSettings,
                 MockSiteConnector.Object,
