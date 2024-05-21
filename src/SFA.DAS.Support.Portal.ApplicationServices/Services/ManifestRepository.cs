@@ -171,7 +171,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var result = new ResourceResultModel
             {
-                //Resource = ,
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
