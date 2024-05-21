@@ -13,20 +13,18 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         [Test]
         public async Task ItShouldUploadAnUpdateRoleRequest()
         {
-            var hashedAccountId = "BADWASSD";
+            const string hashedAccountId = "BADWASSD";
             var userRef = Guid.NewGuid().ToString();
-            var role = "TEST";
-            var supportEmail = "support@email.test";
+            const string role = "TEST";
+            const string supportEmail = "support@email.test";
 
             var url = new Uri($"{BaseUrl}roles/{hashedAccountId}/{userRef}");
 
-            var request = new UpdateRoleRequest
+            var jsonRequest = JsonConvert.SerializeObject(new UpdateRoleRequest
             {
                 Role = role,
                 SupportUserEmail = supportEmail
-            };
-
-            var jsonRequest = JsonConvert.SerializeObject(request);
+            });
 
             var resourceIdentity = MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri;
             
