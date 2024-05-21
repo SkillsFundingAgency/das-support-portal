@@ -64,7 +64,6 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceUrlFormat = "/roles/{0}/{1}",
                     ResourceTitle = "Role",
                     IsNavigationItem = false,
-                    IncludeSupportEmail = true,
                 },
                 new SiteResource
                 {
