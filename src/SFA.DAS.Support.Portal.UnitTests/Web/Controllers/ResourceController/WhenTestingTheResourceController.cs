@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Discovery;
@@ -35,8 +34,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
                 MockManifestRepository.Object,
                 MockPermissionsChecker.Object,
                 MockPermissionsGranter.Object,
-                ServiceConfiguration,
-                Mock.Of<ILog>());
+                ServiceConfiguration);
 
             MockContextBase = new Mock<HttpContextBase>();
 

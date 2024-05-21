@@ -67,19 +67,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var challenge = _serviceConfiguration.GetChallenge(challengeKey);
             if (challenge == null)
             {
-                var e = new NullReferenceException($"The challenge {challengeKey} could not be found in any manifest");
-                _log.Error(e,
-                    $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
-                throw e;
+                var exception = new ApplicationException($"The challenge {challengeKey} could not be found in any manifest");
+                _log.Error(exception, $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
+                throw exception;
             }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
 
-            var challengeUrl =
-                string.Format(
-                    new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
-
+            var challengeUrl = string.Format(new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
+            
             var page = await GetPage(challengeUrl, subSiteConfig.IdentifierUri);
+            
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
