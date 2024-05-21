@@ -86,12 +86,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
 
-            var challengeKey =
-                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
-            var resourceKey =
-                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
+            var challengeKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+            var resourceKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            if (!_serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
+            if (!_serviceConfiguration.ChallengeExists(challengeKey))
+            {
+                throw new MissingMemberException();
+            }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
             var siteUri = new Uri(subSiteConfig.BaseUrl);
@@ -103,7 +104,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var html = await _siteConnector.Upload<string>(uri, formData, subSiteConfig.IdentifierUri);
 
-            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
 
             return HandleChallenegeResponseContent(html, resourceKey, challengeKey, id, redirect);
         }
@@ -126,7 +130,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var searchUri = new Uri(siteUri, resourceSearchItemsUrl);
 
-            ResourceResultModel result = new ResourceResultModel
+            var result = new ResourceResultModel
             {
                 Resource = await _siteConnector.Upload<string>(searchUri, string.Empty, subSiteConfig.IdentifierUri),
                 StatusCode = _siteConnector.LastCode,
@@ -136,7 +140,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return result;
         }
 
-        public class UpdateRoleRequest
+        private class UpdateRoleRequest
         {
             public string Role { get; set; }
             public string SupportUserEmail { get; set; }
@@ -178,14 +182,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail = null)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
         {
             var resource = _serviceConfiguration.GetResource(key);
             if (resource == null)
             {
-                var e = new NullReferenceException($"The requested resource {key} was not found");
-                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
-                throw e;
+                var exception = new NullReferenceException($"The requested resource {key} was not found");
+                _log.Error(exception, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw exception;
             }
 
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -244,21 +248,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private async Task<ResourceResultModel> GetPage(string url, string resourceIdentity)
         {
-            var result = new ResourceResultModel();
-            /// var queryString = AddQueryString(url);
-            result.Resource = await _siteConnector.Download(new Uri(url), resourceIdentity);
-            result.StatusCode = _siteConnector.LastCode;
-            result.Exception = _siteConnector.LastException;
-            return result;
-        }
-
-        private string AddQueryString(string url)
-        {
-            var uriBuilder = new UriBuilder(url);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query["parent"] = string.Empty;
-            uriBuilder.Query = query.ToString();
-            return uriBuilder.ToString();
+            return new ResourceResultModel
+            {
+                Resource = await _siteConnector.Download(new Uri(url), resourceIdentity),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
         }
     }
 }
