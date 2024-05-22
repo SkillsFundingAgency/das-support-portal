@@ -54,7 +54,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
                     {
                         BaseUrl = BaseUrl,
                         Key = SupportServiceIdentity.SupportEmployerAccount.ToString(),
-                        IdentifierUri = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-test-as-ar",
+                        IdentifierUri = "https://doesnotexist.com/for-testing-only",
                     }
                 }
             };
