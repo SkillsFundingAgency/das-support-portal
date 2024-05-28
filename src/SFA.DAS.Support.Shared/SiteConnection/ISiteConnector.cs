@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
@@ -21,5 +22,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         Task<T> Upload<T>(Uri uri, IDictionary<string, string> formData, string resourceIdentity) where T : class;
 
         Task<T> Upload<T>(Uri uri, string content, string resourceIdentity) where T : class;
+        Task Upload(Uri uri, string content, string resourceIdentity);
     }
 }

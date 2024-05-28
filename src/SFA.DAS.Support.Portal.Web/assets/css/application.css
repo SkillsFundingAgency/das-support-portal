@@ -103,9 +103,9 @@
     display: none;
 }
 
-/*** Info / Warning summary styles ***/
+/*** Info / Warning / Error summary styles ***/
 
-.info-summary, .warning-summary{
+.info-summary, .warning-summary, .error-summary {
     
     margin-top: 15px;
     margin-bottom: 15px;
@@ -119,7 +119,12 @@
   .warning-summary {
     border: 4px solid #f47738;
   }
-
+  
+  .error-summary {
+      border: 4px solid #b10e1e;
+      color: #b10e1e;
+  }
+  
   @media (min-width: 641px) {
     .info-summary , .warning-summary {
       margin-top: 30px;

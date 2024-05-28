@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
+using SFA.DAS.Support.Portal.Web.Extensions;
 using SFA.DAS.Support.Portal.Web.Services;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
@@ -16,10 +18,12 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly IGrantPermissions _granter;
         private readonly IManifestRepository _repository;
         private readonly IServiceConfiguration _serviceConfiguration;
+
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
-            IGrantPermissions granter, IServiceConfiguration serviceConfiguration)
+            IGrantPermissions granter,
+            IServiceConfiguration serviceConfiguration)
         {
             _repository = repository;
             _checker = checker;
@@ -93,20 +97,22 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 if (!_checker.HasPermissions(Request, Response, User, $"{resource.Challenge}/{id}"))
                 {
                     return RedirectToAction("Challenge",
-                                            new
-                                            {
-                                                resourceId = id,
-                                                resourceKey = (int)key,
-                                                challengeKey = (int)resource.Challenge,
-                                                url = Request.RawUrl
-                                            });
+                        new
+                        {
+                            resourceId = id,
+                            resourceKey = (int)key,
+                            challengeKey = (int)resource.Challenge,
+                            url = Request.RawUrl
+                        });
                 }
             }
 
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            var resourceResult = await _repository.GetResourcePage(key, id, childId);
+            var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            
+            var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
 
             return View("Sub", resourceResult);
         }
@@ -114,17 +120,35 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         [Route("resource/apprenticeships/search/{hashedAccountId}")]
         public async Task<ActionResult> Apprenticeships(string hashedAccountId, ApprenticeshipSearchType searchType, string searchTerm)
-        {            
+        {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.CommitmentSearch, hashedAccountId);
-           
+
             var resourceResult = await _repository.SubmitApprenticeSearchRequest(
-                                                SupportServiceResourceKey.CommitmentSearch, 
-                                                hashedAccountId,
-                                                searchType, 
-                                                searchTerm);
+                SupportServiceResourceKey.CommitmentSearch,
+                hashedAccountId,
+                searchType,
+                searchTerm);
 
             return View("sub", resourceResult);
+        }
+
+        [HttpGet]
+        [Route("resource/role/change/{hashedAccountId}/{userRef}")]
+        public async Task<ActionResult> ChangeRole(string hashedAccountId, string userRef, string role)
+        {
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
+
+            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+            
+            await _repository.SubmitChangeRoleRequest(
+                hashedAccountId,
+                userRef,
+                role,
+                supportUserEmail);
+
+            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, id = hashedAccountId, childId = userRef });
         }
     }
 }

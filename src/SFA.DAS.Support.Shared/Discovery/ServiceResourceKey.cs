@@ -15,7 +15,10 @@
         EmployerAccount,
         EmployerAccountHeader,
         EmployerAccountTeam,
+        EmployerAccountChangeRole,
+        EmployerAccountChangeRoleConfirm,
         EmployerAccountFinance,
+        EmployerAccountResendInvitation,
         EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge,
     }

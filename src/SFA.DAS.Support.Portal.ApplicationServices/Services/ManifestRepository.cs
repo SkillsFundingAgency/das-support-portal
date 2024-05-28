@@ -7,11 +7,9 @@ using System.Web;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
-using SFA.DAS.Support.Portal.ApplicationServices.Settings;
 using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.Discovery;
 using SFA.DAS.Support.Shared.SiteConnection;
-using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 
 namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 {
@@ -69,19 +67,17 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var challenge = _serviceConfiguration.GetChallenge(challengeKey);
             if (challenge == null)
             {
-                var e = new NullReferenceException($"The challenge {challengeKey} could not be found in any manifest");
-                _log.Error(e,
-                    $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
-                throw e;
+                var exception = new ApplicationException($"The challenge {challengeKey} could not be found in any manifest");
+                _log.Error(exception, $"The Manifest data is misconfigured because a Challenge was identified but not configured, please review the Manifest configuration and update it accordingly.");
+                throw exception;
             }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
 
-            var challengeUrl =
-                string.Format(
-                    new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
-
+            var challengeUrl = string.Format(new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
+            
             var page = await GetPage(challengeUrl, subSiteConfig.IdentifierUri);
+            
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
@@ -90,12 +86,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var redirect = formData["redirect"];
             var innerAction = formData["innerAction"];
 
-            var challengeKey =
-                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
-            var resourceKey =
-                (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
+            var challengeKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["challengeKey"]);
+            var resourceKey = (SupportServiceResourceKey)Enum.Parse(typeof(SupportServiceResourceKey), formData["resourceKey"]);
 
-            if (!_serviceConfiguration.ChallengeExists(challengeKey)) throw new MissingMemberException();
+            if (!_serviceConfiguration.ChallengeExists(challengeKey))
+            {
+                throw new MissingMemberException();
+            }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
             var siteUri = new Uri(subSiteConfig.BaseUrl);
@@ -107,9 +104,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var html = await _siteConnector.Upload<string>(uri, formData, subSiteConfig.IdentifierUri);
 
-            if (_siteConnector.LastException != null) throw _siteConnector.LastException;
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
 
-            return HandleChallenegeResponseContent(html, resourceKey, challengeKey, id, redirect);
+            return HandleChallengeResponseContent(html, resourceKey, challengeKey, id, redirect);
         }
 
         public async Task<ResourceResultModel> SubmitApprenticeSearchRequest(SupportServiceResourceKey key,
@@ -124,13 +124,13 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var resourceSearchItemsUrl = resource.SearchItemsUrl;
 
             resourceSearchItemsUrl = resourceSearchItemsUrl
-                                        .Replace("{0}", hashedAccountId)
-                                        .Replace("{1}", $"{searchType}")
-                                        .Replace("{2}", HttpUtility.HtmlEncode(searchTerm));
+                .Replace("{0}", hashedAccountId)
+                .Replace("{1}", $"{searchType}")
+                .Replace("{2}", HttpUtility.HtmlEncode(searchTerm));
 
             var searchUri = new Uri(siteUri, resourceSearchItemsUrl);
 
-            ResourceResultModel result = new ResourceResultModel
+            var result = new ResourceResultModel
             {
                 Resource = await _siteConnector.Upload<string>(searchUri, string.Empty, subSiteConfig.IdentifierUri),
                 StatusCode = _siteConnector.LastCode,
@@ -138,6 +138,32 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             return result;
+        }
+
+        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
+        {
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
+            
+            var resource = _serviceConfiguration.GetResource(key);
+
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
+            var siteUri = new Uri(subSiteConfig.BaseUrl);
+
+            var resourceUrl = resource.ResourceUrlFormat;
+
+            resourceUrl = resourceUrl
+                .Replace("{0}", hashedAccountId)
+                .Replace("{1}", userRef);
+
+            var uri = new Uri(siteUri, resourceUrl);
+
+            var request = new UpdateRoleRequest
+            {
+                Role = role,
+                SupportUserEmail = supportUserEmail
+            };
+
+            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
         }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
@@ -150,38 +176,46 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
         {
             var resource = _serviceConfiguration.GetResource(key);
+           
             if (resource == null)
             {
-                var e = new NullReferenceException($"The requested resource {key} was not found");
-                _log.Error(e, $"A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
-                throw e;
+                var exception = new ManifestRepositoryException($"The requested resource {key} was not found");
+                _log.Error(exception, "A manifest was identified but not found, please review the Manifest configuration and update it accordingly.");
+                throw exception;
             }
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (!_sites.Any(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase)))
-                throw new NullReferenceException(
-                    $"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+            {
+                throw new ManifestRepositoryException($"The site {resource.ServiceIdentity} could not be found in any of the site configurations");
+            }
 
             var site = _sites.FirstOrDefault(x => x.Key.Equals(resource.ServiceIdentity.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
             if (string.IsNullOrWhiteSpace(site.BaseUrl))
-                throw new NullReferenceException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+            {
+                throw new ManifestRepositoryException($"The site {resource.ServiceIdentity} Uri is null, Please define a BaseUrl for this Service Identity");
+            }
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
-            var url = string.Format(resource.ResourceUrlFormat, id, childId);
+            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.UrlEncode(childId));
+
+            if (resource.IncludeSupportEmail)
+            {
+                url = $"{url}&sid={WebUtility.UrlEncode(supportUserEmail)}";
+            }
 
             return await GetPage(url, site.IdentifierUri);
         }
 
-        private ChallengeResult HandleChallenegeResponseContent(string responseContent,
-                                        SupportServiceResourceKey resourceKey,
-                                        SupportServiceResourceKey challengeKey,
-                                        string id,
-                                        string redirect)
+        private ChallengeResult HandleChallengeResponseContent(string responseContent,
+            SupportServiceResourceKey resourceKey,
+            SupportServiceResourceKey challengeKey,
+            string id,
+            string redirect)
         {
             var challengeValidationResult = new ChallengeValidationResult();
 
@@ -207,21 +241,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         private async Task<ResourceResultModel> GetPage(string url, string resourceIdentity)
         {
-            var result = new ResourceResultModel();
-            /// var queryString = AddQueryString(url);
-            result.Resource = await _siteConnector.Download(new Uri(url), resourceIdentity);
-            result.StatusCode = _siteConnector.LastCode;
-            result.Exception = _siteConnector.LastException;
-            return result;
-        }
-
-        private string AddQueryString(string url)
-        {
-            var uriBuilder = new UriBuilder(url);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query["parent"] = string.Empty;
-            uriBuilder.Query = query.ToString();
-            return uriBuilder.ToString();
+            return new ResourceResultModel
+            {
+                Resource = await _siteConnector.Download(new Uri(url), resourceIdentity),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
         }
     }
 }

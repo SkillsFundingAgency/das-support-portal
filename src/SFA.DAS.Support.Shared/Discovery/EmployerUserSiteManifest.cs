@@ -26,7 +26,6 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerUser,
                     ResourceKey = SupportServiceResourceKey.EmployerUserHeader,
                     ResourceUrlFormat = "/user/header/{0}"
-
                 },
                 new SiteResource
                 {

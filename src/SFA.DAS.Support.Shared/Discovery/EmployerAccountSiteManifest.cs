@@ -17,7 +17,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceUrlFormat = "/account/{0}",
                     ResourceTitle = "Organisations",
                     SearchItemsUrl = "/api/search/accounts/{0}/{1}",
-                    SearchTotalItemsUrl ="/api/search/accounts/totalCount/{0}",
+                    SearchTotalItemsUrl = "/api/search/accounts/totalCount/{0}",
                     SearchCategory = SearchCategory.Account,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
@@ -38,7 +38,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = true
                 },
-                  new SiteResource
+                new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountPayeSchemeLevys,
@@ -54,7 +54,34 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ResourceUrlFormat = "/account/team/{0}",
                     ResourceTitle = "Team members",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    IsNavigationItem = true
+                    IsNavigationItem = true,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRole,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    ResourceUrlFormat = "/roles/{0}/{1}",
+                    ResourceTitle = "Role",
+                    IsNavigationItem = false,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    ResourceUrlFormat = "/roles/confirm/{0}/{1}",
+                    ResourceTitle = "Role",
+                    IsNavigationItem = false,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountResendInvitation,
+                    ResourceUrlFormat = "/invitations/resend/{0}?email={1}",
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    IsNavigationItem = false,
+                    IncludeSupportEmail = true,
                 },
                 new SiteResource
                 {
@@ -70,7 +97,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportCommitments,
                     ResourceKey = SupportServiceResourceKey.CommitmentApprenticeDetail,
-                    ResourceUrlFormat = "/Apprenticeships/account/{0}/Apprenticeship/{1}", 
+                    ResourceUrlFormat = "/Apprenticeships/account/{0}/Apprenticeship/{1}",
                     ResourceTitle = string.Empty,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false

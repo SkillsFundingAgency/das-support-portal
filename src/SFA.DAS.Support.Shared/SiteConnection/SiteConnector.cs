@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
@@ -51,6 +52,38 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             return await Download<string>(url, resourceIdentity);
         }
+        
+        public async Task Upload(Uri uri, string content, string resourceIdentity)
+        {
+            await EnsureClientAuthorizationHeader(resourceIdentity);
+
+            var postContent = new StringContent(content, Encoding.UTF8, "application/json");
+            
+            try
+            {
+                var response = await _client.PostAsync(uri, postContent);
+
+                HttpStatusCodeDecision = ExamineResponse(response);
+
+                switch (HttpStatusCodeDecision)
+                {
+                    case HttpStatusCodeDecision.HandleException:
+                        LastException = LastException ??
+                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        throw LastException;
+
+                    case HttpStatusCodeDecision.ReturnNull:
+                        return;
+
+                    default:
+                        return;
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
+            }
+        }
 
         public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity) where T : class
         {
@@ -83,9 +116,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(LastContent);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -119,9 +152,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(LastContent);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -168,9 +201,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                         return JsonConvert.DeserializeObject<T>(content);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Debug($"Call to sub site failed {nameof(SiteConnector)} with {e.HResult} returning null response. Stack: {e.StackTrace}");
+                _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
                 return null;
             }
         }
@@ -182,9 +215,9 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 var token = await GetAuthenticationToken(resourceIdentity);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.Error(e, "Error obtaining active directory token. Communication with the sub sites is not possible.");
+                _logger.Error(exception, "Error obtaining active directory token. Communication with the sub sites is not possible.");
                 _client.DefaultRequestHeaders.Authorization = null;
             }
         }
