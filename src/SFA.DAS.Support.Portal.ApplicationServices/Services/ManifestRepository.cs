@@ -142,11 +142,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
-            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
-            
-            var resource = _serviceConfiguration.GetResource(key);
+            var resource = _serviceConfiguration.GetResource(SupportServiceResourceKey.EmployerAccountChangeRole);
 
-            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, SupportServiceResourceKey.EmployerAccountChangeRole);
             var siteUri = new Uri(subSiteConfig.BaseUrl);
 
             var resourceUrl = resource.ResourceUrlFormat;
@@ -163,6 +161,29 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 SupportUserEmail = supportUserEmail
             };
 
+            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
+        }
+
+        public async Task SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
+        {
+            var resource = _serviceConfiguration.GetResource(SupportServiceResourceKey.EmployerAccountInvitationPost);
+
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, SupportServiceResourceKey.EmployerAccountInvitationPost);
+            var siteUri = new Uri(subSiteConfig.BaseUrl);
+
+            var resourceUrl = resource.ResourceUrlFormat;
+            
+            var uri = new Uri(siteUri, resourceUrl);
+
+            var request = new CreateInvitationRequest
+            {
+                SupportUserEmail = supportUserEmail,
+                HashedAccountId = hashedAccountId,
+                EmailOfPersonBeingInvited = email,
+                NameOfPersonBeingInvited = fullName,
+                RoleOfPersonBeingInvited = role
+            };
+            
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
         }
 

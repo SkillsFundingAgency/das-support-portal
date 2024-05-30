@@ -16,5 +16,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         Task<ResourceResultModel> SubmitApprenticeSearchRequest(SupportServiceResourceKey key, string hashedAccountId,ApprenticeshipSearchType searchType,string searchTerm);
         Task SubmitChangeRoleRequest(string hashedAccountId,string userRef, string role, string supportUserEmail);
+        Task SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role);
     }
 }

@@ -157,9 +157,16 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [HttpGet]
         [Route("resource/invitemember/{hashedAccountId}")]
-        public ActionResult InviteMember(string hashedAccountId, string email, string fullName, int role)
+        public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role, string supportUserEmail)
         {
-            _logger.Warn($"InviteMember. hashedAccountId: {hashedAccountId}. email: {email}. fullName: {fullName}. role: {role}.");
+            _logger.Warn($"InviteMember. hashedAccountId: {hashedAccountId}. email: {email}. fullName: {fullName}. role: {role}. supportUserEmail: {supportUserEmail}.");
+
+            await _repository.SubmitCreateInvitationRequest(
+                hashedAccountId,
+                email,
+                fullName,
+                supportUserEmail, 
+                role);
             
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
         }

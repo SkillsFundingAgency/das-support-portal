@@ -113,6 +113,7 @@
     <Compile Include="Responses\SearchResponseCodes.cs" />
     <Compile Include="Services\ChallengeResult.cs" />
     <Compile Include="Services\ChallengeService.cs" />
+    <Compile Include="Services\CreateInvitationRequest.cs" />
     <Compile Include="Services\Crypto.cs" />
     <Compile Include="Services\DatetimeService.cs" />
     <Compile Include="Services\IChallengeService.cs" />

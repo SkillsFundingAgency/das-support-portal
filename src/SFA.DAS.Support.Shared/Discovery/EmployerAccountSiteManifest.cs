@@ -68,6 +68,12 @@ namespace SFA.DAS.Support.Shared.Discovery
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationPost,
+                    ResourceUrlFormat = "/invitations",
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     ResourceUrlFormat = "/roles/confirm/{0}/{1}",
