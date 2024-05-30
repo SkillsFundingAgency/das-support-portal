@@ -157,8 +157,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
         [HttpGet]
         [Route("resource/invitemember/{hashedAccountId}")]
-        public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role, string supportUserEmail)
+        public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
         {
+            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+            
             _logger.Warn($"InviteMember. hashedAccountId: {hashedAccountId}. email: {email}. fullName: {fullName}. role: {role}. supportUserEmail: {supportUserEmail}.");
 
             await _repository.SubmitCreateInvitationRequest(
