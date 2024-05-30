@@ -3,6 +3,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Extensions;
@@ -18,17 +19,20 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly IGrantPermissions _granter;
         private readonly IManifestRepository _repository;
         private readonly IServiceConfiguration _serviceConfiguration;
+        private readonly ILog _logger;
 
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
             IGrantPermissions granter,
-            IServiceConfiguration serviceConfiguration)
+            IServiceConfiguration serviceConfiguration,
+            ILog logger)
         {
             _repository = repository;
             _checker = checker;
             _granter = granter;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -149,6 +153,15 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 supportUserEmail);
 
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, id = hashedAccountId, childId = userRef });
+        }
+
+        [HttpGet]
+        [Route("resource/invitemember/{hashedAccountId}")]
+        public ActionResult InviteMember(string hashedAccountId, string email, string fullName, int role)
+        {
+            _logger.Warn($"InviteMember. hashedAccountId: {hashedAccountId}. email: {email}. fullName: {fullName}. role: {role}.");
+            
+            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
         }
     }
 }

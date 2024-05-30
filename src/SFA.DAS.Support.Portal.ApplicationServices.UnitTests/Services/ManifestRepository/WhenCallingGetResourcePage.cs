@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             
             MockSiteConnector.Setup(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
             
-            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountResendInvitation, hashedAccountId, email, supportEmail);
+            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountInvitationConfirm, hashedAccountId, email, supportEmail);
             
             MockSiteConnector.Verify(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
         }

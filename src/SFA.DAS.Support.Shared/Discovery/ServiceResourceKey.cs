@@ -18,7 +18,8 @@
         EmployerAccountChangeRole,
         EmployerAccountChangeRoleConfirm,
         EmployerAccountFinance,
-        EmployerAccountResendInvitation,
+        EmployerAccountInvitation,
+        EmployerAccountInvitationConfirm,
         EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge,
     }
