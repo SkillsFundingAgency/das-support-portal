@@ -142,9 +142,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
         {
-            var resource = _serviceConfiguration.GetResource(SupportServiceResourceKey.EmployerAccountChangeRole);
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
+            
+            var resource = _serviceConfiguration.GetResource(key);
 
-            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, SupportServiceResourceKey.EmployerAccountChangeRole);
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
             var siteUri = new Uri(subSiteConfig.BaseUrl);
 
             var resourceUrl = resource.ResourceUrlFormat;
@@ -166,9 +168,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
         {
-            var resource = _serviceConfiguration.GetResource(SupportServiceResourceKey.EmployerAccountInvitationPost);
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitationPost;
+            
+            var resource = _serviceConfiguration.GetResource(key);
 
-            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, SupportServiceResourceKey.EmployerAccountInvitationPost);
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
             var siteUri = new Uri(subSiteConfig.BaseUrl);
 
             var resourceUrl = resource.ResourceUrlFormat;
@@ -186,6 +190,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
+
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
         }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
