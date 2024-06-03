@@ -69,7 +69,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationPost,
-                    ResourceUrlFormat = "/invitations",
+                    ResourceUrlFormat = "/invitations/{0}",
                 },
                 new SiteResource
                 {
