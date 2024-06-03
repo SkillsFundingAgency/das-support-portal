@@ -161,8 +161,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
             
-            _logger.Warn($"InviteMember. hashedAccountId: {hashedAccountId}. email: {email}. fullName: {fullName}. role: {role}. supportUserEmail: {supportUserEmail}.");
-
             await _repository.SubmitCreateInvitationRequest(
                 hashedAccountId,
                 email,
