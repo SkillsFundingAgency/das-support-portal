@@ -164,6 +164,11 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
 
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
+            
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
         }
 
         public async Task SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
