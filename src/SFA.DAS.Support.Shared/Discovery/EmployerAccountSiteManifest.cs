@@ -87,7 +87,6 @@ namespace SFA.DAS.Support.Shared.Discovery
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     ResourceUrlFormat = "/invitations/{0}",
                     IsNavigationItem = false,
-                    IncludeSupportEmail = true,
                 },
                 new SiteResource
                 {
