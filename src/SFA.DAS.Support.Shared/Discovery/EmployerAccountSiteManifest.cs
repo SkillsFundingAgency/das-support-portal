@@ -74,27 +74,9 @@ namespace SFA.DAS.Support.Shared.Discovery
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
-                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm,
-                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    ResourceUrlFormat = "/invitations/confirm/{0}/{1}",
-                    ResourceTitle = "Role",
-                    IsNavigationItem = false,
-                },
-                new SiteResource
-                {
-                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     ResourceUrlFormat = "/roles/confirm/{0}/{1}",
-                    ResourceTitle = "Role",
-                    IsNavigationItem = false,
-                },
-                new SiteResource
-                {
-                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
-                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm,
-                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    ResourceUrlFormat = "/invitations/confirm/{0}/{1}",
                     ResourceTitle = "Role",
                     IsNavigationItem = false,
                 },
@@ -114,6 +96,15 @@ namespace SFA.DAS.Support.Shared.Discovery
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false,
                     IncludeSupportEmail = true,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    ResourceUrlFormat = "/invitations/confirm/{0}?email={1}",
+                    ResourceTitle = "Confirm",
+                    IsNavigationItem = false,
                 },
                 new SiteResource
                 {
