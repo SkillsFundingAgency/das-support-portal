@@ -4,7 +4,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
     {
         public string SupportUserEmail { get; set; }
 
-        public string HashedAccountId { get; set; }
 
         public string NameOfPersonBeingInvited { get; set; }
 

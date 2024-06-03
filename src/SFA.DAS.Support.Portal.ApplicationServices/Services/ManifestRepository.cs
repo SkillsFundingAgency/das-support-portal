@@ -75,9 +75,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
 
             var challengeUrl = string.Format(new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
-            
+
             var page = await GetPage(challengeUrl, subSiteConfig.IdentifierUri);
-            
+
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
@@ -172,18 +172,19 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var siteUri = new Uri(subSiteConfig.BaseUrl);
 
             var resourceUrl = resource.ResourceUrlFormat;
-            
+
+            resourceUrl = resourceUrl.Replace("{0}", hashedAccountId);
+
             var uri = new Uri(siteUri, resourceUrl);
 
             var request = new CreateInvitationRequest
             {
                 SupportUserEmail = supportUserEmail,
-                HashedAccountId = hashedAccountId,
                 EmailOfPersonBeingInvited = email,
                 NameOfPersonBeingInvited = fullName,
                 RoleOfPersonBeingInvited = role
             };
-            
+
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
         }
 
@@ -200,7 +201,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
         {
             var resource = _serviceConfiguration.GetResource(key);
-           
+
             if (resource == null)
             {
                 var exception = new ManifestRepositoryException($"The requested resource {key} was not found");
