@@ -21,6 +21,7 @@
         EmployerAccountInvitation,
         EmployerAccountInvitationPost,
         EmployerAccountInvitationConfirm,
+        EmployerAccountResendInvitation,
         EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge,
     }

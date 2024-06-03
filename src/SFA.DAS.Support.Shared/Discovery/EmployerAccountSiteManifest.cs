@@ -91,7 +91,7 @@ namespace SFA.DAS.Support.Shared.Discovery
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
-                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountResendInvitation,
                     ResourceUrlFormat = "/invitations/resend/{0}?email={1}",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false,
