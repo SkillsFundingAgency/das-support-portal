@@ -21,6 +21,7 @@
         EmployerAccountInvitation,
         EmployerAccountInvitationPost,
         EmployerAccountInvitationConfirm,
+        EmployerAccountInvitationFailed,
         EmployerAccountResendInvitation,
         EmployerAccountPayeSchemeLevys,
         EmployerAccountFinanceChallenge,

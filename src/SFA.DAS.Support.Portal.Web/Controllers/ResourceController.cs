@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -160,15 +161,24 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
         {
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+
+            try
+            {
+
+                await _repository.SubmitCreateInvitationRequest(
+                    hashedAccountId,
+                    email,
+                    fullName,
+                    supportUserEmail, 
+                    role);
+                
+                return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationFailed, id = hashedAccountId, childId = email });
+            }
             
-            await _repository.SubmitCreateInvitationRequest(
-                hashedAccountId,
-                email,
-                fullName,
-                supportUserEmail, 
-                role);
-            
-            return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
         }
     }
 }

@@ -102,7 +102,16 @@ namespace SFA.DAS.Support.Shared.Discovery
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm,
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
-                    ResourceUrlFormat = "/invitations/confirm/{0}?email={1}",
+                    ResourceUrlFormat = "/invitations/confirm/{0}?email={1}&success=true",
+                    ResourceTitle = "Confirm",
+                    IsNavigationItem = false,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitationFailed,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    ResourceUrlFormat = "/invitations/confirm/{0}?email={1}&success=false",
                     ResourceTitle = "Confirm",
                     IsNavigationItem = false,
                 },
