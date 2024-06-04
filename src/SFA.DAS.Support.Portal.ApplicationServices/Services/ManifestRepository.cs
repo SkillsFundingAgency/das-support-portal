@@ -139,38 +139,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             return result;
         }
-
-        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
-        {
-            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
-            
-            var resource = _serviceConfiguration.GetResource(key);
-
-            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
-            var siteUri = new Uri(subSiteConfig.BaseUrl);
-
-            var resourceUrl = resource.ResourceUrlFormat;
-
-            resourceUrl = resourceUrl
-                .Replace("{0}", hashedAccountId)
-                .Replace("{1}", userRef);
-
-            var uri = new Uri(siteUri, resourceUrl);
-
-            var request = new UpdateRoleRequest
-            {
-                Role = role,
-                SupportUserEmail = supportUserEmail
-            };
-
-            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
-            
-            if (_siteConnector.LastException != null)
-            {
-                throw _siteConnector.LastException;
-            }
-        }
-
+        
         public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitationPost;
@@ -204,6 +173,37 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return result;
         }
 
+        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
+        {
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
+            
+            var resource = _serviceConfiguration.GetResource(key);
+
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
+            var siteUri = new Uri(subSiteConfig.BaseUrl);
+
+            var resourceUrl = resource.ResourceUrlFormat;
+
+            resourceUrl = resourceUrl
+                .Replace("{0}", hashedAccountId)
+                .Replace("{1}", userRef);
+
+            var uri = new Uri(siteUri, resourceUrl);
+
+            var request = new UpdateRoleRequest
+            {
+                Role = role,
+                SupportUserEmail = supportUserEmail
+            };
+
+            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
+            
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
+        }
+        
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
         {
             var navViewModel = new NavViewModel
