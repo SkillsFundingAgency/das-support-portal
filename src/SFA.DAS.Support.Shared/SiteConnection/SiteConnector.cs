@@ -62,6 +62,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             try
             {
                 var response = await _client.PostAsync(uri, postContent);
+                response.EnsureSuccessStatusCode();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
 
@@ -82,6 +83,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             catch (Exception exception)
             {
                 _logger.Error(exception, $"Call to sub site failed {nameof(SiteConnector)} with {exception.HResult} returning null response. Stack: {exception.StackTrace}");
+                throw;
             }
         }
 
