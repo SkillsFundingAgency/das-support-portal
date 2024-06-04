@@ -48,23 +48,25 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
             if (!_serviceConfiguration.ResourceExists(key))
+            {
                 return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
+            }
+
             var resource = _serviceConfiguration.GetResource(key);
             var headerKey = resource.HeaderKey ?? key;
 
             var headerResource = _serviceConfiguration.GetResource(headerKey);
-
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, headerKey);
-
             var uri = new Uri(new Uri(subSiteConfig.BaseUrl), headerResource.ResourceUrlFormat);
-
             var url = string.Format(uri.ToString(), id);
+            
             return await GetPage(url, subSiteConfig.IdentifierUri);
         }
 
         public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url)
         {
             var challenge = _serviceConfiguration.GetChallenge(challengeKey);
+            
             if (challenge == null)
             {
                 var exception = new ApplicationException($"The challenge {challengeKey} could not be found in any manifest");
@@ -73,9 +75,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
-
             var challengeUrl = string.Format(new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
-
             var page = await GetPage(challengeUrl, subSiteConfig.IdentifierUri);
 
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
@@ -163,14 +163,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 RoleOfPersonBeingInvited = role
             };
 
-            var result = new ResourceResultModel
+            return new ResourceResultModel
             {
                 Resource = await _siteConnector.Upload<string>(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri, isJsonContent: true),
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
-            
-            return result;
         }
 
         public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)

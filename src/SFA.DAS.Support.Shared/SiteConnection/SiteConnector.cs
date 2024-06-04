@@ -19,6 +19,11 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
+        
+        public HttpStatusCode LastCode { get; set; }
+        public string LastContent { get; set; }
+        public Exception LastException { get; set; }
+        public HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
 
         public SiteConnector(HttpClient client,
             List<IHttpStatusCodeStrategy> handlers,
@@ -27,18 +32,16 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
 
-            if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
+            if (!handlers.Any())
+            {
+                throw new ArgumentException(nameof(handlers));
+            }
+            
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _azureClientCredentialHelper = azureClientCredentialHelper ?? throw new ArgumentNullException(nameof(azureClientCredentialHelper));
         }
-
-        public HttpStatusCode LastCode { get; set; }
-
-        public string LastContent { get; set; }
-        public Exception LastException { get; set; }
-        public HttpStatusCodeDecision HttpStatusCodeDecision { get; set; }
-
+        
         public async Task<T> Download<T>(string url, string resourceIdentity) where T : class
         {
             return await Download<T>(new Uri(url), resourceIdentity);
@@ -48,13 +51,13 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         {
             return await Download<string>(url, resourceIdentity);
         }
-        
+
         public async Task Upload(Uri uri, string content, string resourceIdentity)
         {
             await EnsureClientAuthorizationHeader(resourceIdentity);
 
             var postContent = new StringContent(content, Encoding.UTF8, "application/json");
-            
+
             try
             {
                 var response = await _client.PostAsync(uri, postContent);
@@ -64,15 +67,18 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.HandleException:
-                        LastException = LastException ??
-                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                    {
+                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
-
+                    }
                     case HttpStatusCodeDecision.ReturnNull:
+                    {
                         return;
-
+                    }
                     default:
+                    {
                         return;
+                    }
                 }
             }
             catch (Exception exception)
@@ -81,17 +87,17 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 throw;
             }
         }
-        
+
         public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity, bool isJsonContent = false) where T : class
         {
             await EnsureClientAuthorizationHeader(resourceIdentity);
 
             var postContent = isJsonContent ? new StringContent(content, Encoding.UTF8, "application/json") : new StringContent(content);
-            
+
             try
-            { 
+            {
                 var response = await _client.PostAsync(uri, postContent);
-                
+
                 LastContent = await response.Content.ReadAsStringAsync();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
@@ -99,17 +105,23 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.HandleException:
-                        LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                    {
+                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
-
+                    }
                     case HttpStatusCodeDecision.ReturnNull:
+                    {
                         return null;
-
+                    }
                     default:
-
-                        if (typeof(T) == typeof(string)) return LastContent as T;
+                    {
+                        if (typeof(T) == typeof(string))
+                        {
+                            return LastContent as T;
+                        }
 
                         return JsonConvert.DeserializeObject<T>(LastContent);
+                    }
                 }
             }
             catch (Exception exception)
@@ -126,7 +138,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             try
             {
                 var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
-                
+
                 LastContent = await response.Content.ReadAsStringAsync();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
@@ -134,18 +146,23 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.HandleException:
-                        LastException = LastException ??
-                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                    {
+                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
-
+                    }
                     case HttpStatusCodeDecision.ReturnNull:
+                    {
                         return null;
-
+                    }
                     default:
-
-                        if (typeof(T) == typeof(string)) return LastContent as T;
+                    {
+                        if (typeof(T) == typeof(string))
+                        {
+                            return LastContent as T;
+                        }
 
                         return JsonConvert.DeserializeObject<T>(LastContent);
+                    }
                 }
             }
             catch (Exception exception)
@@ -170,31 +187,33 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.RethrowException:
-                        var exception = LastException ??
-                                        new Exception(
-                                            $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
-                        _logger.Error(exception,
-                            $"Forced Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
+                    {
+                        var exception = LastException ?? new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode} and Content of: {LastContent}");
+                        _logger.Error(exception, $"Forced Exception from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent} and Content of: {LastContent}");
                         throw exception;
-
+                    }
                     case HttpStatusCodeDecision.HandleException:
-                        var generatedException = LastException ??
-                                                 new Exception(
-                                                     $"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
-                        _logger.Error(generatedException,
-                            $"Exception from {nameof(SiteConnector)} recieving {LastCode} and Content of: {LastContent} from {uri}");
+                    {
+                        var generatedException = LastException ?? new Exception($"A manufactured exception has occured in {nameof(SiteConnector)} after receiving status code {LastCode}");
+                        _logger.Error(generatedException, $"Exception from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent} from {uri}");
                         return null;
-
+                    }
                     case HttpStatusCodeDecision.ReturnNull:
-                        _logger.Debug(
-                            $"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
+                    {
+                        _logger.Debug($"Ignoring Return value from {nameof(SiteConnector)} receiving {LastCode} and Content of: {LastContent}");
                         return null;
-
+                    }
                     default:
-                        _logger.Info($"Successful call to site from {nameof(SiteConnector)} recieving {LastCode}");
+                    {
+                        _logger.Info($"Successful call to site from {nameof(SiteConnector)} receiving {LastCode}");
                         var content = await response.Content.ReadAsStringAsync();
-                        if (typeof(T) == typeof(string)) return content as T;
+                        if (typeof(T) == typeof(string))
+                        {
+                            return content as T;
+                        }
+
                         return JsonConvert.DeserializeObject<T>(content);
+                    }
                 }
             }
             catch (Exception exception)
@@ -227,15 +246,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                                                       x.High >= LastCode &&
                                                       x.ExcludeStatuses.All(y => y != LastCode)).ToList();
 
-            if (handlerOptions.Any()) return handlerOptions.First().Handle(_client, LastCode);
-
-            return HttpStatusCodeDecision.Continue;
+            return handlerOptions.Any() ? handlerOptions.First().Handle(_client, LastCode) : HttpStatusCodeDecision.Continue;
         }
 
         private async Task<string> GetAuthenticationToken(string resourceIdentity)
         {
-            var accessToken = await _azureClientCredentialHelper.GetAccessTokenAsync(resourceIdentity);
-            return accessToken;
+            return await _azureClientCredentialHelper.GetAccessTokenAsync(resourceIdentity);
         }
     }
 }
