@@ -62,7 +62,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             try
             {
                 var response = await _client.PostAsync(uri, postContent);
-                response.EnsureSuccessStatusCode();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
 
@@ -97,8 +96,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
 
                 var response = await _client.PostAsync(uri, postContent);
                 
-                response.EnsureSuccessStatusCode();
-
                 LastContent = await response.Content.ReadAsStringAsync();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
@@ -135,8 +132,6 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             {
                 var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
                 
-                response.EnsureSuccessStatusCode();
-
                 LastContent = await response.Content.ReadAsStringAsync();
 
                 HttpStatusCodeDecision = ExamineResponse(response);
