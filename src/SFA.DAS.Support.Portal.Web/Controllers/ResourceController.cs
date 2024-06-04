@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -160,8 +161,12 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("resource/invitemember/{hashedAccountId}")]
         public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
         {
+            _logger.Warn("ResourceController.InviteMember called");
+            
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
+            
+            _logger.Warn("ResourceController.InviteMember SubNav and SubHeader populated.");
             
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
@@ -171,6 +176,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 fullName,
                 supportUserEmail,
                 role);
+            
+            _logger.Warn($"ResourceController.InviteMember result {JsonConvert.SerializeObject(result)}");
 
             return View("sub", result);
         }

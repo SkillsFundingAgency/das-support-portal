@@ -169,7 +169,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
-
+            
+            _log.Warn($"SubmitCreateInvitationRequest result: {JsonConvert.SerializeObject(result)}");
+            
             return result;
         }
 
