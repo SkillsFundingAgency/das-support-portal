@@ -164,7 +164,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             try
             {
-
                 await _repository.SubmitCreateInvitationRequest(
                     hashedAccountId,
                     email,
@@ -174,7 +173,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 
                 return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationFailed, id = hashedAccountId, childId = email });
             }
