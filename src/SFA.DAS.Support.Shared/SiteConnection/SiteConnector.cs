@@ -19,7 +19,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
-        
+
         public HttpStatusCode LastCode { get; set; }
         public string LastContent { get; set; }
         public Exception LastException { get; set; }
@@ -36,12 +36,12 @@ namespace SFA.DAS.Support.Shared.SiteConnection
             {
                 throw new ArgumentException(nameof(handlers));
             }
-            
+
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _azureClientCredentialHelper = azureClientCredentialHelper ?? throw new ArgumentNullException(nameof(azureClientCredentialHelper));
         }
-        
+
         public async Task<T> Download<T>(string url, string resourceIdentity) where T : class
         {
             return await Download<T>(new Uri(url), resourceIdentity);
@@ -68,7 +68,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 {
                     case HttpStatusCodeDecision.HandleException:
                     {
-                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
                     }
                     case HttpStatusCodeDecision.ReturnNull:
@@ -106,7 +106,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 {
                     case HttpStatusCodeDecision.HandleException:
                     {
-                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
                     }
                     case HttpStatusCodeDecision.ReturnNull:
@@ -147,7 +147,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 {
                     case HttpStatusCodeDecision.HandleException:
                     {
-                        LastException ??= new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
                     }
                     case HttpStatusCodeDecision.ReturnNull:
