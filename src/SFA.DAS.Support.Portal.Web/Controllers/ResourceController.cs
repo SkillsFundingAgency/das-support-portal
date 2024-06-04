@@ -162,24 +162,14 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
-            var responseKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm;
+            var result = await _repository.SubmitCreateInvitationRequest(
+                hashedAccountId,
+                email,
+                fullName,
+                supportUserEmail,
+                role);
 
-            try
-            {
-                await _repository.SubmitCreateInvitationRequest(
-                    hashedAccountId,
-                    email,
-                    fullName,
-                    supportUserEmail,
-                    role);
-            }
-            catch (Exception exception)
-            {
-                _logger.Error(exception, "Exception caught in ResourceController.InviteMember");
-                responseKey = SupportServiceResourceKey.EmployerAccountInvitationFailed;
-            }
-
-            return RedirectToAction(nameof(Index), "Resource", new { key = responseKey, id = hashedAccountId, childId = email });
+            return View("sub", result);
         }
     }
 }

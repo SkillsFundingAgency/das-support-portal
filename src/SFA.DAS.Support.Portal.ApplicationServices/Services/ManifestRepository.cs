@@ -171,7 +171,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
         }
 
-        public async Task SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
+        public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitationPost;
             
@@ -193,13 +193,15 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 NameOfPersonBeingInvited = fullName,
                 RoleOfPersonBeingInvited = role
             };
-
-            await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
-
-            if (_siteConnector.LastException != null)
+            
+            var result = new ResourceResultModel
             {
-                throw _siteConnector.LastException;
-            }
+                Resource = await _siteConnector.Upload<string>(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
+
+            return result;
         }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
