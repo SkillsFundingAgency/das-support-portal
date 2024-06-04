@@ -160,6 +160,9 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("resource/invitemember/{hashedAccountId}")]
         public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
         {
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
+            
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
             var result = await _repository.SubmitCreateInvitationRequest(
