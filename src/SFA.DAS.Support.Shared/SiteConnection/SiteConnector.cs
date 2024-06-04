@@ -85,15 +85,15 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 throw;
             }
         }
-
-        public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity) where T : class
+        
+        public async Task<T> Upload<T>(Uri uri, string content, string resourceIdentity, bool isJsonContent = false) where T : class
         {
             await EnsureClientAuthorizationHeader(resourceIdentity);
 
+            var postContent = isJsonContent ? new StringContent(content, Encoding.UTF8, "application/json") : new StringContent(content);
+            
             try
-            {
-                var postContent = new StringContent(content);
-
+            { 
                 var response = await _client.PostAsync(uri, postContent);
                 
                 LastContent = await response.Content.ReadAsStringAsync();
@@ -103,8 +103,7 @@ namespace SFA.DAS.Support.Shared.SiteConnection
                 switch (HttpStatusCodeDecision)
                 {
                     case HttpStatusCodeDecision.HandleException:
-                        LastException = LastException ??
-                                        new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
+                        LastException = LastException ?? new Exception($"An enforced exception has occured in {nameof(SiteConnector)}");
                         throw LastException;
 
                     case HttpStatusCodeDecision.ReturnNull:
