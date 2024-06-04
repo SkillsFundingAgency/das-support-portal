@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Newtonsoft.Json;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Support.Portal.ApplicationServices.Models;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
 using SFA.DAS.Support.Portal.Web.Extensions;
@@ -21,20 +18,17 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         private readonly IGrantPermissions _granter;
         private readonly IManifestRepository _repository;
         private readonly IServiceConfiguration _serviceConfiguration;
-        private readonly ILog _logger;
 
         public ResourceController(
             IManifestRepository repository,
             ICheckPermissions checker,
             IGrantPermissions granter,
-            IServiceConfiguration serviceConfiguration,
-            ILog logger)
+            IServiceConfiguration serviceConfiguration)
         {
             _repository = repository;
             _checker = checker;
             _granter = granter;
             _serviceConfiguration = serviceConfiguration;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -161,12 +155,8 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [Route("resource/invitemember/{hashedAccountId}")]
         public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
         {
-            _logger.Warn("ResourceController.InviteMember called");
-            
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
-            
-            _logger.Warn("ResourceController.InviteMember SubNav and SubHeader populated.");
             
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
@@ -177,8 +167,6 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
                 supportUserEmail,
                 role);
             
-            _logger.Warn($"ResourceController.InviteMember result {JsonConvert.SerializeObject(result)}");
-
             return View("sub", result);
         }
     }

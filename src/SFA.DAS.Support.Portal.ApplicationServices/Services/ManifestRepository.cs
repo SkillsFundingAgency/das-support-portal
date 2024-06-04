@@ -142,7 +142,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
         {
-            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitationPost;
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitation;
 
             var resource = _serviceConfiguration.GetResource(key);
 
@@ -169,9 +169,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
                 StatusCode = _siteConnector.LastCode,
                 Exception = _siteConnector.LastException
             };
-
-            _log.Warn($"SubmitCreateInvitationRequest result: {JsonConvert.SerializeObject(result)}");
-
+            
             return result;
         }
 

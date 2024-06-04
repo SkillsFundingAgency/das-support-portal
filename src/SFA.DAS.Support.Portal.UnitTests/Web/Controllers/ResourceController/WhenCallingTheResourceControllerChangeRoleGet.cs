@@ -34,7 +34,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
             
-            var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object, Mock.Of<ILog>());
+            var sut = new Portal.Web.Controllers.ResourceController(repository.Object, permissionsChecker.Object, permissionsGranter.Object, config.Object);
 
             var actual = await sut.ChangeRole(hashedAccountId, userRef, role.ToString());
 
