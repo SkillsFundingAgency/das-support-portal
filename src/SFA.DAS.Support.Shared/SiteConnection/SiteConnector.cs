@@ -6,10 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Support.Shared.Authentication;
 using SFA.DAS.Support.Shared.SiteConnection.Authentication;
 
 namespace SFA.DAS.Support.Shared.SiteConnection
@@ -18,19 +16,17 @@ namespace SFA.DAS.Support.Shared.SiteConnection
     {
         private const string TheHttpClientMayNotBeNull = "The Http client may not be null";
         private readonly HttpClient _client;
-        private readonly IClientAuthenticator _clientAuthenticator;
         private readonly List<IHttpStatusCodeStrategy> _handlers;
         private readonly ILog _logger;
         private readonly IAzureClientCredentialHelper _azureClientCredentialHelper;
 
         public SiteConnector(HttpClient client,
-            IClientAuthenticator clientAuthenticator,
             List<IHttpStatusCodeStrategy> handlers,
             ILog logger,
             IAzureClientCredentialHelper azureClientCredentialHelper)
         {
             _client = client ?? throw new ArgumentNullException(TheHttpClientMayNotBeNull);
-            _clientAuthenticator = clientAuthenticator ?? throw new ArgumentNullException(nameof(clientAuthenticator));
+
             if (!handlers.Any()) throw new ArgumentException(nameof(handlers));
             _handlers = handlers;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

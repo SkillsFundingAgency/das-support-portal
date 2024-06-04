@@ -71,7 +71,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
               .ReturnsAsync(() => "mockToken_dndndndndndndndnd=");
 
             Unit = new SiteConnection.SiteConnector(HttpClient,
-                MockClientAuthenticator.Object,
                 Handlers,
                 MockLogger.Object,
                 MockazureClientCredentialHelper.Object);
