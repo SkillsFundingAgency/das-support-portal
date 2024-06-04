@@ -116,7 +116,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
             var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            
+
             var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
 
             return View("Sub", resourceResult);
@@ -146,7 +146,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
 
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
-            
+
             await _repository.SubmitChangeRoleRequest(
                 hashedAccountId,
                 userRef,
@@ -162,22 +162,24 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
+            var responseKey = SupportServiceResourceKey.EmployerAccountInvitationConfirm;
+
             try
             {
                 await _repository.SubmitCreateInvitationRequest(
                     hashedAccountId,
                     email,
                     fullName,
-                    supportUserEmail, 
+                    supportUserEmail,
                     role);
-                
-                return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationConfirm, id = hashedAccountId, childId = email });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountInvitationFailed, id = hashedAccountId, childId = email });
+                _logger.Error(exception, "Exception caught in ResourceController.InviteMember");
+                responseKey = SupportServiceResourceKey.EmployerAccountInvitationFailed;
             }
-            
+
+            return RedirectToAction(nameof(Index), "Resource", new { key = responseKey, id = hashedAccountId, childId = email });
         }
     }
 }
