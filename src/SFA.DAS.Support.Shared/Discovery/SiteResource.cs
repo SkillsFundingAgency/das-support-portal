@@ -20,6 +20,5 @@ namespace SFA.DAS.Support.Shared.Discovery
         public SupportServiceResourceKey? Challenge { get; set; }
         public SupportServiceResourceKey? HeaderKey { get; set; }
         public bool IsNavigationItem { get; set; }
-        public bool IncludeSupportEmail { get; set; }
     }
 }

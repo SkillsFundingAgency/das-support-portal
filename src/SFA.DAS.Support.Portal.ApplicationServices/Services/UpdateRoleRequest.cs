@@ -3,6 +3,5 @@
     public class UpdateRoleRequest
     {
         public string Role { get; set; }
-        public string SupportUserEmail { get; set; }
     }
 }

@@ -115,8 +115,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
+            var resourceResult = await _repository.GetResourcePage(key, id, childId);
 
             return View("Sub", resourceResult);
         }
@@ -143,14 +142,11 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
-
-            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
-
+            
             await _repository.SubmitChangeRoleRequest(
                 hashedAccountId,
                 userRef,
-                role,
-                supportUserEmail);
+                role);
 
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, id = hashedAccountId, childId = userRef });
         }
@@ -162,13 +158,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
             
-            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
-
             var result = await _repository.SubmitCreateInvitationRequest(
                 hashedAccountId,
                 email,
                 fullName,
-                supportUserEmail,
                 role);
             
             return View("sub", result);

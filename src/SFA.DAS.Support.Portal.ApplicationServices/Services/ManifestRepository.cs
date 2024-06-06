@@ -140,7 +140,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return result;
         }
 
-        public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string supportUserEmail, string role)
+        public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string role)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitation;
 
@@ -157,7 +157,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var request = new CreateInvitationRequest
             {
-                SupportUserEmail = supportUserEmail,
                 EmailOfPersonBeingInvited = email,
                 NameOfPersonBeingInvited = fullName,
                 RoleOfPersonBeingInvited = role
@@ -171,7 +170,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             };
         }
 
-        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
+        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
 
@@ -191,7 +190,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var request = new UpdateRoleRequest
             {
                 Role = role,
-                SupportUserEmail = supportUserEmail
             };
 
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
@@ -212,7 +210,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
         {
             var resource = _serviceConfiguration.GetResource(key);
 
@@ -238,12 +236,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
             var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.UrlEncode(childId));
-
-            if (resource.IncludeSupportEmail)
-            {
-                url = $"{url}&sid={WebUtility.UrlEncode(supportUserEmail)}";
-            }
-
+            
             return await GetPage(url, site.IdentifierUri);
         }
 
