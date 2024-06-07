@@ -77,11 +77,19 @@ namespace SFA.DAS.Support.Shared.Discovery
                 new SiteResource
                 {
                     ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
+                    ResourceKey = SupportServiceResourceKey.EmployerAccountInvitation,
+                    HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
+                    ResourceUrlFormat = "/invitations/{0}",
+                    ResourceTitle = "Invitations",
+                    IsNavigationItem = false,
+                },
+                new SiteResource
+                {
+                    ServiceIdentity = SupportServiceIdentity.SupportEmployerAccount,
                     ResourceKey = SupportServiceResourceKey.EmployerAccountResendInvitation,
                     ResourceUrlFormat = "/invitations/resend/{0}?email={1}",
                     HeaderKey = SupportServiceResourceKey.EmployerAccountHeader,
                     IsNavigationItem = false,
-                    IncludeSupportEmail = true,
                 },
                 new SiteResource
                 {

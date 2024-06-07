@@ -24,7 +24,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
         [SetUp]
         public override void Setup()
         {
-            ServiceConfiguration = new ServiceConfiguration {new EmployerAccountSiteManifest()};
+            ServiceConfiguration = new ServiceConfiguration { new EmployerAccountSiteManifest() };
 
             MockManifestRepository = new Mock<IManifestRepository>();
             MockPermissionsChecker = new Mock<ICheckPermissions>();

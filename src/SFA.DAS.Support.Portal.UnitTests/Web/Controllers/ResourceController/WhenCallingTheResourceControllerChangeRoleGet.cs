@@ -28,8 +28,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
             Role role,
             NavViewModel navViewModel,
             ResourceResultModel headerModel,
-            ResourceResultModel resourceModel,
-            string supportUserEmail)
+            ResourceResultModel resourceModel)
         {
             repository.Setup(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(navViewModel);
             repository.Setup(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId)).ReturnsAsync(headerModel);
@@ -46,7 +45,7 @@ namespace SFA.DAS.Support.Portal.UnitTests.Web.Controllers.ResourceController
 
                 repository.Verify(x => x.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
                 repository.Verify(x => x.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId), Times.Once);
-                repository.Verify(x => x.SubmitChangeRoleRequest(hashedAccountId, userRef, role.ToString(), It.IsAny<string>()), Times.Once);
+                repository.Verify(x => x.SubmitChangeRoleRequest(hashedAccountId, userRef, role.ToString()), Times.Once);
             }
         }
     }

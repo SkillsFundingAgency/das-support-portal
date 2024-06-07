@@ -1449,6 +1449,13 @@ input[type=number] {
   padding-top: 4px;
   padding-bottom: 0; }
 
+.info-summary{
+  border: 4px solid #005ea5;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 15px 10px; 
+}
+
 .error-summary {
   border: 4px solid #b10e1e;
   margin-top: 15px;

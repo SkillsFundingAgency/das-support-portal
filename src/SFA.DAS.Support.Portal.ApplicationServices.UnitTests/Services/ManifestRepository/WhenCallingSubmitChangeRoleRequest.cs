@@ -16,21 +16,19 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             const string hashedAccountId = "BADWASSD";
             var userRef = Guid.NewGuid().ToString();
             const string role = "TEST";
-            const string supportEmail = "support@email.test";
 
             var url = new Uri($"{BaseUrl}roles/{hashedAccountId}/{userRef}");
 
             var jsonRequest = JsonConvert.SerializeObject(new UpdateRoleRequest
             {
                 Role = role,
-                SupportUserEmail = supportEmail
             });
 
             var resourceIdentity = MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri;
             
             MockSiteConnector.Setup(x => x.Upload(url, jsonRequest, resourceIdentity)).Returns(Task.CompletedTask);
 
-            await Unit.SubmitChangeRoleRequest(hashedAccountId, userRef, role, supportEmail);
+            await Unit.SubmitChangeRoleRequest(hashedAccountId, userRef, role);
 
             MockSiteConnector.Verify(x => x.Upload(url, jsonRequest, resourceIdentity), Times.Once);
         }

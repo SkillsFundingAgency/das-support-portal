@@ -34,7 +34,10 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Challenge(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string resourceId, string url)
         {
-            if (!_serviceConfiguration.ChallengeExists(challengeKey)) return HttpNotFound();
+            if (!_serviceConfiguration.ChallengeExists(challengeKey))
+            {
+                return HttpNotFound();
+            }
 
             ViewBag.SubNav = await _repository.GetNav(resourceKey, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(resourceKey, resourceId);
@@ -68,6 +71,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
 
             ViewBag.SubNav = await _repository.GetNav(resourceKey, resourceId);
             ViewBag.SubHeader = await _repository.GenerateHeader(resourceKey, resourceId);
+            
             return View("Sub", new ResourceResultModel
             {
                 StatusCode = HttpStatusCode.OK,
@@ -81,14 +85,16 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         public async Task<ActionResult> Index(SupportServiceResourceKey key, string id, string childId)
         {
             id = id.ToUpper();
+            
             if (!_serviceConfiguration.ResourceExists(key))
-                return View("Sub",
-                    new ResourceResultModel
-                    {
-                        Resource = "<h3>This resource isn't registered</h3>",
-                        StatusCode = HttpStatusCode.OK,
-                        Exception = null
-                    });
+            {
+                return View("Sub", new ResourceResultModel
+                {
+                    Resource = "<h3>This resource isn't registered</h3>",
+                    StatusCode = HttpStatusCode.OK,
+                    Exception = null
+                });
+            }
 
             var resource = _serviceConfiguration.GetResource(key);
 
@@ -96,8 +102,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             {
                 if (!_checker.HasPermissions(Request, Response, User, $"{resource.Challenge}/{id}"))
                 {
-                    return RedirectToAction("Challenge",
-                        new
+                    return RedirectToAction("Challenge", new
                         {
                             resourceId = id,
                             resourceKey = (int)key,
@@ -110,9 +115,7 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
             ViewBag.SubNav = await _repository.GetNav(key, id);
             ViewBag.SubHeader = await _repository.GenerateHeader(key, id);
 
-            var supportUserEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            
-            var resourceResult = await _repository.GetResourcePage(key, id, childId, supportUserEmail);
+            var resourceResult = await _repository.GetResourcePage(key, id, childId);
 
             return View("Sub", resourceResult);
         }
@@ -139,16 +142,29 @@ namespace SFA.DAS.Support.Portal.Web.Controllers
         {
             ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
             ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountChangeRole, hashedAccountId);
-
-            var supportUserEmail = HttpContext?.User.FindFirstValue(ClaimTypes.Email);
             
             await _repository.SubmitChangeRoleRequest(
                 hashedAccountId,
                 userRef,
-                role,
-                supportUserEmail);
+                role);
 
             return RedirectToAction(nameof(Index), "Resource", new { key = SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, id = hashedAccountId, childId = userRef });
+        }
+
+        [HttpGet]
+        [Route("resource/invitemember/{hashedAccountId}")]
+        public async Task<ActionResult> InviteMember(string hashedAccountId, string email, string fullName, string role)
+        {
+            ViewBag.SubNav = await _repository.GetNav(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
+            ViewBag.SubHeader = await _repository.GenerateHeader(SupportServiceResourceKey.EmployerAccountInvitation, hashedAccountId);
+            
+            var result = await _repository.SubmitCreateInvitationRequest(
+                hashedAccountId,
+                email,
+                fullName,
+                role);
+            
+            return View("sub", result);
         }
     }
 }

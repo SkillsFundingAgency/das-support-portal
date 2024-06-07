@@ -14,7 +14,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
                 new SiteConnection.SiteConnector(null,
-                    MockClientAuthenticator.Object,
                     Handlers, MockLogger.Object,
                      MockazureClientCredentialHelper.Object)
             );
@@ -25,8 +24,7 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
         {
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
-                new SiteConnection.SiteConnector(null,
-                    null, Handlers,
+                new SiteConnection.SiteConnector(null, Handlers,
                     MockLogger.Object,
                     MockazureClientCredentialHelper.Object)
             );
@@ -38,7 +36,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
                 new SiteConnection.SiteConnector(null,
-                     MockClientAuthenticator.Object,
                     Handlers, MockLogger.Object,
                     MockazureClientCredentialHelper.Object)
             );
@@ -50,7 +47,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
                 new SiteConnection.SiteConnector(null,
-                    MockClientAuthenticator.Object,
                     Handlers, null,
                     MockazureClientCredentialHelper.Object)
             );
@@ -62,7 +58,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             Handlers = new List<IHttpStatusCodeStrategy>();
             Assert.Throws<ArgumentNullException>(() =>
                 new SiteConnection.SiteConnector(null,
-                   MockClientAuthenticator.Object,
                    Handlers,
                     MockLogger.Object,
                     MockazureClientCredentialHelper.Object)

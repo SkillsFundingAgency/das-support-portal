@@ -25,7 +25,6 @@ namespace SFA.DAS.Support.Shared.Tests.SiteConnector
             HttpClient.DefaultRequestHeaders.Authorization = null;
 
             Unit = new SiteConnection.SiteConnector(HttpClient,
-              MockClientAuthenticator.Object,
               Handlers,
               MockLogger.Object,
               MockazureClientCredentialHelper.Object);

@@ -48,23 +48,25 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
         public async Task<ResourceResultModel> GenerateHeader(SupportServiceResourceKey key, string id)
         {
             if (!_serviceConfiguration.ResourceExists(key))
+            {
                 return new ResourceResultModel { StatusCode = HttpStatusCode.NotFound };
+            }
+
             var resource = _serviceConfiguration.GetResource(key);
             var headerKey = resource.HeaderKey ?? key;
 
             var headerResource = _serviceConfiguration.GetResource(headerKey);
-
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, headerKey);
-
             var uri = new Uri(new Uri(subSiteConfig.BaseUrl), headerResource.ResourceUrlFormat);
-
             var url = string.Format(uri.ToString(), id);
+            
             return await GetPage(url, subSiteConfig.IdentifierUri);
         }
 
         public async Task<string> GetChallengeForm(SupportServiceResourceKey resourceKey, SupportServiceResourceKey challengeKey, string id, string url)
         {
             var challenge = _serviceConfiguration.GetChallenge(challengeKey);
+            
             if (challenge == null)
             {
                 var exception = new ApplicationException($"The challenge {challengeKey} could not be found in any manifest");
@@ -73,11 +75,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             }
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, challengeKey);
-
             var challengeUrl = string.Format(new Uri(new Uri(subSiteConfig.BaseUrl), challenge.ChallengeUrlFormat).ToString(), id);
-            
             var page = await GetPage(challengeUrl, subSiteConfig.IdentifierUri);
-            
+
             return _formMapper.UpdateForm(resourceKey, challengeKey, id, url, page.Resource);
         }
 
@@ -140,10 +140,40 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return result;
         }
 
-        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role, string supportUserEmail)
+        public async Task<ResourceResultModel> SubmitCreateInvitationRequest(string hashedAccountId, string email, string fullName, string role)
+        {
+            const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountInvitation;
+
+            var resource = _serviceConfiguration.GetResource(key);
+
+            var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
+            var siteUri = new Uri(subSiteConfig.BaseUrl);
+
+            var resourceUrl = resource.ResourceUrlFormat;
+
+            resourceUrl = resourceUrl.Replace("{0}", hashedAccountId);
+
+            var uri = new Uri(siteUri, resourceUrl);
+
+            var request = new CreateInvitationRequest
+            {
+                EmailOfPersonBeingInvited = email,
+                NameOfPersonBeingInvited = fullName,
+                RoleOfPersonBeingInvited = role
+            };
+
+            return new ResourceResultModel
+            {
+                Resource = await _siteConnector.Upload<string>(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri, isJsonContent: true),
+                StatusCode = _siteConnector.LastCode,
+                Exception = _siteConnector.LastException
+            };
+        }
+
+        public async Task SubmitChangeRoleRequest(string hashedAccountId, string userRef, string role)
         {
             const SupportServiceResourceKey key = SupportServiceResourceKey.EmployerAccountChangeRole;
-            
+
             var resource = _serviceConfiguration.GetResource(key);
 
             var subSiteConfig = _serviceConfiguration.FindSiteConfigForManfiestElement(_sites, key);
@@ -160,10 +190,14 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             var request = new UpdateRoleRequest
             {
                 Role = role,
-                SupportUserEmail = supportUserEmail
             };
 
             await _siteConnector.Upload(uri, JsonConvert.SerializeObject(request), subSiteConfig.IdentifierUri);
+
+            if (_siteConnector.LastException != null)
+            {
+                throw _siteConnector.LastException;
+            }
         }
 
         public async Task<NavViewModel> GetNav(SupportServiceResourceKey key, string id)
@@ -176,10 +210,10 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             return await Task.FromResult(navViewModel);
         }
 
-        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId, string supportUserEmail)
+        public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
         {
             var resource = _serviceConfiguration.GetResource(key);
-           
+
             if (resource == null)
             {
                 var exception = new ManifestRepositoryException($"The requested resource {key} was not found");
@@ -202,12 +236,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
             var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.UrlEncode(childId));
-
-            if (resource.IncludeSupportEmail)
-            {
-                url = $"{url}&sid={WebUtility.UrlEncode(supportUserEmail)}";
-            }
-
+            
             return await GetPage(url, site.IdentifierUri);
         }
 
