@@ -51,6 +51,20 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
 
             MockSiteConnector.Verify(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
         }
+        
+        [Test]
+        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrlWhenChildIdIsNull()
+        {
+            const string hashedAccountId = "SHEMDAS";
+
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/");
+
+            MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
+
+            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, hashedAccountId, null);
+
+            MockSiteConnector.Verify(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
+        }
 
         [Test]
         public void ItShouldThrowAnExceptionIfTheKeyIsNotFound()
