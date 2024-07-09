@@ -235,7 +235,9 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             resource.ResourceUrlFormat = new Uri(new Uri(site.BaseUrl), resource.ResourceUrlFormat).ToString();
 
-            var url = string.Format(resource.ResourceUrlFormat, id, WebUtility.UrlEncode(childId));
+            var childIdWithPlusSignEncoded = childId.Replace("+", "%2B");
+
+            var url = string.Format(resource.ResourceUrlFormat, id, childIdWithPlusSignEncoded);
             
             return await GetPage(url, site.IdentifierUri);
         }
