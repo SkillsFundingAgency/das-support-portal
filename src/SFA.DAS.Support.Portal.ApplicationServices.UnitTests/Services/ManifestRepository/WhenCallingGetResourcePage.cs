@@ -28,7 +28,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             const string hashedAccountId = "HSUEW";
             const string email = "test15@email.test";
 
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{WebUtility.UrlEncode(email)}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{email}");
 
             MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
 
