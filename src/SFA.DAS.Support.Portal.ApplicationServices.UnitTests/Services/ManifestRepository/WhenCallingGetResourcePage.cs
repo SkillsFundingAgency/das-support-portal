@@ -22,28 +22,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Resource));
         }
 
-        [Test]
-        public async Task ItShouldAppendTheUriWithSupportIdWhenIncludeSupportEmailIsTrue()
-        {
-            const string hashedAccountId = "FDSKJH";
-            const string email = "test@email.test";
-            
-            var expectedUri = new Uri($"{BaseUrl}invitations/resend/{hashedAccountId}?email={WebUtility.UrlEncode(email)}");
-            
-            MockSiteConnector.Setup(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
-            
-            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountResendInvitation, hashedAccountId, email);
-            
-            MockSiteConnector.Verify(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
-        }
-        
-        [Test]
-        public async Task ItShouldNotAppendTheUriWithSupportIdWhenIncludeSupportEmailIsFalse()
+        [Test] public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrl()
         {
             const string hashedAccountId = "HSUEW";
             const string email = "test15@email.test";
             
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{WebUtility.UrlEncode(email)}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{email}");
             
             MockSiteConnector.Setup(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
             
