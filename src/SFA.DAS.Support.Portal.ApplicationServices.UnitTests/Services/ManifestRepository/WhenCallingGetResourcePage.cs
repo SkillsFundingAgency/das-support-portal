@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -28,7 +29,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             const string hashedAccountId = "HSUEW";
             const string email = "test15@email.test";
 
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{email}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{HttpUtility.UrlEncode(email)}");
 
             MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
 
@@ -38,12 +39,12 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
         
         [Test]
-        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrlWhenThereIsPlusSignInChildId()
+        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrlWhenThereIsSpecialCharacterInChildId()
         {
             const string hashedAccountId = "SHEMDAS";
-            const string email = "test+something@email.test";
+            const string email = "test+some#thing@email.test";
 
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{email.Replace("+", "%2B")}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{HttpUtility.UrlEncode(email)}");
 
             MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
 
