@@ -212,8 +212,6 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
         public async Task<ResourceResultModel> GetResourcePage(SupportServiceResourceKey key, string id, string childId)
         {
-            _log.Info($"GetResourcePage: Starting ChildId: {childId}.");
-            
             var resource = _serviceConfiguration.GetResource(key);
 
             if (resource == null)
@@ -239,11 +237,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.Services
 
             var encodedChildId = !string.IsNullOrEmpty(childId) ? Uri.EscapeDataString(childId) : childId;
             
-            _log.Info($"GetResourcePage: Encoded ChildId: {encodedChildId}.");
-
             var url = string.Format(resource.ResourceUrlFormat, id, encodedChildId);
-            
-            _log.Info($"GetResourcePage: GetPage url: {url}.");
             
             return await GetPage(url, site.IdentifierUri);
         }
