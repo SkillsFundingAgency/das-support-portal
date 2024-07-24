@@ -28,7 +28,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             const string hashedAccountId = "HSUEW";
             const string email = "test15@email.test";
 
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{HttpUtility.UrlEncode(email)}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{Uri.EscapeDataString(email)}");
 
             MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
             const string hashedAccountId = "SHEMDAS";
             const string email = "test+some#thing@email.test";
 
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{HttpUtility.UrlEncode(email)}");
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{Uri.EscapeDataString(email)}");
 
             MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
 
