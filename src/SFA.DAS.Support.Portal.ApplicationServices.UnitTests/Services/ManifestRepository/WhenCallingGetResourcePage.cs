@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Support.Portal.ApplicationServices.Services;
@@ -23,33 +23,47 @@ namespace SFA.DAS.Support.Portal.ApplicationServices.UnitTests.Services.Manifest
         }
 
         [Test]
-        public async Task ItShouldAppendTheUriWithSupportIdWhenIncludeSupportEmailIsTrue()
-        {
-            const string hashedAccountId = "FDSKJH";
-            const string email = "test@email.test";
-            
-            var expectedUri = new Uri($"{BaseUrl}invitations/resend/{hashedAccountId}?email={WebUtility.UrlEncode(email)}");
-            
-            MockSiteConnector.Setup(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
-            
-            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountResendInvitation, hashedAccountId, email);
-            
-            MockSiteConnector.Verify(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
-        }
-        
-        [Test]
-        public async Task ItShouldNotAppendTheUriWithSupportIdWhenIncludeSupportEmailIsFalse()
+        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrl()
         {
             const string hashedAccountId = "HSUEW";
             const string email = "test15@email.test";
-            
-            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{WebUtility.UrlEncode(email)}");
-            
-            MockSiteConnector.Setup(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
-            
+
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{Uri.EscapeDataString(email)}");
+
+            MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
+
             await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, hashedAccountId, email);
-            
-            MockSiteConnector.Verify(x=> x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
+
+            MockSiteConnector.Verify(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
+        }
+        
+        [Test]
+        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrlWhenThereIsSpecialCharacterInChildId()
+        {
+            const string hashedAccountId = "SHEMDAS";
+            const string email = "test+some#thing@email.test";
+
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/{Uri.EscapeDataString(email)}");
+
+            MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
+
+            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, hashedAccountId, email);
+
+            MockSiteConnector.Verify(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
+        }
+        
+        [Test]
+        public async Task ItShouldCallDownloadOnTheSiteConnectorWithTheCorrectUrlWhenChildIdIsNull()
+        {
+            const string hashedAccountId = "SHEMDAS";
+
+            var expectedUri = new Uri($"{BaseUrl}roles/confirm/{hashedAccountId}/");
+
+            MockSiteConnector.Setup(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri)).ReturnsAsync(string.Empty);
+
+            await Unit.GetResourcePage(SupportServiceResourceKey.EmployerAccountChangeRoleConfirm, hashedAccountId, null);
+
+            MockSiteConnector.Verify(x => x.Download(expectedUri, MockSiteSettings.SubSiteConnectorSettings.First().IdentifierUri), Times.Once);
         }
 
         [Test]
